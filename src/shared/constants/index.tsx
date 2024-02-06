@@ -11,6 +11,7 @@ export * from "./firestoreDataSource";
 export * from "./followFeedItemAction";
 export * from "./formErrorMessages";
 export * from "./getChatChannelUserStatusKey";
+export * from "./getCommonMemberStateKey";
 export * from "./getFeedItemUserMetadataKey";
 export * from "./inboxItemType";
 export * from "./keyboardKeys";

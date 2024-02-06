@@ -79,14 +79,10 @@ export function useFeedItemFollow(
   };
 
   useEffect(() => {
-    if (feedItemId && commonId) {
-      if (userId) {
-        fetchUserFeedItemFollowData(userId, feedItemId);
-      } else {
-        setUserFeedItemFollowData(null);
-      }
+    if (!userId) {
+      setUserFeedItemFollowData(null);
     }
-  }, [userId, feedItemId, commonId]);
+  }, [userId]);
 
   useEffect(() => {
     if (isUserFeedItemFollowDataFetched && feedItemId && commonId) {
