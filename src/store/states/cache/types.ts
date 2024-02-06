@@ -47,4 +47,5 @@ export interface CacheState {
     string,
     LoadingState<(CommonMember & CirclesPermissions) | null>
   >;
+  externalCommonUsers: User[];
 }

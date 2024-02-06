@@ -182,7 +182,7 @@ export default function ChatComponent({
     },
     onFeedItemClick,
     onUserClick,
-    commonId: commonId,
+    commonId,
     onInternalLinkClick,
   });
   const {

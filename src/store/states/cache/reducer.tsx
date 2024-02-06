@@ -24,6 +24,7 @@ export const INITIAL_CACHE_STATE: CacheState = {
   chatChannelUserStatusStates: {},
   commonMembersState: {},
   commonMemberByUserAndCommonIdsStates: {},
+  externalCommonUsers: [],
 };
 
 export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
@@ -245,16 +246,14 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
       }
     }),
   )
-  .handleAction(actions.setStateCommonMembersByCommonId, (state, { payload }) =>
+  .handleAction(actions.addUserToExternalCommonUsers, (state, { payload }) =>
     produce(state, (nextState) => {
-      if (payload.commonId) {
-        nextState.commonMembersState[payload.commonId] = {
-          data: state.commonMembersState[payload.commonId]?.data ?? [],
-          loading: payload.loading,
-          fetched: payload.fetched,
-        };
-      }
-    })
+      nextState.externalCommonUsers = [
+        ...state.externalCommonUsers,
+        payload.user,
+      ];
+    }),
+  )
   .handleAction(
     actions.updateCommonMemberStateByUserAndCommonIds,
     (state, { payload }) =>

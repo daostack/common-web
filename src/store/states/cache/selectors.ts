@@ -69,3 +69,6 @@ export const selectCommonMemberStateByUserAndCommonIds =
     state.cache.commonMemberByUserAndCommonIdsStates[
       getCommonMemberStateKey(info)
     ] || null;
+
+export const selectExternalCommonUsers = (state: AppState) =>
+  state.cache.externalCommonUsers;

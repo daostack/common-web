@@ -21,7 +21,7 @@ interface Return extends State {
   setCommonMembers: (commonMembers: CommonMemberWithUserInfo[]) => void;
 }
 
-const defaultState = {
+const DEFAULT_STATE: State = {
   loading: false,
   fetched: false,
   data: [],
@@ -32,7 +32,7 @@ export const useCommonMembers = ({ commonId }: Options): Return => {
 
   const state =
     useSelector(selectCommonMembersStateByCommonId(commonId)) ||
-    defaultState;
+    DEFAULT_STATE;
 
   const fetchCommonMembers = useCallback(
     (circleVisibility: string[] = []) => {
@@ -63,7 +63,7 @@ export const useCommonMembers = ({ commonId }: Options): Return => {
     (commonMembers: CommonMemberWithUserInfo[]) => {
       dispatch(
         cacheActions.updateCommonMembersByCommonId({
-          commonId: commonId,
+          commonId,
           commonMembers: commonMembers ?? [],
         }),
       );

@@ -230,12 +230,10 @@ export const updateCommonMembersByCommonId = createStandardAction(
   commonMembers: CommonMemberWithUserInfo[];
 }>();
 
-export const setStateCommonMembersByCommonId = createStandardAction(
-  CacheActionType.SET_STATE_COMMON_MEMBERS_BY_COMMON_ID,
+export const addUserToExternalCommonUsers = createStandardAction(
+  CacheActionType.ADD_USER_TO_EXTERNAL_COMMON_USERS,
 )<{
-  commonId?: string;
-  fetched: boolean;
-  loading: boolean;
+  user: User;
 }>();
 
 export const updateCommonMemberStateByUserAndCommonIds = createStandardAction(
