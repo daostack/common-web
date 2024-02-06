@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useUpdateEffect } from "react-use";
-import { DiscussionMessageService } from "@/services";
+import { DiscussionMessageService, UserService } from "@/services";
 import { getTextFromTextEditorString } from "@/shared/components/Chat/ChatMessage/utils";
 import { useRoutesContext } from "@/shared/contexts";
 import { LoadingState } from "@/shared/interfaces";
@@ -270,7 +270,7 @@ export const useDiscussionMessagesById = ({
         ({ moderation }) =>
           moderation?.flag !== ModerationFlags.Hidden || hasPermissionToHide,
       );
-      const loadedDiscussionMessages = filteredMessages.map((d) => {
+      const loadedDiscussionMessages = await Promise.all(filteredMessages.map(async (d) => {
         const newDiscussionMessage = { ...d };
         const parentMessage = filteredMessages.find(
           ({ id }) => id === d.parentId,
@@ -279,7 +279,8 @@ export const useDiscussionMessagesById = ({
           checkIsUserDiscussionMessage(d) &&
           checkIsUserDiscussionMessage(newDiscussionMessage)
         ) {
-          newDiscussionMessage.owner = users.find((o) => o.uid === d.ownerId);
+          const messageOwner = users.find((o) => o.uid === d.ownerId);
+          newDiscussionMessage.owner = messageOwner || await UserService.getUserById(d.ownerId);
         }
         newDiscussionMessage.parentMessage = parentMessage
           ? {
@@ -297,7 +298,7 @@ export const useDiscussionMessagesById = ({
           : null;
 
         return newDiscussionMessage;
-      });
+      }));
 
       setDiscussionMessagesWithOwners(loadedDiscussionMessages);
       setIsLoading(false);
