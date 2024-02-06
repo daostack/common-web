@@ -20,7 +20,6 @@ interface Options {
 
 interface Return {
   preloadDiscussionMessages: (
-    commonId: string,
     circleVisibility?: string[] | null,
     force?: boolean,
   ) => void;
@@ -36,12 +35,12 @@ export const usePreloadDiscussionMessagesById = ({
   const { getCommonPagePath, getCommonPageAboutTabPath } = useRoutesContext();
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const { data: commonMembers, fetchCommonMembers } = useCommonMembers();
+  const { data: commonMembers, fetchCommonMembers } = useCommonMembers({commonId});
   const [forceUpdateFlag, setForceUpdateFlag] = useState(false);
 
   const preloadDiscussionMessages = useCallback(
-    async (commonId, circleVisibility, force = false) => {
-      fetchCommonMembers(commonId, circleVisibility);
+    async (circleVisibility, force = false) => {
+      fetchCommonMembers(circleVisibility);
 
       if (force) {
         setForceUpdateFlag((s) => !s);

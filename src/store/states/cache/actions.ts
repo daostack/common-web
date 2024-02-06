@@ -3,6 +3,7 @@ import { LoadingState, PayloadWithOptionalCallback } from "@/shared/interfaces";
 import {
   ChatChannelUserStatus,
   CommonFeedObjectUserUnique,
+  CommonMemberWithUserInfo,
   Discussion,
   DiscussionMessage,
   DiscussionMessageWithParsedText,
@@ -219,3 +220,20 @@ export const updateChatChannelUserStatus = createStandardAction(
   chatChannelId: string;
   state: LoadingState<ChatChannelUserStatus | null>;
 }>();
+
+
+export const updateCommonMembersByCommonId = createStandardAction(
+  CacheActionType.UPDATE_COMMON_MEMBERS_BY_COMMON_ID,
+)<{
+  commonId?: string;
+  commonMembers: CommonMemberWithUserInfo[];
+}>();
+
+export const setStateCommonMembersByCommonId = createStandardAction(
+  CacheActionType.SET_STATE_COMMON_MEMBERS_BY_COMMON_ID,
+)<{
+  commonId?: string;
+  fetched: boolean;
+  loading: boolean;
+}>();
+

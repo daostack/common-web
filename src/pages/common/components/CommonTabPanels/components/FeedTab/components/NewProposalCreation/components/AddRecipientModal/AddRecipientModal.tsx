@@ -60,15 +60,15 @@ const AddRecipientModal: FC<AddRecipientModalProps> = ({
   onSubmit,
   initData,
 }) => {
-  const {
-    fetched: areCommonMembersFetched,
-    data: commonMembers,
-    fetchCommonMembers,
-  } = useCommonMembers();
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const { common, subCommons, parentCommons } = useNewProposalCreationContext();
   const commonId = useMemo(() => common.id, [common]);
+  const {
+    fetched: areCommonMembersFetched,
+    data: commonMembers,
+    fetchCommonMembers,
+  } = useCommonMembers({ commonId });
 
   const initialValues = useMemo(
     () => ({
@@ -81,7 +81,7 @@ const AddRecipientModal: FC<AddRecipientModalProps> = ({
 
   useEffect(() => {
     if (commonId) {
-      fetchCommonMembers(commonId);
+      fetchCommonMembers();
     }
   }, [fetchCommonMembers, commonId]);
 

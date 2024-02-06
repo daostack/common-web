@@ -79,7 +79,7 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
     fetched: areCommonMembersFetched,
     data: commonMembers,
     fetchCommonMembers,
-  } = useCommonMembers();
+  } = useCommonMembers({ commonId: common.id });
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const isConfigurationStep = step === FundsAllocationStep.Configuration;
@@ -111,7 +111,9 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
   };
 
   useEffect(() => {
-    fetchCommonMembers(governance.commonId);
+    if (governance.commonId) {
+      fetchCommonMembers();
+    }
   }, [fetchCommonMembers, governance.commonId]);
 
   useEffect(() => {

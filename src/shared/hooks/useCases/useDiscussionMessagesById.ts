@@ -295,6 +295,7 @@ export const useDiscussionMessagesById = ({
               createdAt: parentMessage.createdAt,
             }
           : null;
+
         return newDiscussionMessage;
       });
 

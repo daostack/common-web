@@ -340,7 +340,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
         commonId &&
         item.circleVisibility
       ) {
-        preloadDiscussionMessages(commonId, item.circleVisibility);
+        preloadDiscussionMessages(item.circleVisibility);
       }
     }, [shouldPreLoadMessages, isActive]);
 
@@ -351,7 +351,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
         commonId &&
         item.circleVisibility
       ) {
-        preloadDiscussionMessages(commonId, item.circleVisibility, true);
+        preloadDiscussionMessages(item.circleVisibility, true);
       }
     }, [item.data.lastMessage?.content]);
 

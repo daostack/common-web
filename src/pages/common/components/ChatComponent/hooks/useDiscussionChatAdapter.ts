@@ -16,6 +16,7 @@ interface Options {
   directParent?: DirectParent | null;
   textStyles: TextStyles;
   discussionId: string;
+  commonId: string;
 }
 
 interface Return {
@@ -34,10 +35,11 @@ export const useDiscussionChatAdapter = (options: Options): Return => {
     discussionId,
     onFeedItemClick,
     onUserClick,
+    commonId
   } = options;
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const { data: commonMembers, fetchCommonMembers } = useCommonMembers();
+  const { data: commonMembers, fetchCommonMembers } = useCommonMembers({commonId});
 
   const allUsers = useMemo(
     () => commonMembers.map(({ user }) => user),
@@ -48,6 +50,7 @@ export const useDiscussionChatAdapter = (options: Options): Return => {
     () => allUsers.filter((user) => user.uid !== userId),
     [userId, allUsers],
   );
+
   const discussionMessagesData = useDiscussionMessagesById({
     discussionId,
     hasPermissionToHide,
@@ -60,7 +63,7 @@ export const useDiscussionChatAdapter = (options: Options): Return => {
 
   const fetchDiscussionUsers = useCallback(
     (commonId: string, circleVisibility?: string[]) => {
-      fetchCommonMembers(commonId, circleVisibility, false);
+      fetchCommonMembers(circleVisibility);
     },
     [fetchCommonMembers],
   );
