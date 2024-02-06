@@ -8,7 +8,6 @@ import {
   useChatContext,
 } from "@/pages/common/components/ChatComponent";
 import { checkHasAccessToChat } from "@/pages/common/components/CommonTabPanels/components";
-import { InternalLinkData } from "@/shared/components";
 import { ChatType } from "@/shared/constants";
 import { useUsersByIds } from "@/shared/hooks/useCases";
 import {
@@ -19,6 +18,7 @@ import {
   DirectParent,
   PredefinedTypes,
 } from "@/shared/models";
+import { InternalLinkData } from "@/shared/utils";
 import { getUserName, joinWithLast } from "@/shared/utils";
 import { Header } from "./components";
 import styles from "./MobileChat.module.scss";

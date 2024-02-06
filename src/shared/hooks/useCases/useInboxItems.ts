@@ -219,8 +219,7 @@ export const useInboxItems = (
 
   const refetch = () => {
     setNewItemsBatches([]);
-    dispatch(inboxActions.resetInboxItems());
-    fetch();
+    dispatch(inboxActions.refetchInboxItems(Boolean(unread)));
   };
 
   const addNewInboxItems = (

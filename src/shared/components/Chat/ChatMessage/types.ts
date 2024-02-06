@@ -1,6 +1,7 @@
 import { DirectParent, SystemDiscussionMessage, User } from "@/shared/models";
 import { TextEditorValue } from "@/shared/ui-kit";
 import { GetCommonPageAboutTabPath, GetCommonPagePath } from "@/shared/utils";
+import { InternalLinkData } from "@/shared/utils";
 
 export type Text = string | JSX.Element;
 
@@ -19,4 +20,5 @@ export interface TextData {
   onUserClick?: (userId: string) => void;
   onFeedItemClick?: (feedItemId: string) => void;
   onMessageUpdate?: (message: TextEditorValue) => void;
+  onInternalLinkClick?: (data: InternalLinkData) => void;
 }
