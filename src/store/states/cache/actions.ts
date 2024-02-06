@@ -2,8 +2,10 @@ import { createAsyncAction, createStandardAction } from "typesafe-actions";
 import { LoadingState, PayloadWithOptionalCallback } from "@/shared/interfaces";
 import {
   ChatChannelUserStatus,
+  CirclesPermissions,
   CommonFeedObjectUserUnique,
   CommonMemberWithUserInfo,
+  CommonMember,
   Discussion,
   DiscussionMessage,
   DiscussionMessageWithParsedText,
@@ -221,7 +223,6 @@ export const updateChatChannelUserStatus = createStandardAction(
   state: LoadingState<ChatChannelUserStatus | null>;
 }>();
 
-
 export const updateCommonMembersByCommonId = createStandardAction(
   CacheActionType.UPDATE_COMMON_MEMBERS_BY_COMMON_ID,
 )<{
@@ -237,3 +238,10 @@ export const setStateCommonMembersByCommonId = createStandardAction(
   loading: boolean;
 }>();
 
+export const updateCommonMemberStateByUserAndCommonIds = createStandardAction(
+  CacheActionType.UPDATE_COMMON_MEMBER_STATE_BY_USER_AND_COMMON_ID,
+)<{
+  userId: string;
+  commonId: string;
+  state: LoadingState<(CommonMember & CirclesPermissions) | null>;
+}>();

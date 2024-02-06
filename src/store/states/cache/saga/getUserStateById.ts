@@ -35,7 +35,7 @@ export function* getUserStateById({
         },
       }),
     );
-    const user = (yield call(requestFunction, userId)) as Awaited<
+    const user = (yield call(requestFunction, userId, true)) as Awaited<
       ReturnType<typeof requestFunction>
     >;
 

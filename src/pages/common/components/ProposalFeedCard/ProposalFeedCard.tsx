@@ -3,10 +3,12 @@ import React, {
   ReactNode,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import { useSelector } from "react-redux";
 import { useUpdateEffect } from "react-use";
+import { debounce } from "lodash";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember, useProposalUserVote } from "@/pages/OldCommon/hooks";
 import { ProposalService } from "@/services";
@@ -190,7 +192,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       onOpen: onShareModalOpen,
       onClose: onShareModalClose,
     } = useModal(false);
-    const { preloadDiscussionMessages } = usePreloadDiscussionMessagesById({
+    const preloadDiscussionMessagesData = usePreloadDiscussionMessagesById({
       commonId,
       discussionId: discussion?.id,
     });
@@ -226,6 +228,18 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
         setProposalDeletingInProgress(false);
       }
     }, [proposalId]);
+
+    const preloadDiscussionMessages = useMemo(
+      () =>
+        debounce<
+          typeof preloadDiscussionMessagesData.preloadDiscussionMessages
+        >(
+          (...args) =>
+            preloadDiscussionMessagesData.preloadDiscussionMessages(...args),
+          6000,
+        ),
+      [preloadDiscussionMessagesData.preloadDiscussionMessages],
+    );
 
     useEffect(() => {
       fetchFeedItemUser(item.userId);
