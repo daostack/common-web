@@ -6,7 +6,6 @@
 
   min-height: 3.0625rem;
   max-height: 5rem;
-  margin: 0 -1.5rem;
   padding: 0.875rem 0.875rem 1.0625rem 1.5rem;
   display: flex;
   border-bottom: 0.0625rem solid var(--gentle-stroke);
@@ -19,7 +18,7 @@
       background-color: var(--hover-fill);
     }
     .lastMessageActive {
-      background-color: $c-pink-active-feed-cards;
+      background-color: var(--quinary-fill);
     }
   }
 
@@ -33,16 +32,10 @@
 }
 
 .containerActive {
-  --title-color: #ffffff;
-  margin: 0 -1.4375rem 0 -1.5rem;
-  background-color: $c-pink-active-feed-cards;
+  background-color: var(--quinary-fill);
 
   &:hover {
-    background-color: $c-pink-active-feed-cards;
-  }
-
-  @include tablet {
-    margin-right: -1.5rem;
+    background-color: var(--quinary-fill);
   }
 }
 
@@ -140,12 +133,12 @@
 }
 
 .lastMessageActive {
-  color: $c-neutrals-200;
-  background-color: $c-pink-active-feed-cards;
+  color: var(--primary-text);
+  background-color: var(--quinary-fill);
 }
 
 .mentionText {
-  color: $c-pink-mention-2;
+  color: var(--primary-fill);
 }
 
 .messageCount {
@@ -163,7 +156,7 @@
 }
 
 .lastActivityActive {
-  color: $white;
+  color: var(--primary-text);
 }
 
 .bottomContentRight {

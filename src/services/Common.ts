@@ -35,12 +35,13 @@ class CommonService {
   public getCommonById = async (
     commonId: string,
     cached = false,
+    state = CommonState.ACTIVE,
   ): Promise<Common | null> => {
     const snapshot = await firebase
       .firestore()
       .collection(Collection.Daos)
       .where("id", "==", commonId)
-      .where("state", "==", CommonState.ACTIVE)
+      .where("state", "==", state)
       .withConverter(converter)
       .get({ source: cached ? "cache" : "default" });
     const commons = snapshot.docs.map((doc) => doc.data());
@@ -444,7 +445,10 @@ class CommonService {
 
   public subscribeToSubCommons = (
     parentCommonId: string,
-    callback: (data: { common: Common; isRemoved: boolean }[]) => void,
+    callback: (
+      data: { common: Common; isRemoved: boolean }[],
+      fromCache: boolean,
+    ) => void,
   ): UnsubscribeFunction => {
     if (!parentCommonId) {
       return emptyFunction;
@@ -462,7 +466,7 @@ class CommonService {
         common: docChange.doc.data(),
         isRemoved: docChange.type === "removed",
       }));
-      callback(data);
+      callback(data, snapshot.metadata.fromCache);
     });
   };
 

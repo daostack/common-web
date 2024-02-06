@@ -612,5 +612,5 @@ export const updateCommonState = createStandardAction(
   CommonsActionTypes.UPDATE_COMMON_STATE,
 )<{
   commonId: string;
-  state: LoadingState<Common | null>;
+  state: LoadingState<Common | null> | null;
 }>();

@@ -1,5 +1,6 @@
 import { call, put, select, takeEvery, takeLatest } from "redux-saga/effects";
 import { selectUser } from "@/pages/Auth/store/selectors";
+import { CommonService } from "@/services";
 import { isRequestError } from "@/services/Api";
 import PayMeService from "@/services/PayMeService";
 import { store } from "@/shared/appConfig";
@@ -1631,9 +1632,11 @@ export function* getCommonState({
         },
       }),
     );
-    const common = (yield call(fetchCommonDetail, commonId)) as Awaited<
-      ReturnType<typeof fetchCommonDetail>
-    >;
+    const common = (yield call(
+      CommonService.getCommonById,
+      commonId,
+      true,
+    )) as Awaited<ReturnType<typeof CommonService.getCommonById>>;
 
     yield put(
       updateCommonState({

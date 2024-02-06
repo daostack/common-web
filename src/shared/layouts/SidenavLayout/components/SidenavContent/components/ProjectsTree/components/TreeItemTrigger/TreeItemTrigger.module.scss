@@ -20,14 +20,14 @@
   overflow: hidden;
 
   &:hover {
-    --bg-color: var(--secondary-hover-fill);
+    --bg-color: var(--hover-fill);
   }
 }
 .itemActive {
   --bg-color: #{$c-primary-200}99;
 
   &:hover {
-    --bg-color: var(--secondary-hover-fill);
+    --bg-color: var(--hover-fill);
   }
 }
 .itemWithoutMembership {

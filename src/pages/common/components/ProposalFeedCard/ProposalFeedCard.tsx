@@ -3,9 +3,12 @@ import React, {
   ReactNode,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import { useSelector } from "react-redux";
+import { useUpdateEffect } from "react-use";
+import { debounce } from "lodash";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember, useProposalUserVote } from "@/pages/OldCommon/hooks";
 import { ProposalService } from "@/services";
@@ -17,6 +20,7 @@ import {
   useCommon,
   useDiscussionById,
   useFeedItemUserMetadata,
+  usePreloadDiscussionMessagesById,
   useProposalById,
   useUserById,
 } from "@/shared/hooks/useCases";
@@ -86,6 +90,7 @@ interface ProposalFeedCardProps {
   feedItemFollow: FeedItemFollowState;
   onActiveItemDataChange?: (data: FeedLayoutItemChangeData) => void;
   onUserSelect?: (userId: string, commonId?: string) => void;
+  shouldPreLoadMessages: boolean;
 }
 
 const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
@@ -109,6 +114,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       feedItemFollow,
       onActiveItemDataChange,
       onUserSelect,
+      shouldPreLoadMessages,
     } = props;
     const user = useSelector(selectUser());
     const userId = user?.uid;
@@ -153,7 +159,10 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       fetched: isFeedItemUserMetadataFetched,
       fetchFeedItemUserMetadata,
     } = useFeedItemUserMetadata();
-    const shouldLoadCommonData = discussion?.notion && !outerCommonNotion;
+    const discussionNotion = commonId
+      ? discussion?.notionByCommon?.[commonId]
+      : undefined;
+    const shouldLoadCommonData = discussionNotion && !outerCommonNotion;
     const { data: common } = useCommon(shouldLoadCommonData ? commonId : "");
     const {
       isShowing: isProposalDeleteModalOpen,
@@ -183,6 +192,10 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       onOpen: onShareModalOpen,
       onClose: onShareModalClose,
     } = useModal(false);
+    const preloadDiscussionMessagesData = usePreloadDiscussionMessagesById({
+      commonId,
+      discussionId: discussion?.id,
+    });
     const menuItems = useMenuItems(
       {
         commonId,
@@ -215,6 +228,18 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
         setProposalDeletingInProgress(false);
       }
     }, [proposalId]);
+
+    const preloadDiscussionMessages = useMemo(
+      () =>
+        debounce<
+          typeof preloadDiscussionMessagesData.preloadDiscussionMessages
+        >(
+          (...args) =>
+            preloadDiscussionMessagesData.preloadDiscussionMessages(...args),
+          6000,
+        ),
+      [preloadDiscussionMessagesData.preloadDiscussionMessages],
+    );
 
     useEffect(() => {
       fetchFeedItemUser(item.userId);
@@ -322,6 +347,28 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       }
     }, [isExpanded]);
 
+    useEffect(() => {
+      if (
+        shouldPreLoadMessages &&
+        !isActive &&
+        commonId &&
+        item.circleVisibility
+      ) {
+        preloadDiscussionMessages(item.circleVisibility);
+      }
+    }, [shouldPreLoadMessages, isActive]);
+
+    useUpdateEffect(() => {
+      if (
+        shouldPreLoadMessages &&
+        !isActive &&
+        commonId &&
+        item.circleVisibility
+      ) {
+        preloadDiscussionMessages(item.circleVisibility, true);
+      }
+    }, [item.data.lastMessage?.content]);
+
     const renderContent = (): ReactNode => {
       if (isLoading) {
         return null;
@@ -378,7 +425,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
               proposal.data.args.description,
               proposal.type,
             )}
-            notion={discussion?.notion}
+            notion={discussionNotion}
             images={discussion?.images}
             onClick={handleOpenChat}
             onMouseEnter={() => {
@@ -468,7 +515,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
           menuItems={menuItems}
           ownerId={item.userId}
           commonId={commonId}
-          notion={discussion?.notion && commonNotion}
+          notion={discussionNotion && commonNotion}
           hasUnseenMention={
             isFeedItemUserMetadataFetched &&
             feedItemUserMetadata?.hasUnseenMention

@@ -4,12 +4,12 @@ import {
   Props as ReactLinkifyProps,
 } from "react-linkify";
 import classNames from "classnames";
-import { parseMessageLink, ParseMessageLinkData } from "./utils";
+import { parseMessageLink, InternalLinkData } from "@/shared/utils";
 import styles from "./ChatMessageLinkify.module.scss";
 
 interface ChatMessageLinkifyProps {
   className?: string;
-  onInternalLinkClick?: (data: ParseMessageLinkData) => void;
+  onInternalLinkClick?: (data: InternalLinkData) => void;
 }
 
 const ChatMessageLinkify: FC<ChatMessageLinkifyProps> = (props) => {

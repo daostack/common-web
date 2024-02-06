@@ -9,10 +9,11 @@ import styles from "./InboxFilterButton.module.scss";
 
 interface InboxFilterButtonProps {
   className?: string;
+  onClick?: () => void;
 }
 
 const InboxFilterButton: FC<InboxFilterButtonProps> = (props) => {
-  const { className } = props;
+  const { className, onClick } = props;
   const history = useHistory();
   const location = useLocation();
   const queryParams = useQueryParams();
@@ -21,6 +22,8 @@ const InboxFilterButton: FC<InboxFilterButtonProps> = (props) => {
     queryParams[QueryParamKey.Unread] === "true";
 
   const handleFilterIconClick = (): void => {
+    onClick?.();
+
     if (isActiveUnreadInboxItemsQueryParam) {
       removeQueryParams(QueryParamKey.Unread);
     } else {

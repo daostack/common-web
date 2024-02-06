@@ -39,3 +39,6 @@ export * from "./generateStaticShareLink";
 export * from "./getTheme";
 export * from "./pluralizeWord";
 export * from "./joinWithLast";
+export * from "./getResizedFileUrl";
+export * from "./areTimestampsEqual";
+export * from "./parseMessageLink";

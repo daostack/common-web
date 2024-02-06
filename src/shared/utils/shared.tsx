@@ -120,12 +120,16 @@ export const getUserInitials = (user: User | undefined) => {
   return user.displayName || `${user.firstName[0]}${user.lastName[0]}`;
 };
 
-export const getRandomUserAvatarURL = (name?: string | null): string => {
+export const getRandomUserAvatarURL = (
+  name?: string | null,
+  textColor = "ffffff",
+): string => {
   const isOneWord = words(name ?? "").length === 1;
-  return `https://eu.ui-avatars.com/api/?background=de189b&color=fff&name=${name?.replace(
-    /\s/gi,
-    "+",
-  )}&rounded=true&${isOneWord ? "uppercase=false" : ""}`;
+  return `https://eu.ui-avatars.com/api/?background=99999D&color=${textColor.substring(
+    1,
+  )}&name=${name?.replace(/\s/gi, "+")}&rounded=true&${
+    isOneWord ? "uppercase=false" : ""
+  }`;
 };
 
 export const isRandomUserAvatarURL = (url: string): boolean =>

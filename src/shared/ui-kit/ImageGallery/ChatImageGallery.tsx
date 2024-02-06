@@ -4,6 +4,7 @@ import { Image } from "@/shared/components";
 import { useModal } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { CommonLink } from "@/shared/models";
+import { FilePrefix, ResizeType, getResizedFileUrl } from "@/shared/utils";
 import { Button } from "../Button";
 import {
   ImageGalleryModal,
@@ -15,14 +16,19 @@ import styles from "./ChatImageGallery.module.scss";
 interface ChatImageGalleryProps {
   gallery: CommonLink[];
   videoSrc?: string;
+  useResizedFile?: boolean;
 }
 
 const ChatImageGallery: FC<ChatImageGalleryProps> = (props) => {
-  const { gallery, videoSrc } = props;
+  const { gallery, videoSrc, useResizedFile = true } = props;
   const isTabletView = useIsTabletView();
   const { isShowing, onOpen, onClose } = useModal(false);
   const [initialSlide, setInitialSlide] = useState(0);
-  const images = (gallery || []).map(({ value }) => value);
+  const images = (gallery || []).map(({ value }) =>
+    useResizedFile
+      ? getResizedFileUrl(value, ResizeType.Images, FilePrefix.Image)
+      : value,
+  );
 
   const [leftImage, rightImage, secondRowLeftImage, secondRowRightImage] =
     images;

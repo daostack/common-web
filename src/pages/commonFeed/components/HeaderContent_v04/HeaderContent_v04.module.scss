@@ -42,7 +42,7 @@
 
   &:hover {
     .commonName {
-      color: $c-pink-primary;
+      color: var(--primary-fill);
       text-decoration: underline;
     }
   }

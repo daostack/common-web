@@ -14,7 +14,7 @@ $modal-mobile-padding: 1.5rem;
   z-index: $modal-z-index;
   width: 100vw;
   height: 100vh;
-  background-color: $black;
+  background-color: var(--drop-shadow-secondary);
   opacity: 0.5;
 }
 
@@ -189,7 +189,7 @@ $modal-mobile-padding: 1.5rem;
     height: 100%;
     margin: unset;
     border-radius: unset;
-    overflow: scroll;
+    overflow-y: scroll;
   }
 }
 .modal--mobile-pop-up {

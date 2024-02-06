@@ -39,15 +39,10 @@ export const useCommonFeedItems = (
   }, [idsForNotListening]);
 
   useEffect(() => {
-    if (!feedItems.firstDocTimestamp) {
-      return;
-    }
+    const endBefore = feedItems.firstDocTimestamp || undefined;
 
     const unsubscribe = CommonFeedService.subscribeToNewUpdatedCommonFeedItems(
-      {
-        commonId,
-        endBefore: feedItems.firstDocTimestamp,
-      },
+      { commonId, endBefore },
       (data) => {
         if (data.length === 0) {
           return;

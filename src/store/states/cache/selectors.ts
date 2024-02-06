@@ -1,9 +1,15 @@
-import { getChatChannelUserStatusKey } from "@/shared/constants";
+import {
+  getChatChannelUserStatusKey,
+  getCommonMemberStateKey,
+} from "@/shared/constants";
 import { getFeedItemUserMetadataKey } from "@/shared/constants/getFeedItemUserMetadataKey";
 import { AppState } from "@/shared/interfaces";
 
 export const selectUserStateById = (userId: string) => (state: AppState) =>
   state.cache.userStates[userId] || null;
+
+export const selectUserStates = () => (state: AppState) =>
+  state.cache.userStates;
 
 export const selectGovernanceStateByCommonId =
   (commonId: string) => (state: AppState) =>
@@ -27,9 +33,21 @@ export const selectDiscussionMessagesStateByDiscussionId =
   (discussionId: string) => (state: AppState) =>
     state.cache.discussionMessagesStates[discussionId] || null;
 
+export const selectCommonMembersStateByCommonId =
+  (commonId?: string) => (state: AppState) => {
+    if (!commonId) {
+      return null;
+    }
+
+    return state.cache.commonMembersState[commonId] || null;
+  };
+
 export const selectFeedStateByCommonId =
   (commonId: string) => (state: AppState) =>
     state.cache.feedByCommonIdStates[commonId] || null;
+
+export const selectFeedItemUserMetadataStates = (state: AppState) =>
+  state.cache.feedItemUserMetadataStates;
 
 export const selectFeedItemUserMetadata =
   (info: { commonId: string; userId: string; feedObjectId: string }) =>
@@ -37,8 +55,20 @@ export const selectFeedItemUserMetadata =
     state.cache.feedItemUserMetadataStates[getFeedItemUserMetadataKey(info)] ||
     null;
 
+export const selectChatChannelUserStatusStates = (state: AppState) =>
+  state.cache.chatChannelUserStatusStates;
+
 export const selectChatChannelUserStatus =
   (info: { userId: string; chatChannelId: string }) => (state: AppState) =>
     state.cache.chatChannelUserStatusStates[
       getChatChannelUserStatusKey(info)
     ] || null;
+
+export const selectCommonMemberStateByUserAndCommonIds =
+  (info: { userId: string; commonId: string }) => (state: AppState) =>
+    state.cache.commonMemberByUserAndCommonIdsStates[
+      getCommonMemberStateKey(info)
+    ] || null;
+
+export const selectExternalCommonUsers = (state: AppState) =>
+  state.cache.externalCommonUsers;

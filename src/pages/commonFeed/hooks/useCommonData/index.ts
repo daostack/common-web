@@ -4,6 +4,7 @@ import {
   CommonFeedService,
   CommonService,
   GovernanceService,
+  Logger,
 } from "@/services";
 import { FirestoreDataSource } from "@/shared/constants";
 import { getRootCommon } from "@/shared/hooks/useCases/useFullCommonData";
@@ -103,6 +104,7 @@ export const useCommonData = (userId?: string): Return => {
             },
           });
         } catch (error) {
+          Logger.error(error);
           setState({
             loading: false,
             fetched: true,

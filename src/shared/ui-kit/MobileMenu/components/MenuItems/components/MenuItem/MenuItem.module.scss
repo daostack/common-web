@@ -10,7 +10,7 @@
   color: var(--item-color);
   background-color: var(--item-bg-color);
   border: 0;
-  border-bottom: 0.0625rem solid var(--gentle-stroke);
+  border-bottom: 0.0625rem solid var(--secondary-fill);
   font-family: PoppinsSans, sans-serif;
   font-weight: 600;
   font-size: $small;
@@ -24,14 +24,9 @@
     border-top-left-radius: var(--items-br);
     border-top-right-radius: var(--items-br);
   }
-
-  &:last-child {
-    border-bottom-left-radius: var(--items-br);
-    border-bottom-right-radius: var(--items-br);
-  }
 }
 .itemActive {
-  --item-bg-color: #{var(--secondary-hover-fill)};
+  --item-bg-color: #{var(--hover-fill)};
 }
 
 .itemWithWarning {

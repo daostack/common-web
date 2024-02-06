@@ -3,9 +3,12 @@ import React, {
   ReactNode,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import { useSelector } from "react-redux";
+import { useUpdateEffect } from "react-use";
+import { debounce } from "lodash";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { DiscussionService } from "@/services";
 import { DeletePrompt, GlobalOverlay, ReportModal } from "@/shared/components";
@@ -16,6 +19,7 @@ import {
   useCommon,
   useDiscussionById,
   useFeedItemUserMetadata,
+  usePreloadDiscussionMessagesById,
   useUserById,
 } from "@/shared/hooks/useCases";
 import { FeedLayoutItemChangeData } from "@/shared/interfaces";
@@ -44,7 +48,11 @@ import {
   GetLastMessageOptions,
   GetNonAllowedItemsOptions,
 } from "../FeedItem";
-import { LinkStreamModal, MoveStreamModal } from "./components";
+import {
+  LinkStreamModal,
+  MoveStreamModal,
+  UnlinkStreamModal,
+} from "./components";
 import { useMenuItems } from "./hooks";
 
 interface DiscussionFeedCardProps {
@@ -69,6 +77,7 @@ interface DiscussionFeedCardProps {
   rootCommonId?: string;
   feedItemFollow: FeedItemFollowState;
   onUserSelect?: (userId: string, commonId?: string) => void;
+  shouldPreLoadMessages: boolean;
 }
 
 const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
@@ -98,6 +107,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       rootCommonId,
       feedItemFollow,
       onUserSelect,
+      shouldPreLoadMessages,
     } = props;
     const {
       isShowing: isReportModalOpen,
@@ -120,6 +130,11 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       onClose: onLinkStreamModalClose,
     } = useModal(false);
     const {
+      isShowing: isUnlinkStreamModalOpen,
+      onOpen: onUnlinkStreamModalOpen,
+      onClose: onUnlinkStreamModalClose,
+    } = useModal(false);
+    const {
       isShowing: isMoveStreamModalOpen,
       onOpen: onMoveStreamModalOpen,
       onClose: onMoveStreamModalClose,
@@ -136,14 +151,21 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       fetched: isDiscussionFetched,
     } = useDiscussionById();
     const isHome = discussion?.predefinedType === PredefinedTypes.General;
+    const discussionNotion = commonId
+      ? discussion?.notionByCommon?.[commonId]
+      : undefined;
     const {
       data: feedItemUserMetadata,
       fetched: isFeedItemUserMetadataFetched,
       fetchFeedItemUserMetadata,
     } = useFeedItemUserMetadata();
     const shouldLoadCommonData =
-      isHome || (discussion?.notion && !outerCommonNotion);
+      isHome || (discussionNotion && !outerCommonNotion);
     const { data: common } = useCommon(shouldLoadCommonData ? commonId : "");
+    const preloadDiscussionMessagesData = usePreloadDiscussionMessagesById({
+      commonId,
+      discussionId: discussion?.id,
+    });
     const menuItems = useMenuItems(
       {
         commonId,
@@ -161,6 +183,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
         share: () => onShareModalOpen(),
         remove: onDeleteModalOpen,
         linkStream: onLinkStreamModalOpen,
+        unlinkStream: onUnlinkStreamModalOpen,
         moveStream: onMoveStreamModalOpen,
       },
     );
@@ -214,6 +237,18 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       }
     }, [discussion]);
 
+    const preloadDiscussionMessages = useMemo(
+      () =>
+        debounce<
+          typeof preloadDiscussionMessagesData.preloadDiscussionMessages
+        >(
+          (...args) =>
+            preloadDiscussionMessagesData.preloadDiscussionMessages(...args),
+          6000,
+        ),
+      [preloadDiscussionMessagesData.preloadDiscussionMessages],
+    );
+
     useEffect(() => {
       fetchDiscussionCreator(item.userId);
     }, [item.userId]);
@@ -265,6 +300,28 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       }
     }, [isActive, cardTitle]);
 
+    useEffect(() => {
+      if (
+        shouldPreLoadMessages &&
+        !isActive &&
+        commonId &&
+        item.circleVisibility
+      ) {
+        preloadDiscussionMessages(item.circleVisibility);
+      }
+    }, [shouldPreLoadMessages, isActive]);
+
+    useUpdateEffect(() => {
+      if (
+        shouldPreLoadMessages &&
+        !isActive &&
+        commonId &&
+        item.circleVisibility
+      ) {
+        preloadDiscussionMessages(item.circleVisibility, true);
+      }
+    }, [item.data.lastMessage?.content]);
+
     const renderContent = (): ReactNode => {
       if (isLoading) {
         return null;
@@ -276,35 +333,33 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
 
       return (
         <>
-          {!isHome && (
-            <FeedCardHeader
-              avatar={discussionCreator?.photoURL}
-              title={getUserName(discussionCreator)}
-              createdAt={
-                <>
-                  Created:{" "}
-                  <FeedCountdown
-                    isCountdownFinished
-                    expirationTimestamp={item.createdAt}
-                  />
-                </>
-              }
-              type="Discussion"
-              circleVisibility={circleVisibility}
-              menuItems={menuItems}
-              isMobileVersion={isMobileVersion}
-              commonId={commonId}
-              userId={item.userId}
-              directParent={directParent}
-              onUserSelect={
-                onUserSelect && (() => onUserSelect(item.userId, commonId))
-              }
-            />
-          )}
+          <FeedCardHeader
+            avatar={discussionCreator?.photoURL}
+            title={getUserName(discussionCreator)}
+            createdAt={
+              <>
+                Created:{" "}
+                <FeedCountdown
+                  isCountdownFinished
+                  expirationTimestamp={item.createdAt}
+                />
+              </>
+            }
+            type={isHome ? "Home" : "Discussion"}
+            circleVisibility={circleVisibility}
+            menuItems={menuItems}
+            isMobileVersion={isMobileVersion}
+            commonId={commonId}
+            userId={item.userId}
+            directParent={directParent}
+            onUserSelect={
+              onUserSelect && (() => onUserSelect(item.userId, commonId))
+            }
+          />
           <FeedCardContent
             description={isHome ? common?.description : discussion?.message}
             images={isHome ? common?.gallery : discussion?.images}
-            notion={discussion?.notion}
+            notion={discussionNotion}
             onClick={handleOpenChat}
             onMouseEnter={() => {
               onHover(true);
@@ -356,7 +411,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
           seen={feedItemUserMetadata?.seen ?? !isFeedItemUserMetadataFetched}
           ownerId={item.userId}
           discussionPredefinedType={discussion?.predefinedType}
-          notion={discussion?.notion && commonNotion}
+          notion={discussionNotion && commonNotion}
           hasUnseenMention={
             isFeedItemUserMetadataFetched &&
             feedItemUserMetadata?.hasUnseenMention
@@ -407,6 +462,14 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
               originalCommonId={discussion?.commonId || ""}
               linkedCommonIds={discussion?.linkedCommonIds}
               circleVisibility={item.circleVisibility}
+            />
+            <UnlinkStreamModal
+              isOpen={isUnlinkStreamModalOpen}
+              onClose={onUnlinkStreamModalClose}
+              feedItemId={item.id}
+              title={cardTitle || ""}
+              commonId={commonId}
+              commonName={commonName}
             />
             <MoveStreamModal
               isOpen={isMoveStreamModalOpen}

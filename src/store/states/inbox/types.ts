@@ -4,6 +4,12 @@ import {
 } from "@/shared/interfaces";
 import { Timestamp } from "@/shared/models";
 
+export interface InboxSearchState {
+  isSearching: boolean;
+  searchValue: string;
+  items: FeedLayoutItemWithFollowData[] | null;
+}
+
 export interface InboxItems {
   data: FeedLayoutItemWithFollowData[] | null;
   loading: boolean;
@@ -20,4 +26,5 @@ export interface InboxState {
   sharedItem: FeedLayoutItemWithFollowData | null;
   chatChannelItems: ChatChannelLayoutItem[];
   nextChatChannelItemId: string | null;
+  searchState: InboxSearchState;
 }

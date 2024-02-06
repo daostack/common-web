@@ -4,7 +4,7 @@ import {
   FeedLayoutItem,
 } from "@/shared/interfaces";
 
-export const getChatChannelItemByUserIds = (
+export const getDMChatChannelItemByUserIds = (
   items: FeedLayoutItem[],
   currentUserId?: string,
   dmUserId?: string,
@@ -14,11 +14,12 @@ export const getChatChannelItemByUserIds = (
   }
 
   const isDMWithMyself = currentUserId === dmUserId;
+  const participantsAmount = isDMWithMyself ? 1 : 2;
   const item = items.find(
     (item): item is ChatChannelLayoutItem =>
       checkIsChatChannelLayoutItem(item) &&
       item.chatChannel.participants.includes(dmUserId) &&
-      (!isDMWithMyself || item.chatChannel.participants.length === 1),
+      item.chatChannel.participants.length === participantsAmount,
   );
 
   return item || null;

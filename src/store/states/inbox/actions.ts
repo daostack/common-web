@@ -2,7 +2,7 @@ import { createAsyncAction, createStandardAction } from "typesafe-actions";
 import { FeedLayoutItemWithFollowData } from "@/shared/interfaces";
 import { ChatChannel, CommonFeed } from "@/shared/models";
 import { InboxActionType } from "./constants";
-import { InboxItems } from "./types";
+import { InboxItems, InboxSearchState } from "./types";
 
 export const resetInbox = createStandardAction(InboxActionType.RESET_INBOX)<{
   onlyIfUnread?: boolean;
@@ -66,6 +66,34 @@ export const updateChatChannelItemEmptiness = createStandardAction(
 export const resetInboxItems = createStandardAction(
   InboxActionType.RESET_INBOX_ITEMS,
 )();
+
+export const refetchInboxItems = createStandardAction(
+  InboxActionType.REFETCH_INBOX_ITEMS,
+)<boolean>();
+
+export const searchInboxItems = createStandardAction(
+  InboxActionType.SEARCH_INBOX_ITEMS,
+)<string>();
+
+export const setSearchState = createStandardAction(
+  InboxActionType.SET_SEARCH_STATE,
+)<InboxSearchState>();
+
+export const resetSearchState = createStandardAction(
+  InboxActionType.RESET_SEARCH_STATE,
+)();
+
+export const resetSearchInboxItems = createStandardAction(
+  InboxActionType.RESET_SEARCH_INBOX_ITEMS,
+)();
+
+export const updateSearchInboxItems = createStandardAction(
+  InboxActionType.UPDATE_SEARCH_INBOX_ITEMS,
+)<string[]>();
+
+export const setIsSearchingInboxItems = createStandardAction(
+  InboxActionType.SET_IS_SEARCHING_INBOX_ITEMS,
+)<boolean>();
 
 export const setHasMoreInboxItems = createStandardAction(
   InboxActionType.SET_HAS_MORE_INBOX_ITEMS,

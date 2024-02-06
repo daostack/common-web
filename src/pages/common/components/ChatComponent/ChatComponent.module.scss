@@ -19,7 +19,6 @@
   display: flex;
   flex-direction: column-reverse;
   padding: 0.5rem 2rem 0 2rem;
-  margin-bottom: var(--chat-input-wrapper-height);
 
   @include big-phone {
     --chat-input-wrapper-height: 2.5rem;
@@ -31,17 +30,6 @@
   display: flex;
   justify-content: center;
   align-self: center;
-}
-
-.bottomChatContainer {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  padding-bottom: var(--safe-area-inset-bottom);
-  @include big-phone {
-    position: fixed;
-  }
 }
 
 .chatInputWrapper {
@@ -80,12 +68,14 @@
   flex-direction: column;
   justify-content: center;
   word-break: break-word;
-  padding: 0.125rem 1.75rem 0.125rem 0.75rem;
+  padding: 0.125rem 2.5rem 0.125rem 0.75rem;
   margin: 0.3rem 0;
+  overflow-x: hidden;
+  min-height: 2.625rem !important;
 }
 
 .messageInputRtl {
-  padding: 0.125rem 0.25rem 0.125rem 1.75rem;
+  padding: 0.125rem 2.5rem 0.125rem 0.75rem;
 }
 
 .messageInputEmpty {

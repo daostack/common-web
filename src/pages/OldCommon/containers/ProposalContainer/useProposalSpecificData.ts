@@ -16,6 +16,10 @@ import {
   isRemoveCircleProposal,
 } from "@/shared/models/governance/proposals";
 
+interface Options {
+  commonId?: string;
+}
+
 export interface ProposalSpecificData {
   user: User | null;
   commonMembers: CommonMemberWithUserInfo[];
@@ -32,7 +36,7 @@ const INITIAL_DATA: ProposalSpecificData = {
   subCommons: [],
 };
 
-export const useProposalSpecificData = (): Return => {
+export const useProposalSpecificData = ({ commonId }: Options): Return => {
   const [state, setState] = useLoadingState<ProposalSpecificData>(INITIAL_DATA);
   const {
     data: commonMembers,
@@ -40,7 +44,7 @@ export const useProposalSpecificData = (): Return => {
     fetched: areCommonMembersFetched,
     fetchCommonMembers,
     setCommonMembers,
-  } = useCommonMembers();
+  } = useCommonMembers({ commonId });
   const {
     data: subCommons,
     loading: areSubCommonsLoading,
@@ -68,7 +72,7 @@ export const useProposalSpecificData = (): Return => {
       const commonId = proposal.data.args.commonId;
 
       if (isFundsAllocationProposal(proposal)) {
-        fetchCommonMembers(commonId);
+        fetchCommonMembers();
         fetchSubCommons(commonId);
       } else {
         setCommonMembers([]);

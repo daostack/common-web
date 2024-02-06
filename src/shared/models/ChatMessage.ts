@@ -16,6 +16,7 @@ export interface ChatMessage extends BaseEntity {
   mentions: string[]; // userIds
   parentId?: string;
 
-  owner?: User;
+  owner?: User | null;
   parentMessage?: ParentDiscussionMessage | null;
+  hasUncheckedItems: boolean;
 }

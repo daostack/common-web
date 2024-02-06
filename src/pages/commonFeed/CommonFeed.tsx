@@ -52,9 +52,9 @@ import {
   cacheActions,
   commonActions,
   selectCommonAction,
+  selectFeedSearchValue,
   selectIsSearchingFeedItems,
   selectRecentStreamId,
-  selectSearchValue,
   selectSharedFeedItem,
 } from "@/store/states";
 import {
@@ -104,7 +104,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   const userId = user?.uid;
   const recentStreamId = useSelector(selectRecentStreamId);
   const isSearchingFeedItems = useSelector(selectIsSearchingFeedItems);
-  const searchValue = useSelector(selectSearchValue);
+  const searchValue = useSelector(selectFeedSearchValue);
   const [feedLayoutRef, setFeedLayoutRef] = useState<FeedLayoutRef | null>(
     null,
   );
@@ -255,6 +255,12 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
           isRemoved,
         }),
       );
+
+      if (!isRemoved && item.data.lastMessage?.ownerId === userId) {
+        document
+          .getElementById("feedLayoutWrapper")
+          ?.scrollIntoView({ behavior: "smooth" });
+      }
     },
     [dispatch],
   );
@@ -486,6 +492,12 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     );
   }
 
+  const onPullToRefresh = () => {
+    if (hasMoreCommonFeedItems) {
+      fetchCommonFeedItems();
+    }
+  };
+
   const renderContentWrapper = (
     children: ReactNode,
     wrapperStyles?: CSSProperties,
@@ -548,6 +560,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
         outerStyles={feedLayoutOuterStyles}
         settings={feedLayoutSettings}
         renderChatInput={renderChatInput}
+        onPullToRefresh={onPullToRefresh}
       />
       <CommonSidenavLayoutTabs className={styles.tabs} />
       {commonData.common && commonData.governance && (

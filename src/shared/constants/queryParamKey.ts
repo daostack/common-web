@@ -9,4 +9,5 @@ export enum QueryParamKey {
   Message = "message",
   Unread = "unread",
   Search = "search",
+  Unchecked = "unchecked",
 }

@@ -4,10 +4,14 @@ import React, {
   useEffect,
   useState,
   useMemo,
+  useRef,
 } from "react";
+import { useDispatch } from "react-redux";
 import classNames from "classnames";
+import { Element } from "slate";
 import { useLongPress } from "use-long-press";
-import { DiscussionMessageService } from "@/services";
+import * as oldCommonActions from "@/pages/OldCommon/store/actions";
+import { ChatService, DiscussionMessageService } from "@/services";
 import { ElementDropdown, UserAvatar } from "@/shared/components";
 import {
   Orientation,
@@ -15,6 +19,7 @@ import {
   EntityTypes,
   QueryParamKey,
 } from "@/shared/constants";
+import { useNotification } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
 import {
@@ -27,13 +32,25 @@ import {
   DiscussionMessageWithParsedText,
   ParentDiscussionMessage,
 } from "@/shared/models";
-import { FilePreview, FilePreviewVariant, getFileName } from "@/shared/ui-kit";
+import {
+  FilePreview,
+  FilePreviewVariant,
+  getFileName,
+  parseStringToTextEditorValue,
+  TextEditorValue,
+} from "@/shared/ui-kit";
 import { ChatImageGallery } from "@/shared/ui-kit";
-import { isRtlWithNoMentions } from "@/shared/ui-kit/TextEditor/utils";
+import {
+  checkIsCheckboxItemElement,
+  checkUncheckedItemsInTextEditorValue,
+  isRtlWithNoMentions,
+} from "@/shared/ui-kit/TextEditor/utils";
 import { StaticLinkType, getUserName } from "@/shared/utils";
+import { InternalLinkData } from "@/shared/utils";
 import { convertBytes } from "@/shared/utils/convertBytes";
 import { EditMessageInput } from "../EditMessageInput";
-import { ChatMessageLinkify, InternalLinkData, Time } from "./components";
+import { ChatMessageLinkify, Time } from "./components";
+import { ChatMessageContext, ChatMessageContextValue } from "./context";
 import { getTextFromTextEditorString } from "./utils";
 import styles from "./ChatMessage.module.scss";
 
@@ -54,6 +71,7 @@ interface ChatMessageProps {
   onUserClick?: (userId: string) => void;
   onFeedItemClick?: (feedItemId: string) => void;
   onInternalLinkClick?: (data: InternalLinkData) => void;
+  isMessageEditAllowed: boolean;
 }
 
 const getStaticLinkByChatType = (chatType: ChatType): StaticLinkType => {
@@ -84,9 +102,17 @@ export default function ChatMessage({
   onUserClick,
   onFeedItemClick,
   onInternalLinkClick,
+  isMessageEditAllowed,
 }: ChatMessageProps) {
+  const dispatch = useDispatch();
+  const { notify } = useNotification();
+  const updateMessageRef = useRef<{
+    updateMessage: (message: TextEditorValue) => void;
+    text: string;
+  }>();
   const [isEditMode, setEditMode] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMessageEditLoading, setIsMessageEditLoading] = useState(false);
   const isTabletView = useIsTabletView();
   const isUserDiscussionMessage =
     checkIsUserDiscussionMessage(discussionMessage);
@@ -117,12 +143,15 @@ export default function ChatMessage({
         ));
 
       const parsedText = await getTextFromTextEditorString({
+        userId,
+        ownerId: discussionMessageUserId,
         textEditorString: parentMessage?.text,
         users,
         commonId: discussionMessage.commonId,
         directParent,
         onUserClick,
         onFeedItemClick,
+        onInternalLinkClick,
       });
 
       setReplyMessageText(parsedText);
@@ -134,6 +163,7 @@ export default function ChatMessage({
     isNotCurrentUserMessage,
     discussionMessage.commonId,
     onUserClick,
+    onInternalLinkClick,
   ]);
 
   const createdAtDate = new Date(discussionMessage.createdAt.seconds * 1000);
@@ -192,6 +222,90 @@ export default function ChatMessage({
     }
   };
 
+  const handleEditModeClose = () => {
+    setEditMode(false);
+  };
+
+  const updateDiscussionMessage = (message: TextEditorValue) => {
+    if (!checkIsUserDiscussionMessage(discussionMessage)) {
+      notify("Something went wrong");
+      return;
+    }
+    setIsMessageEditLoading(true);
+    dispatch(
+      oldCommonActions.updateDiscussionMessage.request({
+        payload: {
+          discussionMessageId: discussionMessage.id,
+          ownerId: discussionMessage.ownerId,
+          text: JSON.stringify(message),
+          hasUncheckedItems: checkUncheckedItemsInTextEditorValue(message),
+        },
+        isProposalMessage: chatType === ChatType.ProposalComments,
+        discussionId: discussionMessage.discussionId,
+        callback(isSucceed) {
+          if (isSucceed) {
+            handleEditModeClose();
+          } else {
+            notify("Something went wrong");
+          }
+          setIsMessageEditLoading(false);
+        },
+      }),
+    );
+  };
+
+  const updateChatMessage = async (message: TextEditorValue) => {
+    setIsMessageEditLoading(true);
+
+    try {
+      const updatedMessage = await ChatService.updateChatMessage({
+        chatMessageId: discussionMessage.id,
+        text: JSON.stringify(message),
+        hasUncheckedItems: checkUncheckedItemsInTextEditorValue(message),
+      });
+      handleEditModeClose();
+    } catch (err) {
+      notify("Something went wrong");
+    } finally {
+      setIsMessageEditLoading(false);
+    }
+  };
+
+  const updateMessage = (message: TextEditorValue) => {
+    if (chatType === ChatType.ChatMessages) {
+      updateChatMessage(message);
+    } else {
+      updateDiscussionMessage(message);
+    }
+  };
+  updateMessageRef.current = {
+    updateMessage,
+    text: discussionMessage.text,
+  };
+
+  const handleCheckboxChange = useCallback(
+    (id: string, checked: boolean) => {
+      if (!updateMessageRef.current) {
+        return;
+      }
+
+      const textEditorValue = parseStringToTextEditorValue(
+        updateMessageRef.current.text,
+      );
+
+      updateMessageRef.current.updateMessage(
+        textEditorValue.map((value) =>
+          Element.isElement(value) &&
+          checkIsCheckboxItemElement(value) &&
+          value.id === id
+            ? { ...value, checked }
+            : value,
+        ),
+      );
+    },
+    [updateMessageRef],
+  );
+
   const ReplyMessage = useCallback(() => {
     if (
       !parentMessage?.id ||
@@ -225,7 +339,6 @@ export default function ChatMessage({
         <div className={styles.replyMessagesWrapper}>
           <div
             className={classNames(styles.messageName, styles.replyMessageName, {
-              [styles.replyMessageNameCurrentUser]: !isNotCurrentUserMessage,
               [styles.replyMessageNameWithImage]: image,
             })}
           >
@@ -238,8 +351,8 @@ export default function ChatMessage({
               styles.messageContent,
               styles.replyMessageContent,
               {
-                [styles.replyMessageContentCurrentUser]:
-                  !isNotCurrentUserMessage,
+                [styles.replyMessageContentNotCurrentUser]:
+                  isNotCurrentUserMessage,
                 [styles.replyMessageContentWithImage]: image,
                 [styles.replyMessageContentWithFile]: file,
                 [styles.messageContentRtl]: isRtlWithNoMentions(
@@ -273,136 +386,148 @@ export default function ChatMessage({
     [discussionMessage.files],
   );
 
-  return (
-    <li
-      id={discussionMessage.id}
-      className={classNames(styles.container, className)}
-    >
-      <div
-        className={classNames(styles.message, {
-          [styles.messageCurrentUser]: !isNotCurrentUserMessage,
-          [styles.systemMessageContainer]: isSystemMessage,
-        })}
-      >
-        {isNotCurrentUserMessage && isUserDiscussionMessage && (
-          <div className={styles.iconWrapper} onClick={handleUserClick}>
-            <UserAvatar
-              imageContainerClassName={styles.userAvatarContainer}
-              photoURL={discussionMessage.owner?.photoURL}
-              nameForRandomAvatar={discussionMessage.owner?.email}
-              userName={getUserName(discussionMessage.owner)}
-            />
-          </div>
-        )}
-        {isEditMode ? (
-          <EditMessageInput
-            isProposalMessage={chatType === ChatType.ProposalComments}
-            isChatMessage={chatType === ChatType.ChatMessages}
-            discussionMessage={discussionMessage}
-            onClose={() => setEditMode(false)}
-            commonMember={commonMember}
-          />
-        ) : (
-          <>
-            <div
-              onContextMenu={handleContextMenu}
-              className={classNames(styles.messageText, {
-                [styles.messageTextCurrentUser]: !isNotCurrentUserMessage,
-                [styles.messageTextRtl]: isRtlWithNoMentions(
-                  discussionMessage.text,
-                ),
-                [styles.messageTextWithReply]: !!parentMessage?.id,
-                [styles.systemMessage]: isSystemMessage,
-                [styles.highlighted]: highlighted && isNotCurrentUserMessage,
-                [styles.highlightedOwn]:
-                  highlighted && !isNotCurrentUserMessage,
-              })}
-              {...getLongPressProps()}
-            >
-              {isNotCurrentUserMessage && !isSystemMessage && (
-                <div className={styles.messageName} onClick={handleUserClick}>
-                  {getUserName(discussionMessage.owner)}
-                </div>
-              )}
-              <ReplyMessage />
+  const chatMessageContextValue = useMemo<ChatMessageContextValue>(
+    () => ({
+      isMessageLoading: isMessageEditLoading,
+      onCheckboxChange: handleCheckboxChange,
+      isMessageEditAllowed,
+    }),
+    [isMessageEditLoading, handleCheckboxChange, isMessageEditAllowed],
+  );
 
+  return (
+    <ChatMessageContext.Provider value={chatMessageContextValue}>
+      <li
+        id={discussionMessage.id}
+        className={classNames(styles.container, className)}
+      >
+        <div
+          className={classNames(styles.message, {
+            [styles.messageCurrentUser]: !isNotCurrentUserMessage,
+            [styles.systemMessageContainer]: isSystemMessage,
+          })}
+        >
+          {isNotCurrentUserMessage && isUserDiscussionMessage && (
+            <div className={styles.iconWrapper} onClick={handleUserClick}>
+              <UserAvatar
+                imageContainerClassName={styles.userAvatarContainer}
+                photoURL={discussionMessage.owner?.photoURL}
+                nameForRandomAvatar={discussionMessage.owner?.email}
+                userName={getUserName(discussionMessage.owner)}
+              />
+            </div>
+          )}
+          {isEditMode ? (
+            <EditMessageInput
+              discussionMessage={discussionMessage}
+              onClose={handleEditModeClose}
+              commonMember={commonMember}
+              isLoading={isMessageEditLoading}
+              updateMessage={updateMessage}
+            />
+          ) : (
+            <>
               <div
-                className={classNames(styles.messageContent, {
-                  [styles.messageContentCurrentUser]: !isNotCurrentUserMessage,
-                  [styles.messageContentRtl]:
-                    !isSystemMessage &&
-                    isRtlWithNoMentions(discussionMessage.text),
+                onContextMenu={handleContextMenu}
+                className={classNames(styles.messageText, {
+                  [styles.messageTextCurrentUser]: !isNotCurrentUserMessage,
+                  [styles.messageTextRtl]: isRtlWithNoMentions(
+                    discussionMessage.text,
+                  ),
+                  [styles.messageTextWithReply]: !!parentMessage?.id,
+                  [styles.systemMessage]: isSystemMessage,
+                  [styles.highlighted]: highlighted && isNotCurrentUserMessage,
+                  [styles.highlightedOwn]:
+                    highlighted && !isNotCurrentUserMessage,
                 })}
+                {...getLongPressProps()}
               >
-                {filePreview && (
-                  <FilePreview
-                    src={filePreview.value}
-                    name={filePreview.name || filePreview.title}
-                    fileSize={filePreview.size}
-                    variant={FilePreviewVariant.medium}
-                    isCurrentUser={!isNotCurrentUserMessage}
-                  />
+                {isNotCurrentUserMessage && !isSystemMessage && (
+                  <div className={styles.messageName} onClick={handleUserClick}>
+                    {getUserName(discussionMessage.owner)}
+                  </div>
                 )}
-                <ChatImageGallery gallery={discussionMessage.images ?? []} />
-                <ChatMessageLinkify
-                  onInternalLinkClick={handleInternalLinkClick}
+                <ReplyMessage />
+
+                <div
+                  className={classNames(styles.messageContent, {
+                    [styles.messageContentCurrentUser]:
+                      !isNotCurrentUserMessage,
+                    [styles.messageContentRtl]:
+                      !isSystemMessage &&
+                      isRtlWithNoMentions(discussionMessage.text),
+                  })}
                 >
-                  {discussionMessage.parsedText.map((text) => text)}
-                </ChatMessageLinkify>
+                  {filePreview && (
+                    <FilePreview
+                      src={filePreview.value}
+                      name={filePreview.name || filePreview.title}
+                      fileSize={filePreview.size}
+                      variant={FilePreviewVariant.medium}
+                      isCurrentUser={!isNotCurrentUserMessage}
+                    />
+                  )}
+                  <ChatImageGallery gallery={discussionMessage.images ?? []} />
+                  <ChatMessageLinkify
+                    onInternalLinkClick={handleInternalLinkClick}
+                  >
+                    {discussionMessage.parsedText.map((text) => text)}
+                  </ChatMessageLinkify>
+                  {!isSystemMessage && (
+                    <Time
+                      createdAtDate={createdAtDate}
+                      editedAtDate={editedAtDate}
+                      moderation={discussionMessage.moderation}
+                      isNotCurrentUserMessage={isNotCurrentUserMessage}
+                    />
+                  )}
+                </div>
                 {!isSystemMessage && (
-                  <Time
-                    createdAtDate={createdAtDate}
-                    editedAtDate={editedAtDate}
-                    moderation={discussionMessage.moderation}
-                    isNotCurrentUserMessage={isNotCurrentUserMessage}
+                  <ElementDropdown
+                    commonMember={commonMember}
+                    governanceCircles={governanceCircles}
+                    linkType={getStaticLinkByChatType(chatType)}
+                    entityType={
+                      [
+                        ChatType.DiscussionMessages,
+                        ChatType.ChatMessages,
+                      ].includes(chatType)
+                        ? EntityTypes.DiscussionMessage
+                        : EntityTypes.ProposalMessage
+                    }
+                    elem={discussionMessage}
+                    className={styles.dropdownMenu}
+                    variant={Orientation.Arrow}
+                    onMenuToggle={setIsMenuOpen}
+                    transparent
+                    isDiscussionMessage
+                    isChatMessage={chatType === ChatType.ChatMessages}
+                    isDiscussionMessageWithFile={Boolean(filePreview)}
+                    ownerId={
+                      isUserDiscussionMessage
+                        ? discussionMessage.ownerId
+                        : undefined
+                    }
+                    userId={userId}
+                    commonId={discussionMessage.commonId}
+                    onEdit={() => setEditMode(true)}
+                    isControlledDropdown={false}
+                    isOpen={isMenuOpen}
+                    styles={{
+                      menu: styles.elementDropdownMenu,
+                      menuButton: classNames(styles.menuArrowButton, {
+                        [styles.menuArrowButtonVisible]: isMenuOpen,
+                      }),
+                    }}
+                    feedItemId={feedItemId}
+                    onDelete={onMessageDelete}
                   />
                 )}
               </div>
-              {!isSystemMessage && (
-                <ElementDropdown
-                  commonMember={commonMember}
-                  governanceCircles={governanceCircles}
-                  linkType={getStaticLinkByChatType(chatType)}
-                  entityType={
-                    [
-                      ChatType.DiscussionMessages,
-                      ChatType.ChatMessages,
-                    ].includes(chatType)
-                      ? EntityTypes.DiscussionMessage
-                      : EntityTypes.ProposalMessage
-                  }
-                  elem={discussionMessage}
-                  className={styles.dropdownMenu}
-                  variant={Orientation.Arrow}
-                  onMenuToggle={setIsMenuOpen}
-                  transparent
-                  isDiscussionMessage
-                  isChatMessage={chatType === ChatType.ChatMessages}
-                  isDiscussionMessageWithFile={Boolean(filePreview)}
-                  ownerId={
-                    isUserDiscussionMessage
-                      ? discussionMessage.ownerId
-                      : undefined
-                  }
-                  userId={userId}
-                  commonId={discussionMessage.commonId}
-                  onEdit={() => setEditMode(true)}
-                  isControlledDropdown={false}
-                  isOpen={isMenuOpen}
-                  styles={{
-                    menu: styles.elementDropdownMenu,
-                    menuButton: classNames(styles.menuArrowButton, {
-                      [styles.menuArrowButtonVisible]: isMenuOpen,
-                    }),
-                  }}
-                  feedItemId={feedItemId}
-                  onDelete={onMessageDelete}
-                />
-              )}
-            </div>
-          </>
-        )}
-      </div>
-    </li>
+            </>
+          )}
+        </div>
+      </li>
+    </ChatMessageContext.Provider>
   );
 }

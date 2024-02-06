@@ -104,7 +104,7 @@
   transition: all 0.2s;
 
   &:hover {
-    background-color: var(--secondary-hover-fill);
+    background-color: var(--hover-fill);
   }
 }
 .custom-dropdown-wrapper__menu-item--active {

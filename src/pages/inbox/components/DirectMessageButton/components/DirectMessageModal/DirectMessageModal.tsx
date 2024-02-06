@@ -23,7 +23,7 @@ interface DirectMessageModalProps {
 interface SelectOption {
   value: string;
   label: JSX.Element;
-  shortLabel: string;
+  shortLabel: JSX.Element;
   uid: string;
 }
 
@@ -103,7 +103,7 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
           <span>{user.userName}</span>
         </div>
       ),
-      shortLabel: user.userName,
+      shortLabel: <span className={styles.shortLabel}>{user.userName}</span>,
       uid: user.uid,
     }));
 

@@ -1,13 +1,17 @@
 import { DiscussionService, ProposalService } from "@/services";
 import { CommonFeedType } from "@/shared/models";
 
+interface FeedItemDisplayingData {
+  title: string;
+  isDeleted: boolean;
+  isMoved?: boolean;
+}
+
 export const getFeedItemDisplayingData = async (
   feedItemDataId: string,
   feedItemType: CommonFeedType,
-): Promise<{
-  title: string;
-  isDeleted: boolean;
-}> => {
+  currentCommonId?: string,
+): Promise<FeedItemDisplayingData> => {
   if (feedItemType === CommonFeedType.Discussion) {
     const discussion = await DiscussionService.getDiscussionById(
       feedItemDataId,
@@ -15,6 +19,7 @@ export const getFeedItemDisplayingData = async (
     return {
       title: discussion?.title || "",
       isDeleted: discussion?.isDeleted ?? true,
+      isMoved: discussion?.commonId !== currentCommonId,
     };
   }
   if (feedItemType === CommonFeedType.Proposal) {
@@ -30,3 +35,11 @@ export const getFeedItemDisplayingData = async (
     isDeleted: false,
   };
 };
+
+export const getFeedItemDisplayingTitle = (
+  data: FeedItemDisplayingData,
+): string =>
+  data.title &&
+  `${data.title}${
+    data.isDeleted ? " (deleted)" : data.isMoved ? " (moved)" : ""
+  }`;

@@ -109,7 +109,7 @@ const ProposalContainer = () => {
     data: proposalSpecificData,
     fetched: isProposalSpecificDataFetched,
     fetchData: fetchProposalSpecificData,
-  } = useProposalSpecificData();
+  } = useProposalSpecificData({ commonId });
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const currentProposalId = currentProposal?.id;

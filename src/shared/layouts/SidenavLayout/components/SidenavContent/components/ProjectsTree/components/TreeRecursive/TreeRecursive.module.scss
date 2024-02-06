@@ -23,7 +23,7 @@
 }
 
 .addProjectItem {
-  --item-text-color: #{$c-pink-primary};
+  --item-text-color: var(--primary-fill);
 }
 
 .plusIcon {

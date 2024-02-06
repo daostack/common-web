@@ -3,7 +3,7 @@
 .container {
   display: flex;
   flex-direction: row;
-  background-color: var(--primary-background);
+  background-color: var(--secondary-background);
   padding: 0.4375rem 2rem 0.625rem;
   border-top: 0.0625rem solid var(--gentle-stroke);
   border-bottom: 0.0625rem solid var(--gentle-stroke);
@@ -60,7 +60,6 @@
 }
 
 .fileSize {
-  color: $c-gray-60;
   font-size: $xsmall;
   font-weight: 400;
   margin: 0;

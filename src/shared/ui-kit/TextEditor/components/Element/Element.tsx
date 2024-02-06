@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { RenderElementProps } from "slate-react";
 import { ElementType } from "../../constants";
 import { EditorElementStyles } from "../../types";
-import { Link } from "./components";
+import { CheckboxItem, Link } from "./components";
 import { ElementAttributes } from "./types";
 import { getElementTextDirection } from "./utils";
 import styles from "./Element.module.scss";
@@ -95,6 +95,12 @@ const Element: FC<RenderElementProps & { styles?: EditorElementStyles }> = (
         </span>
       );
     }
+    case ElementType.CheckboxItem:
+      return (
+        <CheckboxItem attributes={elementProps} element={element}>
+          {children}
+        </CheckboxItem>
+      );
     default:
       return (
         <p
