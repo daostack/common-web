@@ -91,6 +91,7 @@ interface ChatComponentInterface {
   feedItemId: string;
   isAuthorized?: boolean;
   isHidden: boolean;
+  seenOnce?: boolean;
   onMessagesAmountChange?: (newMessagesAmount: number) => void;
   directParent?: DirectParent | null;
   renderChatInput?: () => ReactNode;
@@ -136,6 +137,7 @@ export default function ChatComponent({
   feedItemId,
   isAuthorized,
   isHidden = false,
+  seenOnce = false,
   onMessagesAmountChange,
   directParent,
   renderChatInput: renderChatInputOuter,
@@ -581,6 +583,10 @@ export default function ChatComponent({
   );
 
   useEffect(() => {
+    if (seenOnce) {
+      return;
+    }
+
     if (isChatChannel) {
       markChatMessageItemAsSeen({
         chatChannelId: feedItemId,
