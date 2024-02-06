@@ -2,6 +2,7 @@ import { useCallback, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMembers } from "@/pages/OldCommon/hooks";
+import { InternalLinkData } from "@/shared/utils";
 import {
   useDiscussionMessagesById,
   useMarkFeedItemAsSeen,
@@ -13,6 +14,7 @@ interface Options {
   hasPermissionToHide: boolean;
   onUserClick?: (userId: string) => void;
   onFeedItemClick?: (feedItemId: string) => void;
+  onInternalLinkClick?: (data: InternalLinkData) => void;
   directParent?: DirectParent | null;
   textStyles: TextStyles;
   discussionId: string;
@@ -35,7 +37,8 @@ export const useDiscussionChatAdapter = (options: Options): Return => {
     discussionId,
     onFeedItemClick,
     onUserClick,
-    commonId
+    commonId,
+    onInternalLinkClick,
   } = options;
   const user = useSelector(selectUser());
   const userId = user?.uid;
@@ -58,6 +61,7 @@ export const useDiscussionChatAdapter = (options: Options): Return => {
     textStyles,
     onFeedItemClick,
     onUserClick,
+    onInternalLinkClick,
   });
   const { markFeedItemAsSeen } = useMarkFeedItemAsSeen();
 
