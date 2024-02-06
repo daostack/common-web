@@ -1,86 +1,81 @@
-import { useCallback, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { LoadingState } from "@/shared/interfaces";
 import { CommonMemberWithUserInfo } from "@/shared/models";
+import {
+  cacheActions,
+  selectCommonMembersStateByCommonId,
+} from "@/store/states";
 import { getCommonMembers } from "../store/actions";
+
+interface Options {
+  commonId?: string
+}
 
 type State = LoadingState<CommonMemberWithUserInfo[]>;
 
 interface Return extends State {
   fetchCommonMembers: (
-    commonId: string,
-    circleVisibility?: string[],
-    force?: boolean,
+    circleVisibility?: string[]
   ) => void;
   setCommonMembers: (commonMembers: CommonMemberWithUserInfo[]) => void;
-  resetCommonMembers: () => void;
 }
 
-export const useCommonMembers = (): Return => {
+const DEFAULT_STATE: State = {
+  loading: false,
+  fetched: false,
+  data: [],
+};
+
+export const useCommonMembers = ({ commonId }: Options): Return => {
   const dispatch = useDispatch();
-  const [state, setState] = useState<State>({
-    loading: false,
-    fetched: false,
-    data: [],
-  });
+
+  const state =
+    useSelector(selectCommonMembersStateByCommonId(commonId)) ||
+    DEFAULT_STATE;
 
   const fetchCommonMembers = useCallback(
-    (commonId: string, circleVisibility: string[] = [], force = false) => {
-      if (!force && (state.loading || state.fetched)) {
+    (circleVisibility: string[] = []) => {
+      if (!commonId) {
         return;
       }
-
-      setState({
-        loading: true,
-        fetched: false,
-        data: [],
-      });
 
       dispatch(
         getCommonMembers.request({
           payload: { commonId, circleVisibility },
           callback: (error, commonMembers) => {
-            const nextState: State = {
-              loading: false,
-              fetched: true,
-              data: [],
-            };
-
-            if (!error && commonMembers) {
-              nextState.data = commonMembers;
+            if (!error) {
+              dispatch(
+                cacheActions.updateCommonMembersByCommonId({
+                  commonId,
+                  commonMembers: commonMembers ?? [],
+                }),
+              );
             }
-
-            setState(nextState);
           },
         }),
       );
     },
-    [state, dispatch],
+    [state, dispatch, commonId],
   );
 
   const setCommonMembers = useCallback(
     (commonMembers: CommonMemberWithUserInfo[]) => {
-      setState({
-        loading: false,
-        fetched: true,
-        data: commonMembers,
-      });
+      dispatch(
+        cacheActions.updateCommonMembersByCommonId({
+          commonId,
+          commonMembers: commonMembers ?? [],
+        }),
+      );
     },
-    [],
+    [commonId],
   );
 
-  const resetCommonMembers = useCallback(() => {
-    setState({
-      loading: false,
-      fetched: false,
-      data: [],
-    });
-  }, []);
-
   return {
-    ...state,
+    data: state.data ?? [],
+    loading: false,
+    fetched: true,
     fetchCommonMembers,
     setCommonMembers,
-    resetCommonMembers,
   };
 };

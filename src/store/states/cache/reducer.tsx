@@ -1,7 +1,10 @@
 import produce from "immer";
 import { unionBy, uniqBy } from "lodash";
 import { ActionType, createReducer } from "typesafe-actions";
-import { getChatChannelUserStatusKey } from "@/shared/constants";
+import {
+  getChatChannelUserStatusKey,
+  getCommonMemberStateKey,
+} from "@/shared/constants";
 import { getFeedItemUserMetadataKey } from "@/shared/constants/getFeedItemUserMetadataKey";
 import * as actions from "./actions";
 import { CacheState } from "./types";
@@ -19,6 +22,9 @@ export const INITIAL_CACHE_STATE: CacheState = {
   feedByCommonIdStates: {},
   feedItemUserMetadataStates: {},
   chatChannelUserStatusStates: {},
+  commonMembersState: {},
+  commonMemberByUserAndCommonIdsStates: {},
+  externalCommonUsers: [],
 };
 
 export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
@@ -228,4 +234,37 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
         data: updatedDiscussionMessages,
       };
     }),
+  )
+  .handleAction(actions.updateCommonMembersByCommonId, (state, { payload }) =>
+    produce(state, (nextState) => {
+      if (payload.commonId) {
+        nextState.commonMembersState[payload.commonId] = {
+          data: payload.commonMembers,
+          loading: false,
+          fetched: true,
+        };
+      }
+    }),
+  )
+  .handleAction(actions.addUserToExternalCommonUsers, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.externalCommonUsers = [
+        ...state.externalCommonUsers,
+        payload.user,
+      ];
+    }),
+  )
+  .handleAction(
+    actions.updateCommonMemberStateByUserAndCommonIds,
+    (state, { payload }) =>
+      produce(state, (nextState) => {
+        const { userId, commonId, state } = payload;
+
+        nextState.commonMemberByUserAndCommonIdsStates[
+          getCommonMemberStateKey({
+            userId,
+            commonId,
+          })
+        ] = { ...state };
+      }),
   );

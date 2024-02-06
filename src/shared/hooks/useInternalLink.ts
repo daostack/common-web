@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useHistory } from "react-router-dom";
-import { InternalLinkData } from "../components";
+import { InternalLinkData } from "@/shared/utils";
 import { QueryParamKey, ROUTE_PATHS } from "../constants";
 import { useRoutesContext } from "../contexts";
 import { getParamsFromOneOfRoutes } from "../utils";

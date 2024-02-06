@@ -54,7 +54,7 @@ const AssignCircleStage: FC<AssignCircleStageProps> = (props) => {
     fetched: areCommonMembersFetched,
     data: commonMembers,
     fetchCommonMembers,
-  } = useCommonMembers();
+  } = useCommonMembers({ commonId: common.id });
   const user = useSelector(selectUser());
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -131,7 +131,9 @@ const AssignCircleStage: FC<AssignCircleStageProps> = (props) => {
   };
 
   useEffect(() => {
-    fetchCommonMembers(governance.commonId);
+    if (governance.commonId) {
+      fetchCommonMembers();
+    }
   }, [fetchCommonMembers, governance.commonId]);
 
   useEffect(() => {

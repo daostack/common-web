@@ -42,14 +42,6 @@ export const useFeedItemUserMetadata = (): Return => {
         fetched: !info.userId,
       });
       setIdentificationInfo(info);
-
-      if (info.userId) {
-        dispatch(
-          cacheActions.getFeedItemUserMetadata.request({
-            payload: info,
-          }),
-        );
-      }
     },
     [dispatch],
   );
