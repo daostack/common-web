@@ -184,6 +184,7 @@ export default function ChatComponent({
     },
     onFeedItemClick,
     onUserClick,
+    commonId,
     onInternalLinkClick,
   });
   const {

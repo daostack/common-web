@@ -32,7 +32,9 @@ export default function EditMessageInput({
   const [message, setMessage] = useState(() =>
     parseStringToTextEditorValue(discussionMessage.text),
   );
-  const { data: commonMembers, fetchCommonMembers } = useCommonMembers();
+  const { data: commonMembers, fetchCommonMembers } = useCommonMembers({
+    commonId: discussionMessage.commonId,
+  });
 
   const handleMessageUpdate = () => {
     updateMessage(message);
@@ -40,7 +42,7 @@ export default function EditMessageInput({
 
   useEffect(() => {
     if (discussionMessage.commonId) {
-      fetchCommonMembers(discussionMessage.commonId);
+      fetchCommonMembers();
     }
   }, [discussionMessage.commonId]);
 

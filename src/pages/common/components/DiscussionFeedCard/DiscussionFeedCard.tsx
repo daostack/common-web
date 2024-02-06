@@ -307,7 +307,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
         commonId &&
         item.circleVisibility
       ) {
-        preloadDiscussionMessages(commonId, item.circleVisibility);
+        preloadDiscussionMessages(item.circleVisibility);
       }
     }, [shouldPreLoadMessages, isActive]);
 
@@ -318,7 +318,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
         commonId &&
         item.circleVisibility
       ) {
-        preloadDiscussionMessages(commonId, item.circleVisibility, true);
+        preloadDiscussionMessages(item.circleVisibility, true);
       }
     }, [item.data.lastMessage?.content]);
 

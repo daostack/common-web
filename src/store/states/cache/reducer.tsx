@@ -22,7 +22,9 @@ export const INITIAL_CACHE_STATE: CacheState = {
   feedByCommonIdStates: {},
   feedItemUserMetadataStates: {},
   chatChannelUserStatusStates: {},
+  commonMembersState: {},
   commonMemberByUserAndCommonIdsStates: {},
+  externalCommonUsers: [],
 };
 
 export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
@@ -231,6 +233,25 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
         ...state.discussionMessagesStates[discussionId],
         data: updatedDiscussionMessages,
       };
+    }),
+  )
+  .handleAction(actions.updateCommonMembersByCommonId, (state, { payload }) =>
+    produce(state, (nextState) => {
+      if (payload.commonId) {
+        nextState.commonMembersState[payload.commonId] = {
+          data: payload.commonMembers,
+          loading: false,
+          fetched: true,
+        };
+      }
+    }),
+  )
+  .handleAction(actions.addUserToExternalCommonUsers, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.externalCommonUsers = [
+        ...state.externalCommonUsers,
+        payload.user,
+      ];
     }),
   )
   .handleAction(

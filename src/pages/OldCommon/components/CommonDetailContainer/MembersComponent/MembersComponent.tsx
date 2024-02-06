@@ -34,7 +34,7 @@ const MembersComponent: FC<MembersComponentProps> = ({ common }) => {
     fetched: areCommonMembersFetched,
     data: commonMembers,
     fetchCommonMembers,
-  } = useCommonMembers();
+  } = useCommonMembers({ commonId: common.id });
   const sortedCommonMembers = useMemo(
     () =>
       [...commonMembers].sort(
@@ -113,7 +113,9 @@ const MembersComponent: FC<MembersComponentProps> = ({ common }) => {
   );
 
   useEffect(() => {
-    fetchCommonMembers(common.id);
+    if (common.id) {
+      fetchCommonMembers();
+    }
   }, [fetchCommonMembers, common.id]);
 
   useEffect(() => {

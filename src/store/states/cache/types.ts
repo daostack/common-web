@@ -3,6 +3,7 @@ import {
   ChatChannelUserStatus,
   CirclesPermissions,
   CommonFeedObjectUserUnique,
+  CommonMemberWithUserInfo,
   CommonMember,
   Discussion,
   DiscussionMessage,
@@ -26,6 +27,10 @@ export interface CacheState {
     string,
     LoadingState<DiscussionMessage[] | null>
   >;
+  commonMembersState: Record<
+    string,
+    LoadingState<CommonMemberWithUserInfo[] | null>
+  >;
   feedByCommonIdStates: Record<string, FeedState>;
   // key: {commonId}_{userId}_{feedObjectId}
   feedItemUserMetadataStates: Record<
@@ -42,4 +47,5 @@ export interface CacheState {
     string,
     LoadingState<(CommonMember & CirclesPermissions) | null>
   >;
+  externalCommonUsers: User[];
 }

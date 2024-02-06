@@ -64,7 +64,7 @@ interface BaseDiscussionMessage extends BaseEntity {
 export interface UserDiscussionMessage extends BaseDiscussionMessage {
   ownerType: DiscussionMessageOwnerType.User;
   ownerId: string;
-  owner?: User;
+  owner?: User | null;
 }
 
 interface BaseSystemDiscussionMessage extends BaseDiscussionMessage {
