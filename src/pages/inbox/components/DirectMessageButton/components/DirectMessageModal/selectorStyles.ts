@@ -18,6 +18,10 @@ export const selectorStyles = (
       ...provided,
       maxHeight: isTabletView ? "calc(100vh - 15rem)" : "15rem", // TODO: temporary - need to handle the height better.
     }),
+    input: (provided) => ({
+      ...provided,
+      color: getThemeColor(ThemeColors.primaryText),
+    }),
     control: (provided) => ({
       ...provided,
       minHeight: "3rem",
