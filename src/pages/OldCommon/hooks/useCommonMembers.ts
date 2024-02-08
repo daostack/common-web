@@ -9,15 +9,13 @@ import {
 import { getCommonMembers } from "../store/actions";
 
 interface Options {
-  commonId?: string
+  commonId?: string;
 }
 
 type State = LoadingState<CommonMemberWithUserInfo[]>;
 
 interface Return extends State {
-  fetchCommonMembers: (
-    circleVisibility?: string[]
-  ) => void;
+  fetchCommonMembers: (circleVisibility?: string[]) => void;
   setCommonMembers: (commonMembers: CommonMemberWithUserInfo[]) => void;
 }
 
@@ -31,8 +29,7 @@ export const useCommonMembers = ({ commonId }: Options): Return => {
   const dispatch = useDispatch();
 
   const state =
-    useSelector(selectCommonMembersStateByCommonId(commonId)) ||
-    DEFAULT_STATE;
+    useSelector(selectCommonMembersStateByCommonId(commonId)) || DEFAULT_STATE;
 
   const fetchCommonMembers = useCallback(
     (circleVisibility: string[] = []) => {
@@ -56,7 +53,7 @@ export const useCommonMembers = ({ commonId }: Options): Return => {
         }),
       );
     },
-    [state, dispatch, commonId],
+    [dispatch, commonId],
   );
 
   const setCommonMembers = useCallback(
@@ -72,9 +69,8 @@ export const useCommonMembers = ({ commonId }: Options): Return => {
   );
 
   return {
-    data: state.data ?? [],
-    loading: false,
-    fetched: true,
+    ...state,
+    data: state.data || DEFAULT_STATE.data,
     fetchCommonMembers,
     setCommonMembers,
   };
