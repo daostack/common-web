@@ -53,7 +53,7 @@ export const useCommonMembers = ({ commonId }: Options): Return => {
         }),
       );
     },
-    [state, dispatch, commonId],
+    [dispatch, commonId],
   );
 
   const setCommonMembers = useCallback(
@@ -69,9 +69,8 @@ export const useCommonMembers = ({ commonId }: Options): Return => {
   );
 
   return {
-    data: state.data ?? [],
-    loading: false,
-    fetched: true,
+    ...state,
+    data: state.data || DEFAULT_STATE.data,
     fetchCommonMembers,
     setCommonMembers,
   };
