@@ -652,6 +652,9 @@ export const reducer = createReducer<CommonState, Action>(initialState)
   .handleAction(actions.resetFeedItems, (state) =>
     produce(state, (nextState) => {
       nextState.feedItems = { ...initialFeedItems };
+      nextState.pinnedFeedItems = { ...initialPinnedFeedItems };
+      nextState.sharedFeedItemId = null;
+      nextState.sharedFeedItem = null;
     }),
   )
   .handleAction(actions.setIsNewProjectCreated, (state, { payload }) =>

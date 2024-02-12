@@ -140,6 +140,13 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
       };
     }),
   )
+  .handleAction(
+    actions.clearFeedStateByCommonId,
+    (state, { payload: commonId }) =>
+      produce(state, (nextState) => {
+        delete nextState.feedByCommonIdStates[commonId];
+      }),
+  )
   .handleAction(actions.resetFeedStates, (state) =>
     produce(state, (nextState) => {
       nextState.feedByCommonIdStates = {};
