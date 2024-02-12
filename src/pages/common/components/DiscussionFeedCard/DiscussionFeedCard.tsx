@@ -50,6 +50,7 @@ import {
   LinkStreamModal,
   MoveStreamModal,
   UnlinkStreamModal,
+  DiscussionFeedCardContent,
 } from "./components";
 import { useMenuItems } from "./hooks";
 
@@ -308,56 +309,6 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       }
     }, [item.data.lastMessage?.content]);
 
-    const renderContent = (): ReactNode => {
-      if (isLoading) {
-        return null;
-      }
-
-      const circleVisibility = governanceCircles
-        ? getVisibilityString(governanceCircles, item?.circleVisibility)
-        : undefined;
-
-      return (
-        <>
-          <FeedCardHeader
-            avatar={discussionCreator?.photoURL}
-            title={getUserName(discussionCreator)}
-            createdAt={
-              <>
-                Created:{" "}
-                <FeedCountdown
-                  isCountdownFinished
-                  expirationTimestamp={item.createdAt}
-                />
-              </>
-            }
-            type={isHome ? "Home" : "Discussion"}
-            circleVisibility={circleVisibility}
-            menuItems={menuItems}
-            isMobileVersion={isMobileVersion}
-            commonId={commonId}
-            userId={item.userId}
-            directParent={directParent}
-            onUserSelect={
-              onUserSelect && (() => onUserSelect(item.userId, commonId))
-            }
-          />
-          <FeedCardContent
-            description={isHome ? common?.description : discussion?.message}
-            images={isHome ? common?.gallery : discussion?.images}
-            notion={discussionNotion}
-            onClick={handleOpenChat}
-            onMouseEnter={() => {
-              onHover(true);
-            }}
-            onMouseLeave={() => {
-              onHover(false);
-            }}
-          />
-        </>
-      );
-    };
-
     return (
       <>
         <FeedCard
@@ -405,7 +356,23 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
           originalCommonIdForLinking={discussion?.commonId}
           linkedCommonIds={discussion?.linkedCommonIds}
         >
-          {renderContent()}
+          <DiscussionFeedCardContent
+            item={item}
+            governanceCircles={governanceCircles}
+            isMobileVersion={isMobileVersion}
+            commonId={commonId}
+            directParent={directParent}
+            onUserSelect={onUserSelect}
+            discussionCreator={discussionCreator}
+            isHome={isHome}
+            menuItems={menuItems}
+            discussion={discussion}
+            common={common}
+            discussionNotion={discussionNotion}
+            handleOpenChat={handleOpenChat}
+            onHover={onHover}
+            isLoading={isLoading}
+          />
         </FeedCard>
         {userId && discussion && (
           <ReportModal

@@ -88,6 +88,7 @@ const getInitialValues = (
       token: isNotionIntegrationEnabled ? NOTION_INTEGRATION_TOKEN_MASK : "",
     },
     advancedSettings: advancedSettings,
+    initialAdvancedSettings: advancedSettings,
   };
 };
 
@@ -153,6 +154,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   const roles: Roles = nonProjectCircles.map((circle) => ({
     circleId: circle.id,
     circleName: circle.name,
+    tier: circle.hierarchy?.tier,
   }));
   const nonProjectRootCircles = useMemo(
     () => removeProjectCircles(Object.values(rootGovernance?.circles || {})),
@@ -163,6 +165,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
     : nonProjectRootCircles.map((circle) => ({
         circleId: circle.id,
         circleName: circle.name,
+        tier: circle.hierarchy?.tier,
       }));
 
   const advancedSettings: SpaceAdvancedSettingsIntermediate =
@@ -182,6 +185,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
               governanceId: parentGovernanceId,
               circleId: roles[index].circleId,
               circleName: `${roles[index].circleName}s`,
+              tier: role.tier,
             },
           };
         }),

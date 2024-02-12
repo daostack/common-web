@@ -35,6 +35,7 @@ export interface IntermediateCreateProjectPayload {
   links?: CommonLink[];
   roles?: Roles;
   advancedSettings?: SpaceAdvancedSettingsIntermediate;
+  initialAdvancedSettings?: SpaceAdvancedSettingsIntermediate;
   highestCircleId: string;
   notion?: NotionIntegrationPayloadIntermediate;
 }
