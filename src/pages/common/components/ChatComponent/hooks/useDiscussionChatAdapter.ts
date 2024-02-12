@@ -2,13 +2,13 @@ import { useCallback, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMembers } from "@/pages/OldCommon/hooks";
-import { InternalLinkData } from "@/shared/utils";
 import {
   useDiscussionMessagesById,
-  useMarkFeedItemAsSeen,
+  useUpdateFeedItemSeenState,
 } from "@/shared/hooks/useCases";
 import { TextStyles } from "@/shared/hooks/useCases/useDiscussionMessagesById";
 import { DirectParent, User } from "@/shared/models";
+import { InternalLinkData } from "@/shared/utils";
 
 interface Options {
   hasPermissionToHide: boolean;
@@ -24,7 +24,7 @@ interface Options {
 interface Return {
   discussionMessagesData: ReturnType<typeof useDiscussionMessagesById>;
   markDiscussionMessageItemAsSeen: ReturnType<
-    typeof useMarkFeedItemAsSeen
+    typeof useUpdateFeedItemSeenState
   >["markFeedItemAsSeen"];
   discussionUsers: User[];
   fetchDiscussionUsers: (commonId: string, circleVisibility?: string[]) => void;
@@ -42,7 +42,9 @@ export const useDiscussionChatAdapter = (options: Options): Return => {
   } = options;
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const { data: commonMembers, fetchCommonMembers } = useCommonMembers({commonId});
+  const { data: commonMembers, fetchCommonMembers } = useCommonMembers({
+    commonId,
+  });
 
   const allUsers = useMemo(
     () => commonMembers.map(({ user }) => user),
@@ -63,7 +65,7 @@ export const useDiscussionChatAdapter = (options: Options): Return => {
     onUserClick,
     onInternalLinkClick,
   });
-  const { markFeedItemAsSeen } = useMarkFeedItemAsSeen();
+  const { markFeedItemAsSeen } = useUpdateFeedItemSeenState();
 
   const fetchDiscussionUsers = useCallback(
     (commonId: string, circleVisibility?: string[]) => {

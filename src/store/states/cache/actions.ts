@@ -219,12 +219,29 @@ export const updateFeedItemUserMetadata = createStandardAction(
   state: LoadingState<CommonFeedObjectUserUnique | null>;
 }>();
 
+export const updateFeedItemUserSeenState = createStandardAction(
+  CacheActionType.UPDATE_FEED_ITEM_USER_SEEN_STATE,
+)<{
+  commonId: string;
+  userId: string;
+  feedObjectId: string;
+  seen: boolean;
+}>();
+
 export const updateChatChannelUserStatus = createStandardAction(
   CacheActionType.UPDATE_CHAT_CHANNEL_USER_STATUS,
 )<{
   userId: string;
   chatChannelId: string;
   state: LoadingState<ChatChannelUserStatus | null>;
+}>();
+
+export const updateChatChannelUserSeenState = createStandardAction(
+  CacheActionType.UPDATE_CHAT_CHANNEL_USER_SEEN_STATE,
+)<{
+  userId: string;
+  chatChannelId: string;
+  seen: boolean;
 }>();
 
 export const updateCommonMembersByCommonId = createStandardAction(

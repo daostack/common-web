@@ -190,6 +190,7 @@ export default function ChatComponent({
   const {
     chatMessagesData,
     markChatMessageItemAsSeen,
+    markChatChannelAsSeen,
     chatUsers,
     fetchChatUsers,
   } = useChatChannelChatAdapter({ participants: chatChannel?.participants });
@@ -252,6 +253,7 @@ export default function ChatComponent({
 
   const lastNonUserMessage = getLastNonUserMessage(
     discussionMessages || [],
+    discussionId,
     userId,
   );
 
@@ -589,9 +591,7 @@ export default function ChatComponent({
     }
 
     if (isChatChannel) {
-      markChatMessageItemAsSeen({
-        chatChannelId: feedItemId,
-      });
+      markChatChannelAsSeen(feedItemId);
     } else if (commonId) {
       markDiscussionMessageItemAsSeen({
         feedObjectId: feedItemId,
