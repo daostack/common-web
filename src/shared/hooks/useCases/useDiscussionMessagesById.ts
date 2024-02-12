@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useUpdateEffect } from "react-use";
-import { DiscussionMessageService } from "@/services";
+import { DiscussionMessageService, UserService } from "@/services";
 import { getTextFromTextEditorString } from "@/shared/components/Chat/ChatMessage/utils";
 import { useRoutesContext } from "@/shared/contexts";
 import { LoadingState } from "@/shared/interfaces";
@@ -14,10 +14,12 @@ import {
   DiscussionMessageWithParsedText,
   User,
 } from "@/shared/models";
+import { InternalLinkData } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
 import {
   cacheActions,
   selectDiscussionMessagesStateByDiscussionId,
+  selectExternalCommonUsers,
 } from "@/store/states";
 
 export type TextStyles = {
@@ -35,6 +37,7 @@ interface Options {
   onFeedItemClick?: (feedItemId: string) => void;
   users: User[];
   textStyles: TextStyles;
+  onInternalLinkClick?: (data: InternalLinkData) => void;
 }
 
 type State = LoadingState<DiscussionMessageWithParsedText[] | null>;
@@ -62,8 +65,10 @@ export const useDiscussionMessagesById = ({
   onUserClick,
   onFeedItemClick,
   users,
+  onInternalLinkClick,
 }: Options): Return => {
   const dispatch = useDispatch();
+  const externalCommonUsers = useSelector(selectExternalCommonUsers);
   const { getCommonPagePath, getCommonPageAboutTabPath } = useRoutesContext();
   const [defaultState, setDefaultState] = useState({ ...DEFAULT_STATE });
   const [lastVisible, setLastVisible] = useState<
@@ -97,6 +102,7 @@ export const useDiscussionMessagesById = ({
       directParent,
       onUserClick,
       onFeedItemClick,
+      onInternalLinkClick,
     });
 
     dispatch(
@@ -163,6 +169,7 @@ export const useDiscussionMessagesById = ({
           directParent,
           onUserClick,
           onFeedItemClick,
+          onInternalLinkClick,
         });
 
         return {
@@ -230,6 +237,7 @@ export const useDiscussionMessagesById = ({
               directParent,
               onUserClick,
               onFeedItemClick,
+              onInternalLinkClick,
             });
 
             return {
@@ -261,11 +269,16 @@ export const useDiscussionMessagesById = ({
         setIsLoading(true);
       }
       const discussionMessages = [...(state.data || [])];
+
+      // if (discussionMessages.length > 0 && users.length === 0) {
+      // return;
+      // }
+
       const filteredMessages = discussionMessages.filter(
         ({ moderation }) =>
           moderation?.flag !== ModerationFlags.Hidden || hasPermissionToHide,
       );
-      const loadedDiscussionMessages = filteredMessages.map((d) => {
+      const loadedDiscussionMessages = await Promise.all(filteredMessages.map(async (d) => {
         const newDiscussionMessage = { ...d };
         const parentMessage = filteredMessages.find(
           ({ id }) => id === d.parentId,
@@ -274,7 +287,14 @@ export const useDiscussionMessagesById = ({
           checkIsUserDiscussionMessage(d) &&
           checkIsUserDiscussionMessage(newDiscussionMessage)
         ) {
-          newDiscussionMessage.owner = users.find((o) => o.uid === d.ownerId);
+          const commonMemberMessageOwner = [...users, ...externalCommonUsers].find((o) => o.uid === d.ownerId);
+          const messageOwner = commonMemberMessageOwner || await UserService.getUserById(d.ownerId);
+          newDiscussionMessage.owner = messageOwner;
+          if(!commonMemberMessageOwner && messageOwner) {
+            dispatch(cacheActions.addUserToExternalCommonUsers({
+              user: messageOwner
+            }))
+          }
         }
         newDiscussionMessage.parentMessage = parentMessage
           ? {
@@ -290,13 +310,14 @@ export const useDiscussionMessagesById = ({
               createdAt: parentMessage.createdAt,
             }
           : null;
+
         return newDiscussionMessage;
-      });
+      }));
 
       setDiscussionMessagesWithOwners(loadedDiscussionMessages);
       setIsLoading(false);
     })();
-  }, [state.data, hasPermissionToHide, users]);
+  }, [state.data, hasPermissionToHide, users, externalCommonUsers]);
 
   return {
     ...state,

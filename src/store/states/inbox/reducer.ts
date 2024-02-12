@@ -553,11 +553,20 @@ export const reducer = createReducer<InboxState, Action>(INITIAL_INBOX_STATE)
       nextState.searchState = { ...INITIAL_SEARCH_STATE };
     }),
   )
+  .handleAction(actions.resetSearchInboxItems, (state) =>
+    produce(state, (nextState) => {
+      nextState.searchState.items = null;
+    }),
+  )
   .handleAction(actions.updateSearchInboxItems, (state, { payload }) =>
     produce(state, (nextState) => {
       if (!nextState.searchState.items) {
         nextState.searchState.items = [];
       }
+
+      const searchItemIds = nextState.searchState.items.map(
+        ({ itemId }) => itemId,
+      );
 
       payload.forEach((feedItemEntityId) => {
         const feedItem = nextState.items.data?.find((item) =>
@@ -567,7 +576,7 @@ export const reducer = createReducer<InboxState, Action>(INITIAL_INBOX_STATE)
               item.feedItem.data.discussionId === feedItemEntityId,
         );
 
-        if (feedItem) {
+        if (feedItem && !searchItemIds.includes(feedItem.itemId)) {
           nextState.searchState.items!.push(feedItem);
         }
       });
@@ -626,7 +635,6 @@ export const reducer = createReducer<InboxState, Action>(INITIAL_INBOX_STATE)
   .handleAction(actions.resetInboxItems, (state) =>
     produce(state, (nextState) => {
       nextState.items = { ...INITIAL_INBOX_ITEMS };
-      nextState.searchState.items = null;
       nextState.sharedFeedItemId = null;
       nextState.sharedItem = null;
       nextState.chatChannelItems = [];

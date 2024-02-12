@@ -3,10 +3,12 @@ import React, {
   ReactNode,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import { useSelector } from "react-redux";
 import { useUpdateEffect } from "react-use";
+import { debounce } from "lodash";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { DiscussionService } from "@/services";
 import { DeletePrompt, GlobalOverlay, ReportModal } from "@/shared/components";
@@ -161,7 +163,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
     const shouldLoadCommonData =
       isHome || (discussionNotion && !outerCommonNotion);
     const { data: common } = useCommon(shouldLoadCommonData ? commonId : "");
-    const { preloadDiscussionMessages } = usePreloadDiscussionMessagesById({
+    const preloadDiscussionMessagesData = usePreloadDiscussionMessagesById({
       commonId,
       discussionId: discussion?.id,
     });
@@ -236,6 +238,18 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       }
     }, [discussion]);
 
+    const preloadDiscussionMessages = useMemo(
+      () =>
+        debounce<
+          typeof preloadDiscussionMessagesData.preloadDiscussionMessages
+        >(
+          (...args) =>
+            preloadDiscussionMessagesData.preloadDiscussionMessages(...args),
+          6000,
+        ),
+      [preloadDiscussionMessagesData.preloadDiscussionMessages],
+    );
+
     useEffect(() => {
       fetchDiscussionCreator(item.userId);
     }, [item.userId]);
@@ -294,7 +308,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
         commonId &&
         item.circleVisibility
       ) {
-        preloadDiscussionMessages(commonId, item.circleVisibility);
+        preloadDiscussionMessages(item.circleVisibility);
       }
     }, [shouldPreLoadMessages, isActive]);
 
@@ -305,7 +319,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
         commonId &&
         item.circleVisibility
       ) {
-        preloadDiscussionMessages(commonId, item.circleVisibility, true);
+        preloadDiscussionMessages(item.circleVisibility, true);
       }
     }, [item.data.lastMessage?.content]);
 

@@ -15,7 +15,6 @@ import { debounce, delay, omit } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { ChatService, DiscussionMessageService, FileService } from "@/services";
-import { InternalLinkData } from "@/shared/components";
 import {
   ChatType,
   DiscussionMessageOwnerType,
@@ -52,6 +51,7 @@ import {
   countTextEditorEmojiElements,
 } from "@/shared/ui-kit";
 import { checkUncheckedItemsInTextEditorValue } from "@/shared/ui-kit/TextEditor/utils";
+import { InternalLinkData } from "@/shared/utils";
 import {
   emptyFunction,
   getUserName,
@@ -91,6 +91,7 @@ interface ChatComponentInterface {
   feedItemId: string;
   isAuthorized?: boolean;
   isHidden: boolean;
+  seenOnce?: boolean;
   onMessagesAmountChange?: (newMessagesAmount: number) => void;
   directParent?: DirectParent | null;
   renderChatInput?: () => ReactNode;
@@ -136,6 +137,7 @@ export default function ChatComponent({
   feedItemId,
   isAuthorized,
   isHidden = false,
+  seenOnce = false,
   onMessagesAmountChange,
   directParent,
   renderChatInput: renderChatInputOuter,
@@ -182,6 +184,8 @@ export default function ChatComponent({
     },
     onFeedItemClick,
     onUserClick,
+    commonId,
+    onInternalLinkClick,
   });
   const {
     chatMessagesData,
@@ -580,6 +584,10 @@ export default function ChatComponent({
   );
 
   useEffect(() => {
+    if (seenOnce) {
+      return;
+    }
+
     if (isChatChannel) {
       markChatMessageItemAsSeen({
         chatChannelId: feedItemId,

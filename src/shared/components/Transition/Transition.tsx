@@ -11,6 +11,7 @@ interface TransitionProps {
   className?: string;
   show: boolean;
   transition?: ModalTransition | null;
+  style?: React.CSSProperties;
 }
 
 const bottomToTopTransitionClasses: TransitionClasses = {
@@ -41,7 +42,7 @@ const MAP_TRANSITION_TO_CLASSES: Record<ModalTransition, TransitionClasses> = {
 };
 
 const Transition: FC<TransitionProps> = (props) => {
-  const { className, show, transition, children } = props;
+  const { className, show, transition, children, style } = props;
 
   if (!transition) {
     return <>{children}</>;
@@ -51,6 +52,7 @@ const Transition: FC<TransitionProps> = (props) => {
     <HeadlessUITransition
       className={classNames(className, styles.container)}
       show={show}
+      style={style}
       appear
       {...MAP_TRANSITION_TO_CLASSES[transition]}
     >

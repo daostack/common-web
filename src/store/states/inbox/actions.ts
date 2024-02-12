@@ -67,6 +67,10 @@ export const resetInboxItems = createStandardAction(
   InboxActionType.RESET_INBOX_ITEMS,
 )();
 
+export const refetchInboxItems = createStandardAction(
+  InboxActionType.REFETCH_INBOX_ITEMS,
+)<boolean>();
+
 export const searchInboxItems = createStandardAction(
   InboxActionType.SEARCH_INBOX_ITEMS,
 )<string>();
@@ -77,6 +81,10 @@ export const setSearchState = createStandardAction(
 
 export const resetSearchState = createStandardAction(
   InboxActionType.RESET_SEARCH_STATE,
+)();
+
+export const resetSearchInboxItems = createStandardAction(
+  InboxActionType.RESET_SEARCH_INBOX_ITEMS,
 )();
 
 export const updateSearchInboxItems = createStandardAction(

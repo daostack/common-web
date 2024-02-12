@@ -2,6 +2,7 @@ import { useCallback, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMembers } from "@/pages/OldCommon/hooks";
+import { InternalLinkData } from "@/shared/utils";
 import {
   useDiscussionMessagesById,
   useMarkFeedItemAsSeen,
@@ -13,9 +14,11 @@ interface Options {
   hasPermissionToHide: boolean;
   onUserClick?: (userId: string) => void;
   onFeedItemClick?: (feedItemId: string) => void;
+  onInternalLinkClick?: (data: InternalLinkData) => void;
   directParent?: DirectParent | null;
   textStyles: TextStyles;
   discussionId: string;
+  commonId: string;
 }
 
 interface Return {
@@ -34,10 +37,12 @@ export const useDiscussionChatAdapter = (options: Options): Return => {
     discussionId,
     onFeedItemClick,
     onUserClick,
+    commonId,
+    onInternalLinkClick,
   } = options;
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const { data: commonMembers, fetchCommonMembers } = useCommonMembers();
+  const { data: commonMembers, fetchCommonMembers } = useCommonMembers({commonId});
 
   const allUsers = useMemo(
     () => commonMembers.map(({ user }) => user),
@@ -48,6 +53,7 @@ export const useDiscussionChatAdapter = (options: Options): Return => {
     () => allUsers.filter((user) => user.uid !== userId),
     [userId, allUsers],
   );
+
   const discussionMessagesData = useDiscussionMessagesById({
     discussionId,
     hasPermissionToHide,
@@ -55,12 +61,13 @@ export const useDiscussionChatAdapter = (options: Options): Return => {
     textStyles,
     onFeedItemClick,
     onUserClick,
+    onInternalLinkClick,
   });
   const { markFeedItemAsSeen } = useMarkFeedItemAsSeen();
 
   const fetchDiscussionUsers = useCallback(
     (commonId: string, circleVisibility?: string[]) => {
-      fetchCommonMembers(commonId, circleVisibility, true);
+      fetchCommonMembers(circleVisibility);
     },
     [fetchCommonMembers],
   );

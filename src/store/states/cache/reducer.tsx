@@ -1,10 +1,15 @@
 import produce from "immer";
-import { unionBy } from "lodash";
+import { unionBy, uniqBy } from "lodash";
 import { ActionType, createReducer } from "typesafe-actions";
-import { getChatChannelUserStatusKey } from "@/shared/constants";
+import {
+  getChatChannelUserStatusKey,
+  getCommonMemberStateKey,
+} from "@/shared/constants";
 import { getFeedItemUserMetadataKey } from "@/shared/constants/getFeedItemUserMetadataKey";
 import * as actions from "./actions";
 import { CacheState } from "./types";
+
+const FEED_ITEM_ID_KEY = "itemId";
 
 type Action = ActionType<typeof actions>;
 
@@ -17,6 +22,9 @@ export const INITIAL_CACHE_STATE: CacheState = {
   feedByCommonIdStates: {},
   feedItemUserMetadataStates: {},
   chatChannelUserStatusStates: {},
+  commonMembersState: {},
+  commonMemberByUserAndCommonIdsStates: {},
+  externalCommonUsers: [],
 };
 
 export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
@@ -119,7 +127,17 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
     produce(state, (nextState) => {
       const { commonId, state } = payload;
 
-      nextState.feedByCommonIdStates[commonId] = { ...state };
+      nextState.feedByCommonIdStates[commonId] = {
+        ...state,
+        pinnedFeedItems: {
+          ...state.pinnedFeedItems,
+          data: uniqBy(state.pinnedFeedItems.data, FEED_ITEM_ID_KEY),
+        },
+        feedItems: {
+          ...state.feedItems,
+          data: uniqBy(state.feedItems.data, FEED_ITEM_ID_KEY),
+        },
+      };
     }),
   )
   .handleAction(actions.resetFeedStates, (state) =>
@@ -216,4 +234,37 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
         data: updatedDiscussionMessages,
       };
     }),
+  )
+  .handleAction(actions.updateCommonMembersByCommonId, (state, { payload }) =>
+    produce(state, (nextState) => {
+      if (payload.commonId) {
+        nextState.commonMembersState[payload.commonId] = {
+          data: payload.commonMembers,
+          loading: false,
+          fetched: true,
+        };
+      }
+    }),
+  )
+  .handleAction(actions.addUserToExternalCommonUsers, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.externalCommonUsers = [
+        ...state.externalCommonUsers,
+        payload.user,
+      ];
+    }),
+  )
+  .handleAction(
+    actions.updateCommonMemberStateByUserAndCommonIds,
+    (state, { payload }) =>
+      produce(state, (nextState) => {
+        const { userId, commonId, state } = payload;
+
+        nextState.commonMemberByUserAndCommonIdsStates[
+          getCommonMemberStateKey({
+            userId,
+            commonId,
+          })
+        ] = { ...state };
+      }),
   );

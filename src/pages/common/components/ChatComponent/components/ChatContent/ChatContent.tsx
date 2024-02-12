@@ -12,12 +12,7 @@ import { scroller, animateScroll } from "react-scroll";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { DiscussionMessageService } from "@/services";
-import {
-  ChatMessage,
-  InternalLinkData,
-  DMChatMessage,
-  Transition,
-} from "@/shared/components";
+import { ChatMessage, DMChatMessage, Transition } from "@/shared/components";
 import {
   ChatType,
   QueryParamKey,
@@ -36,6 +31,7 @@ import {
   DiscussionMessageWithParsedText,
 } from "@/shared/models";
 import { Loader } from "@/shared/ui-kit";
+import { InternalLinkData } from "@/shared/utils";
 import { formatDate } from "@/shared/utils";
 import { Separator } from "./components";
 import { checkIsLastSeenInPreviousDay } from "./utils";
@@ -258,6 +254,7 @@ const ChatContent: ForwardRefRenderFunction<
             show={currentMessages.length > 0}
             transition={isTabletView ? ModalTransition.FadeIn : null}
             className={styles.messageListTransitionContainer}
+            style={{ zIndex: dateListReverse.length - dayIndex }}
           >
             {currentMessages.length > 0 && (
               <ul id={chatId} className={styles.messageList}>

@@ -7,7 +7,7 @@ import {
   ChatItem,
 } from "@/pages/common/components/ChatComponent";
 import { checkHasAccessToChat } from "@/pages/common/components/CommonTabPanels/components";
-import { InternalLinkData, UserAvatar } from "@/shared/components";
+import { UserAvatar } from "@/shared/components";
 import { useUserById } from "@/shared/hooks/useCases";
 import {
   Circles,
@@ -15,6 +15,7 @@ import {
   CommonMember,
   DirectParent,
 } from "@/shared/models";
+import { InternalLinkData } from "@/shared/utils";
 import { getUserName, isRTL } from "@/shared/utils";
 import { DesktopRightPane } from "../DesktopRightPane";
 import { getChatType } from "./utils";
@@ -122,6 +123,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
         hasAccess={hasAccessToChat}
         lastSeenItem={chatItem.lastSeenItem}
         isHidden={false}
+        seenOnce={chatItem.seenOnce}
         isAuthorized={Boolean(user)}
         onMessagesAmountChange={onMessagesAmountChange}
         directParent={directParent}
