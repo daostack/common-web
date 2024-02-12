@@ -170,6 +170,7 @@ const ChatContent: ForwardRefRenderFunction<
       shouldScrollToElementId &&
       discussionMessages?.find((item) => item.id === shouldScrollToElementId)
     ) {
+      setScrolledToMessage(false);
       setHighlightedMessageId(shouldScrollToElementId);
       setShouldScrollToElementId("");
     }
