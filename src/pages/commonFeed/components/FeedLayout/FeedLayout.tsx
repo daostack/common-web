@@ -528,6 +528,15 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const handleFeedItemClick = onFeedItemSelect
     ? handleFeedItemClickExternal
     : handleFeedItemClickInternal;
+  const feedItemClickRef = useRef(handleFeedItemClick);
+  feedItemClickRef.current = handleFeedItemClick;
+
+  const handleFeedItemClickMemoized = useCallback<typeof handleFeedItemClick>(
+    (...args) => {
+      feedItemClickRef.current(...args);
+    },
+    [feedItemClickRef],
+  );
 
   const handleInternalLinkClick = useCallback(
     (data: InternalLinkData) => {
@@ -743,6 +752,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                         directParent={outerCommon?.directParent}
                         rootCommonId={outerCommon?.rootCommonId}
                         shouldPreLoadMessages={shouldPreLoadMessages}
+                        onFeedItemClick={handleFeedItemClickMemoized}
                       />
                     );
                   }

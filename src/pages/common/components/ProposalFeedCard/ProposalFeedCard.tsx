@@ -89,8 +89,9 @@ interface ProposalFeedCardProps {
   isMobileVersion?: boolean;
   feedItemFollow: FeedItemFollowState;
   onActiveItemDataChange?: (data: FeedLayoutItemChangeData) => void;
-  onUserSelect?: (userId: string, commonId?: string) => void;
   shouldPreLoadMessages: boolean;
+  onUserClick?: (userId: string) => void;
+  onFeedItemClick: (feedItemId: string) => void;
 }
 
 const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
@@ -113,8 +114,9 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       isMobileVersion,
       feedItemFollow,
       onActiveItemDataChange,
-      onUserSelect,
       shouldPreLoadMessages,
+      onUserClick,
+      onFeedItemClick,
     } = props;
     const user = useSelector(selectUser());
     const userId = user?.uid;
@@ -195,6 +197,8 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
     const preloadDiscussionMessagesData = usePreloadDiscussionMessagesById({
       commonId,
       discussionId: discussion?.id,
+      onUserClick,
+      onFeedItemClick,
     });
     const menuItems = useMenuItems(
       {
@@ -411,9 +415,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
             commonId={commonId}
             userId={item.userId}
             menuItems={menuItems}
-            onUserSelect={
-              onUserSelect && (() => onUserSelect(item.userId, commonId))
-            }
+            onUserSelect={onUserClick && (() => onUserClick(item.userId))}
           />
           <FeedCardContent
             subtitle={getProposalSubtitle(
