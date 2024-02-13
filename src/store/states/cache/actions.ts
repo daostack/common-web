@@ -167,6 +167,10 @@ export const updateFeedStateByCommonId = createStandardAction(
   state: FeedState;
 }>();
 
+export const clearFeedStateByCommonId = createStandardAction(
+  CacheActionType.CLEAR_FEED_STATE_BY_COMMON_ID,
+)<string>();
+
 export const resetFeedStates = createStandardAction(
   CacheActionType.RESET_FEED_STATES,
 )();

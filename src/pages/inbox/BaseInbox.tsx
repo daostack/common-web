@@ -337,7 +337,7 @@ const InboxPage: FC<InboxPageProps> = (props) => {
         onChatChannelCreate={handleChatChannelCreate}
         outerStyles={feedLayoutOuterStyles}
         settings={feedLayoutSettings}
-        onPullToRefresh={fetchInboxItems}
+        onPullToRefresh={refetchInboxItems}
       />
       <CommonSidenavLayoutTabs className={styles.tabs} />
     </>
