@@ -172,7 +172,11 @@ export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
         itemsContainerHeight - headerOffset - tabNavigationOffset;
       scrollTimeoutRef.current = null;
 
-      if (!itemBottom || itemHeight > visibleSpaceForItems) {
+      if (
+        !itemBottom ||
+        itemHeight > visibleSpaceForItems ||
+        itemBottom - itemHeight < 0
+      ) {
         scrollToTargetTop(headerOffset, elementPositionOffset);
         return;
       }
