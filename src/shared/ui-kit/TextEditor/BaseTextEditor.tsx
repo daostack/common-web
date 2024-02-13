@@ -269,11 +269,11 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
       const checkboxText = EditorSlate.string(editor, {
         anchor: { offset: 0, path: selectionPath },
         focus: { offset: 3, path: selectionPath },
-      });
+      }).trim();
 
       if (
         beforeText === " " &&
-        selectionOffset === 4 &&
+        (selectionOffset === 3 || selectionOffset === 4) &&
         selectionOffset === lineLastPoint?.offset &&
         checkIsCheckboxCreationText(checkboxText)
       ) {
@@ -288,7 +288,6 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
       handleSearch(beforeText ?? "", beforeRange);
     }
   };
-
 
   const handleOnChange = useCallback(
     (updatedContent) => {
