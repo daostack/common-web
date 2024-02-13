@@ -185,7 +185,7 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
                                 (circle) => circle.inheritFrom?.tier === tier,
                               ) ?? 0;
 
-                            if (newCircleIndex > 0) {
+                            if (newCircleIndex > 0 && index > newCircleIndex) {
                               setFieldValue(
                                 `advancedSettings.circles.${newCircleIndex}.inheritFrom`,
                                 advancedSettings?.circles?.[newCircleIndex - 1]
