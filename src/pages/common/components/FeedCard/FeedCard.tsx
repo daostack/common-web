@@ -53,7 +53,7 @@ type FeedCardProps = PropsWithChildren<{
 }>;
 
 const MOBILE_HEADER_HEIGHT = 52;
-const DESKTOP_HEADER_HEIGHT = 72;
+const DESKTOP_HEADER_HEIGHT = 56 + 79;
 const MOBILE_TAB_NAVIGATION_HEIGHT = 65;
 const COLLAPSE_DURATION = 300;
 const OFFSET_FROM_BOTTOM_FOR_SCROLLING = 10;
@@ -111,14 +111,32 @@ export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
     }
   };
 
-  const scrollToTargetTop = (headerOffset: number) => {
+  const scrollToTargetTop = (
+    headerOffset: number,
+    elementPositionOffset: number,
+  ) => {
     const elementPosition =
-      containerRef.current?.getBoundingClientRect().top ?? 0;
-    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-    window.scrollTo({
-      top: offsetPosition,
-      behavior: "smooth",
-    });
+      (containerRef.current?.getBoundingClientRect().top ?? 0) -
+      elementPositionOffset;
+
+    if (isTabletView) {
+      const offsetPosition =
+        elementPosition + window.pageYOffset - headerOffset;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+      return;
+    }
+
+    const itemsContainerEl = document.getElementsByClassName("Pane Pane1")[0];
+
+    if (itemsContainerEl) {
+      itemsContainerEl.scrollBy({
+        top: elementPosition,
+        behavior: "smooth",
+      });
+    }
   };
 
   const scrollToTargetAdjusted = () => {
@@ -126,30 +144,48 @@ export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
       clearTimeout(scrollTimeoutRef.current);
     }
 
+    const paneEl = document.getElementsByClassName("Pane Pane1")[0];
+    let itemsContainerEl: typeof window | typeof paneEl = window;
+    let itemsContainerHeight = window.innerHeight;
+
+    if (!isTabletView) {
+      if (!paneEl) {
+        return;
+      }
+
+      itemsContainerEl = paneEl;
+      itemsContainerHeight = paneEl.clientHeight;
+    }
+
     scrollTimeoutRef.current = setTimeout(() => {
-      const headerOffset = isTabletView
-        ? MOBILE_HEADER_HEIGHT
-        : DESKTOP_HEADER_HEIGHT;
+      const headerOffset = isTabletView ? MOBILE_HEADER_HEIGHT : 0;
+      const elementPositionOffset = isTabletView ? 0 : DESKTOP_HEADER_HEIGHT;
       const tabNavigationOffset = isTabletView
         ? MOBILE_TAB_NAVIGATION_HEIGHT
         : 0;
       const itemHeight =
         containerRef.current?.getBoundingClientRect().height || 0;
-      const itemBottom = containerRef.current?.getBoundingClientRect().bottom;
+      const itemBottom =
+        (containerRef.current?.getBoundingClientRect().bottom || 0) -
+        elementPositionOffset;
       const visibleSpaceForItems =
-        window.innerHeight - headerOffset - tabNavigationOffset;
+        itemsContainerHeight - headerOffset - tabNavigationOffset;
       scrollTimeoutRef.current = null;
 
-      if (!itemBottom || itemHeight > visibleSpaceForItems) {
-        scrollToTargetTop(headerOffset);
+      if (
+        !itemBottom ||
+        itemHeight > visibleSpaceForItems ||
+        itemBottom - itemHeight < 0
+      ) {
+        scrollToTargetTop(headerOffset, elementPositionOffset);
         return;
       }
 
       const itemPositionDifference =
-        window.innerHeight - tabNavigationOffset - itemBottom;
+        itemsContainerHeight - tabNavigationOffset - itemBottom;
 
       if (itemPositionDifference < 0) {
-        window.scrollBy({
+        itemsContainerEl.scrollBy({
           top: -itemPositionDifference + OFFSET_FROM_BOTTOM_FOR_SCROLLING,
           behavior: "smooth",
         });
