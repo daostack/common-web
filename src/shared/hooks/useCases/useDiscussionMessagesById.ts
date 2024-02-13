@@ -132,7 +132,7 @@ export const useDiscussionMessagesById = ({
     messageId: string,
     endDate: Date,
   ): Promise<void> => {
-    if (state.data?.find((item) => item.id === discussionId)) {
+    if (state.data?.find((item) => item.id === messageId)) {
       return Promise.resolve();
     }
 
@@ -278,41 +278,50 @@ export const useDiscussionMessagesById = ({
         ({ moderation }) =>
           moderation?.flag !== ModerationFlags.Hidden || hasPermissionToHide,
       );
-      const loadedDiscussionMessages = await Promise.all(filteredMessages.map(async (d) => {
-        const newDiscussionMessage = { ...d };
-        const parentMessage = filteredMessages.find(
-          ({ id }) => id === d.parentId,
-        );
-        if (
-          checkIsUserDiscussionMessage(d) &&
-          checkIsUserDiscussionMessage(newDiscussionMessage)
-        ) {
-          const commonMemberMessageOwner = [...users, ...externalCommonUsers].find((o) => o.uid === d.ownerId);
-          const messageOwner = commonMemberMessageOwner || await UserService.getUserById(d.ownerId);
-          newDiscussionMessage.owner = messageOwner;
-          if(!commonMemberMessageOwner && messageOwner) {
-            dispatch(cacheActions.addUserToExternalCommonUsers({
-              user: messageOwner
-            }))
-          }
-        }
-        newDiscussionMessage.parentMessage = parentMessage
-          ? {
-              id: parentMessage.id,
-              text: parentMessage.text,
-              ownerName: parentMessage?.ownerName,
-              ...(checkIsUserDiscussionMessage(parentMessage) && {
-                ownerId: parentMessage.ownerId,
-              }),
-              moderation: parentMessage?.moderation,
-              images: parentMessage?.images,
-              files: parentMessage?.files,
-              createdAt: parentMessage.createdAt,
+      const loadedDiscussionMessages = await Promise.all(
+        filteredMessages.map(async (d) => {
+          const newDiscussionMessage = { ...d };
+          const parentMessage = filteredMessages.find(
+            ({ id }) => id === d.parentId,
+          );
+          if (
+            checkIsUserDiscussionMessage(d) &&
+            checkIsUserDiscussionMessage(newDiscussionMessage)
+          ) {
+            const commonMemberMessageOwner = [
+              ...users,
+              ...externalCommonUsers,
+            ].find((o) => o.uid === d.ownerId);
+            const messageOwner =
+              commonMemberMessageOwner ||
+              (await UserService.getUserById(d.ownerId));
+            newDiscussionMessage.owner = messageOwner;
+            if (!commonMemberMessageOwner && messageOwner) {
+              dispatch(
+                cacheActions.addUserToExternalCommonUsers({
+                  user: messageOwner,
+                }),
+              );
             }
-          : null;
+          }
+          newDiscussionMessage.parentMessage = parentMessage
+            ? {
+                id: parentMessage.id,
+                text: parentMessage.text,
+                ownerName: parentMessage?.ownerName,
+                ...(checkIsUserDiscussionMessage(parentMessage) && {
+                  ownerId: parentMessage.ownerId,
+                }),
+                moderation: parentMessage?.moderation,
+                images: parentMessage?.images,
+                files: parentMessage?.files,
+                createdAt: parentMessage.createdAt,
+              }
+            : null;
 
-        return newDiscussionMessage;
-      }));
+          return newDiscussionMessage;
+        }),
+      );
 
       setDiscussionMessagesWithOwners(loadedDiscussionMessages);
       setIsLoading(false);

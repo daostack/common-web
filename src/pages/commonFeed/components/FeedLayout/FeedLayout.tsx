@@ -222,6 +222,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const [expandedFeedItemId, setExpandedFeedItemId] = useState<string | null>(
     null,
   );
+  const [isLoaderAfterRefresh, setIsLoaderAfterRefresh] = useState(false);
   const allFeedItems = useMemo(() => {
     const items: FeedLayoutItem[] = [];
 
@@ -528,6 +529,15 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const handleFeedItemClick = onFeedItemSelect
     ? handleFeedItemClickExternal
     : handleFeedItemClickInternal;
+  const feedItemClickRef = useRef(handleFeedItemClick);
+  feedItemClickRef.current = handleFeedItemClick;
+
+  const handleFeedItemClickMemoized = useCallback<typeof handleFeedItemClick>(
+    (...args) => {
+      feedItemClickRef.current(...args);
+    },
+    [feedItemClickRef],
+  );
 
   const handleInternalLinkClick = useCallback(
     (data: InternalLinkData) => {
@@ -560,6 +570,11 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     },
     [getCommonPagePath, handleFeedItemClick],
   );
+
+  const handleRefresh = async () => {
+    setIsLoaderAfterRefresh(true);
+    onPullToRefresh?.();
+  };
 
   useEffect(() => {
     if (!outerGovernance && selectedItemCommonData?.id) {
@@ -645,6 +660,12 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     }
   }, [sharedFeedItemId, isTabletView, allFeedItems]);
 
+  useEffect(() => {
+    if (allFeedItems.length) {
+      setIsLoaderAfterRefresh(false);
+    }
+  }, [Boolean(allFeedItems.length)]);
+
   useImperativeHandle(
     ref,
     () => ({
@@ -685,7 +706,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
             <PullToRefresh
               isPullable={isTabletView && Boolean(onPullToRefresh)}
               className={styles.pullToRefresh}
-              onRefresh={async () => onPullToRefresh?.()}
+              onRefresh={handleRefresh}
               refreshingContent={<Loader />}
             >
               <InfiniteScroll
@@ -696,7 +717,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                 }
                 onFetchNext={onFetchNext}
                 isLoading={loading}
-                loaderDelay={LOADER_APPEARANCE_DELAY}
+                loaderDelay={isLoaderAfterRefresh ? 0 : LOADER_APPEARANCE_DELAY}
               >
                 {allFeedItems?.map((item, index) => {
                   const isActive = item.itemId === activeFeedItemId;
@@ -743,6 +764,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                         directParent={outerCommon?.directParent}
                         rootCommonId={outerCommon?.rootCommonId}
                         shouldPreLoadMessages={shouldPreLoadMessages}
+                        onFeedItemClick={handleFeedItemClickMemoized}
                       />
                     );
                   }

@@ -77,8 +77,9 @@ interface DiscussionFeedCardProps {
   directParent?: DirectParent | null;
   rootCommonId?: string;
   feedItemFollow: FeedItemFollowState;
-  onUserSelect?: (userId: string, commonId?: string) => void;
   shouldPreLoadMessages: boolean;
+  onUserClick?: (userId: string) => void;
+  onFeedItemClick: (feedItemId: string) => void;
 }
 
 const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
@@ -107,8 +108,9 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       directParent,
       rootCommonId,
       feedItemFollow,
-      onUserSelect,
       shouldPreLoadMessages,
+      onUserClick,
+      onFeedItemClick,
     } = props;
     const {
       isShowing: isReportModalOpen,
@@ -166,6 +168,8 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
     const preloadDiscussionMessagesData = usePreloadDiscussionMessagesById({
       commonId,
       discussionId: discussion?.id,
+      onUserClick,
+      onFeedItemClick,
     });
     const menuItems = useMenuItems(
       {
