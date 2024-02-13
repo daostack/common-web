@@ -513,12 +513,20 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       refsByItemId.current[feedItemId]?.scrollToItem();
     } else {
       onFetchNext(feedItemId);
-      setTimeout(() => {
-        window.scrollTo({
-          top: document.body.scrollHeight,
-          behavior: "smooth",
-        });
-      }, 50);
+      const paneEl = document.getElementsByClassName("Pane Pane1")[0];
+      const containerEl = isTabletView ? window : paneEl;
+      const scrollHeight = isTabletView
+        ? document.body.scrollHeight
+        : paneEl?.scrollHeight;
+
+      if (containerEl) {
+        setTimeout(() => {
+          containerEl.scrollTo({
+            top: scrollHeight,
+            behavior: "smooth",
+          });
+        }, 50);
+      }
     }
 
     if (messageId) {
