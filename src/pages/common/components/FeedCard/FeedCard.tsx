@@ -53,7 +53,7 @@ type FeedCardProps = PropsWithChildren<{
 }>;
 
 const MOBILE_HEADER_HEIGHT = 52;
-const DESKTOP_HEADER_HEIGHT = 72;
+const DESKTOP_HEADER_HEIGHT = 56 + 79;
 const MOBILE_TAB_NAVIGATION_HEIGHT = 65;
 const COLLAPSE_DURATION = 300;
 const OFFSET_FROM_BOTTOM_FOR_SCROLLING = 10;
@@ -126,18 +126,31 @@ export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
       clearTimeout(scrollTimeoutRef.current);
     }
 
+    const itemsContainerEl = isTabletView
+      ? window
+      : document.getElementsByClassName("Pane Pane1")[0];
+
+    if (!itemsContainerEl) {
+      return;
+    }
+
+    const itemsContainerHeight = isTabletView
+      ? window.innerHeight
+      : document.getElementsByClassName("Pane Pane1")[0]?.clientHeight;
+
     scrollTimeoutRef.current = setTimeout(() => {
-      const headerOffset = isTabletView
-        ? MOBILE_HEADER_HEIGHT
-        : DESKTOP_HEADER_HEIGHT;
+      const headerOffset = isTabletView ? MOBILE_HEADER_HEIGHT : 0;
+      const offsetForBottom = isTabletView ? 0 : DESKTOP_HEADER_HEIGHT;
       const tabNavigationOffset = isTabletView
         ? MOBILE_TAB_NAVIGATION_HEIGHT
         : 0;
       const itemHeight =
         containerRef.current?.getBoundingClientRect().height || 0;
-      const itemBottom = containerRef.current?.getBoundingClientRect().bottom;
+      const itemBottom =
+        (containerRef.current?.getBoundingClientRect().bottom || 0) -
+        offsetForBottom;
       const visibleSpaceForItems =
-        window.innerHeight - headerOffset - tabNavigationOffset;
+        itemsContainerHeight - headerOffset - tabNavigationOffset;
       scrollTimeoutRef.current = null;
 
       if (!itemBottom || itemHeight > visibleSpaceForItems) {
@@ -146,10 +159,10 @@ export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
       }
 
       const itemPositionDifference =
-        window.innerHeight - tabNavigationOffset - itemBottom;
+        itemsContainerHeight - tabNavigationOffset - itemBottom;
 
       if (itemPositionDifference < 0) {
-        window.scrollBy({
+        itemsContainerEl.scrollBy({
           top: -itemPositionDifference + OFFSET_FROM_BOTTOM_FOR_SCROLLING,
           behavior: "smooth",
         });
