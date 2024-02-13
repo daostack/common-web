@@ -30,6 +30,8 @@ interface AdvancedSettingsOption extends Option {
  * TODO: need to handle hierarchy
  */
 
+const TIER_GAP = 10;
+
 const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
   const { isOpen, onClose, parentCommonName } = props;
   const { values, setFieldValue } =
@@ -50,7 +52,7 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
       (circle) => circle?.inheritFrom?.tier,
     );
     return [min(tierList), max(tierList)];
-  }, [values?.advancedSettings?.circles]);
+  }, [initialAdvancedSettings]);
 
   const inheritedCircles: AdvancedSettingsOption[] = useMemo(
     () =>
@@ -152,7 +154,9 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
                       shouldBeFixed={false}
                       className={styles.dropdown}
                       disabled={
-                        prevCirclesMax === maxTier || nextCirclesMin === minTier
+                        prevCirclesMax === maxTier ||
+                        nextCirclesMin === minTier ||
+                        prevCirclesMax + TIER_GAP === nextCirclesMin
                       }
                     />
                   )}
@@ -169,6 +173,27 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
                         options={inheritCirclesOptions || []}
                         shouldBeFixed={false}
                         className={styles.dropdown}
+                        onSelect={(val) => {
+                          const tier = (val as InheritFromCircle).tier;
+                          if (
+                            tier !==
+                            initialAdvancedSettings?.circles?.[index]
+                              .inheritFrom?.tier
+                          ) {
+                            const newCircleIndex =
+                              initialAdvancedSettings?.circles?.findIndex(
+                                (circle) => circle.inheritFrom?.tier === tier,
+                              ) ?? 0;
+
+                            if (newCircleIndex > 0) {
+                              setFieldValue(
+                                `advancedSettings.circles.${newCircleIndex}.inheritFrom`,
+                                advancedSettings?.circles?.[newCircleIndex - 1]
+                                  .inheritFrom,
+                              );
+                            }
+                          }
+                        }}
                       />
                     </div>
                   )}
