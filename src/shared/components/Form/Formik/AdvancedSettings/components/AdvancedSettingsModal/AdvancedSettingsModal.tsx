@@ -12,6 +12,7 @@ import {
 import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { Checkbox } from "../../../Checkbox";
 import { SYNCING_OPTIONS } from "./constants";
+import { getCirclesTiers, getInheritCirclesOptions } from "./utils";
 import styles from "./AdvancedSettingsModal.module.scss";
 
 interface AdvancedSettingsModalProps {
@@ -78,6 +79,28 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
     onClose();
   };
 
+  const onChangeInheritCircle = (index: number) => (value: unknown) => {
+    const newTier = (value as InheritFromCircle).tier;
+    const initialTier =
+      initialAdvancedSettings?.circles?.[index]?.inheritFrom?.tier;
+
+    if (newTier !== initialTier) {
+      const circles = initialAdvancedSettings?.circles || [];
+      const newCircleIndex =
+        circles.findIndex((circle) => circle.inheritFrom?.tier === newTier) ??
+        0;
+
+      if (newCircleIndex > 0 && index > newCircleIndex) {
+        const newInheritFrom =
+          advancedSettings?.circles?.[newCircleIndex - 1]?.inheritFrom;
+        setFieldValue(
+          `advancedSettings.circles.${newCircleIndex}.inheritFrom`,
+          newInheritFrom,
+        );
+      }
+    }
+  };
+
   return (
     <Modal
       title="Advanced settings"
@@ -91,50 +114,22 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
         render={() => (
           <>
             {advancedSettings.circles?.map((circle, index) => {
-              const previousCircles = advancedSettings.circles
-                ?.slice(0, index)
-                .reduce((acc, obj) => {
-                  if (
-                    obj.synced &&
-                    obj.inheritFrom &&
-                    Number.isInteger(obj?.inheritFrom?.tier)
-                  ) {
-                    acc.push(obj.inheritFrom.tier as number);
-                  }
-                  return acc;
-                }, [] as number[]);
-              const prevCirclesMax = Number(max(previousCircles));
-              const nextCircles = advancedSettings.circles
-                ?.slice(index + 1, advancedSettings.circles.length)
-                .reduce((acc, obj) => {
-                  if (
-                    obj.synced &&
-                    obj.inheritFrom &&
-                    Number.isInteger(obj?.inheritFrom?.tier)
-                  ) {
-                    acc.push(obj.inheritFrom.tier as number);
-                  }
-                  return acc;
-                }, [] as number[]);
-
-              const nextCirclesMin = Number(min(nextCircles));
-
-              const inheritCirclesOptions = inheritedCircles?.reduce(
-                (acc, inheritCircle) => {
-                  const tier = Number(inheritCircle.value?.tier);
-                  if (
-                    Number.isInteger(tier) &&
-                    (tier <= prevCirclesMax || tier >= nextCirclesMin)
-                  ) {
-                    return acc;
-                  }
-
-                  acc.push(inheritCircle);
-                  return acc;
-                },
-                [] as AdvancedSettingsOption[],
+              const advancedCircles = advancedSettings.circles || [];
+              const previousCircles = getCirclesTiers(
+                advancedCircles.slice(0, index),
               );
+              const previousCirclesTierMax = Number(max(previousCircles));
 
+              const nextCircles = getCirclesTiers(
+                advancedCircles.slice(index + 1),
+              );
+              const nextCirclesTierMin = Number(min(nextCircles));
+
+              const inheritCirclesOptions = getInheritCirclesOptions({
+                inheritedCircles: inheritedCircles ?? [],
+                previousCirclesTierMax,
+                nextCirclesTierMin,
+              });
               return (
                 <div key={index} className={styles.rootCircleWrapper}>
                   <Checkbox
@@ -154,9 +149,9 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
                       shouldBeFixed={false}
                       className={styles.dropdown}
                       disabled={
-                        prevCirclesMax === maxTier ||
-                        nextCirclesMin === minTier ||
-                        prevCirclesMax + TIER_GAP === nextCirclesMin
+                        previousCirclesTierMax === maxTier ||
+                        nextCirclesTierMin === minTier ||
+                        previousCirclesTierMax + TIER_GAP === nextCirclesTierMin
                       }
                     />
                   )}
@@ -173,27 +168,7 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
                         options={inheritCirclesOptions || []}
                         shouldBeFixed={false}
                         className={styles.dropdown}
-                        onSelect={(val) => {
-                          const tier = (val as InheritFromCircle).tier;
-                          if (
-                            tier !==
-                            initialAdvancedSettings?.circles?.[index]
-                              .inheritFrom?.tier
-                          ) {
-                            const newCircleIndex =
-                              initialAdvancedSettings?.circles?.findIndex(
-                                (circle) => circle.inheritFrom?.tier === tier,
-                              ) ?? 0;
-
-                            if (newCircleIndex > 0 && index > newCircleIndex) {
-                              setFieldValue(
-                                `advancedSettings.circles.${newCircleIndex}.inheritFrom`,
-                                advancedSettings?.circles?.[newCircleIndex - 1]
-                                  .inheritFrom,
-                              );
-                            }
-                          }
-                        }}
+                        onSelect={onChangeInheritCircle(index)}
                       />
                     </div>
                   )}
