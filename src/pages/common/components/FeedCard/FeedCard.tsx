@@ -111,14 +111,32 @@ export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
     }
   };
 
-  const scrollToTargetTop = (headerOffset: number) => {
+  const scrollToTargetTop = (
+    headerOffset: number,
+    elementPositionOffset: number,
+  ) => {
     const elementPosition =
-      containerRef.current?.getBoundingClientRect().top ?? 0;
-    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-    window.scrollTo({
-      top: offsetPosition,
-      behavior: "smooth",
-    });
+      (containerRef.current?.getBoundingClientRect().top ?? 0) -
+      elementPositionOffset;
+
+    if (isTabletView) {
+      const offsetPosition =
+        elementPosition + window.pageYOffset - headerOffset;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+      return;
+    }
+
+    const itemsContainerEl = document.getElementsByClassName("Pane Pane1")[0];
+
+    if (itemsContainerEl) {
+      itemsContainerEl.scrollBy({
+        top: elementPosition,
+        behavior: "smooth",
+      });
+    }
   };
 
   const scrollToTargetAdjusted = () => {
@@ -140,7 +158,7 @@ export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
 
     scrollTimeoutRef.current = setTimeout(() => {
       const headerOffset = isTabletView ? MOBILE_HEADER_HEIGHT : 0;
-      const offsetForBottom = isTabletView ? 0 : DESKTOP_HEADER_HEIGHT;
+      const elementPositionOffset = isTabletView ? 0 : DESKTOP_HEADER_HEIGHT;
       const tabNavigationOffset = isTabletView
         ? MOBILE_TAB_NAVIGATION_HEIGHT
         : 0;
@@ -148,13 +166,13 @@ export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
         containerRef.current?.getBoundingClientRect().height || 0;
       const itemBottom =
         (containerRef.current?.getBoundingClientRect().bottom || 0) -
-        offsetForBottom;
+        elementPositionOffset;
       const visibleSpaceForItems =
         itemsContainerHeight - headerOffset - tabNavigationOffset;
       scrollTimeoutRef.current = null;
 
       if (!itemBottom || itemHeight > visibleSpaceForItems) {
-        scrollToTargetTop(headerOffset);
+        scrollToTargetTop(headerOffset, elementPositionOffset);
         return;
       }
 
