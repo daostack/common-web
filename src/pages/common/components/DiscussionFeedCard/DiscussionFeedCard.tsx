@@ -380,7 +380,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
             isMobileVersion={isMobileVersion}
             commonId={commonId}
             directParent={directParent}
-            onUserSelect={onUserSelect}
+            onUserSelect={onUserClick && (() => onUserClick(item.userId))}
             discussionCreator={discussionCreator}
             isHome={isHome}
             menuItems={menuItems}
