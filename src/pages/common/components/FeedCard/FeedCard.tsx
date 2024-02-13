@@ -144,17 +144,18 @@ export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
       clearTimeout(scrollTimeoutRef.current);
     }
 
-    const itemsContainerEl = isTabletView
-      ? window
-      : document.getElementsByClassName("Pane Pane1")[0];
+    const paneEl = document.getElementsByClassName("Pane Pane1")[0];
+    let itemsContainerEl: typeof window | typeof paneEl = window;
+    let itemsContainerHeight = window.innerHeight;
 
-    if (!itemsContainerEl) {
-      return;
+    if (!isTabletView) {
+      if (!paneEl) {
+        return;
+      }
+
+      itemsContainerEl = paneEl;
+      itemsContainerHeight = paneEl.clientHeight;
     }
-
-    const itemsContainerHeight = isTabletView
-      ? window.innerHeight
-      : document.getElementsByClassName("Pane Pane1")[0]?.clientHeight;
 
     scrollTimeoutRef.current = setTimeout(() => {
       const headerOffset = isTabletView ? MOBILE_HEADER_HEIGHT : 0;
