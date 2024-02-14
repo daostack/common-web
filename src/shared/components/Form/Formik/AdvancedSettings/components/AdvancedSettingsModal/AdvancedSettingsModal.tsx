@@ -27,10 +27,6 @@ interface AdvancedSettingsOption extends Option {
   key: string;
 }
 
-/**
- * TODO: need to handle hierarchy
- */
-
 const TIER_GAP = 10;
 
 const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
@@ -112,6 +108,32 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
     }
   };
 
+  const onChangeSelectedCircles =
+    (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (!event.target.checked) {
+        const currentTier = advancedSettings.circles?.[index].inheritFrom?.tier;
+        const initialTier =
+          initialAdvancedSettings?.circles?.[index].inheritFrom?.tier;
+        if (currentTier !== initialTier) {
+          const initialCircleIndex =
+            initialAdvancedSettings?.circles?.findIndex(
+              (circle) => circle?.inheritFrom?.tier === currentTier,
+            ) as number;
+          if (!advancedSettings?.circles?.[initialCircleIndex].synced) {
+            setFieldValue(
+              `advancedSettings.circles.${initialCircleIndex}`,
+              initialAdvancedSettings?.circles?.[initialCircleIndex],
+            );
+          }
+        }
+
+        setFieldValue(
+          `advancedSettings.circles.${index}`,
+          initialAdvancedSettings?.circles?.[index],
+        );
+      }
+    };
+
   return (
     <Modal
       title="Advanced settings"
@@ -143,45 +165,52 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
               });
               return (
                 <div key={index} className={styles.rootCircleWrapper}>
-                  <Checkbox
-                    id={`advancedSettings.circles.${index}.selected`}
-                    name={`advancedSettings.circles.${index}.selected`}
-                    label={circle.circleName}
-                    disabled={
-                      advancedSettings.circles &&
-                      index === advancedSettings.circles?.length - 1
-                    }
-                  />
-
-                  {circle.selected && (
-                    <Dropdown
-                      name={`advancedSettings.circles.${index}.synced`}
-                      options={SYNCING_OPTIONS}
-                      shouldBeFixed={false}
-                      className={styles.dropdown}
+                  <div className={styles.rowContentWrapper}>
+                    <Checkbox
+                      id={`advancedSettings.circles.${index}.selected`}
+                      name={`advancedSettings.circles.${index}.selected`}
+                      label={circle.circleName}
                       disabled={
-                        previousCirclesTierMax === maxTier ||
-                        nextCirclesTierMin === minTier ||
-                        previousCirclesTierMax + TIER_GAP === nextCirclesTierMin
+                        advancedSettings.circles &&
+                        index === advancedSettings.circles?.length - 1
                       }
+                      onChange={onChangeSelectedCircles(index)}
                     />
-                  )}
 
-                  {circle.selected && circle.synced && (
-                    <div className={styles.syncedWrapper}>
-                      <b>with space</b>
-                      <span className={styles.parentSpaceNameLabel}>
-                        {parentCommonName}
-                      </span>
-                      <b>role</b>
+                    {circle.selected && (
                       <Dropdown
-                        name={`advancedSettings.circles.${index}.inheritFrom`}
-                        options={inheritCirclesOptions || []}
+                        name={`advancedSettings.circles.${index}.synced`}
+                        options={SYNCING_OPTIONS}
                         shouldBeFixed={false}
                         className={styles.dropdown}
-                        onSelect={onChangeInheritCircle(index)}
+                        disabled={
+                          previousCirclesTierMax === maxTier ||
+                          nextCirclesTierMin === minTier ||
+                          previousCirclesTierMax + TIER_GAP ===
+                            nextCirclesTierMin
+                        }
                       />
-                    </div>
+                    )}
+                  </div>
+                  {circle.selected && circle.synced && (
+                    <>
+                      <div className={styles.rowContentWrapper}>
+                        <b>with space</b>
+                        <span className={styles.parentSpaceNameLabel}>
+                          {parentCommonName}
+                        </span>
+                      </div>
+                      <div className={styles.rowContentWrapper}>
+                        <b>role</b>
+                        <Dropdown
+                          name={`advancedSettings.circles.${index}.inheritFrom`}
+                          options={inheritCirclesOptions || []}
+                          shouldBeFixed={false}
+                          className={styles.dropdown}
+                          onSelect={onChangeInheritCircle(index)}
+                        />
+                      </div>
+                    </>
                   )}
                 </div>
               );

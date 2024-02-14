@@ -1,13 +1,14 @@
 import { InheritedCircleIntermediate } from "@/shared/models";
 
 export const getCirclesTiers = (circles: InheritedCircleIntermediate[]) => {
-  return circles.reduce((acc, obj) => {
+  return circles.reduce((acc, circle) => {
     if (
-      obj.synced &&
-      obj.inheritFrom &&
-      Number.isInteger(obj?.inheritFrom?.tier)
+      circle.selected &&
+      circle.synced &&
+      circle.inheritFrom &&
+      Number.isInteger(circle?.inheritFrom?.tier)
     ) {
-      acc.push(obj.inheritFrom.tier as number);
+      acc.push(circle.inheritFrom.tier as number);
     }
     return acc;
   }, [] as number[]);
