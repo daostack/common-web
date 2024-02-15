@@ -1,7 +1,15 @@
 @import "../../../../../../../constants";
 
+$marginToText: 0.5rem;
+
 .container {
   display: flex;
+
+  margin-top: 0.125rem;
+
+  &:first-child {
+    margin-top: 0;
+  }
 }
 .containerRTL {
   direction: rtl;
@@ -9,16 +17,15 @@
 
 .inputWrapper {
   position: relative;
-  width: 0.875rem;
-  height: 0.875rem;
-  margin-top: 0.125rem;
-  margin-right: 0.25rem;
+  width: 1.125rem;
+  height: 1.125rem;
+  margin-right: #{$marginToText};
   flex-shrink: 0;
 }
 
 [dir="rtl"] .inputWrapper,
 .inputWrapperRTL {
-  margin-left: 0.25rem;
+  margin-left: #{$marginToText};
   margin-right: 0;
   text-align: right;
 }
@@ -34,32 +41,49 @@
   opacity: 0 !important;
   cursor: pointer;
 
-  &:checked ~ .iconRegular,
-  &:not(:checked) ~ .iconSelected {
+  &:checked ~ .circleInactive,
+  &:not(:checked) ~ .circleActive {
     display: none;
   }
 
-  &:focus-visible ~ .icon {
+  &:focus-visible ~ .circle {
     outline: $purple auto 0.3125rem;
   }
 }
 
-.icon {
+.circle {
+  --circle-bg: transparent;
+  --circle-border-color: #{$editor-checkbox-inactive};
+
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--circle-bg);
+  border: 0.09375rem solid var(--circle-border-color);
+  border-radius: 50%;
   pointer-events: none;
+  box-sizing: border-box;
 }
-.iconRegular {
-  color: $c-neutrals-300;
+.circleInactive {
+  --circle-border-color: #{$editor-checkbox-inactive};
 }
-.iconSelected {
-  color: $c-pink-light-2;
+.circleActive {
+  --circle-bg: #{$editor-checkbox-active};
+  --circle-border-color: #{$c-shades-white};
+
+  color: var(--circle-border-color);
 }
-.iconDisabled {
+.circleDisabled {
   opacity: 0.5;
+}
+
+.checkIcon {
+  flex-shrink: 0;
 }
 
 .textWrapper {
