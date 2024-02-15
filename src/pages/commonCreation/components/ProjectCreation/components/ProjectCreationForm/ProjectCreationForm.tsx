@@ -38,6 +38,7 @@ const NOTION_INTEGRATION_TOKEN_MASK = "************";
 const CreationForm = generateCreationForm<ProjectCreationFormValues>();
 
 interface ProjectCreationFormProps {
+  rootCommonId: string;
   parentCommonId: string;
   parentCommonName?: string;
   governanceCircles: Circles;
@@ -94,6 +95,7 @@ const getInitialValues = (
 
 const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   const {
+    rootCommonId,
     parentCommonId,
     parentCommonName,
     governanceCircles,
@@ -109,8 +111,9 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   const { data: governance, fetchGovernance } = useGovernanceByCommonId();
   const { data: rootGovernance, fetchGovernance: fetchRootGovernance } =
     useGovernanceByCommonId();
-  const isParentIsRoot =
-    initialCommon?.directParent.commonId === initialCommon?.rootCommonId;
+  const isParentIsRoot = initialCommon
+    ? initialCommon?.directParent.commonId === initialCommon?.rootCommonId
+    : parentCommonId === rootCommonId;
   const {
     isProjectCreationLoading,
     project,
@@ -190,7 +193,12 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
           };
         }),
       };
-    }, [rootGovernance?.id]);
+    }, [
+      rootGovernance?.id,
+      parentGovernanceId,
+      rootCommonRoles,
+      isParentIsRoot,
+    ]);
 
   const initialValues = useMemo(
     () =>
@@ -200,7 +208,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
         roles,
         advancedSettings,
       ),
-    [governanceCircles, nonProjectCircles],
+    [governanceCircles, roles, nonProjectCircles, advancedSettings],
   );
   const projectId = initialCommon?.id || project?.id;
 
@@ -255,10 +263,10 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   }, [projectId]);
 
   useEffect(() => {
-    if (initialCommon?.rootCommonId) {
-      fetchRootGovernance(initialCommon.rootCommonId);
+    if (rootCommonId) {
+      fetchRootGovernance(rootCommonId);
     }
-  }, [initialCommon?.rootCommonId]);
+  }, [rootCommonId]);
 
   useEffect(() => {
     const finalProject = project || updatedProject;

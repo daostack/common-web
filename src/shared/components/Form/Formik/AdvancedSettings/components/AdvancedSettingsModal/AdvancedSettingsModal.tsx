@@ -108,31 +108,40 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
     }
   };
 
+  const onResetCircleValue = (index: number): void => {
+    const currentTier = advancedSettings.circles?.[index].inheritFrom?.tier;
+    const initialTier =
+      initialAdvancedSettings?.circles?.[index].inheritFrom?.tier;
+    if (currentTier !== initialTier) {
+      const initialCircleIndex = initialAdvancedSettings?.circles?.findIndex(
+        (circle) => circle?.inheritFrom?.tier === currentTier,
+      ) as number;
+      if (!advancedSettings?.circles?.[initialCircleIndex].synced) {
+        setFieldValue(
+          `advancedSettings.circles.${initialCircleIndex}`,
+          initialAdvancedSettings?.circles?.[initialCircleIndex],
+        );
+      }
+    }
+
+    setFieldValue(
+      `advancedSettings.circles.${index}`,
+      initialAdvancedSettings?.circles?.[index],
+    );
+  };
+
   const onChangeSelectedCircles =
     (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
       if (!event.target.checked) {
-        const currentTier = advancedSettings.circles?.[index].inheritFrom?.tier;
-        const initialTier =
-          initialAdvancedSettings?.circles?.[index].inheritFrom?.tier;
-        if (currentTier !== initialTier) {
-          const initialCircleIndex =
-            initialAdvancedSettings?.circles?.findIndex(
-              (circle) => circle?.inheritFrom?.tier === currentTier,
-            ) as number;
-          if (!advancedSettings?.circles?.[initialCircleIndex].synced) {
-            setFieldValue(
-              `advancedSettings.circles.${initialCircleIndex}`,
-              initialAdvancedSettings?.circles?.[initialCircleIndex],
-            );
-          }
-        }
-
-        setFieldValue(
-          `advancedSettings.circles.${index}`,
-          initialAdvancedSettings?.circles?.[index],
-        );
+        onResetCircleValue(index);
       }
     };
+
+  const onChangeSyncedCircle = (index: number) => (isSynced: unknown) => {
+    if (!isSynced) {
+      onResetCircleValue(index);
+    }
+  };
 
   return (
     <Modal
@@ -189,6 +198,7 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
                           previousCirclesTierMax + TIER_GAP ===
                             nextCirclesTierMin
                         }
+                        onSelect={onChangeSyncedCircle(index)}
                       />
                     )}
                   </div>
