@@ -15,3 +15,15 @@
     margin: $gap 0 0 $gap;
   }
 }
+
+@mixin lightTheme {
+  :root[data-theme="light"] {
+    @content;
+  }
+}
+
+@mixin darkTheme {
+  :root[data-theme="dark"] {
+    @content;
+  }
+}
