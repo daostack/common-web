@@ -579,6 +579,18 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     [getCommonPagePath, handleFeedItemClick],
   );
 
+  const internalLinkClickRef = useRef(handleInternalLinkClick);
+  internalLinkClickRef.current = handleInternalLinkClick;
+
+  const handleInternalLinkClickMemoized = useCallback<
+    typeof handleInternalLinkClick
+  >(
+    (...args) => {
+      internalLinkClickRef.current(...args);
+    },
+    [internalLinkClickRef],
+  );
+
   const handleRefresh = async () => {
     setIsLoaderAfterRefresh(true);
     onPullToRefresh?.();
@@ -773,6 +785,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                         rootCommonId={outerCommon?.rootCommonId}
                         shouldPreLoadMessages={shouldPreLoadMessages}
                         onFeedItemClick={handleFeedItemClickMemoized}
+                        onInternalLinkClick={handleInternalLinkClickMemoized}
                       />
                     );
                   }
