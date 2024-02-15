@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, FC, useState } from "react";
+import React, { ChangeEventHandler, FC, useEffect, useState } from "react";
 import classNames from "classnames";
 import { Check3Icon } from "@/shared/icons";
 import textEditorStyles from "@/shared/ui-kit/TextEditor/components/Element/components/CheckboxItem/CheckboxItem.module.scss";
@@ -22,6 +22,10 @@ const CheckboxItem: FC<CheckboxItemProps> = (props) => {
     onCheckboxChange?.(id, !checked);
     setChecked((v) => !v);
   };
+
+  useEffect(() => {
+    setChecked(props.checked);
+  }, [props.checked]);
 
   return (
     <div
