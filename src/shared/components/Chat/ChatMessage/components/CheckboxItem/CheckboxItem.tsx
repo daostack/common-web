@@ -1,8 +1,9 @@
-import React, { ChangeEventHandler, FC, useState } from "react";
+import React, { ChangeEventHandler, FC, useEffect, useState } from "react";
 import classNames from "classnames";
-import { RegularCheckboxIcon, SelectedCheckboxIcon } from "@/shared/icons";
-import styles from "@/shared/ui-kit/TextEditor/components/Element/components/CheckboxItem/CheckboxItem.module.scss";
+import { Check3Icon } from "@/shared/icons";
+import textEditorStyles from "@/shared/ui-kit/TextEditor/components/Element/components/CheckboxItem/CheckboxItem.module.scss";
 import { useChatMessageContext } from "../../context";
+import styles from "./CheckboxItem.module.scss";
 
 interface CheckboxItemProps {
   id: string;
@@ -22,39 +23,51 @@ const CheckboxItem: FC<CheckboxItemProps> = (props) => {
     setChecked((v) => !v);
   };
 
+  useEffect(() => {
+    setChecked(props.checked);
+  }, [props.checked]);
+
   return (
     <div
-      className={classNames(styles.container, {
-        [styles.containerRTL]: isRTL,
+      className={classNames(textEditorStyles.container, {
+        [textEditorStyles.containerRTL]: isRTL,
       })}
     >
       <div
-        className={classNames(styles.inputWrapper, {
-          [styles.inputWrapperRTL]: isRTL,
+        className={classNames(textEditorStyles.inputWrapper, {
+          [textEditorStyles.inputWrapperRTL]: isRTL,
         })}
         contentEditable={false}
       >
         <input
-          className={styles.input}
+          className={textEditorStyles.input}
           type="checkbox"
           checked={checked}
           onChange={handleChange}
           disabled={isDisabled}
         />
-        <RegularCheckboxIcon
-          className={classNames(styles.icon, styles.iconRegular, {
-            [styles.iconDisabled]: isDisabled,
-          })}
-          color="currentColor"
+        <span
+          className={classNames(
+            textEditorStyles.circle,
+            styles.circleInactive,
+            {
+              [textEditorStyles.circleDisabled]: isDisabled,
+            },
+          )}
         />
-        <SelectedCheckboxIcon
-          className={classNames(styles.icon, styles.iconSelected, {
-            [styles.iconDisabled]: isDisabled,
-          })}
-          color="currentColor"
-        />
+        <span
+          className={classNames(
+            textEditorStyles.circle,
+            textEditorStyles.circleActive,
+            {
+              [textEditorStyles.circleDisabled]: isDisabled,
+            },
+          )}
+        >
+          <Check3Icon className={textEditorStyles.checkIcon} />
+        </span>
       </div>
-      <span className={styles.textWrapper}>{children}</span>
+      <span className={textEditorStyles.textWrapper}>{children}</span>
     </div>
   );
 };
