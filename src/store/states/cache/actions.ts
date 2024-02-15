@@ -222,10 +222,9 @@ export const updateFeedItemUserMetadata = createStandardAction(
 export const updateFeedItemUserSeenState = createStandardAction(
   CacheActionType.UPDATE_FEED_ITEM_USER_SEEN_STATE,
 )<{
-  commonId: string;
-  userId: string;
-  feedObjectId: string;
+  key: string;
   seen: boolean;
+  isSeenUpdating: boolean;
 }>();
 
 export const updateChatChannelUserStatus = createStandardAction(
@@ -239,9 +238,9 @@ export const updateChatChannelUserStatus = createStandardAction(
 export const updateChatChannelUserSeenState = createStandardAction(
   CacheActionType.UPDATE_CHAT_CHANNEL_USER_SEEN_STATE,
 )<{
-  userId: string;
-  chatChannelId: string;
+  key: string;
   seen: boolean;
+  isSeenUpdating: boolean;
 }>();
 
 export const updateCommonMembersByCommonId = createStandardAction(

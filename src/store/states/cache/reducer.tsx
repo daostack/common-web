@@ -155,54 +155,59 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
   .handleAction(actions.updateFeedItemUserMetadata, (state, { payload }) =>
     produce(state, (nextState) => {
       const { commonId, userId, feedObjectId, state } = payload;
-
-      nextState.feedItemUserMetadataStates[
-        getFeedItemUserMetadataKey({
-          commonId,
-          userId,
-          feedObjectId,
-        })
-      ] = { ...state };
-    }),
-  )
-  .handleAction(actions.updateFeedItemUserSeenState, (state, { payload }) =>
-    produce(state, (nextState) => {
-      const { commonId, userId, feedObjectId, seen } = payload;
       const key = getFeedItemUserMetadataKey({
         commonId,
         userId,
         feedObjectId,
       });
+      const currentState = nextState.feedItemUserMetadataStates[key];
+
+      if (state.data !== null && currentState?.data?.isSeenUpdating) {
+        state.data.seen = currentState.data.seen;
+      }
+
+      nextState.feedItemUserMetadataStates[key] = { ...state };
+    }),
+  )
+  .handleAction(actions.updateFeedItemUserSeenState, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const { key, seen, isSeenUpdating } = payload;
       const state = nextState.feedItemUserMetadataStates[key]?.data;
 
       if (state) {
         state.seen = seen;
+        state.seenOnce = true;
+        state.count = 0;
+        state.isSeenUpdating = isSeenUpdating;
       }
     }),
   )
   .handleAction(actions.updateChatChannelUserStatus, (state, { payload }) =>
     produce(state, (nextState) => {
       const { userId, chatChannelId, state } = payload;
+      const key = getChatChannelUserStatusKey({
+        userId,
+        chatChannelId,
+      });
+      const currentState = nextState.chatChannelUserStatusStates[key];
 
-      nextState.chatChannelUserStatusStates[
-        getChatChannelUserStatusKey({
-          userId,
-          chatChannelId,
-        })
-      ] = { ...state };
+      if (state.data !== null && currentState?.data?.isSeenUpdating) {
+        state.data.seen = currentState.data.seen;
+      }
+
+      nextState.chatChannelUserStatusStates[key] = { ...state };
     }),
   )
   .handleAction(actions.updateChatChannelUserSeenState, (state, { payload }) =>
     produce(state, (nextState) => {
-      const { chatChannelId, userId, seen } = payload;
-      const key = getChatChannelUserStatusKey({
-        chatChannelId,
-        userId,
-      });
+      const { key, seen, isSeenUpdating } = payload;
       const state = nextState.chatChannelUserStatusStates[key]?.data;
 
       if (state) {
         state.seen = seen;
+        state.seenOnce = true;
+        state.notSeenCount = 0;
+        state.isSeenUpdating = isSeenUpdating;
       }
     }),
   )

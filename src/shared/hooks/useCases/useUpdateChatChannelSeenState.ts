@@ -1,14 +1,8 @@
-import { useCallback, useRef } from "react";
+import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import {
-  CancelTokenSource,
-  ChatService,
-  isRequestCancelled,
-  getCancelTokenSource,
-  Logger,
-} from "@/services";
-import { ChatChannelIdentificationData } from "@/shared/interfaces";
+import { ChatService } from "@/services";
+import { getChatChannelUserStatusKey } from "@/shared/constants";
 import { cacheActions } from "@/store/states";
 
 interface Return {
@@ -18,7 +12,6 @@ interface Return {
 
 export const useUpdateChatChannelSeenState = (): Return => {
   const dispatch = useDispatch();
-  const cancelTokenRef = useRef<CancelTokenSource | null>(null);
   const user = useSelector(selectUser());
   const userId = user?.uid;
 
@@ -26,49 +19,35 @@ export const useUpdateChatChannelSeenState = (): Return => {
     chatChannelId: string,
     newSeenValue: boolean,
   ) => {
-    if (cancelTokenRef.current) {
-      cancelTokenRef.current.cancel();
-    }
-
     if (!userId) {
       return;
     }
 
-    const identificationData: ChatChannelIdentificationData = {
+    const key = getChatChannelUserStatusKey({
       userId,
       chatChannelId,
-    };
+    });
 
     try {
       dispatch(
         cacheActions.updateChatChannelUserSeenState({
-          ...identificationData,
+          key,
           seen: newSeenValue,
+          isSeenUpdating: true,
         }),
       );
-      cancelTokenRef.current = getCancelTokenSource();
 
       if (newSeenValue) {
-        await ChatService.markChatChannelAsSeen(chatChannelId, {
-          cancelToken: cancelTokenRef.current.token,
-        });
+        await ChatService.markChatChannelAsSeen(chatChannelId);
       } else {
-        await ChatService.markChatChannelAsUnseen(chatChannelId, {
-          cancelToken: cancelTokenRef.current.token,
-        });
+        await ChatService.markChatChannelAsUnseen(chatChannelId);
       }
-
-      cancelTokenRef.current = null;
     } catch (error) {
-      if (!isRequestCancelled(error)) {
-        Logger.error(error);
-        cancelTokenRef.current = null;
-      }
-
       dispatch(
         cacheActions.updateChatChannelUserSeenState({
-          ...identificationData,
+          key,
           seen: !newSeenValue,
+          isSeenUpdating: false,
         }),
       );
     }

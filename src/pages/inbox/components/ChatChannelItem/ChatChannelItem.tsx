@@ -74,11 +74,13 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
           }
         : undefined,
       seenOnce: chatChannelUserStatus?.seenOnce,
+      seen: chatChannelUserStatus?.seen,
     });
   }, [
     chatChannel,
     chatChannelUserStatus?.lastSeenChatMessageId,
     chatChannelUserStatus?.seenOnce,
+    chatChannelUserStatus?.seen,
   ]);
 
   const handleChatChannelUpdate = useCallback(

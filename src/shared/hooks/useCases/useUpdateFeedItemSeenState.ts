@@ -1,15 +1,9 @@
-import { useCallback, useRef } from "react";
+import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
+import { CommonFeedService } from "@/services";
+import { getFeedItemUserMetadataKey } from "@/shared/constants";
 import {
-  CancelTokenSource,
-  CommonFeedService,
-  isRequestCancelled,
-  getCancelTokenSource,
-  Logger,
-} from "@/services";
-import {
-  FeedItemIdentificationData,
   MarkCommonFeedItemAsSeenPayload,
   MarkCommonFeedItemAsUnseenPayload,
 } from "@/shared/interfaces";
@@ -22,7 +16,6 @@ interface Return {
 
 export const useUpdateFeedItemSeenState = (): Return => {
   const dispatch = useDispatch();
-  const cancelTokenRef = useRef<CancelTokenSource | null>(null);
   const user = useSelector(selectUser());
   const userId = user?.uid;
 
@@ -32,51 +25,37 @@ export const useUpdateFeedItemSeenState = (): Return => {
       | MarkCommonFeedItemAsUnseenPayload,
     newSeenValue: boolean,
   ) => {
-    if (cancelTokenRef.current) {
-      cancelTokenRef.current.cancel();
-    }
-
     if (!userId) {
       return;
     }
 
     const { commonId, feedObjectId } = payload;
-    const identificationData: FeedItemIdentificationData = {
+    const key = getFeedItemUserMetadataKey({
       commonId,
       userId,
       feedObjectId,
-    };
+    });
 
     try {
       dispatch(
         cacheActions.updateFeedItemUserSeenState({
-          ...identificationData,
+          key,
           seen: newSeenValue,
+          isSeenUpdating: true,
         }),
       );
-      cancelTokenRef.current = getCancelTokenSource();
 
       if (newSeenValue) {
-        await CommonFeedService.markCommonFeedItemAsSeen(payload, {
-          cancelToken: cancelTokenRef.current.token,
-        });
+        await CommonFeedService.markCommonFeedItemAsSeen(payload);
       } else {
-        await CommonFeedService.markCommonFeedItemAsUnseen(payload, {
-          cancelToken: cancelTokenRef.current.token,
-        });
+        await CommonFeedService.markCommonFeedItemAsUnseen(payload);
       }
-
-      cancelTokenRef.current = null;
     } catch (error) {
-      if (!isRequestCancelled(error)) {
-        Logger.error(error);
-        cancelTokenRef.current = null;
-      }
-
       dispatch(
         cacheActions.updateFeedItemUserSeenState({
-          ...identificationData,
+          key,
           seen: !newSeenValue,
+          isSeenUpdating: false,
         }),
       );
     }

@@ -222,6 +222,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
           lastSeenItem: feedItemUserMetadata?.lastSeen,
           lastSeenAt: feedItemUserMetadata?.lastSeenAt,
           seenOnce: feedItemUserMetadata?.seenOnce,
+          seen: feedItemUserMetadata?.seen,
           hasUnseenMention: feedItemUserMetadata?.hasUnseenMention,
         });
       }
@@ -232,6 +233,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       feedItemUserMetadata?.lastSeen,
       feedItemUserMetadata?.lastSeenAt,
       feedItemUserMetadata?.seenOnce,
+      feedItemUserMetadata?.seen,
       feedItemUserMetadata?.hasUnseenMention,
     ]);
 

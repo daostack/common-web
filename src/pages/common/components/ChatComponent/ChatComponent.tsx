@@ -51,7 +51,7 @@ import {
   countTextEditorEmojiElements,
 } from "@/shared/ui-kit";
 import { checkUncheckedItemsInTextEditorValue } from "@/shared/ui-kit/TextEditor/utils";
-import { InternalLinkData } from "@/shared/utils";
+import { InternalLinkData, notEmpty } from "@/shared/utils";
 import {
   emptyFunction,
   getUserName,
@@ -92,6 +92,7 @@ interface ChatComponentInterface {
   isAuthorized?: boolean;
   isHidden: boolean;
   seenOnce?: boolean;
+  seen?: boolean;
   onMessagesAmountChange?: (newMessagesAmount: number) => void;
   directParent?: DirectParent | null;
   renderChatInput?: () => ReactNode;
@@ -138,6 +139,7 @@ export default function ChatComponent({
   isAuthorized,
   isHidden = false,
   seenOnce = false,
+  seen,
   onMessagesAmountChange,
   directParent,
   renderChatInput: renderChatInputOuter,
@@ -586,7 +588,7 @@ export default function ChatComponent({
   );
 
   useEffect(() => {
-    if (seenOnce) {
+    if (seenOnce && notEmpty(seen) && seen) {
       return;
     }
 
