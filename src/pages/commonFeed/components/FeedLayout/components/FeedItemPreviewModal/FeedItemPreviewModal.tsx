@@ -95,6 +95,7 @@ const FeedItemPreviewModal: FC<FeedItemPreviewModalProps> = (props) => {
             sizeKey={sizeKey}
             onActiveItemDataChange={handleActiveItemDataChange}
             onFeedItemClick={emptyFunction}
+            onInternalLinkClick={emptyFunction}
           />
         </>
       )}

@@ -38,6 +38,7 @@ import {
   StaticLinkType,
   checkIsCountdownState,
   getUserName,
+  InternalLinkData,
 } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
 import { useMenuItems } from "../DiscussionFeedCard/hooks";
@@ -92,6 +93,7 @@ interface ProposalFeedCardProps {
   shouldPreLoadMessages: boolean;
   onUserClick?: (userId: string) => void;
   onFeedItemClick: (feedItemId: string) => void;
+  onInternalLinkClick: (data: InternalLinkData) => void;
 }
 
 const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
@@ -117,6 +119,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       shouldPreLoadMessages,
       onUserClick,
       onFeedItemClick,
+      onInternalLinkClick,
     } = props;
     const user = useSelector(selectUser());
     const userId = user?.uid;
@@ -199,6 +202,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       discussionId: discussion?.id,
       onUserClick,
       onFeedItemClick,
+      onInternalLinkClick,
     });
     const menuItems = useMenuItems(
       {
