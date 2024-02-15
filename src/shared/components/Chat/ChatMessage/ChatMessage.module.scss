@@ -1,4 +1,5 @@
-@import "../../../../constants.scss";
+@import "../../../../constants";
+@import "../../../../styles/mixins";
 @import "../../../../styles/sizes";
 
 .message {
@@ -260,6 +261,13 @@
   background-color: $c-pink-active-btn;
 }
 
+@include darkTheme {
+  .highlighted {
+    border: 0;
+    background-color: var(--quaternary-fill);
+  }
+}
+
 .highlightedOwn {
   animation: highlightedOwn 10s forwards;
   border: 0.094rem solid $dark-yellow;
@@ -270,6 +278,15 @@
   100% {
     border-color: transparent;
     background-color: $c-light-gray;
+  }
+}
+
+@include darkTheme {
+  @keyframes highlighted {
+    100% {
+      border-color: transparent;
+      background-color: var(--secondary-background);
+    }
   }
 }
 
