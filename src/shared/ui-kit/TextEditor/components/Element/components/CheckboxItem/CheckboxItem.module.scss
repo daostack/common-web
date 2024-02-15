@@ -1,6 +1,6 @@
 @import "../../../../../../../constants";
 
-$marginToText: 0.5rem;
+$marginToText: 0.625rem;
 
 .container {
   display: flex;
@@ -77,6 +77,7 @@ $marginToText: 0.5rem;
   --circle-border-color: #{$c-shades-white};
 
   color: var(--circle-border-color);
+  border-width: 0.0625rem;
 }
 .circleDisabled {
   opacity: 0.5;
