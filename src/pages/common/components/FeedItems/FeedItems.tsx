@@ -85,6 +85,7 @@ const FeedItems: FC<FeedItemsProps> = (props) => {
                 isPreviewMode
                 directParent={common.directParent}
                 onFeedItemClick={emptyFunction}
+                onInternalLinkClick={emptyFunction}
               />
             );
           })}

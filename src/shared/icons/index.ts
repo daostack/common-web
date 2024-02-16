@@ -10,6 +10,7 @@ export { default as BoldPlusIcon } from "./boldPlus.icon";
 export { default as CaretIcon } from "./caret.icon";
 export { default as CheckIcon } from "./check.icon";
 export { default as Check2Icon } from "./check2.icon";
+export { default as Check3Icon } from "./check3.icon";
 export { default as Close2Icon } from "./close2.icon";
 export { default as CopyrightIcon } from "./copyright.icon";
 export { default as CopyLinkChainIcon } from "./copyLinkChain.icon";

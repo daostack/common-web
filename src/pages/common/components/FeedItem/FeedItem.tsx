@@ -11,7 +11,7 @@ import {
   CommonNotion,
   DirectParent,
 } from "@/shared/models";
-import { checkIsItemVisibleForUser } from "@/shared/utils";
+import { checkIsItemVisibleForUser, InternalLinkData } from "@/shared/utils";
 import { useFeedItemSubscription } from "../../hooks";
 import { DiscussionFeedCard } from "../DiscussionFeedCard";
 import { ProposalFeedCard } from "../ProposalFeedCard";
@@ -46,6 +46,7 @@ interface FeedItemProps {
   rootCommonId?: string;
   shouldPreLoadMessages?: boolean;
   onFeedItemClick: (feedItemId: string) => void;
+  onInternalLinkClick: (data: InternalLinkData) => void;
 }
 
 const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
@@ -73,6 +74,7 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     rootCommonId,
     shouldPreLoadMessages = false,
     onFeedItemClick,
+    onInternalLinkClick,
   } = props;
   const {
     onFeedItemUpdate,
@@ -146,6 +148,7 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     shouldPreLoadMessages,
     onUserClick: handleUserClick,
     onFeedItemClick,
+    onInternalLinkClick,
   };
 
   if (item.data.type === CommonFeedType.Discussion) {

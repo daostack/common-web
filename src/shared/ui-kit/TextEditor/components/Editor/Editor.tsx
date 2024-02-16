@@ -12,7 +12,7 @@ import { DOMRange } from "slate-react/dist/utils/dom";
 import { Element, Leaf } from "../../components";
 import { HOTKEYS, TextEditorSize } from "../../constants";
 import { EditorElementStyles } from "../../types";
-import { toggleMark } from "../../utils";
+import { checkIsCheckboxItemElement, toggleMark } from "../../utils";
 import styles from "./Editor.module.scss";
 
 interface EditorProps {
@@ -32,7 +32,6 @@ interface EditorProps {
 const Editor: FC<EditorProps> = (props) => {
   const {
     size = TextEditorSize.Small,
-    placeholder,
     elementStyles,
     readOnly = false,
     disabled = false,
@@ -57,6 +56,10 @@ const Editor: FC<EditorProps> = (props) => {
     props.className,
   );
   const id = props.id || props.name;
+  const placeholder =
+    editor.children[0] && checkIsCheckboxItemElement(editor.children[0])
+      ? undefined
+      : props.placeholder;
 
   const handleKeyDown: KeyboardEventHandler<HTMLDivElement> = (event) => {
     Object.entries(HOTKEYS).forEach(([hotkey, format]) => {

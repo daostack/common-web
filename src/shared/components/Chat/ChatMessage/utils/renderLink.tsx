@@ -1,4 +1,4 @@
-import React from "react";
+import React, { MouseEventHandler } from "react";
 import { NavLink } from "react-router-dom";
 import { Text } from "../types";
 import styles from "../ChatMessage.module.scss";
@@ -6,7 +6,7 @@ import styles from "../ChatMessage.module.scss";
 interface RenderLinkProps {
   to: string;
   name: string;
-  onClick?: () => void;
+  onClick?: MouseEventHandler;
   className?: string;
 }
 

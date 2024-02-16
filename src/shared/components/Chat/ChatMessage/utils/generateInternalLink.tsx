@@ -64,8 +64,13 @@ export const generateInternalLink = async ({
                 ...(itemId && { item: itemId }),
               }),
               name: itemTitle ?? common.name,
-              onClick: () => {
+              onClick: (event) => {
                 const parsedLinkData = parseMessageLink(text);
+
+                if (onInternalLinkClick && parsedLinkData) {
+                  event.preventDefault();
+                }
+
                 onInternalLinkClick &&
                   parsedLinkData &&
                   onInternalLinkClick(parsedLinkData);

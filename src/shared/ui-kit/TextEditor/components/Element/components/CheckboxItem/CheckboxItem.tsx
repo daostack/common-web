@@ -2,7 +2,7 @@ import React, { ChangeEventHandler, FC } from "react";
 import classNames from "classnames";
 import { Transforms } from "slate";
 import { ReactEditor, useReadOnly, useSlateStatic } from "slate-react";
-import { RegularCheckboxIcon, SelectedCheckboxIcon } from "@/shared/icons";
+import { Check3Icon } from "@/shared/icons";
 import { CheckboxItemElement } from "../../../../types";
 import { ElementAttributes } from "../../types";
 import styles from "./CheckboxItem.module.scss";
@@ -38,13 +38,10 @@ const CheckboxItem: FC<CheckboxItemProps> = (props) => {
           checked={checked}
           onChange={handleChange}
         />
-        <RegularCheckboxIcon
-          className={`${styles.icon} ${styles.iconRegular}`}
-        />
-        <SelectedCheckboxIcon
-          className={`${styles.icon} ${styles.iconSelected}`}
-          color="currentColor"
-        />
+        <span className={`${styles.circle} ${styles.circleInactive}`} />
+        <span className={`${styles.circle} ${styles.circleActive}`}>
+          <Check3Icon className={styles.checkIcon} />
+        </span>
       </div>
       <span
         className={styles.textWrapper}
