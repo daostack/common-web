@@ -1,4 +1,5 @@
 import React, { FC, useMemo, useRef } from "react";
+import classNames from "classnames";
 import { FieldArray, useFormikContext } from "formik";
 import { min, max } from "lodash";
 import { Option } from "@/shared/components/Dropdown/Dropdown";
@@ -204,13 +205,23 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
                   </div>
                   {circle.selected && circle.synced && (
                     <>
-                      <div className={styles.rowContentWrapper}>
+                      <div
+                        className={classNames(
+                          styles.rowContentWrapper,
+                          styles.rowContentText,
+                        )}
+                      >
                         <b>with space</b>
                         <span className={styles.parentSpaceNameLabel}>
                           {parentCommonName}
                         </span>
                       </div>
-                      <div className={styles.rowContentWrapper}>
+                      <div
+                        className={classNames(
+                          styles.rowContentWrapper,
+                          styles.rowContentText,
+                        )}
+                      >
                         <b>role</b>
                         <Dropdown
                           name={`advancedSettings.circles.${index}.inheritFrom`}

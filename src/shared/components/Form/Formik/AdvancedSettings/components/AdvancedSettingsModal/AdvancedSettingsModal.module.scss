@@ -14,6 +14,7 @@
   @include big-phone {
     flex-direction: column;
     margin: 2rem;
+    align-items: flex-start;
   }
 }
 
@@ -28,6 +29,13 @@
 
   @include big-phone {
     margin: 1rem 0;
+    align-items: center;
+  }
+}
+
+.rowContentText {
+  @include big-phone {
+    margin-left: 2rem;
   }
 }
 
