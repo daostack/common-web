@@ -132,7 +132,7 @@ export const useDiscussionMessagesById = ({
     messageId: string,
     endDate: Date,
   ): Promise<void> => {
-    if (state.data?.find((item) => item.id === discussionId)) {
+    if (state.data?.find((item) => item.id === messageId)) {
       return Promise.resolve();
     }
 

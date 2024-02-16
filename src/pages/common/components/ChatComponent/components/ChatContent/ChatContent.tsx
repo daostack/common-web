@@ -170,6 +170,7 @@ const ChatContent: ForwardRefRenderFunction<
       shouldScrollToElementId &&
       discussionMessages?.find((item) => item.id === shouldScrollToElementId)
     ) {
+      setScrolledToMessage(false);
       setHighlightedMessageId(shouldScrollToElementId);
       setShouldScrollToElementId("");
     }
@@ -254,6 +255,7 @@ const ChatContent: ForwardRefRenderFunction<
             show={currentMessages.length > 0}
             transition={isTabletView ? ModalTransition.FadeIn : null}
             className={styles.messageListTransitionContainer}
+            style={{ zIndex: dateListReverse.length - dayIndex }}
           >
             {currentMessages.length > 0 && (
               <ul id={chatId} className={styles.messageList}>

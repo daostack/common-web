@@ -493,9 +493,8 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   }
 
   const onPullToRefresh = () => {
-    if (hasMoreCommonFeedItems) {
-      fetchCommonFeedItems();
-    }
+    dispatch(cacheActions.clearFeedStateByCommonId(commonId));
+    dispatch(commonActions.resetFeedItems());
   };
 
   const renderContentWrapper = (

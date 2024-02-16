@@ -38,6 +38,7 @@ import {
   StaticLinkType,
   checkIsCountdownState,
   getUserName,
+  InternalLinkData,
 } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
 import { useMenuItems } from "../DiscussionFeedCard/hooks";
@@ -89,8 +90,10 @@ interface ProposalFeedCardProps {
   isMobileVersion?: boolean;
   feedItemFollow: FeedItemFollowState;
   onActiveItemDataChange?: (data: FeedLayoutItemChangeData) => void;
-  onUserSelect?: (userId: string, commonId?: string) => void;
   shouldPreLoadMessages: boolean;
+  onUserClick?: (userId: string) => void;
+  onFeedItemClick: (feedItemId: string) => void;
+  onInternalLinkClick: (data: InternalLinkData) => void;
 }
 
 const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
@@ -113,8 +116,10 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       isMobileVersion,
       feedItemFollow,
       onActiveItemDataChange,
-      onUserSelect,
       shouldPreLoadMessages,
+      onUserClick,
+      onFeedItemClick,
+      onInternalLinkClick,
     } = props;
     const user = useSelector(selectUser());
     const userId = user?.uid;
@@ -195,6 +200,9 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
     const preloadDiscussionMessagesData = usePreloadDiscussionMessagesById({
       commonId,
       discussionId: discussion?.id,
+      onUserClick,
+      onFeedItemClick,
+      onInternalLinkClick,
     });
     const menuItems = useMenuItems(
       {
@@ -411,9 +419,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
             commonId={commonId}
             userId={item.userId}
             menuItems={menuItems}
-            onUserSelect={
-              onUserSelect && (() => onUserSelect(item.userId, commonId))
-            }
+            onUserSelect={onUserClick && (() => onUserClick(item.userId))}
           />
           <FeedCardContent
             subtitle={getProposalSubtitle(

@@ -33,7 +33,7 @@ import {
   PredefinedTypes,
 } from "@/shared/models";
 import { TextEditorValue } from "@/shared/ui-kit";
-import { StaticLinkType, getUserName } from "@/shared/utils";
+import { StaticLinkType, getUserName, InternalLinkData } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
 import {
   FeedCard,
@@ -76,8 +76,10 @@ interface DiscussionFeedCardProps {
   directParent?: DirectParent | null;
   rootCommonId?: string;
   feedItemFollow: FeedItemFollowState;
-  onUserSelect?: (userId: string, commonId?: string) => void;
   shouldPreLoadMessages: boolean;
+  onUserClick?: (userId: string) => void;
+  onFeedItemClick: (feedItemId: string) => void;
+  onInternalLinkClick: (data: InternalLinkData) => void;
 }
 
 const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
@@ -106,8 +108,10 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       directParent,
       rootCommonId,
       feedItemFollow,
-      onUserSelect,
       shouldPreLoadMessages,
+      onUserClick,
+      onFeedItemClick,
+      onInternalLinkClick,
     } = props;
     const {
       isShowing: isReportModalOpen,
@@ -165,6 +169,9 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
     const preloadDiscussionMessagesData = usePreloadDiscussionMessagesById({
       commonId,
       discussionId: discussion?.id,
+      onUserClick,
+      onFeedItemClick,
+      onInternalLinkClick,
     });
     const menuItems = useMenuItems(
       {
@@ -352,9 +359,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
             commonId={commonId}
             userId={item.userId}
             directParent={directParent}
-            onUserSelect={
-              onUserSelect && (() => onUserSelect(item.userId, commonId))
-            }
+            onUserSelect={onUserClick && (() => onUserClick(item.userId))}
           />
           <FeedCardContent
             description={isHome ? common?.description : discussion?.message}

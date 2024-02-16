@@ -6,7 +6,7 @@ import { useCommonFeedItems } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { checkIsFeedItemFollowLayoutItem } from "@/shared/interfaces";
 import { Container, InfiniteScroll } from "@/shared/ui-kit";
-import { checkIsProject } from "@/shared/utils";
+import { checkIsProject, emptyFunction } from "@/shared/utils";
 import { FeedItem, FeedItemContext, FeedItemContextValue } from "../FeedItem";
 import styles from "./FeedItems.module.scss";
 
@@ -84,6 +84,8 @@ const FeedItems: FC<FeedItemsProps> = (props) => {
                 userCircleIds={userCircleIds}
                 isPreviewMode
                 directParent={common.directParent}
+                onFeedItemClick={emptyFunction}
+                onInternalLinkClick={emptyFunction}
               />
             );
           })}

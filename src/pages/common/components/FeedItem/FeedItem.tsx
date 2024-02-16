@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useEffect } from "react";
+import React, { forwardRef, memo, useEffect, useMemo } from "react";
 import { useFeedItemFollow } from "@/shared/hooks/useCases";
 import { FeedLayoutItemChangeData } from "@/shared/interfaces";
 import {
@@ -11,7 +11,7 @@ import {
   CommonNotion,
   DirectParent,
 } from "@/shared/models";
-import { checkIsItemVisibleForUser } from "@/shared/utils";
+import { checkIsItemVisibleForUser, InternalLinkData } from "@/shared/utils";
 import { useFeedItemSubscription } from "../../hooks";
 import { DiscussionFeedCard } from "../DiscussionFeedCard";
 import { ProposalFeedCard } from "../ProposalFeedCard";
@@ -45,6 +45,8 @@ interface FeedItemProps {
   directParent?: DirectParent | null;
   rootCommonId?: string;
   shouldPreLoadMessages?: boolean;
+  onFeedItemClick: (feedItemId: string) => void;
+  onInternalLinkClick: (data: InternalLinkData) => void;
 }
 
 const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
@@ -71,6 +73,8 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     directParent,
     rootCommonId,
     shouldPreLoadMessages = false,
+    onFeedItemClick,
+    onInternalLinkClick,
   } = props;
   const {
     onFeedItemUpdate,
@@ -84,6 +88,11 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     { withSubscription: true },
   );
   useFeedItemSubscription(item.id, commonId, onFeedItemUpdate);
+
+  const handleUserClick = useMemo(
+    () => onUserSelect && ((userId: string) => onUserSelect(userId, commonId)),
+    [onUserSelect, commonId],
+  );
 
   useEffect(() => {
     if (
@@ -137,6 +146,9 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     feedItemFollow,
     onUserSelect,
     shouldPreLoadMessages,
+    onUserClick: handleUserClick,
+    onFeedItemClick,
+    onInternalLinkClick,
   };
 
   if (item.data.type === CommonFeedType.Discussion) {
