@@ -212,6 +212,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const commonMember = outerCommonMember || fetchedCommonMember;
   const userForProfile = useUserForProfile();
   const governance = outerGovernance || fetchedGovernance;
+  const [splitPaneRef, setSplitPaneRef] = useState<Element | null>(null);
   const maxChatSize =
     settings?.getSplitViewMaxSize?.(windowWidth) ??
     getSplitViewMaxSize(windowWidth);
@@ -686,6 +687,16 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     }
   }, [Boolean(allFeedItems.length)]);
 
+  useEffect(() => {
+    if (isTabletView) {
+      setSplitPaneRef(null);
+      return;
+    }
+    if (!splitPaneRef) {
+      setSplitPaneRef(document.getElementsByClassName("SplitPane")?.[0]);
+    }
+  }, [isTabletView, splitPaneRef]);
+
   useImperativeHandle(
     ref,
     () => ({
@@ -697,7 +708,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   );
 
   const pageContentStyles = {
-    "--chat-w": `${chatWidth}px`,
+    "--chat-w": `${splitPaneRef ? splitPaneRef.clientWidth - chatWidth : 0}px`,
   } as CSSProperties;
 
   const followFeedItemEl =
