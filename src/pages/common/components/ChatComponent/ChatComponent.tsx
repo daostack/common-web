@@ -340,7 +340,7 @@ export default function ChatComponent({
               actualId: response.id,
             }),
           );
-        }, 2000 * index);
+        }, 2000 * (index || 1));
         return payload;
       });
 
