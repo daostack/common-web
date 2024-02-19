@@ -71,6 +71,9 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     [styles.imageNonRounded]: !shouldImageBeRounded,
     [styles.imageRounded]: shouldImageBeRounded,
   });
+  const tooltipTitle =
+    hoverTitle || (typeof finalTitle === "string" ? finalTitle : "");
+
   // Here we get either MouseEven, or TouchEven, but I was struggling with importing them from react
   // and use here to have correct types.
   const handleLongPress = (event) => {
@@ -156,10 +159,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
               [styles.titleWrapperActive]: isActive,
             })}
           >
-            <span
-              className={styles.title}
-              title={typeof hoverTitle === "string" ? hoverTitle : undefined}
-            >
+            <span className={styles.title} title={tooltipTitle}>
               {finalTitle || "Loading..."}
             </span>
             {Boolean(notion) && (
