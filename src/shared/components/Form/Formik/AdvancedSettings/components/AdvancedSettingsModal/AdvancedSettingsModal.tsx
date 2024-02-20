@@ -1,7 +1,7 @@
 import React, { FC, useMemo, useRef } from "react";
 import classNames from "classnames";
 import { FieldArray, useFormikContext } from "formik";
-import { min, max } from "lodash";
+import { min, max, uniqBy } from "lodash";
 import { Option } from "@/shared/components/Dropdown/Dropdown";
 import { Dropdown } from "@/shared/components/Form/Formik";
 import { Modal } from "@/shared/components/Modal";
@@ -54,11 +54,14 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
 
   const inheritedCircles: AdvancedSettingsOption[] = useMemo(
     () =>
-      (initialAdvancedSettings?.circles ?? []).map((circle, index) => ({
-        text: circle.inheritFrom?.circleName as string,
-        value: circle.inheritFrom as InheritFromCircle,
-        key: String(index),
-      })),
+      uniqBy(
+        (initialAdvancedSettings?.circles ?? []).map((circle, index) => ({
+          text: circle.inheritFrom?.circleName as string,
+          value: circle.inheritFrom as InheritFromCircle,
+          key: String(index),
+        })),
+        "text",
+      ),
     [initialAdvancedSettings],
   );
 
@@ -113,6 +116,7 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
     const currentTier = advancedSettings.circles?.[index].inheritFrom?.tier;
     const initialTier =
       initialAdvancedSettings?.circles?.[index].inheritFrom?.tier;
+
     if (currentTier !== initialTier) {
       const initialCircleIndex = initialAdvancedSettings?.circles?.findIndex(
         (circle) => circle?.inheritFrom?.tier === currentTier,
@@ -157,10 +161,12 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
         render={() => (
           <>
             {advancedSettings.circles?.map((circle, index) => {
+              const currentCircleTier = circle?.inheritFrom?.tier;
               const advancedCircles = advancedSettings.circles || [];
               const previousCircles = getCirclesTiers(
                 advancedCircles.slice(0, index),
               );
+
               const previousCirclesTierMax = Number(max(previousCircles));
 
               const nextCircles = getCirclesTiers(
@@ -173,6 +179,7 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
                 previousCirclesTierMax,
                 nextCirclesTierMin,
               });
+
               return (
                 <div key={index} className={styles.rootCircleWrapper}>
                   <div className={styles.rowContentWrapper}>
@@ -197,7 +204,9 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
                           previousCirclesTierMax === maxTier ||
                           nextCirclesTierMin === minTier ||
                           previousCirclesTierMax + TIER_GAP ===
-                            nextCirclesTierMin
+                            nextCirclesTierMin ||
+                          currentCircleTier === previousCirclesTierMax ||
+                          currentCircleTier === nextCirclesTierMin
                         }
                         onSelect={onChangeSyncedCircle(index)}
                       />

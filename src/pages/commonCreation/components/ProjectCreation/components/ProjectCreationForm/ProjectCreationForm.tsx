@@ -178,27 +178,30 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
         permissionGovernanceId: isParentIsRoot
           ? parentGovernanceId
           : rootGovernance?.id,
-        circles: rootCommonRoles.map((role, index) => ({
-          circleId: role.circleId,
-          circleName: `${role.circleName}s`,
-          selected: true,
-          synced: false,
-          inheritFrom: {
-            governanceId: parentGovernanceId,
-            circleId:
-              roles[index]?.circleId ?? roles[roles.length - 1]?.circleId,
-            circleName: `${
-              roles[index]?.circleName ?? roles[roles.length - 1]?.circleName
-            }s`,
-            tier: roles[index] ? role.tier : roles[roles.length - 1]?.tier,
-          },
-        })),
+        circles: rootCommonRoles.map((role, index) => {
+          return {
+            circleId: role.circleId,
+            circleName: `${role.circleName}s`,
+            selected: true,
+            synced: index === 0 ? true : false,
+            inheritFrom: {
+              governanceId: parentGovernanceId,
+              circleId:
+                roles[index]?.circleId ?? roles[roles.length - 1]?.circleId,
+              circleName: `${
+                roles[index]?.circleName ?? roles[roles.length - 1]?.circleName
+              }s`,
+              tier: roles[index]?.tier ?? roles[roles.length - 1]?.tier,
+            },
+          };
+        }),
       };
     }, [
       rootGovernance?.id,
       parentGovernanceId,
       rootCommonRoles,
       isParentIsRoot,
+      roles,
     ]);
 
   const initialValues = useMemo(

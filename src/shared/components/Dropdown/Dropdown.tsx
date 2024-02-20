@@ -19,6 +19,7 @@ import {
   closeMenu,
 } from "react-aria-menubutton";
 import classNames from "classnames";
+import { isEqual } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { useChatContentContext } from "@/pages/common/components/CommonContent/context";
 import { Loader } from "@/shared/components";
@@ -106,7 +107,7 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
   const menuButtonRef = useRef<HTMLElement>(null);
   const [menuRef, setMenuRef] = useState<HTMLUListElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const selectedOption = options.find((option) => option.value === value);
+  const selectedOption = options.find((option) => isEqual(option.value, value));
   const dropdownId = useMemo(() => `dropdown-${uuidv4()}`, []);
   const { isScrolling: isChatScrolling, chatContentRect } =
     useChatContentContext();
