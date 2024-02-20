@@ -1,5 +1,7 @@
+Ticket
+
 - [ ] PR title equals to the ticket name
-- [ ] I added the ticket to the `Development` section of this PR.
+- [ ] I've added the link to task above in `Ticket`
 
 ### What was changed?
 - [ ] 
