@@ -1,4 +1,5 @@
 import React, { ReactNode, useMemo } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import classNames from "classnames";
 import { useFullText } from "@/shared/hooks";
 import { CommonLink } from "@/shared/models";
@@ -43,16 +44,18 @@ export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
         <p className={classNames(styles.text, styles.subtitle)}>{subtitle}</p>
       )}
       {!isDescriptionEmpty && (
-        <TextEditorWithReinitialization
-          editorRef={setDescriptionRef}
-          editorClassName={classNames(styles.description, {
-            [styles.descriptionShortened]: !shouldShowFullContent,
-            [styles.descriptionLessShortened]:
-              !shouldShowFullContent && (!images || images.length === 0),
-          })}
-          value={parsedDescription}
-          readOnly
-        />
+        <ErrorBoundary fallback={null}>
+          <TextEditorWithReinitialization
+            editorRef={setDescriptionRef}
+            editorClassName={classNames(styles.description, {
+              [styles.descriptionShortened]: !shouldShowFullContent,
+              [styles.descriptionLessShortened]:
+                !shouldShowFullContent && (!images || images.length === 0),
+            })}
+            value={parsedDescription}
+            readOnly
+          />
+        </ErrorBoundary>
       )}
       {shouldDisplaySeeMoreButton && (
         <a

@@ -1,6 +1,7 @@
 @import "../../../../../../../../../constants";
 
 .container {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   color: var(--highlight);

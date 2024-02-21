@@ -9,6 +9,7 @@ import {
   checkIsSystemDiscussionMessage,
   checkIsUserDiscussionMessage,
 } from "@/shared/models";
+import { InternalLinkData } from "@/shared/utils";
 import { cacheActions } from "@/store/states";
 
 interface Options {
@@ -16,6 +17,7 @@ interface Options {
   commonId?: string;
   onUserClick?: (userId: string) => void;
   onFeedItemClick?: (feedItemId: string) => void;
+  onInternalLinkClick?: (data: InternalLinkData) => void;
 }
 
 interface Return {
@@ -30,12 +32,15 @@ export const usePreloadDiscussionMessagesById = ({
   commonId,
   onUserClick,
   onFeedItemClick,
+  onInternalLinkClick,
 }: Options): Return => {
   const dispatch = useDispatch();
   const { getCommonPagePath, getCommonPageAboutTabPath } = useRoutesContext();
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const { data: commonMembers, fetchCommonMembers } = useCommonMembers({commonId});
+  const { data: commonMembers, fetchCommonMembers } = useCommonMembers({
+    commonId,
+  });
   const [forceUpdateFlag, setForceUpdateFlag] = useState(false);
 
   const preloadDiscussionMessages = useCallback(
@@ -79,6 +84,7 @@ export const usePreloadDiscussionMessagesById = ({
           getCommonPageAboutTabPath,
           onUserClick,
           onFeedItemClick,
+          onInternalLinkClick,
         });
 
         return {

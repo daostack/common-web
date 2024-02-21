@@ -1,0 +1,5 @@
+@import "../../../../../../constants";
+
+.circleInactive {
+  --circle-border-color: #{$chat-checkbox-inactive};
+}

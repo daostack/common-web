@@ -28,7 +28,7 @@ const SplitView: FC<SplitViewProps> = (props) => {
     <SplitPane
       className={className}
       split="vertical"
-      primary="second"
+      primary="first"
       size={size}
       minSize={minSize}
       maxSize={maxSize}

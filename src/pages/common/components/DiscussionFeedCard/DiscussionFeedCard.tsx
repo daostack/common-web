@@ -33,7 +33,7 @@ import {
   PredefinedTypes,
 } from "@/shared/models";
 import { TextEditorValue } from "@/shared/ui-kit";
-import { StaticLinkType, getUserName } from "@/shared/utils";
+import { StaticLinkType, getUserName, InternalLinkData } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
 import {
   FeedCard,
@@ -80,6 +80,7 @@ interface DiscussionFeedCardProps {
   shouldPreLoadMessages: boolean;
   onUserClick?: (userId: string) => void;
   onFeedItemClick: (feedItemId: string) => void;
+  onInternalLinkClick: (data: InternalLinkData) => void;
 }
 
 const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
@@ -111,6 +112,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       shouldPreLoadMessages,
       onUserClick,
       onFeedItemClick,
+      onInternalLinkClick,
     } = props;
     const {
       isShowing: isReportModalOpen,
@@ -170,6 +172,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       discussionId: discussion?.id,
       onUserClick,
       onFeedItemClick,
+      onInternalLinkClick,
     });
     const menuItems = useMenuItems(
       {
