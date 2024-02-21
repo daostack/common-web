@@ -7,6 +7,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { NavLink } from "react-router-dom";
@@ -516,7 +517,12 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
         className={styles.feedLayout}
         renderContentWrapper={renderContentWrapper}
         topContent={
-          <>
+          <ErrorBoundary
+            fallback={null}
+            onError={() => {
+              dispatch(commonActions.setCommonAction(null));
+            }}
+          >
             {(commonAction === CommonAction.NewDiscussion ||
               commonAction === CommonAction.EditDiscussion) && (
               <NewDiscussionCreation
@@ -540,7 +546,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
                 isModalVariant={false}
               />
             )}
-          </>
+          </ErrorBoundary>
         }
         common={commonData.common}
         governance={commonData.governance}
