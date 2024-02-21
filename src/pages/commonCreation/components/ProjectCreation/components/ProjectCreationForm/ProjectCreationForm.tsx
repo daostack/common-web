@@ -184,15 +184,14 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
             circleName: `${role.circleName}s`,
             selected: true,
             synced: index === 0 ? true : false,
-            inheritFrom: {
-              governanceId: parentGovernanceId,
-              circleId:
-                roles[index]?.circleId ?? roles[roles.length - 1]?.circleId,
-              circleName: `${
-                roles[index]?.circleName ?? roles[roles.length - 1]?.circleName
-              }s`,
-              tier: roles[index]?.tier ?? roles[roles.length - 1]?.tier,
-            },
+            ...(roles[index]?.circleId && {
+              inheritFrom: {
+                governanceId: parentGovernanceId,
+                circleId: roles[index]?.circleId,
+                circleName: `${roles[index]?.circleName}s`,
+                tier: roles[index]?.tier,
+              },
+            }),
           };
         }),
       };

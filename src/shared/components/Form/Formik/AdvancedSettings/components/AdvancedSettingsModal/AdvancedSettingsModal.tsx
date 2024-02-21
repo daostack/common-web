@@ -55,11 +55,13 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
   const inheritedCircles: AdvancedSettingsOption[] = useMemo(
     () =>
       uniqBy(
-        (initialAdvancedSettings?.circles ?? []).map((circle, index) => ({
-          text: circle.inheritFrom?.circleName as string,
-          value: circle.inheritFrom as InheritFromCircle,
-          key: String(index),
-        })),
+        (initialAdvancedSettings?.circles ?? [])
+          .map((circle, index) => ({
+            text: circle.inheritFrom?.circleName as string,
+            value: circle.inheritFrom as InheritFromCircle,
+            key: String(index),
+          }))
+          .filter(({ text }) => text),
         "text",
       ),
     [initialAdvancedSettings],
@@ -129,10 +131,10 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
       }
     }
 
-    setFieldValue(
-      `advancedSettings.circles.${index}`,
-      initialAdvancedSettings?.circles?.[index],
-    );
+    setFieldValue(`advancedSettings.circles.${index}`, {
+      ...initialAdvancedSettings?.circles?.[index],
+      synced: false,
+    });
   };
 
   const onChangeSelectedCircles =
@@ -180,6 +182,10 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
                 nextCirclesTierMin,
               });
 
+              const hasLimits =
+                !Number.isNaN(previousCirclesTierMax) &&
+                !Number.isNaN(nextCirclesTierMin);
+
               return (
                 <div key={index} className={styles.rootCircleWrapper}>
                   <div className={styles.rowContentWrapper}>
@@ -205,8 +211,10 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
                           nextCirclesTierMin === minTier ||
                           previousCirclesTierMax + TIER_GAP ===
                             nextCirclesTierMin ||
-                          currentCircleTier === previousCirclesTierMax ||
-                          currentCircleTier === nextCirclesTierMin
+                          (currentCircleTier === previousCirclesTierMax &&
+                            hasLimits) ||
+                          (currentCircleTier === nextCirclesTierMin &&
+                            hasLimits)
                         }
                         onSelect={onChangeSyncedCircle(index)}
                       />
@@ -233,11 +241,14 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
                       >
                         <b>role</b>
                         <Dropdown
+                          autoSelect
                           name={`advancedSettings.circles.${index}.inheritFrom`}
                           options={inheritCirclesOptions || []}
                           shouldBeFixed={false}
                           className={styles.dropdown}
-                          onSelect={onChangeInheritCircle(index)}
+                          onSelect={(value) => {
+                            onChangeInheritCircle(index)(value);
+                          }}
                         />
                       </div>
                     </>
