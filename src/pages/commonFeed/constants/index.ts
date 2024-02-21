@@ -1,2 +1,2 @@
 export * from "./commonFeedMenuItem";
-export * from "./minChatWidth";
+export * from "./splitPaneSize";

@@ -73,26 +73,28 @@ const PhoneAuth: FC<PhoneAuthProps> = ({ authCode, onFinish, onError }) => {
     setIsCodeSending(true);
     setIsCodeInvalid(false);
 
-    dispatch(
-      sendVerificationCode.request({
-        payload: phoneNumber,
-        callback: (error, confirmationResult) => {
-          if (error || !confirmationResult) {
-            onError();
-            return;
-          }
+    setTimeout(() => {
+      dispatch(
+        sendVerificationCode.request({
+          payload: phoneNumber,
+          callback: (error, confirmationResult) => {
+            if (error || !confirmationResult) {
+              onError();
+              return;
+            }
 
-          setConfirmation(confirmationResult);
-          setCountdownDate(getCountdownDate());
-          setStep((step) =>
-            step === PhoneAuthStep.Verification
-              ? step
-              : PhoneAuthStep.Verification,
-          );
-          setIsCodeSending(false);
-        },
-      }),
-    );
+            setConfirmation(confirmationResult);
+            setCountdownDate(getCountdownDate());
+            setStep((step) =>
+              step === PhoneAuthStep.Verification
+                ? step
+                : PhoneAuthStep.Verification,
+            );
+            setIsCodeSending(false);
+          },
+        }),
+      );
+    }, 0);
   };
 
   const onVerificationCodeSubmit = (code: string) => {
