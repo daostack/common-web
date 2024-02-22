@@ -1,6 +1,5 @@
 import React, { FC, MouseEventHandler, useRef } from "react";
 import { useSelector } from "react-redux";
-import firebase from "firebase/compat/app";
 import { v4 } from "uuid";
 import { MemberDropdown } from "@/pages/common/components/CommonTabPanels/components/MembersTab/components/MemberDropdown";
 import { GovernanceActions } from "@/shared/constants";
@@ -46,7 +45,9 @@ const CommonMember: FC<CommonMemberProps> = ({
 }) => {
   const { isShowing, onClose, onOpen } = useModal(false);
   const contextMenuRef = useRef<ContextMenuRef>(null);
-  const recentAssignedCircle = useSelector(selectRecentAssignedCircle);
+  const recentAssignedCircle: Circle | undefined = useSelector(
+    selectRecentAssignedCircle(member.userId),
+  );
 
   const handleContextMenu: MouseEventHandler<HTMLLIElement> = (event) => {
     event.preventDefault();
@@ -71,8 +72,8 @@ const CommonMember: FC<CommonMemberProps> = ({
     member.circleIds,
   );
 
-  if (recentAssignedCircle && member.userId === recentAssignedCircle.userId) {
-    memberCircles.push(recentAssignedCircle.circle);
+  if (recentAssignedCircle) {
+    memberCircles.push(recentAssignedCircle);
   }
 
   const circlesWithHighestTier = getCirclesWithHighestTier(memberCircles);

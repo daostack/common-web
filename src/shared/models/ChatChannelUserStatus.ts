@@ -9,4 +9,5 @@ export interface ChatChannelUserStatus extends BaseEntity {
   seenOnce?: boolean;
   seenAt?: Timestamp;
   seen: boolean;
+  isSeenUpdating?: boolean;
 }

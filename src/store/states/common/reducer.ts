@@ -58,7 +58,7 @@ const initialState: CommonState = {
   commonMember: null,
   governance: null,
   recentStreamId: "",
-  recentAssignedCircle: null,
+  recentAssignedCircleByMember: {},
 };
 
 const sortFeedItems = (data: FeedItemFollowLayoutItem[]): void => {
@@ -672,9 +672,16 @@ export const reducer = createReducer<CommonState, Action>(initialState)
       nextState.recentStreamId = payload;
     }),
   )
-  .handleAction(actions.setRecentAssignedCircle, (state, { payload }) =>
+  .handleAction(actions.setRecentAssignedCircleByMember, (state, { payload }) =>
     produce(state, (nextState) => {
-      nextState.recentAssignedCircle = payload;
+      const { memberId, circle } = payload;
+
+      nextState.recentAssignedCircleByMember[memberId] = circle;
+    }),
+  )
+  .handleAction(actions.resetRecentAssignedCircleByMember, (state) =>
+    produce(state, (nextState) => {
+      nextState.recentAssignedCircleByMember = {};
     }),
   )
   .handleAction(actions.setSharedFeedItem, (state, { payload }) =>

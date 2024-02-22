@@ -48,5 +48,6 @@ export const selectSharedFeedItem = (state: AppState) =>
 export const selectRecentStreamId = (state: AppState) =>
   state.common.recentStreamId;
 
-export const selectRecentAssignedCircle = (state: AppState) =>
-  state.common.recentAssignedCircle;
+export const selectRecentAssignedCircle =
+  (memberId: string) => (state: AppState) =>
+    state.common.recentAssignedCircleByMember[memberId];
