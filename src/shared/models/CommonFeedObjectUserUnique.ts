@@ -14,5 +14,6 @@ export interface CommonFeedObjectUserUnique extends BaseEntity {
   commonId: string;
   seenOnce?: boolean;
   seen?: boolean;
+  isSeenUpdating?: boolean;
   hasUnseenMention?: boolean;
 }
