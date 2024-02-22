@@ -265,7 +265,11 @@ export const useInboxItems = (
 
         const filteredItems = data
           ? fetchedInboxItems.filter((fetchedItem) =>
-              data.every((item) => item.itemId !== fetchedItem.itemId),
+              data.every((item) =>
+                checkIsFeedItemFollowLayoutItemWithFollowData(item)
+                  ? item.feedItemFollowWithMetadata.id !== fetchedItem.itemId
+                  : item.itemId !== fetchedItem.itemId,
+              ),
             )
           : fetchedInboxItems;
 
