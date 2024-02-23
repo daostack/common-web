@@ -476,7 +476,7 @@ export default function ChatComponent({
             ownerType: DiscussionMessageOwnerType.User,
             ownerId: userId as string,
             ownerName: getUserName(user),
-            text: JSON.stringify(message),
+            text: "Loading...", //JSON.stringify(message),
             commonId,
             discussionId,
             createdAt: firebaseDate,
