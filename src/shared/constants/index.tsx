@@ -34,3 +34,4 @@ export * from "./theme";
 export * from "./docChange";
 export * from "./files";
 export * from "./inboxAction";
+export * from "./featuresFlags";
