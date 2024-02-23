@@ -123,7 +123,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
     isNotionIntegrationLoading;
   const error = createProjectError || updateProjectError;
 
-  // const { userFlag: isAdvancedSettingsEnabled } = useFeatureFlag(FeaturesFlags.AdvnacedSettings);
+  // const { userFlag: isAdvancedSettingsEnabled } = useFeatureFlag(FeaturesFlags.AdvancedSettings);
   // console.log(isAdvancedSettingsEnabled);
 
   useEffect(() => {
