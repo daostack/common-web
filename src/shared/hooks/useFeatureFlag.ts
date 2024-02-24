@@ -4,9 +4,9 @@ import { selectUser } from "@/pages/Auth/store/selectors";
 import { FeatureFlagService } from "@/services";
 import { FeaturesFlags } from "../constants";
 
-export const useFeatureFlag = (flag: FeaturesFlags) => {
+export const useUserFeatureFlag = (flag: FeaturesFlags) => {
   const user = useSelector(selectUser());
-  const [userFlag, setUserFlag] = useState<boolean | undefined>();
+  const [isFlagEnabled, setIsFlagEnabled] = useState<boolean | undefined>();
 
   useEffect(() => {
     (async () => {
@@ -14,12 +14,27 @@ export const useFeatureFlag = (flag: FeaturesFlags) => {
         const userFlags = await FeatureFlagService.getUserFeatureFlags(
           user?.uid,
         );
-        setUserFlag(userFlags?.[flag]);
+        setIsFlagEnabled(userFlags?.[flag]);
       }
     })();
   }, [user?.uid]);
 
   return {
-    userFlag,
+    isFlagEnabled,
+  };
+};
+
+export const useFeatureFlag = (flag: FeaturesFlags) => {
+  const [isFlagEnabled, setIsFlagEnabled] = useState<boolean | undefined>();
+
+  useEffect(() => {
+    (async () => {
+      const feature = await FeatureFlagService.getFeatureFlag(flag);
+      setIsFlagEnabled(feature?.enabled);
+    })();
+  }, []);
+
+  return {
+    isFlagEnabled,
   };
 };

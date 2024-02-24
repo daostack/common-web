@@ -1,3 +1,7 @@
-export interface FeatureFlag {
+export interface UserFeatureFlags {
   [key: string]: boolean;
+}
+
+export interface FeatureFlag {
+  enabled: boolean;
 }
