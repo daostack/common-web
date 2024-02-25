@@ -31,3 +31,11 @@ export interface UpdateChatMessageDto {
   files?: InfoItem[];
   mentions?: string[];
 }
+
+export interface CreateChatMessageReaction {
+  emoji: string;
+  chatMessageId: string;
+  chatChannelId: string;
+}
+
+export interface DeleteChatMessageReaction extends CreateChatMessageReaction {}

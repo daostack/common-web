@@ -65,6 +65,7 @@ export interface UserDiscussionMessage extends BaseDiscussionMessage {
   ownerType: DiscussionMessageOwnerType.User;
   ownerId: string;
   owner?: User | null;
+  reactionCounts?: { [key: string]: number };
 }
 
 interface BaseSystemDiscussionMessage extends BaseDiscussionMessage {

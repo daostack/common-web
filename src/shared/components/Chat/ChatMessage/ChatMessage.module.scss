@@ -324,3 +324,17 @@
 .multipleEmojiText {
   font-size: $large;
 }
+
+.reactWithEmoji {
+  margin: auto;
+  margin-left: 0;
+}
+
+.reactionsContainer {
+  position: absolute;
+  z-index: 2;
+  background-color: var(--primary-background);
+  border-radius: 2.5rem;
+  padding: 0.3rem 0.5rem;
+  box-shadow: 0 0.25rem 0.9375rem var(--drop-shadow);
+}

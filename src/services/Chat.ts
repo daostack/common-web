@@ -2,6 +2,8 @@ import { stringify } from "query-string";
 import { ApiEndpoint, FirestoreDataSource } from "@/shared/constants";
 import { DMUser, UnsubscribeFunction } from "@/shared/interfaces";
 import {
+  CreateChatMessageReaction,
+  DeleteChatMessageReaction,
   GetChatChannelMessagesResponse,
   SendChatMessageDto,
   UpdateChatMessageDto,
@@ -234,6 +236,18 @@ class ChatService {
       undefined,
       { cancelToken },
     );
+  };
+
+  public createMessageReaction = async (
+    payload: CreateChatMessageReaction,
+  ): Promise<void> => {
+    await Api.post(ApiEndpoint.CreateChatMessageReaction, payload);
+  };
+
+  public deleteMessageReaction = async (
+    payload: DeleteChatMessageReaction,
+  ): Promise<void> => {
+    await Api.post(ApiEndpoint.DeleteChatMessageReaction, payload);
   };
 
   public subscribeToChatChannel = (

@@ -49,7 +49,7 @@ import { StaticLinkType, getUserName } from "@/shared/utils";
 import { InternalLinkData } from "@/shared/utils";
 import { convertBytes } from "@/shared/utils/convertBytes";
 import { EditMessageInput } from "../EditMessageInput";
-import { ChatMessageLinkify, Time } from "./components";
+import { ChatMessageLinkify, ReactWithEmoji, Time } from "./components";
 import { ChatMessageContext, ChatMessageContextValue } from "./context";
 import { getTextFromTextEditorString } from "./utils";
 import styles from "./ChatMessage.module.scss";
@@ -112,6 +112,7 @@ export default function ChatMessage({
   }>();
   const [isEditMode, setEditMode] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showReactWithEmoji, setShowReactWithEmoji] = useState(false);
   const [isMessageEditLoading, setIsMessageEditLoading] = useState(false);
   const isTabletView = useIsTabletView();
   const isUserDiscussionMessage =
@@ -129,6 +130,22 @@ export default function ChatMessage({
   >([]);
 
   const [parentMessage, setParentMessage] = useState<ParentDiscussionMessage>();
+
+  /**
+   * TODO: improve.
+   */
+  const reactionCounts = isUserDiscussionMessage
+    ? discussionMessage.reactionCounts
+    : null;
+  const reactionsString = useMemo(() => {
+    if (!reactionCounts) return;
+    let string = "";
+    for (const [key, value] of Object.entries(reactionCounts)) {
+      string += `${key} ${value}`;
+    }
+
+    return string;
+  }, [reactionCounts]);
 
   useEffect(() => {
     (async () => {
@@ -400,6 +417,8 @@ export default function ChatMessage({
       <li
         id={discussionMessage.id}
         className={classNames(styles.container, className)}
+        onMouseEnter={() => setShowReactWithEmoji(true)}
+        onMouseLeave={() => setShowReactWithEmoji(false)}
       >
         <div
           className={classNames(styles.message, {
@@ -523,8 +542,22 @@ export default function ChatMessage({
                     onDelete={onMessageDelete}
                   />
                 )}
+
+                {/* TODO: move to seperate component */}
+                {reactionCounts && (
+                  <div className={styles.reactionsContainer}>
+                    {reactionsString}
+                  </div>
+                )}
               </div>
             </>
+          )}
+          {!isSystemMessage && (
+            <ReactWithEmoji
+              show={showReactWithEmoji}
+              discussionMessageId={discussionMessage.id}
+              className={styles.reactWithEmoji}
+            />
           )}
         </div>
       </li>

@@ -16,3 +16,11 @@ export interface CreateDiscussionMessageDto {
   mentions?: string[];
   hasUncheckedItems: boolean;
 }
+
+export interface CreateDiscussionMessageReaction {
+  emoji: string;
+  discussionMessageId: string;
+}
+
+export interface DeleteDiscussionMessageReaction
+  extends CreateDiscussionMessageReaction {}

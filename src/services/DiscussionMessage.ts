@@ -1,6 +1,10 @@
 import { ApiEndpoint, DocChange } from "@/shared/constants";
 import { UnsubscribeFunction } from "@/shared/interfaces";
-import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
+import {
+  CreateDiscussionMessageDto,
+  CreateDiscussionMessageReaction,
+  DeleteDiscussionMessageReaction,
+} from "@/shared/interfaces/api/discussionMessages";
 import { Collection, DiscussionMessage } from "@/shared/models";
 import {
   convertObjectDatesToFirestoreTimestamps,
@@ -164,6 +168,18 @@ class DiscussionMessageService {
     );
 
     return convertObjectDatesToFirestoreTimestamps(data);
+  };
+
+  public createMessageReaction = async (
+    payload: CreateDiscussionMessageReaction,
+  ): Promise<void> => {
+    await Api.post(ApiEndpoint.CreateDiscussionMessageReaction, payload);
+  };
+
+  public deleteMessageReaction = async (
+    payload: DeleteDiscussionMessageReaction,
+  ): Promise<void> => {
+    await Api.post(ApiEndpoint.DeleteDiscussionMessageReaction, payload);
   };
 }
 
