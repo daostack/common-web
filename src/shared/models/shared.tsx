@@ -35,6 +35,8 @@ export enum Collection {
   BankAccountDetails = "bankAccountDetails",
   UsersActivity = "usersActivity",
   NotionIntegration = "daoNotionIntegrations",
+  UserFeatureFlags = "userFeatureFlags",
+  FeatureFlags = "featureFlags",
 }
 
 export enum SubCollections {
