@@ -186,6 +186,20 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
                 !Number.isNaN(previousCirclesTierMax) &&
                 !Number.isNaN(nextCirclesTierMin);
 
+              const isPreviousCircleTierEqualToMaxTier = previousCirclesTierMax === maxTier;
+              const isNextCircleTierEqualToMinTier = nextCirclesTierMin === minTier;
+              const hasNoGapBetweenTiers = previousCirclesTierMax + TIER_GAP === nextCirclesTierMin;
+
+              const isSyncOptionDisabled =
+                isPreviousCircleTierEqualToMaxTier ||
+                isNextCircleTierEqualToMinTier ||
+                hasNoGapBetweenTiers ||
+                (currentCircleTier === previousCirclesTierMax &&
+                  hasLimits) ||
+                (currentCircleTier === nextCirclesTierMin &&
+                  hasLimits)
+                ;
+
               return (
                 <div key={index} className={styles.rootCircleWrapper}>
                   <div className={styles.rowContentWrapper}>
@@ -206,16 +220,7 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
                         options={SYNCING_OPTIONS}
                         shouldBeFixed={false}
                         className={styles.dropdown}
-                        disabled={
-                          previousCirclesTierMax === maxTier ||
-                          nextCirclesTierMin === minTier ||
-                          previousCirclesTierMax + TIER_GAP ===
-                            nextCirclesTierMin ||
-                          (currentCircleTier === previousCirclesTierMax &&
-                            hasLimits) ||
-                          (currentCircleTier === nextCirclesTierMin &&
-                            hasLimits)
-                        }
+                        disabled={isSyncOptionDisabled}
                         onSelect={onChangeSyncedCircle(index)}
                       />
                     )}
