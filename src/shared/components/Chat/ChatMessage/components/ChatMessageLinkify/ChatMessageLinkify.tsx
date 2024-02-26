@@ -13,7 +13,7 @@ interface ChatMessageLinkifyProps {
 }
 
 const ChatMessageLinkify: FC<ChatMessageLinkifyProps> = (props) => {
-  const { className, onInternalLinkClick, children,} = props;
+  const { className, onInternalLinkClick, children } = props;
   const componentDecorator: ReactLinkifyProps["componentDecorator"] =
     useCallback(
       (decoratedHref, decoratedText, key) => {
