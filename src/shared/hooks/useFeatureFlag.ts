@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { FeatureFlagService } from "@/services";
+import { FeatureFlagService, Logger } from "@/services";
 import { FeatureFlags } from "../constants";
 
 export const useUserFeatureFlag = (flag: FeatureFlags) => {
@@ -11,10 +11,14 @@ export const useUserFeatureFlag = (flag: FeatureFlags) => {
   useEffect(() => {
     (async () => {
       if (user) {
-        const userFlags = await FeatureFlagService.getUserFeatureFlags(
-          user?.uid,
-        );
-        setIsFlagEnabled(userFlags?.[flag]);
+        try {
+          const userFlags = await FeatureFlagService.getUserFeatureFlags(
+            user?.uid,
+          );
+          setIsFlagEnabled(userFlags?.[flag]);
+        } catch (error) {
+          Logger.error(error);
+        }
       }
     })();
   }, [user?.uid, flag]);
@@ -29,8 +33,12 @@ export const useFeatureFlag = (flag: FeatureFlags) => {
 
   useEffect(() => {
     (async () => {
-      const feature = await FeatureFlagService.getFeatureFlag(flag);
-      setIsFlagEnabled(feature?.enabled);
+      try {
+        const feature = await FeatureFlagService.getFeatureFlag(flag);
+        setIsFlagEnabled(feature?.enabled);
+      } catch (error) {
+        Logger.error(error);
+      }
     })();
   }, [flag]);
 
