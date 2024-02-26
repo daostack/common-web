@@ -2,12 +2,17 @@ import React, { FC, useCallback, useEffect, useMemo, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useCommonUpdate } from "@/pages/OldCommon/components/CommonListContainer/EditCommonModal/useCases";
 import { ConfirmationModal } from "@/shared/components";
+import { FeatureFlags } from "@/shared/constants";
 import { usePreventReload } from "@/shared/hooks";
 import {
   useGovernanceByCommonId,
   useNotionIntegration,
   useProjectCreation,
 } from "@/shared/hooks/useCases";
+import {
+  useFeatureFlag,
+  useUserFeatureFlag,
+} from "@/shared/hooks/useFeatureFlag";
 import { Circles, Common, Governance, Project, Roles } from "@/shared/models";
 import {
   Loader,
@@ -122,6 +127,14 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
     isCommonUpdateLoading ||
     isNotionIntegrationLoading;
   const error = createProjectError || updateProjectError;
+
+  const { isFlagEnabled: isAdvancedSettingsEnabled } = useUserFeatureFlag(
+    FeatureFlags.AdvancedSettings,
+  );
+  console.log(isAdvancedSettingsEnabled);
+
+  const { isFlagEnabled } = useFeatureFlag(FeatureFlags.AdvancedSettings);
+  console.log(isFlagEnabled);
 
   useEffect(() => {
     if (initialCommon?.id) {

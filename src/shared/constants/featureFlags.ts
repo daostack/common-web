@@ -1,3 +1,3 @@
-export enum FeaturesFlags {
+export enum FeatureFlags {
   AdvancedSettings = "AdvancedSettings",
 }

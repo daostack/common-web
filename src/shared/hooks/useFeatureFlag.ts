@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { FeatureFlagService } from "@/services";
-import { FeaturesFlags } from "../constants";
+import { FeatureFlags } from "../constants";
 
-export const useUserFeatureFlag = (flag: FeaturesFlags) => {
+export const useUserFeatureFlag = (flag: FeatureFlags) => {
   const user = useSelector(selectUser());
-  const [isFlagEnabled, setIsFlagEnabled] = useState<boolean | undefined>();
+  const [isFlagEnabled, setIsFlagEnabled] = useState<boolean>();
 
   useEffect(() => {
     (async () => {
@@ -17,22 +17,22 @@ export const useUserFeatureFlag = (flag: FeaturesFlags) => {
         setIsFlagEnabled(userFlags?.[flag]);
       }
     })();
-  }, [user?.uid]);
+  }, [user?.uid, flag]);
 
   return {
     isFlagEnabled,
   };
 };
 
-export const useFeatureFlag = (flag: FeaturesFlags) => {
-  const [isFlagEnabled, setIsFlagEnabled] = useState<boolean | undefined>();
+export const useFeatureFlag = (flag: FeatureFlags) => {
+  const [isFlagEnabled, setIsFlagEnabled] = useState<boolean>();
 
   useEffect(() => {
     (async () => {
       const feature = await FeatureFlagService.getFeatureFlag(flag);
       setIsFlagEnabled(feature?.enabled);
     })();
-  }, []);
+  }, [flag]);
 
   return {
     isFlagEnabled,

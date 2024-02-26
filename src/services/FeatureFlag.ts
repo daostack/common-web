@@ -8,7 +8,7 @@ const featureFlagsConverter = firestoreDataConverter<FeatureFlag>();
 class FeatureFlagService {
   public getFeatureFlag = async (
     feature: string,
-  ): Promise<FeatureFlag | undefined> =>
+  ): Promise<FeatureFlag | null> =>
     (
       await firebase
         .firestore()
@@ -16,19 +16,19 @@ class FeatureFlagService {
         .withConverter(featureFlagsConverter)
         .doc(feature)
         .get()
-    ).data();
+    ).data() || null;
 
   public getUserFeatureFlags = async (
     userId: string,
-  ): Promise<UserFeatureFlags | undefined> =>
+  ): Promise<UserFeatureFlags | null> =>
     (
       await firebase
         .firestore()
-        .collection(Collection.UserFeatureFlag)
+        .collection(Collection.UserFeatureFlags)
         .withConverter(userFeatureFlagsConverter)
         .doc(userId)
         .get()
-    ).data();
+    ).data() || null;
 }
 
 export default new FeatureFlagService();
