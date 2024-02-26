@@ -34,13 +34,13 @@ export const selectDiscussionMessagesStateByDiscussionId =
     state.cache.discussionMessagesStates[discussionId] || null;
 
 export const selectCommonMembersStateByCommonId =
-    (commonId?: string) => (state: AppState) => {
-      if(!commonId) {
-        return null;
-      }
-
-      return state.cache.commonMembersState[commonId] || null;
+  (commonId?: string) => (state: AppState) => {
+    if (!commonId) {
+      return null;
     }
+
+    return state.cache.commonMembersState[commonId] || null;
+  };
 
 export const selectFeedStateByCommonId =
   (commonId: string) => (state: AppState) =>

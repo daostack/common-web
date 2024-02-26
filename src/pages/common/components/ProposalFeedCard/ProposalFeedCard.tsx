@@ -22,6 +22,7 @@ import {
   useFeedItemUserMetadata,
   usePreloadDiscussionMessagesById,
   useProposalById,
+  useUpdateFeedItemSeenState,
   useUserById,
 } from "@/shared/hooks/useCases";
 import { FeedLayoutItemChangeData } from "@/shared/interfaces";
@@ -38,6 +39,7 @@ import {
   StaticLinkType,
   checkIsCountdownState,
   getUserName,
+  InternalLinkData,
 } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
 import { useMenuItems } from "../DiscussionFeedCard/hooks";
@@ -92,6 +94,7 @@ interface ProposalFeedCardProps {
   shouldPreLoadMessages: boolean;
   onUserClick?: (userId: string) => void;
   onFeedItemClick: (feedItemId: string) => void;
+  onInternalLinkClick: (data: InternalLinkData) => void;
 }
 
 const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
@@ -117,6 +120,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       shouldPreLoadMessages,
       onUserClick,
       onFeedItemClick,
+      onInternalLinkClick,
     } = props;
     const user = useSelector(selectUser());
     const userId = user?.uid;
@@ -199,7 +203,10 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       discussionId: discussion?.id,
       onUserClick,
       onFeedItemClick,
+      onInternalLinkClick,
     });
+    const { markFeedItemAsSeen, markFeedItemAsUnseen } =
+      useUpdateFeedItemSeenState();
     const menuItems = useMenuItems(
       {
         commonId,
@@ -216,6 +223,8 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
         report: () => {},
         share: () => onShareModalOpen(),
         remove: onProposalDeleteModalOpen,
+        markFeedItemAsSeen,
+        markFeedItemAsUnseen,
       },
     );
     const cardTitle = discussion?.title;
@@ -304,6 +313,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
           lastSeenItem: feedItemUserMetadata?.lastSeen,
           lastSeenAt: feedItemUserMetadata?.lastSeenAt,
           seenOnce: feedItemUserMetadata?.seenOnce,
+          seen: feedItemUserMetadata?.seen,
           hasUnseenMention: feedItemUserMetadata?.hasUnseenMention,
         });
       }
@@ -316,6 +326,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       feedItemUserMetadata?.lastSeen,
       feedItemUserMetadata?.lastSeenAt,
       feedItemUserMetadata?.seenOnce,
+      feedItemUserMetadata?.seen,
       feedItemUserMetadata?.hasUnseenMention,
     ]);
 

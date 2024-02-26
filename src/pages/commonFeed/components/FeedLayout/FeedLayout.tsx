@@ -69,7 +69,7 @@ import {
   getParamsFromOneOfRoutes,
   getUserName,
 } from "@/shared/utils";
-import { MIN_CHAT_WIDTH } from "../../constants";
+import { MIN_CONTENT_WIDTH } from "../../constants";
 import {
   DesktopChat,
   DesktopChatPlaceholder,
@@ -91,7 +91,7 @@ import {
   getDMChatChannelItemByUserIds,
   getItemCommonData,
   getSplitViewMaxSize,
-  saveChatSize,
+  saveContentSize,
 } from "./utils";
 import styles from "./FeedLayout.module.scss";
 
@@ -212,13 +212,14 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const commonMember = outerCommonMember || fetchedCommonMember;
   const userForProfile = useUserForProfile();
   const governance = outerGovernance || fetchedGovernance;
-  const maxChatSize =
+  const [splitPaneRef, setSplitPaneRef] = useState<Element | null>(null);
+  const maxContentSize =
     settings?.getSplitViewMaxSize?.(windowWidth) ??
     getSplitViewMaxSize(windowWidth);
-  const [realChatWidth, setRealChatWidth] = useState(() =>
-    getDefaultSize(windowWidth, maxChatSize),
+  const [realContentWidth, setRealContentWidth] = useState(() =>
+    getDefaultSize(windowWidth, maxContentSize),
   );
-  const chatWidth = Math.min(realChatWidth, maxChatSize);
+  const contentWidth = Math.min(realContentWidth, maxContentSize);
   const [expandedFeedItemId, setExpandedFeedItemId] = useState<string | null>(
     null,
   );
@@ -298,7 +299,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     userId,
   ]);
   const activeFeedItemId = chatItem?.feedItemId || feedItemIdForAutoChatOpen;
-  const sizeKey = `${windowWidth}_${chatWidth}`;
+  const sizeKey = `${windowWidth}_${contentWidth}`;
   const userCircleIds = useMemo(
     () => Object.values(commonMember?.circles.map ?? {}),
     [commonMember?.circles.map],
@@ -513,12 +514,20 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       refsByItemId.current[feedItemId]?.scrollToItem();
     } else {
       onFetchNext(feedItemId);
-      setTimeout(() => {
-        window.scrollTo({
-          top: document.body.scrollHeight,
-          behavior: "smooth",
-        });
-      }, 50);
+      const paneEl = document.getElementsByClassName("Pane Pane1")[0];
+      const containerEl = isTabletView ? window : paneEl;
+      const scrollHeight = isTabletView
+        ? document.body.scrollHeight
+        : paneEl?.scrollHeight;
+
+      if (containerEl) {
+        setTimeout(() => {
+          containerEl.scrollTo({
+            top: scrollHeight,
+            behavior: "smooth",
+          });
+        }, 50);
+      }
     }
 
     if (messageId) {
@@ -571,6 +580,18 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     [getCommonPagePath, handleFeedItemClick],
   );
 
+  const internalLinkClickRef = useRef(handleInternalLinkClick);
+  internalLinkClickRef.current = handleInternalLinkClick;
+
+  const handleInternalLinkClickMemoized = useCallback<
+    typeof handleInternalLinkClick
+  >(
+    (...args) => {
+      internalLinkClickRef.current(...args);
+    },
+    [internalLinkClickRef],
+  );
+
   const handleRefresh = async () => {
     setIsLoaderAfterRefresh(true);
     onPullToRefresh?.();
@@ -591,8 +612,8 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   }, [selectedItemCommonData?.id, userId]);
 
   useEffect(() => {
-    saveChatSize(chatWidth);
-  }, [chatWidth]);
+    saveContentSize(contentWidth);
+  }, [contentWidth]);
 
   useEffect(() => {
     onActiveItemChange?.(activeFeedItemId);
@@ -666,6 +687,16 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     }
   }, [Boolean(allFeedItems.length)]);
 
+  useEffect(() => {
+    if (isTabletView) {
+      setSplitPaneRef(null);
+      return;
+    }
+    if (!splitPaneRef) {
+      setSplitPaneRef(document.getElementsByClassName("SplitPane")?.[0]);
+    }
+  }, [isTabletView, splitPaneRef]);
+
   useImperativeHandle(
     ref,
     () => ({
@@ -677,7 +708,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   );
 
   const pageContentStyles = {
-    "--chat-w": `${chatWidth}px`,
+    "--chat-w": `${
+      splitPaneRef ? splitPaneRef.clientWidth - contentWidth : 0
+    }px`,
   } as CSSProperties;
 
   const followFeedItemEl =
@@ -765,6 +798,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                         rootCommonId={outerCommon?.rootCommonId}
                         shouldPreLoadMessages={shouldPreLoadMessages}
                         onFeedItemClick={handleFeedItemClickMemoized}
+                        onInternalLinkClick={handleInternalLinkClickMemoized}
                       />
                     );
                   }
@@ -884,10 +918,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   ) : (
     <SplitView
       className={outerStyles?.splitView}
-      size={chatWidth}
-      minSize={MIN_CHAT_WIDTH}
-      maxSize={maxChatSize}
-      onChange={setRealChatWidth}
+      size={contentWidth}
+      minSize={MIN_CONTENT_WIDTH}
+      maxSize={maxContentSize}
+      onChange={setRealContentWidth}
     >
       {contentEl}
     </SplitView>

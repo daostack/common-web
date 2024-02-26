@@ -1,5 +1,5 @@
 import produce from "immer";
-import { unionBy, uniqBy } from "lodash";
+import { unionBy } from "lodash";
 import { ActionType, createReducer } from "typesafe-actions";
 import {
   getChatChannelUserStatusKey,
@@ -8,8 +8,6 @@ import {
 import { getFeedItemUserMetadataKey } from "@/shared/constants/getFeedItemUserMetadataKey";
 import * as actions from "./actions";
 import { CacheState } from "./types";
-
-const FEED_ITEM_ID_KEY = "itemId";
 
 type Action = ActionType<typeof actions>;
 
@@ -127,17 +125,7 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
     produce(state, (nextState) => {
       const { commonId, state } = payload;
 
-      nextState.feedByCommonIdStates[commonId] = {
-        ...state,
-        pinnedFeedItems: {
-          ...state.pinnedFeedItems,
-          data: uniqBy(state.pinnedFeedItems.data, FEED_ITEM_ID_KEY),
-        },
-        feedItems: {
-          ...state.feedItems,
-          data: uniqBy(state.feedItems.data, FEED_ITEM_ID_KEY),
-        },
-      };
+      nextState.feedByCommonIdStates[commonId] = { ...state };
     }),
   )
   .handleAction(
@@ -155,26 +143,60 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
   .handleAction(actions.updateFeedItemUserMetadata, (state, { payload }) =>
     produce(state, (nextState) => {
       const { commonId, userId, feedObjectId, state } = payload;
+      const key = getFeedItemUserMetadataKey({
+        commonId,
+        userId,
+        feedObjectId,
+      });
+      const currentState = nextState.feedItemUserMetadataStates[key];
 
-      nextState.feedItemUserMetadataStates[
-        getFeedItemUserMetadataKey({
-          commonId,
-          userId,
-          feedObjectId,
-        })
-      ] = { ...state };
+      if (state.data !== null && currentState?.data?.isSeenUpdating) {
+        state.data.seen = currentState.data.seen;
+      }
+
+      nextState.feedItemUserMetadataStates[key] = { ...state };
+    }),
+  )
+  .handleAction(actions.updateFeedItemUserSeenState, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const { key, seen, isSeenUpdating } = payload;
+      const state = nextState.feedItemUserMetadataStates[key]?.data;
+
+      if (state) {
+        state.seen = seen;
+        state.seenOnce = true;
+        state.count = 0;
+        state.isSeenUpdating = isSeenUpdating;
+      }
     }),
   )
   .handleAction(actions.updateChatChannelUserStatus, (state, { payload }) =>
     produce(state, (nextState) => {
       const { userId, chatChannelId, state } = payload;
+      const key = getChatChannelUserStatusKey({
+        userId,
+        chatChannelId,
+      });
+      const currentState = nextState.chatChannelUserStatusStates[key];
 
-      nextState.chatChannelUserStatusStates[
-        getChatChannelUserStatusKey({
-          userId,
-          chatChannelId,
-        })
-      ] = { ...state };
+      if (state.data !== null && currentState?.data?.isSeenUpdating) {
+        state.data.seen = currentState.data.seen;
+      }
+
+      nextState.chatChannelUserStatusStates[key] = { ...state };
+    }),
+  )
+  .handleAction(actions.updateChatChannelUserSeenState, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const { key, seen, isSeenUpdating } = payload;
+      const state = nextState.chatChannelUserStatusStates[key]?.data;
+
+      if (state) {
+        state.seen = seen;
+        state.seenOnce = true;
+        state.notSeenCount = 0;
+        state.isSeenUpdating = isSeenUpdating;
+      }
     }),
   )
   .handleAction(

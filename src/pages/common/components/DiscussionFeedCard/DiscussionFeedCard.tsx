@@ -20,6 +20,7 @@ import {
   useDiscussionById,
   useFeedItemUserMetadata,
   usePreloadDiscussionMessagesById,
+  useUpdateFeedItemSeenState,
   useUserById,
 } from "@/shared/hooks/useCases";
 import { FeedLayoutItemChangeData } from "@/shared/interfaces";
@@ -33,7 +34,7 @@ import {
   PredefinedTypes,
 } from "@/shared/models";
 import { TextEditorValue } from "@/shared/ui-kit";
-import { StaticLinkType, getUserName } from "@/shared/utils";
+import { StaticLinkType, getUserName, InternalLinkData } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
 import {
   FeedCard,
@@ -80,6 +81,7 @@ interface DiscussionFeedCardProps {
   shouldPreLoadMessages: boolean;
   onUserClick?: (userId: string) => void;
   onFeedItemClick: (feedItemId: string) => void;
+  onInternalLinkClick: (data: InternalLinkData) => void;
 }
 
 const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
@@ -111,6 +113,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       shouldPreLoadMessages,
       onUserClick,
       onFeedItemClick,
+      onInternalLinkClick,
     } = props;
     const {
       isShowing: isReportModalOpen,
@@ -170,7 +173,10 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       discussionId: discussion?.id,
       onUserClick,
       onFeedItemClick,
+      onInternalLinkClick,
     });
+    const { markFeedItemAsSeen, markFeedItemAsUnseen } =
+      useUpdateFeedItemSeenState();
     const menuItems = useMenuItems(
       {
         commonId,
@@ -190,6 +196,8 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
         linkStream: onLinkStreamModalOpen,
         unlinkStream: onUnlinkStreamModalOpen,
         moveStream: onMoveStreamModalOpen,
+        markFeedItemAsSeen,
+        markFeedItemAsUnseen,
       },
     );
     const user = useSelector(selectUser());
@@ -215,6 +223,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
           lastSeenItem: feedItemUserMetadata?.lastSeen,
           lastSeenAt: feedItemUserMetadata?.lastSeenAt,
           seenOnce: feedItemUserMetadata?.seenOnce,
+          seen: feedItemUserMetadata?.seen,
           hasUnseenMention: feedItemUserMetadata?.hasUnseenMention,
         });
       }
@@ -225,6 +234,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       feedItemUserMetadata?.lastSeen,
       feedItemUserMetadata?.lastSeenAt,
       feedItemUserMetadata?.seenOnce,
+      feedItemUserMetadata?.seen,
       feedItemUserMetadata?.hasUnseenMention,
     ]);
 

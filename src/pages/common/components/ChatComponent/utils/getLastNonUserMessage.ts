@@ -6,10 +6,13 @@ import {
 
 export const getLastNonUserMessage = (
   discussionMessages: DiscussionMessage[],
+  discussionId: string,
   userId?: string,
 ): DiscussionMessage | null =>
   findLast(
-    discussionMessages,
+    discussionMessages.filter(
+      (message) => message.discussionId === discussionId,
+    ),
     (message) =>
       !checkIsUserDiscussionMessage(message) || message.ownerId !== userId,
   ) || null;
