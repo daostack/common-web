@@ -1,20 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CommonFeedObjectUserUniqueService } from "@/services";
-import { LoadingState } from "@/shared/interfaces";
+import { FeedItemIdentificationData, LoadingState } from "@/shared/interfaces";
 import { CommonFeedObjectUserUnique } from "@/shared/models";
 import { cacheActions, selectFeedItemUserMetadata } from "@/store/states";
 
 type State = LoadingState<CommonFeedObjectUserUnique | null>;
 
-interface IdentificationInfo {
-  commonId: string;
-  userId: string;
-  feedObjectId: string;
-}
-
 interface Return extends State {
-  fetchFeedItemUserMetadata: (info: IdentificationInfo) => void;
+  fetchFeedItemUserMetadata: (info: FeedItemIdentificationData) => void;
 }
 
 const DEFAULT_STATE: State = {
@@ -26,7 +20,7 @@ const DEFAULT_STATE: State = {
 export const useFeedItemUserMetadata = (): Return => {
   const dispatch = useDispatch();
   const [identificationInfo, setIdentificationInfo] =
-    useState<IdentificationInfo | null>(null);
+    useState<FeedItemIdentificationData | null>(null);
   const [defaultState, setDefaultState] = useState({ ...DEFAULT_STATE });
   const state =
     useSelector(
@@ -36,7 +30,7 @@ export const useFeedItemUserMetadata = (): Return => {
     ) || defaultState;
 
   const fetchFeedItemUserMetadata = useCallback(
-    (info: IdentificationInfo) => {
+    (info: FeedItemIdentificationData) => {
       setDefaultState({
         ...DEFAULT_STATE,
         fetched: !info.userId,

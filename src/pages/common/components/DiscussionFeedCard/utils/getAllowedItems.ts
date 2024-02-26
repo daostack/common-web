@@ -31,14 +31,27 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
     );
   },
   [FeedItemMenuItem.MarkUnread]: ({ feedItemUserMetadata }) => {
-    const { count, seen } = feedItemUserMetadata || {};
+    const { count, seen, isSeenUpdating } = feedItemUserMetadata || {};
+
+    if (isSeenUpdating) {
+      return false;
+    }
 
     return notEmpty(count) && notEmpty(seen) && count === 0 && seen;
   },
   [FeedItemMenuItem.MarkRead]: ({ feedItemUserMetadata }) => {
-    const { count, seen } = feedItemUserMetadata || {};
+    const { count, seenOnce, seen, isSeenUpdating } =
+      feedItemUserMetadata || {};
 
-    return Boolean(count) || !seen;
+    if (isSeenUpdating) {
+      return false;
+    }
+
+    return (
+      Boolean(count) ||
+      (notEmpty(seen) && !seen) ||
+      (notEmpty(seenOnce) && !seenOnce)
+    );
   },
   [FeedItemMenuItem.LinkTo]: checkIsLinkToAllowed,
   [FeedItemMenuItem.MoveTo]: checkIsMoveToAllowed,

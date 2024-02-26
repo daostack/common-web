@@ -156,6 +156,7 @@ const MobileChat: FC<ChatProps> = (props) => {
             hasAccess={hasAccessToChat}
             isHidden={false}
             seenOnce={chatItem.seenOnce}
+            seen={chatItem.seen}
             commonId={commonId}
             discussion={chatItem.discussion}
             chatChannel={chatItem.chatChannel}

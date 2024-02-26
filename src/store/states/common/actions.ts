@@ -9,10 +9,10 @@ import {
   NewDiscussionCreationFormValues,
   NewProposalCreationFormValues,
   PayloadWithOptionalCallback,
-  RecentAssignedCircle,
   UploadFile,
 } from "@/shared/interfaces";
 import {
+  Circle,
   CommonFeed,
   CommonMember,
   Discussion,
@@ -222,6 +222,13 @@ export const setRecentStreamId = createStandardAction(
   CommonActionType.SET_RECENT_STREAM_ID,
 )<string>();
 
-export const setRecentAssignedCircle = createStandardAction(
-  CommonActionType.SET_RECENT_ASSIGNED_CIRCLE,
-)<RecentAssignedCircle | null>();
+export const setRecentAssignedCircleByMember = createStandardAction(
+  CommonActionType.SET_RECENT_ASSIGNED_CIRCLE_BY_MEMBER,
+)<{
+  memberId: string;
+  circle: Circle;
+}>();
+
+export const resetRecentAssignedCircleByMember = createStandardAction(
+  CommonActionType.RESET_RECENT_ASSIGNED_CIRCLE_BY_MEMBER,
+)();

@@ -29,6 +29,7 @@ export * from "./checkIsSynchronizedDate";
 export * from "./checkIsURL";
 export * from "./circles";
 export * from "./notifications";
+export * from "./notEmpty";
 export * from "./getFirebaseAuthProvider";
 export * from "./getFirebaseToken";
 export * from "./sidenav";
