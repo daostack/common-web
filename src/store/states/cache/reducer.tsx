@@ -1,5 +1,5 @@
 import produce from "immer";
-import { unionBy, uniqBy } from "lodash";
+import { unionBy } from "lodash";
 import { ActionType, createReducer } from "typesafe-actions";
 import {
   getChatChannelUserStatusKey,
@@ -8,8 +8,6 @@ import {
 import { getFeedItemUserMetadataKey } from "@/shared/constants/getFeedItemUserMetadataKey";
 import * as actions from "./actions";
 import { CacheState } from "./types";
-
-const FEED_ITEM_ID_KEY = "itemId";
 
 type Action = ActionType<typeof actions>;
 
@@ -127,17 +125,7 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
     produce(state, (nextState) => {
       const { commonId, state } = payload;
 
-      nextState.feedByCommonIdStates[commonId] = {
-        ...state,
-        pinnedFeedItems: {
-          ...state.pinnedFeedItems,
-          data: uniqBy(state.pinnedFeedItems.data, FEED_ITEM_ID_KEY),
-        },
-        feedItems: {
-          ...state.feedItems,
-          data: uniqBy(state.feedItems.data, FEED_ITEM_ID_KEY),
-        },
-      };
+      nextState.feedByCommonIdStates[commonId] = { ...state };
     }),
   )
   .handleAction(
