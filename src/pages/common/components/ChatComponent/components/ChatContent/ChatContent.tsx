@@ -64,6 +64,7 @@ interface ChatContentInterface {
   isChatChannel: boolean;
   isMessageEditAllowed: boolean;
   fetchReplied: (messageId: string, endDate: Date) => Promise<void>;
+  chatChannelId?: string;
 }
 
 const isToday = (someDate: Date) => {
@@ -102,6 +103,7 @@ const ChatContent: ForwardRefRenderFunction<
     isMessageEditAllowed,
     fetchReplied,
     discussionMessages,
+    chatChannelId,
   },
   chatContentRef,
 ) => {
@@ -286,6 +288,7 @@ const ChatContent: ForwardRefRenderFunction<
                       onUserClick={onUserClick}
                       onFeedItemClick={onFeedItemClick}
                       onInternalLinkClick={onInternalLinkClick}
+                      chatChannelId={chatChannelId}
                     />
                   ) : (
                     <ChatMessage

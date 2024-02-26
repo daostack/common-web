@@ -48,7 +48,12 @@ import { StaticLinkType, getUserName } from "@/shared/utils";
 import { InternalLinkData } from "@/shared/utils";
 import { convertBytes } from "@/shared/utils/convertBytes";
 import { EditMessageInput } from "../EditMessageInput";
-import { ChatMessageLinkify, Time } from "./components";
+import {
+  ChatMessageLinkify,
+  ReactWithEmoji,
+  Reactions,
+  Time,
+} from "./components";
 import { ChatMessageContext, ChatMessageContextValue } from "./context";
 import { getTextFromTextEditorString } from "./utils";
 import styles from "./ChatMessage.module.scss";
@@ -70,6 +75,7 @@ interface ChatMessageProps {
   onUserClick?: (userId: string) => void;
   onFeedItemClick?: (feedItemId: string) => void;
   onInternalLinkClick?: (data: InternalLinkData) => void;
+  chatChannelId?: string;
 }
 
 const getStaticLinkByChatType = (chatType: ChatType): StaticLinkType => {
@@ -100,6 +106,7 @@ export default function DMChatMessage({
   onUserClick,
   onFeedItemClick,
   onInternalLinkClick,
+  chatChannelId,
 }: ChatMessageProps) {
   const dispatch = useDispatch();
   const { notify } = useNotification();
@@ -110,6 +117,7 @@ export default function DMChatMessage({
   }>();
   const [isEditMode, setEditMode] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showReactWithEmoji, setShowReactWithEmoji] = useState(false);
   const [isMessageEditLoading, setIsMessageEditLoading] = useState(false);
   const isTabletView = useIsTabletView();
   const isUserDiscussionMessage =
@@ -398,6 +406,8 @@ export default function DMChatMessage({
       <li
         id={discussionMessage.id}
         className={classNames(styles.container, className)}
+        onMouseEnter={() => setShowReactWithEmoji(true)}
+        onMouseLeave={() => setShowReactWithEmoji(false)}
       >
         <div
           className={classNames(styles.message, {
@@ -526,9 +536,19 @@ export default function DMChatMessage({
                     onDelete={onMessageDelete}
                   />
                 )}
+
+                {isUserDiscussionMessage && (
+                  <Reactions reactions={discussionMessage.reactionCounts} />
+                )}
               </div>
             </>
           )}
+          <ReactWithEmoji
+            show={showReactWithEmoji}
+            chatMessageId={discussionMessage.id}
+            chatChannelId={chatChannelId}
+            className={styles.reactWithEmoji}
+          />
         </div>
       </li>
     </ChatMessageContext.Provider>
