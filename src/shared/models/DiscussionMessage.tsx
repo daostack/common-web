@@ -61,11 +61,15 @@ interface BaseDiscussionMessage extends BaseEntity {
   hasUncheckedItems: boolean;
 }
 
+export interface ReactionCounts {
+  [key: string]: number;
+}
+
 export interface UserDiscussionMessage extends BaseDiscussionMessage {
   ownerType: DiscussionMessageOwnerType.User;
   ownerId: string;
   owner?: User | null;
-  reactionCounts?: { [key: string]: number };
+  reactionCounts?: ReactionCounts;
 }
 
 interface BaseSystemDiscussionMessage extends BaseDiscussionMessage {

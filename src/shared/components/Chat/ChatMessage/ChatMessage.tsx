@@ -49,7 +49,12 @@ import { StaticLinkType, getUserName } from "@/shared/utils";
 import { InternalLinkData } from "@/shared/utils";
 import { convertBytes } from "@/shared/utils/convertBytes";
 import { EditMessageInput } from "../EditMessageInput";
-import { ChatMessageLinkify, ReactWithEmoji, Time } from "./components";
+import {
+  ChatMessageLinkify,
+  ReactWithEmoji,
+  Reactions,
+  Time,
+} from "./components";
 import { ChatMessageContext, ChatMessageContextValue } from "./context";
 import { getTextFromTextEditorString } from "./utils";
 import styles from "./ChatMessage.module.scss";
@@ -130,22 +135,6 @@ export default function ChatMessage({
   >([]);
 
   const [parentMessage, setParentMessage] = useState<ParentDiscussionMessage>();
-
-  /**
-   * TODO: improve.
-   */
-  const reactionCounts = isUserDiscussionMessage
-    ? discussionMessage.reactionCounts
-    : null;
-  const reactionsString = useMemo(() => {
-    if (!reactionCounts) return;
-    let string = "";
-    for (const [key, value] of Object.entries(reactionCounts)) {
-      string += `${key} ${value}`;
-    }
-
-    return string;
-  }, [reactionCounts]);
 
   useEffect(() => {
     (async () => {
@@ -543,11 +532,8 @@ export default function ChatMessage({
                   />
                 )}
 
-                {/* TODO: move to seperate component */}
-                {reactionCounts && (
-                  <div className={styles.reactionsContainer}>
-                    {reactionsString}
-                  </div>
+                {!isSystemMessage && isUserDiscussionMessage && (
+                  <Reactions reactions={discussionMessage.reactionCounts} />
                 )}
               </div>
             </>
