@@ -6,7 +6,7 @@ import { FeatureFlags } from "../constants";
 
 export const useUserFeatureFlag = (flag: FeatureFlags) => {
   const user = useSelector(selectUser());
-  const [isFlagEnabled, setIsFlagEnabled] = useState<boolean>();
+  const [isFlagEnabled, setIsFlagEnabled] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
@@ -15,9 +15,10 @@ export const useUserFeatureFlag = (flag: FeatureFlags) => {
           const userFlags = await FeatureFlagService.getUserFeatureFlags(
             user?.uid,
           );
-          setIsFlagEnabled(userFlags?.[flag]);
+          setIsFlagEnabled(userFlags?.[flag] ?? false);
         } catch (error) {
           Logger.error(error);
+          setIsFlagEnabled(false);
         }
       }
     })();
@@ -29,15 +30,16 @@ export const useUserFeatureFlag = (flag: FeatureFlags) => {
 };
 
 export const useFeatureFlag = (flag: FeatureFlags) => {
-  const [isFlagEnabled, setIsFlagEnabled] = useState<boolean>();
+  const [isFlagEnabled, setIsFlagEnabled] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
       try {
         const feature = await FeatureFlagService.getFeatureFlag(flag);
-        setIsFlagEnabled(feature?.enabled);
+        setIsFlagEnabled(feature?.enabled ?? false);
       } catch (error) {
         Logger.error(error);
+        setIsFlagEnabled(false);
       }
     })();
   }, [flag]);
