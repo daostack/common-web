@@ -337,7 +337,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
 
         {/* For now, we don't support the ability to mention in a group chat.
           See https://github.com/daostack/common-web/issues/2380 */}
-        {!groupChat && target && chars.length > 0 && (
+        {!groupChat && target && (
           <MentionDropdown
             shouldFocusTarget={shouldFocusTarget}
             onClick={(user: User) => {
