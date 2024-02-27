@@ -193,6 +193,46 @@ const addMetadataToItemsBatch = async (
   ].filter(({ item }) => !feedItemIdsForNotListening.includes(item.itemId));
 };
 
+const filterItemsInTheMiddle = (info: {
+  fetchedInboxItems: InboxItem[];
+  unread: boolean;
+  currentData: FeedLayoutItemWithFollowData[] | null;
+}): { addedItems: InboxItem[]; removedItems: InboxItem[] } => {
+  const { fetchedInboxItems, unread, currentData } = info;
+  const newItems = currentData
+    ? fetchedInboxItems.filter((fetchedItem) =>
+        currentData.every((item) =>
+          checkIsFeedItemFollowLayoutItemWithFollowData(item)
+            ? item.feedItemFollowWithMetadata.id !== fetchedItem.itemId
+            : item.itemId !== fetchedItem.itemId,
+        ),
+      )
+    : fetchedInboxItems;
+
+  if (!unread) {
+    return {
+      addedItems: newItems,
+      removedItems: [],
+    };
+  }
+
+  const removedItems = fetchedInboxItems.filter(
+    (fetchedItem) =>
+      !fetchedItem.unread &&
+      (currentData || []).some((item) =>
+        checkIsFeedItemFollowLayoutItemWithFollowData(item)
+          ? item.feedItemFollowWithMetadata.id === fetchedItem.itemId
+          : item.itemId === fetchedItem.itemId,
+      ),
+  );
+  const filteredItems = newItems.filter((item) => item.unread);
+
+  return {
+    addedItems: filteredItems,
+    removedItems,
+  };
+};
+
 export const useInboxItems = (
   feedItemIdsForNotListening?: string[],
   options?: { unread?: boolean },
@@ -248,6 +288,7 @@ export const useInboxItems = (
           data,
           firstDocTimestamp: startAt,
           lastDocTimestamp: endAt,
+          unread,
         } = inboxItems;
 
         if (!userId || !startAt || !endAt) {
@@ -260,29 +301,34 @@ export const useInboxItems = (
           endAt,
         });
 
-        if (!isMounted || inboxItemsRef.current.unread) {
+        if (!isMounted) {
           return;
         }
 
-        const filteredItems = data
-          ? fetchedInboxItems.filter((fetchedItem) =>
-              data.every((item) =>
-                checkIsFeedItemFollowLayoutItemWithFollowData(item)
-                  ? item.feedItemFollowWithMetadata.id !== fetchedItem.itemId
-                  : item.itemId !== fetchedItem.itemId,
-              ),
-            )
-          : fetchedInboxItems;
+        const { addedItems, removedItems } = filterItemsInTheMiddle({
+          fetchedInboxItems,
+          unread,
+          currentData: data,
+        });
+        const addedItemsWithStatuses = addedItems.map((item) => ({
+          item,
+          statuses: {
+            isAdded: false,
+            isRemoved: false,
+          },
+        }));
+        const removedItemsWithStatuses = removedItems.map((item) => ({
+          item,
+          statuses: {
+            isAdded: false,
+            isRemoved: true,
+          },
+        }));
 
-        addNewInboxItems(
-          filteredItems.map((item) => ({
-            item,
-            statuses: {
-              isAdded: false,
-              isRemoved: false,
-            },
-          })),
-        );
+        addNewInboxItems([
+          ...addedItemsWithStatuses,
+          ...removedItemsWithStatuses,
+        ]);
       } catch (err) {
         Logger.error(err);
       }
