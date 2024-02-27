@@ -52,7 +52,9 @@ const getTextFromDescendant = async (
   showPlainText?: boolean,
 ): Promise<Text> => {
   if (showPlainText) {
-    return <span>{(descendant as any).children[0].text}</span>;
+    if (Element.isElement(descendant)) {
+      return <span>{descendant.children[0].text}</span>;
+    }
   }
 
   if (!Element.isElement(descendant)) {
