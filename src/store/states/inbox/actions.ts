@@ -17,6 +17,7 @@ export const getInboxItems = createAsyncAction(
   {
     limit?: number;
     unread?: boolean;
+    shouldUseLastStateIfExists?: boolean;
   },
   Omit<InboxItems, "loading" | "batchNumber">,
   Error,
@@ -114,3 +115,7 @@ export const addChatChannelItem = createStandardAction(
 export const removeEmptyChatChannelItems = createStandardAction(
   InboxActionType.REMOVE_EMPTY_CHAT_CHANNEL_ITEMS,
 )<string | void>();
+
+export const saveLastState = createStandardAction(
+  InboxActionType.SAVE_LAST_STATE,
+)<{ shouldSaveAsReadState: boolean }>();

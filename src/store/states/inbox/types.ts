@@ -20,6 +20,15 @@ export interface InboxItems {
   unread: boolean;
 }
 
+export type LastState = Pick<
+  InboxState,
+  | "items"
+  | "sharedFeedItemId"
+  | "sharedItem"
+  | "chatChannelItems"
+  | "nextChatChannelItemId"
+>;
+
 export interface InboxState {
   items: InboxItems;
   sharedFeedItemId: string | null;
@@ -27,4 +36,6 @@ export interface InboxState {
   chatChannelItems: ChatChannelLayoutItem[];
   nextChatChannelItemId: string | null;
   searchState: InboxSearchState;
+  lastReadState: LastState | null;
+  lastUnreadState: LastState | null;
 }
