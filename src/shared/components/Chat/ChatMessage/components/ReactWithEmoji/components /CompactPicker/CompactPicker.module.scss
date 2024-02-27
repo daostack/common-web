@@ -1,0 +1,28 @@
+@import "../../../../../../../../constants.scss";
+
+.container {
+  display: flex;
+  align-items: center;
+  border-radius: 2.5rem;
+  padding: 0.5rem;
+  box-shadow: 0 0.25rem 0.9375rem var(--drop-shadow);
+  background-color: var(--gentle-stroke);
+}
+
+.emojiButton {
+  padding: 0 0.4rem;
+  font-size: 1.25rem;
+  border-radius: 5rem;
+  height: 2rem;
+  &:hover {
+    background-color: var(--secondary-hover-fill);
+  }
+}
+
+.plusIcon {
+  border-radius: 5rem;
+  color: var(--primary-text);
+  &:hover {
+    background-color: var(--secondary-hover-fill);
+  }
+}

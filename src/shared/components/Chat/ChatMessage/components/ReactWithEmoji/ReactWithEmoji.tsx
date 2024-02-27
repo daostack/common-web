@@ -12,6 +12,7 @@ import {
 import { EmojiIcon } from "@/shared/icons";
 import { selectTheme } from "@/shared/store/selectors";
 import { ButtonIcon } from "@/shared/ui-kit";
+import { CompactPicker } from "./components /CompactPicker";
 import styles from "./ReactWithEmoji.module.scss";
 
 interface ReactWithEmojiProps {
@@ -34,6 +35,7 @@ export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
   } = props;
   const theme = useSelector(selectTheme);
   const [showPicker, setShowPicker] = useState(false);
+  const [showAllEmojis, setShowAllEmojis] = useState(false);
   const wrapperRef = useRef(null);
   const { isOutside, setOutsideValue } = useOutsideClick(wrapperRef);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -43,6 +45,7 @@ export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
 
   useEffect(() => {
     if (isOutside) {
+      setShowAllEmojis(false);
       setShowPicker(false);
       setOutsideValue();
     }
@@ -61,10 +64,11 @@ export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
         discussionMessageId,
       });
     }
+    setShowAllEmojis(false);
     setShowPicker(false);
   };
 
-  const handleButtonClick = () => {
+  const handleEmojiButtonClick = () => {
     if (buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
       setPickerPosition({
@@ -85,7 +89,7 @@ export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
       }}
     >
       {showEmojiButton && (
-        <ButtonIcon ref={buttonRef} onClick={handleButtonClick}>
+        <ButtonIcon ref={buttonRef} onClick={handleEmojiButtonClick}>
           <EmojiIcon />
         </ButtonIcon>
       )}
@@ -96,16 +100,24 @@ export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
             pickerContainerClassName || styles.pickerContainer,
           )}
         >
-          <Picker
-            data={data}
-            onEmojiSelect={onEmojiSelect}
-            theme={theme === Theme.Dark ? Theme.Dark : Theme.Light}
-            searchPosition="none"
-            navPosition="none"
-            maxFrequentRows={0}
-            perLine={5}
-            previewPosition="none"
-          />
+          {showAllEmojis ? (
+            <Picker
+              data={data}
+              onEmojiSelect={onEmojiSelect}
+              theme={theme === Theme.Dark ? Theme.Dark : Theme.Light}
+              searchPosition="none"
+              navPosition="none"
+              maxFrequentRows={0}
+              perLine={5}
+              previewPosition="none"
+              skinTonePosition="none"
+            />
+          ) : (
+            <CompactPicker
+              setShowAllEmojis={setShowAllEmojis}
+              onEmojiSelect={onEmojiSelect}
+            />
+          )}
         </div>
       )}
     </div>

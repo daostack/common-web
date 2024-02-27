@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from "react";
+import React, { FC } from "react";
 import { ReactionCounts } from "@/shared/models";
 import styles from "./Reactions.module.scss";
 
@@ -13,19 +13,12 @@ export const Reactions: FC<ReactionsProps> = (props) => {
     return null;
   }
 
-  /**
-   * TODO: improve.
-   */
-  const reactionsString = useMemo(() => {
-    let emojis = "";
-    let totalCount = 0;
-    for (const [key, value] of Object.entries(reactions)) {
-      totalCount += value;
-      emojis += key;
-    }
+  const totalCount = Object.values(reactions).reduce((a, b) => a + b, 0);
+  const emojis = Object.keys(reactions).join("");
 
-    return totalCount > 1 ? `${totalCount} ${emojis}` : emojis;
-  }, [reactions]);
-
-  return <div className={styles.container}>{reactionsString}</div>;
+  return (
+    <div className={styles.container}>
+      {totalCount > 1 ? `${totalCount} ${emojis}` : emojis}
+    </div>
+  );
 };

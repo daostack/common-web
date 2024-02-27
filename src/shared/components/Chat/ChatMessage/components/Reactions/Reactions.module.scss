@@ -1,8 +1,11 @@
+@import "../../../../../../constants.scss";
+
 .container {
   position: absolute;
   z-index: 2;
-  background-color: var(--primary-background);
+  background-color: var(--gentle-stroke);
   border-radius: 2.5rem;
   padding: 0.3rem 0.5rem;
   box-shadow: 0 0.25rem 0.9375rem var(--drop-shadow);
+  color: $c-neutrals-300;
 }
