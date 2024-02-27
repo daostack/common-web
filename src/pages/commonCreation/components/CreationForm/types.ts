@@ -6,6 +6,7 @@ import {
   RolesArrayWrapperProps,
   NotionIntegrationProps,
 } from "@/shared/components/Form/Formik";
+import { AdvancedSettingsProps } from "@/shared/components/Form/Formik/AdvancedSettings";
 import { CreationFormItemType } from "./constants";
 
 interface ItemValidation {
@@ -67,10 +68,16 @@ export interface NotionIntegrationFormItem
   type: CreationFormItemType.NotionIntegration;
 }
 
+export interface AdvancedSettingsFormItem
+  extends BaseFormItem<AdvancedSettingsProps> {
+  type: CreationFormItemType.AdvancedSettings;
+}
+
 export type CreationFormItem =
   | TextFieldFormItem
   | TextEditorFormItem
   | UploadFilesFormItem
   | LinksFormItem
   | RolesFormItem
-  | NotionIntegrationFormItem;
+  | NotionIntegrationFormItem
+  | AdvancedSettingsFormItem;
