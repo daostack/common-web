@@ -62,7 +62,6 @@
   font-size: $small;
   color: var(--primary-text);
   max-width: 33.563rem;
-  margin-right: 2.8rem;
 
   &:hover {
     .menuArrowButton {
@@ -326,6 +325,7 @@
 }
 
 .reactWithEmoji {
-  margin: auto;
-  margin-left: 0;
+  display: flex;
+  align-items: center;
+  margin-right: 2.8rem;
 }

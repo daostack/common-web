@@ -13,6 +13,9 @@ export const Reactions: FC<ReactionsProps> = (props) => {
     return null;
   }
 
+  /**
+   * TODO: improve.
+   */
   const reactionsString = useMemo(() => {
     let emojis = "";
     let totalCount = 0;

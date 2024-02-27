@@ -544,7 +544,7 @@ export default function DMChatMessage({
             </>
           )}
           <ReactWithEmoji
-            show={showReactWithEmoji}
+            showEmojiButton={showReactWithEmoji}
             chatMessageId={discussionMessage.id}
             chatChannelId={chatChannelId}
             className={styles.reactWithEmoji}

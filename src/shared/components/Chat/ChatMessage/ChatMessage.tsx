@@ -540,7 +540,7 @@ export default function ChatMessage({
           )}
           {!isSystemMessage && (
             <ReactWithEmoji
-              show={showReactWithEmoji}
+              showEmojiButton={showReactWithEmoji}
               discussionMessageId={discussionMessage.id}
               className={styles.reactWithEmoji}
             />
