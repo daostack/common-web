@@ -6,7 +6,6 @@ import {
   FormikTouched,
 } from "formik";
 import { Role, Roles } from "@/shared/models";
-import { ErrorText } from "../../ErrorText";
 import { TextField } from "../TextField";
 import styles from "./RolesArray.module.scss";
 
@@ -46,7 +45,7 @@ const RolesArray: FC<RolesArrayProps> = (props) => {
           <div>
             {values?.map((role, index) => {
               return (
-                <div className={styles.roleField}>
+                <div key={index} className={styles.roleField}>
                   <TextField
                     key={index}
                     id={`${restProps.name}.${index}.circleName`}
