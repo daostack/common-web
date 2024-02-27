@@ -521,7 +521,9 @@ export default function ChatComponent({
           });
         } else {
           pendingMessages.forEach((pendingMessage) => {
-            discussionMessagesData.addDiscussionMessage(pendingMessage, true);
+            discussionMessagesData.addDiscussionMessage(pendingMessage, {
+              showPlainText: true,
+            });
           });
         }
 

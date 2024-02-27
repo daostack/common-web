@@ -40,6 +40,10 @@ interface Options {
   onInternalLinkClick?: (data: InternalLinkData) => void;
 }
 
+interface AddDiscussionMessageOptions {
+  showPlainText?: boolean;
+}
+
 type State = LoadingState<DiscussionMessageWithParsedText[] | null>;
 
 interface Return extends State {
@@ -47,7 +51,7 @@ interface Return extends State {
   fetchRepliedMessages: (messageId: string, endDate: Date) => Promise<void>;
   addDiscussionMessage: (
     discussionMessage: DiscussionMessage,
-    showPlainText?: boolean,
+    options?: AddDiscussionMessageOptions,
   ) => void;
   deleteDiscussionMessage: (discussionMessageId: string) => void;
   isEndOfList: Record<string, boolean> | null;
@@ -93,24 +97,22 @@ export const useDiscussionMessagesById = ({
 
   const addDiscussionMessage = async (
     discussionMessage: DiscussionMessage,
-    showPlainText?: boolean,
+    options?: AddDiscussionMessageOptions,
   ): Promise<void> => {
-    const parsedText = await getTextFromTextEditorString(
-      {
-        userId,
-        ownerId: userId,
-        textEditorString: discussionMessage.text,
-        users,
-        commonId: discussionMessage.commonId,
-        getCommonPagePath,
-        getCommonPageAboutTabPath,
-        directParent,
-        onUserClick,
-        onFeedItemClick,
-        onInternalLinkClick,
-      },
-      showPlainText,
-    );
+    const parsedText = await getTextFromTextEditorString({
+      userId,
+      ownerId: userId,
+      textEditorString: discussionMessage.text,
+      users,
+      commonId: discussionMessage.commonId,
+      getCommonPagePath,
+      getCommonPageAboutTabPath,
+      directParent,
+      onUserClick,
+      onFeedItemClick,
+      onInternalLinkClick,
+      showPlainText: options?.showPlainText,
+    });
 
     dispatch(
       cacheActions.addDiscussionMessageByDiscussionId({

@@ -36,21 +36,20 @@ interface TextFromDescendant {
   directParent?: DirectParent | null;
   onUserClick?: (userId: string) => void;
   onInternalLinkClick?: (data: InternalLinkData) => void;
+  showPlainText?: boolean;
 }
 
-const getTextFromDescendant = async (
-  {
-    descendant,
-    users,
-    mentionTextClassName,
-    emojiTextClassName,
-    commonId,
-    directParent,
-    onUserClick,
-    onInternalLinkClick,
-  }: TextFromDescendant,
-  showPlainText?: boolean,
-): Promise<Text> => {
+const getTextFromDescendant = async ({
+  descendant,
+  users,
+  mentionTextClassName,
+  emojiTextClassName,
+  commonId,
+  directParent,
+  onUserClick,
+  onInternalLinkClick,
+  showPlainText,
+}: TextFromDescendant): Promise<Text> => {
   if (showPlainText) {
     if (Element.isElement(descendant)) {
       return <span>{descendant.children[0].text}</span>;
@@ -139,7 +138,6 @@ const getTextFromDescendant = async (
 
 export const getTextFromTextEditorString = async (
   data: TextData,
-  showPlainText?: boolean,
 ): Promise<Text[]> => {
   const {
     userId,
@@ -153,6 +151,7 @@ export const getTextFromTextEditorString = async (
     directParent,
     onUserClick,
     onInternalLinkClick,
+    showPlainText,
   } = data;
 
   const isCurrentUser = userId === ownerId;
@@ -192,27 +191,25 @@ export const getTextFromTextEditorString = async (
   return await Promise.all(
     textEditorValue.map(async (item, index) => (
       <React.Fragment key={index}>
-        {await getTextFromDescendant(
-          {
-            descendant: item,
-            users: filteredUsers,
-            mentionTextClassName:
-              mentionTextClassName || mentionCurrentUserTextStyle,
-            emojiTextClassName:
-              emojiTextClassName ||
-              classNames({
-                [textEditorElementsStyles.singleEmojiText]:
-                  emojiCount.isSingleEmoji,
-                [textEditorElementsStyles.multipleEmojiText]:
-                  emojiCount.isMultipleEmoji,
-              }),
-            commonId,
-            directParent,
-            onUserClick,
-            onInternalLinkClick,
-          },
+        {await getTextFromDescendant({
+          descendant: item,
+          users: filteredUsers,
+          mentionTextClassName:
+            mentionTextClassName || mentionCurrentUserTextStyle,
+          emojiTextClassName:
+            emojiTextClassName ||
+            classNames({
+              [textEditorElementsStyles.singleEmojiText]:
+                emojiCount.isSingleEmoji,
+              [textEditorElementsStyles.multipleEmojiText]:
+                emojiCount.isMultipleEmoji,
+            }),
+          commonId,
+          directParent,
+          onUserClick,
+          onInternalLinkClick,
           showPlainText,
-        )}
+        })}
       </React.Fragment>
     )),
   );
