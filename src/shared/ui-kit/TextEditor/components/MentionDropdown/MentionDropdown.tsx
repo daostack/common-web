@@ -4,6 +4,7 @@ import { UserAvatar } from "@/shared/components";
 import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
 import { useOutsideClick } from "@/shared/hooks";
 import { User } from "@/shared/models";
+import { Loader } from "@/shared/ui-kit";
 import { getUserName } from "@/shared/utils";
 import styles from "./MentionDropdown.module.scss";
 
@@ -85,6 +86,11 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
       data-cy="mentions-portal"
       onKeyDown={onKeyDown}
     >
+      {users.length === 0 && (
+        <li className={styles.content}>
+          <Loader className={styles.loader} />
+        </li>
+      )}
       {users.map((user, index) => (
         <li
           id={user.uid}
