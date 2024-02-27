@@ -766,6 +766,7 @@ export const reducer = createReducer<InboxState, Action>(INITIAL_INBOX_STATE)
           (data[data.length - 1] &&
             getFeedLayoutItemDateForSorting(data[data.length - 1])) ||
           null,
+        batchNumber: data.length > 15 ? stateToSave.items.batchNumber : 2,
       };
 
       if (shouldSaveAsReadState) {
