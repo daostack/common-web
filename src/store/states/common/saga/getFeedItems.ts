@@ -1,3 +1,4 @@
+import { uniqBy } from "lodash";
 import { call, put, select } from "redux-saga/effects";
 import { CommonFeedService } from "@/services";
 import { InboxItemType } from "@/shared/constants";
@@ -8,6 +9,8 @@ import * as actions from "../actions";
 import { selectFeedItems } from "../selectors";
 import { FeedItems } from "../types";
 import { searchFetchedFeedItems } from "./searchFetchedFeedItems";
+
+const FEED_ITEM_PATH_FOR_FILTERING = "feedItem.id";
 
 export function* getFeedItems(
   action: ReturnType<typeof actions.getFeedItems.request>,
@@ -23,7 +26,23 @@ export function* getFeedItems(
     if (!currentFeedItems.data && !feedItemId && cachedFeedState) {
       yield put(
         actions.setFeedState({
-          data: cachedFeedState,
+          data: {
+            ...cachedFeedState,
+            feedItems: {
+              ...cachedFeedState.feedItems,
+              data: uniqBy(
+                cachedFeedState.feedItems.data,
+                FEED_ITEM_PATH_FOR_FILTERING,
+              ),
+            },
+            pinnedFeedItems: {
+              ...cachedFeedState.pinnedFeedItems,
+              data: uniqBy(
+                cachedFeedState.pinnedFeedItems.data,
+                FEED_ITEM_PATH_FOR_FILTERING,
+              ),
+            },
+          },
           sharedFeedItemId,
         }),
       );

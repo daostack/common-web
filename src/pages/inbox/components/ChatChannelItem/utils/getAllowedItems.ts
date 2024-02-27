@@ -1,5 +1,6 @@
 import { ContextMenuItem as Item } from "@/shared/interfaces";
 import { ChatChannelUserStatus } from "@/shared/models";
+import { notEmpty } from "@/shared/utils";
 import { ChatChannelMenuItem } from "../constants";
 
 export interface Options {
@@ -10,10 +11,31 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
   ChatChannelMenuItem,
   (options: Options) => boolean
 > = {
-  [ChatChannelMenuItem.MarkUnread]: ({ chatChannelUserStatus }) =>
-    Boolean(chatChannelUserStatus?.seen),
-  [ChatChannelMenuItem.MarkRead]: ({ chatChannelUserStatus }) =>
-    Boolean(chatChannelUserStatus && !chatChannelUserStatus.seen),
+  [ChatChannelMenuItem.MarkUnread]: ({ chatChannelUserStatus }) => {
+    const { notSeenCount, seen, isSeenUpdating } = chatChannelUserStatus || {};
+
+    if (isSeenUpdating) {
+      return false;
+    }
+
+    return (
+      notEmpty(notSeenCount) && notEmpty(seen) && notSeenCount === 0 && seen
+    );
+  },
+  [ChatChannelMenuItem.MarkRead]: ({ chatChannelUserStatus }) => {
+    const { notSeenCount, seenOnce, seen, isSeenUpdating } =
+      chatChannelUserStatus || {};
+
+    if (isSeenUpdating) {
+      return false;
+    }
+
+    return (
+      Boolean(notSeenCount) ||
+      (notEmpty(seen) && !seen) ||
+      (notEmpty(seenOnce) && !seenOnce)
+    );
+  },
 };
 
 export const getAllowedItems = (items: Item[], options: Options): Item[] =>

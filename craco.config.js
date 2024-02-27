@@ -22,16 +22,5 @@ module.exports = {
         tsConfigPath: "./tsconfig.paths.json",
       },
     },
-    {
-      plugin: {
-        overrideWebpackConfig: ({ webpackConfig }) => {
-          if (process.env.REACT_APP_ENV === "production") {
-            delete webpackConfig.devtool;
-          }
-
-          return webpackConfig;
-        },
-      },
-    },
   ],
 };

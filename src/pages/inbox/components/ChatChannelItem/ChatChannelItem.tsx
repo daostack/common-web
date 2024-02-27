@@ -7,6 +7,7 @@ import { LastSeenEntity } from "@/shared/constants";
 import { ChatChannelToDiscussionConverter } from "@/shared/converters";
 import {
   useChatChannelUserStatus,
+  useUpdateChatChannelSeenState,
   useUsersByIds,
 } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
@@ -29,7 +30,12 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
     fetched: isChatChannelUserStatusFetched,
     fetchChatChannelUserStatus,
   } = useChatChannelUserStatus();
-  const menuItems = useMenuItems({ chatChannelUserStatus });
+  const { markChatChannelAsSeen, markChatChannelAsUnseen } =
+    useUpdateChatChannelSeenState();
+  const menuItems = useMenuItems(
+    { chatChannelUserStatus },
+    { markChatChannelAsSeen, markChatChannelAsUnseen },
+  );
   const { setChatItem, feedItemIdForAutoChatOpen, shouldAllowChatAutoOpen } =
     useChatContext();
   const user = useSelector(selectUser());
@@ -68,11 +74,13 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
           }
         : undefined,
       seenOnce: chatChannelUserStatus?.seenOnce,
+      seen: chatChannelUserStatus?.seen,
     });
   }, [
     chatChannel,
     chatChannelUserStatus?.lastSeenChatMessageId,
     chatChannelUserStatus?.seenOnce,
+    chatChannelUserStatus?.seen,
   ]);
 
   const handleChatChannelUpdate = useCallback(

@@ -17,7 +17,7 @@ import {
 } from "@/shared/models/governance/proposals";
 
 interface Options {
-  commonId?: string
+  commonId?: string;
 }
 
 export interface ProposalSpecificData {

@@ -3,9 +3,8 @@ import {
   FeedItemFollowLayoutItem,
   NewDiscussionCreationFormValues,
   NewProposalCreationFormValues,
-  RecentAssignedCircle,
 } from "@/shared/interfaces";
-import { CommonMember, Governance, Timestamp } from "@/shared/models";
+import { Circle, CommonMember, Governance, Timestamp } from "@/shared/models";
 
 export type EntityCreation<T> = {
   data: T | null;
@@ -52,6 +51,6 @@ export interface CommonState {
   commonMember: CommonMember | null;
   governance: Governance | null;
   recentStreamId: string;
-  recentAssignedCircle: RecentAssignedCircle | null;
+  recentAssignedCircleByMember: Record<string, Circle>;
   searchState: CommonSearchState;
 }
