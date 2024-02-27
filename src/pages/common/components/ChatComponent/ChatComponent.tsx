@@ -476,7 +476,7 @@ export default function ChatComponent({
             ownerType: DiscussionMessageOwnerType.User,
             ownerId: userId as string,
             ownerName: getUserName(user),
-            text: "Loading...", //JSON.stringify(message),
+            text: JSON.stringify(message),
             commonId,
             discussionId,
             createdAt: firebaseDate,
@@ -521,7 +521,7 @@ export default function ChatComponent({
           });
         } else {
           pendingMessages.forEach((pendingMessage) => {
-            discussionMessagesData.addDiscussionMessage(pendingMessage);
+            discussionMessagesData.addDiscussionMessage(pendingMessage, true);
           });
         }
 

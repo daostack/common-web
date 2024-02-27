@@ -38,16 +38,23 @@ interface TextFromDescendant {
   onInternalLinkClick?: (data: InternalLinkData) => void;
 }
 
-const getTextFromDescendant = async ({
-  descendant,
-  users,
-  mentionTextClassName,
-  emojiTextClassName,
-  commonId,
-  directParent,
-  onUserClick,
-  onInternalLinkClick,
-}: TextFromDescendant): Promise<Text> => {
+const getTextFromDescendant = async (
+  {
+    descendant,
+    users,
+    mentionTextClassName,
+    emojiTextClassName,
+    commonId,
+    directParent,
+    onUserClick,
+    onInternalLinkClick,
+  }: TextFromDescendant,
+  showPlainText?: boolean,
+): Promise<Text> => {
+  if (showPlainText) {
+    return <span>{(descendant as any).children[0].text}</span>;
+  }
+
   if (!Element.isElement(descendant)) {
     const separatedText = descendant.text.split(" ");
     const mappedText = await Promise.all(
@@ -130,6 +137,7 @@ const getTextFromDescendant = async ({
 
 export const getTextFromTextEditorString = async (
   data: TextData,
+  showPlainText?: boolean,
 ): Promise<Text[]> => {
   const {
     userId,
@@ -182,24 +190,27 @@ export const getTextFromTextEditorString = async (
   return await Promise.all(
     textEditorValue.map(async (item, index) => (
       <React.Fragment key={index}>
-        {await getTextFromDescendant({
-          descendant: item,
-          users: filteredUsers,
-          mentionTextClassName:
-            mentionTextClassName || mentionCurrentUserTextStyle,
-          emojiTextClassName:
-            emojiTextClassName ||
-            classNames({
-              [textEditorElementsStyles.singleEmojiText]:
-                emojiCount.isSingleEmoji,
-              [textEditorElementsStyles.multipleEmojiText]:
-                emojiCount.isMultipleEmoji,
-            }),
-          commonId,
-          directParent,
-          onUserClick,
-          onInternalLinkClick,
-        })}
+        {await getTextFromDescendant(
+          {
+            descendant: item,
+            users: filteredUsers,
+            mentionTextClassName:
+              mentionTextClassName || mentionCurrentUserTextStyle,
+            emojiTextClassName:
+              emojiTextClassName ||
+              classNames({
+                [textEditorElementsStyles.singleEmojiText]:
+                  emojiCount.isSingleEmoji,
+                [textEditorElementsStyles.multipleEmojiText]:
+                  emojiCount.isMultipleEmoji,
+              }),
+            commonId,
+            directParent,
+            onUserClick,
+            onInternalLinkClick,
+          },
+          showPlainText,
+        )}
       </React.Fragment>
     )),
   );

@@ -45,7 +45,10 @@ type State = LoadingState<DiscussionMessageWithParsedText[] | null>;
 interface Return extends State {
   fetchDiscussionMessages: () => void;
   fetchRepliedMessages: (messageId: string, endDate: Date) => Promise<void>;
-  addDiscussionMessage: (discussionMessage: DiscussionMessage) => void;
+  addDiscussionMessage: (
+    discussionMessage: DiscussionMessage,
+    showPlainText?: boolean,
+  ) => void;
   deleteDiscussionMessage: (discussionMessageId: string) => void;
   isEndOfList: Record<string, boolean> | null;
   rawData: DiscussionMessage[] | null;
@@ -90,20 +93,24 @@ export const useDiscussionMessagesById = ({
 
   const addDiscussionMessage = async (
     discussionMessage: DiscussionMessage,
+    showPlainText?: boolean,
   ): Promise<void> => {
-    const parsedText = await getTextFromTextEditorString({
-      userId,
-      ownerId: userId,
-      textEditorString: discussionMessage.text,
-      users,
-      commonId: discussionMessage.commonId,
-      getCommonPagePath,
-      getCommonPageAboutTabPath,
-      directParent,
-      onUserClick,
-      onFeedItemClick,
-      onInternalLinkClick,
-    });
+    const parsedText = await getTextFromTextEditorString(
+      {
+        userId,
+        ownerId: userId,
+        textEditorString: discussionMessage.text,
+        users,
+        commonId: discussionMessage.commonId,
+        getCommonPagePath,
+        getCommonPageAboutTabPath,
+        directParent,
+        onUserClick,
+        onFeedItemClick,
+        onInternalLinkClick,
+      },
+      showPlainText,
+    );
 
     dispatch(
       cacheActions.addDiscussionMessageByDiscussionId({
