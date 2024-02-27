@@ -415,6 +415,13 @@ export default function ChatMessage({
             [styles.systemMessageContainer]: isSystemMessage,
           })}
         >
+          {!isSystemMessage && !isNotCurrentUserMessage && (
+            <ReactWithEmoji
+              showEmojiButton={showReactWithEmoji}
+              discussionMessageId={discussionMessage.id}
+              className={styles.reactWithEmojiSelf}
+            />
+          )}
           {isNotCurrentUserMessage && isUserDiscussionMessage && (
             <div className={styles.iconWrapper} onClick={handleUserClick}>
               <UserAvatar
@@ -538,7 +545,7 @@ export default function ChatMessage({
               </div>
             </>
           )}
-          {!isSystemMessage && (
+          {!isSystemMessage && isNotCurrentUserMessage && (
             <ReactWithEmoji
               showEmojiButton={showReactWithEmoji}
               discussionMessageId={discussionMessage.id}

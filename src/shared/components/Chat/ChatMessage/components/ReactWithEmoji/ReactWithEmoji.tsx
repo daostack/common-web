@@ -82,13 +82,13 @@ export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
   return (
     <div
       ref={wrapperRef}
-      className={classNames(styles.container, className)}
+      className={classNames(className)}
       style={{
         top: `${pickerPosition.top}px`,
         left: `${pickerPosition.left}px`,
       }}
     >
-      {showEmojiButton && (
+      {(showEmojiButton || showPicker) && (
         <ButtonIcon ref={buttonRef} onClick={handleEmojiButtonClick}>
           <EmojiIcon />
         </ButtonIcon>

@@ -415,6 +415,13 @@ export default function DMChatMessage({
             [styles.systemMessageContainer]: isSystemMessage,
           })}
         >
+          {!isSystemMessage && !isNotCurrentUserMessage && (
+            <ReactWithEmoji
+              showEmojiButton={showReactWithEmoji}
+              discussionMessageId={discussionMessage.id}
+              className={styles.reactWithEmojiSelf}
+            />
+          )}
           {isNotCurrentUserMessage && isUserDiscussionMessage && (
             <div className={styles.iconWrapper} onClick={handleUserClick}>
               <UserAvatar

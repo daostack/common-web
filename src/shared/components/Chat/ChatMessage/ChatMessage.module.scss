@@ -92,7 +92,6 @@
 
 .messageTextCurrentUser {
   background-color: var(--primary-fill);
-  margin-left: 2.8rem;
   margin-right: unset;
 
   .mentionText {
@@ -328,4 +327,11 @@
   display: flex;
   align-items: center;
   margin-right: 2.8rem;
+}
+
+.reactWithEmojiSelf {
+  display: flex;
+  align-items: center;
+  margin-right: unset;
+  margin-left: 2.8rem;
 }
