@@ -291,7 +291,7 @@ export const useInboxItems = (
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [inboxItems.unread]);
 
   useEffect(() => {
     if (!inboxItems.firstDocTimestamp || !userId) {
