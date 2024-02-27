@@ -106,21 +106,16 @@ class ProjectService {
     data: CreateProjectPayload,
   ): Promise<Common> => {
     const { advancedSettings, ...subCommonData } = data;
-    const {
-      data: { circleProjectSubcommon },
-    } = await Api.post<{ circleProjectSubcommon: Common }>(
-      ApiEndpoint.CreateAction,
-      {
-        type: GovernanceActions.CREATE_SUBCOMMON,
-        args: {
-          commonId: parentCommonId,
-          subcommonDefinition: subCommonData,
-          ...advancedSettings,
-        },
+    const { data: project } = await Api.post<Common>(ApiEndpoint.CreateAction, {
+      type: GovernanceActions.CREATE_SUBCOMMON,
+      args: {
+        commonId: parentCommonId,
+        subcommonDefinition: subCommonData,
+        ...advancedSettings,
       },
-    );
+    });
 
-    return circleProjectSubcommon;
+    return project;
   };
 }
 
