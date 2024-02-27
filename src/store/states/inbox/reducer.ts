@@ -755,10 +755,17 @@ export const reducer = createReducer<InboxState, Action>(INITIAL_INBOX_STATE)
         "chatChannelItems",
         "nextChatChannelItemId",
       ]);
+      const data = stateToSave.items.data || [];
       stateToSave.items = {
         ...stateToSave.items,
         loading: false,
         hasMore: true,
+        firstDocTimestamp:
+          (data[0] && getFeedLayoutItemDateForSorting(data[0])) || null,
+        lastDocTimestamp:
+          (data[data.length - 1] &&
+            getFeedLayoutItemDateForSorting(data[data.length - 1])) ||
+          null,
       };
 
       if (shouldSaveAsReadState) {
