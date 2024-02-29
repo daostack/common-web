@@ -9,6 +9,10 @@ interface ReactToChatMessageParams {
 
 interface Return {
   reactToChatMessage: (params: ReactToChatMessageParams) => void;
+  removeChatMessageReaction: (
+    chatMessageId: string,
+    chatChannelId: string,
+  ) => void;
 }
 
 export const useChatMessageReaction = (): Return => {
@@ -23,7 +27,22 @@ export const useChatMessageReaction = (): Return => {
     [],
   );
 
+  const removeChatMessageReaction = useCallback(
+    async (chatMessageId: string, chatChannelId: string) => {
+      try {
+        await ChatService.deleteMessageReaction({
+          chatMessageId,
+          chatChannelId,
+        });
+      } catch (error) {
+        Logger.error(error);
+      }
+    },
+    [],
+  );
+
   return {
     reactToChatMessage,
+    removeChatMessageReaction,
   };
 };

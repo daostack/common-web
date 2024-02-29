@@ -23,4 +23,4 @@ export interface CreateDiscussionMessageReaction {
 }
 
 export interface DeleteDiscussionMessageReaction
-  extends CreateDiscussionMessageReaction {}
+  extends Omit<CreateDiscussionMessageReaction, "emoji"> {}

@@ -38,4 +38,5 @@ export interface CreateChatMessageReaction {
   chatChannelId: string;
 }
 
-export interface DeleteChatMessageReaction extends CreateChatMessageReaction {}
+export interface DeleteChatMessageReaction
+  extends Omit<CreateChatMessageReaction, "emoji"> {}

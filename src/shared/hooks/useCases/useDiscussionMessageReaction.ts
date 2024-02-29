@@ -8,6 +8,7 @@ interface ReactToDiscussionMessageParams {
 
 interface Return {
   reactToDiscussionMessage: (params: ReactToDiscussionMessageParams) => void;
+  removeDiscussionMessageReaction: (discussionMessageId: string) => void;
 }
 
 export const useDiscussionMessageReaction = (): Return => {
@@ -22,7 +23,21 @@ export const useDiscussionMessageReaction = (): Return => {
     [],
   );
 
+  const removeDiscussionMessageReaction = useCallback(
+    async (discussionMessageId: string) => {
+      try {
+        await DiscussionMessageService.deleteMessageReaction({
+          discussionMessageId,
+        });
+      } catch (error) {
+        Logger.error(error);
+      }
+    },
+    [],
+  );
+
   return {
     reactToDiscussionMessage,
+    removeDiscussionMessageReaction,
   };
 };

@@ -545,17 +545,23 @@ export default function DMChatMessage({
                 )}
 
                 {isUserDiscussionMessage && (
-                  <Reactions reactions={discussionMessage.reactionCounts} />
+                  <Reactions
+                    reactions={discussionMessage.reactionCounts}
+                    chatMessageId={discussionMessage.id}
+                    chatChannelId={chatChannelId}
+                  />
                 )}
               </div>
             </>
           )}
-          <ReactWithEmoji
-            showEmojiButton={showReactWithEmoji}
-            chatMessageId={discussionMessage.id}
-            chatChannelId={chatChannelId}
-            className={styles.reactWithEmoji}
-          />
+          {isNotCurrentUserMessage && (
+            <ReactWithEmoji
+              showEmojiButton={showReactWithEmoji}
+              chatMessageId={discussionMessage.id}
+              chatChannelId={chatChannelId}
+              className={styles.reactWithEmoji}
+            />
+          )}
         </div>
       </li>
     </ChatMessageContext.Provider>
