@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
+import { isEmpty } from "lodash";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import {
   useChatMessageReaction,
@@ -29,10 +30,6 @@ export const Reactions: FC<ReactionsProps> = (props) => {
     UserReaction | null | undefined
   >(null);
 
-  if (!reactions || !userId) {
-    return null;
-  }
-
   useEffect(() => {
     (async () => {
       if (discussionMessageId) {
@@ -40,35 +37,37 @@ export const Reactions: FC<ReactionsProps> = (props) => {
         setUserReaction(userReaction);
       }
     })();
-  }, [discussionMessageId]);
+  }, [reactions, discussionMessageId]);
 
-  /**
-   * TODO: improve
-   */
-  const onEmojiSelect = (emoji: string) => {
-    if (userReaction?.userId === userId && userReaction.emoji === emoji) {
-      if (chatMessageId && chatChannelId) {
-        removeChatMessageReaction(chatMessageId, chatChannelId);
-      } else if (discussionMessageId) {
-        removeDiscussionMessageReaction(discussionMessageId);
-      }
+  if (!reactions || isEmpty(reactions)) {
+    return null;
+  }
+
+  const onEmojiRemove = () => {
+    if (chatMessageId && chatChannelId) {
+      removeChatMessageReaction(chatMessageId, chatChannelId);
+    } else if (discussionMessageId) {
+      removeDiscussionMessageReaction(discussionMessageId);
     }
   };
 
   const totalCount = Object.values(reactions).reduce((a, b) => a + b, 0);
   const emojis = Object.keys(reactions)
     .filter((key) => reactions[key] > 0)
-    .map((emoji) => (
-      <span
-        className={classNames({
-          [styles.currentUserReaction]:
-            userReaction?.userId === userId && userReaction.emoji === emoji,
-        })}
-        onClick={() => onEmojiSelect(emoji)}
-      >
-        {emoji}
-      </span>
-    ));
+    .map((emoji) => {
+      const isCurrentUserReaction =
+        userReaction?.userId === userId && userReaction?.emoji === emoji;
+      return (
+        <span
+          className={classNames({
+            [styles.currentUserReaction]: isCurrentUserReaction,
+          })}
+          onClick={isCurrentUserReaction ? onEmojiRemove : undefined}
+        >
+          {emoji}
+        </span>
+      );
+    });
 
   return (
     <div className={styles.container}>
