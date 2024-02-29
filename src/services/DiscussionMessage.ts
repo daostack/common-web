@@ -13,6 +13,8 @@ import { Api } from ".";
 
 const converter = firestoreDataConverter<DiscussionMessage>();
 
+export const MESSAGES_NUMBER_IN_BATCH = 30;
+
 const getDiscussionMessagesByStatus = (
   snapshot: firebase.firestore.QuerySnapshot<DiscussionMessage>,
 ) => {
@@ -103,7 +105,7 @@ class DiscussionMessageService {
   ): UnsubscribeFunction => {
     let query = this.getDiscussionMessageCollection()
       .where("discussionId", "==", discussionId)
-      .limit(15)
+      .limit(MESSAGES_NUMBER_IN_BATCH)
       .orderBy("createdAt", "desc");
 
     if (lastVisible) {
@@ -128,7 +130,7 @@ class DiscussionMessageService {
   ): Promise<DiscussionMessage[]> => {
     const discussionMessages = await this.getDiscussionMessageCollection()
       .where("discussionId", "==", discussionId)
-      .limit(15)
+      .limit(MESSAGES_NUMBER_IN_BATCH)
       .orderBy("createdAt", "desc")
       .get();
 
