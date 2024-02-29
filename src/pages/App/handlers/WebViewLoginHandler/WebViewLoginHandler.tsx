@@ -40,11 +40,13 @@ const WebViewLoginHandler: FC = () => {
               if (isDarkThemePreferred) {
                 window.ReactNativeWebView.postMessage(Theme.Dark);
               }
+              window.ReactNativeWebView.postMessage("toast-loggedIn");
               window.ReactNativeWebView.postMessage(
                 WebviewActions.loginSuccess,
               );
               history.push(getInboxPagePath());
             } else {
+              window.ReactNativeWebView.postMessage("toast-loginError");
               window.ReactNativeWebView.postMessage(WebviewActions.loginError);
             }
           },
