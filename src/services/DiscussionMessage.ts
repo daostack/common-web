@@ -5,7 +5,7 @@ import {
   CreateDiscussionMessageReaction,
   DeleteDiscussionMessageReaction,
 } from "@/shared/interfaces/api/discussionMessages";
-import { Collection, DiscussionMessage } from "@/shared/models";
+import { Collection, DiscussionMessage, UserReaction } from "@/shared/models";
 import {
   convertObjectDatesToFirestoreTimestamps,
   firestoreDataConverter,
@@ -16,6 +16,7 @@ import firebase from "@/shared/utils/firebase";
 import { Api } from ".";
 
 const converter = firestoreDataConverter<DiscussionMessage>();
+const getUserReactionConverter = firestoreDataConverter<UserReaction>();
 
 const getDiscussionMessagesByStatus = (
   snapshot: firebase.firestore.QuerySnapshot<DiscussionMessage>,
@@ -181,6 +182,21 @@ class DiscussionMessageService {
   ): Promise<void> => {
     await Api.post(ApiEndpoint.DeleteDiscussionMessageReaction, payload);
   };
+
+  public getUserReaction = async (
+    discussionMsgId: string,
+    userId: string,
+  ): Promise<UserReaction | null> =>
+    (
+      await firebase
+        .firestore()
+        .collection(Collection.DiscussionMessage)
+        .doc(discussionMsgId)
+        .collection(Collection.Reactions)
+        .withConverter(getUserReactionConverter)
+        .doc(userId)
+        .get()
+    ).data() || null;
 }
 
 export default new DiscussionMessageService();
