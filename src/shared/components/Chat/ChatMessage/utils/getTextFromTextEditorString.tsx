@@ -50,14 +50,11 @@ const getTextFromDescendant = async ({
   onInternalLinkClick,
   showPlainText,
 }: TextFromDescendant): Promise<Text> => {
-  if (showPlainText) {
-    if (Element.isElement(descendant)) {
-      return <span>{descendant.children[0].text}</span>;
-    }
-  }
-
   if (!Element.isElement(descendant)) {
     const separatedText = descendant.text.split(" ");
+    if (showPlainText) {
+      return descendant.text;
+    }
     const mappedText = await Promise.all(
       separatedText.map(async (text) => {
         return await generateInternalLink({ text, onInternalLinkClick });
@@ -83,6 +80,7 @@ const getTextFromDescendant = async ({
                   directParent,
                   onUserClick,
                   onInternalLinkClick,
+                  showPlainText,
                 })}
               </React.Fragment>
             )),
