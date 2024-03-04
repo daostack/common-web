@@ -40,12 +40,19 @@ interface Options {
   onInternalLinkClick?: (data: InternalLinkData) => void;
 }
 
+interface AddDiscussionMessageOptions {
+  showPlainText?: boolean;
+}
+
 type State = LoadingState<DiscussionMessageWithParsedText[] | null>;
 
 interface Return extends State {
   fetchDiscussionMessages: () => void;
   fetchRepliedMessages: (messageId: string, endDate: Date) => Promise<void>;
-  addDiscussionMessage: (discussionMessage: DiscussionMessage) => void;
+  addDiscussionMessage: (
+    discussionMessage: DiscussionMessage,
+    options?: AddDiscussionMessageOptions,
+  ) => void;
   deleteDiscussionMessage: (discussionMessageId: string) => void;
   isEndOfList: Record<string, boolean> | null;
   rawData: DiscussionMessage[] | null;
@@ -90,6 +97,7 @@ export const useDiscussionMessagesById = ({
 
   const addDiscussionMessage = async (
     discussionMessage: DiscussionMessage,
+    options?: AddDiscussionMessageOptions,
   ): Promise<void> => {
     const parsedText = await getTextFromTextEditorString({
       userId,
@@ -103,6 +111,7 @@ export const useDiscussionMessagesById = ({
       onUserClick,
       onFeedItemClick,
       onInternalLinkClick,
+      showPlainText: options?.showPlainText,
     });
 
     dispatch(
