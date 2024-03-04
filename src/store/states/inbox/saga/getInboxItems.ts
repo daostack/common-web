@@ -30,7 +30,7 @@ export function* getInboxItems(
   action: ReturnType<typeof actions.getInboxItems.request>,
 ) {
   const {
-    payload: { limit, unread = false },
+    payload: { limit, unread = false, shouldUseLastStateIfExists = false },
   } = action;
 
   try {
@@ -42,6 +42,11 @@ export function* getInboxItems(
 
     const currentItems = (yield select(selectInboxItems)) as InboxItems;
     const isFirstRequest = !currentItems.lastDocTimestamp;
+
+    if (shouldUseLastStateIfExists && !isFirstRequest) {
+      return;
+    }
+
     const { data, firstDocTimestamp, lastDocTimestamp, hasMore } = (yield call(
       UserService.getInboxItemsWithMetadata,
       {

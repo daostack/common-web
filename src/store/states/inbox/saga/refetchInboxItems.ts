@@ -17,11 +17,17 @@ export function* refetchInboxItems(
     yield put(actions.resetSearchInboxItems());
   }
 
+  yield put(
+    actions.saveLastState({
+      shouldSaveAsReadState: unread,
+    }),
+  );
   yield put(actions.resetInboxItems());
   yield put(
     actions.getInboxItems.request({
       limit: 15,
       unread,
+      shouldUseLastStateIfExists: true,
     }),
   );
 }

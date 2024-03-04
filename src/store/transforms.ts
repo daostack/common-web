@@ -33,6 +33,8 @@ export const inboxTransform = createTransform(
     if (inboundState.items.unread) {
       return {
         ...inboundState,
+        lastReadState: null,
+        lastUnreadState: null,
         items: { ...INITIAL_INBOX_ITEMS },
       };
     }
@@ -42,6 +44,8 @@ export const inboxTransform = createTransform(
 
     return {
       ...inboundState,
+      lastReadState: null,
+      lastUnreadState: null,
       items: {
         ...inboundState.items,
         data,
