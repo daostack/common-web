@@ -48,6 +48,20 @@ export const useProjectCreation = (): Return => {
           getFilesDownloadInfo(creationData.gallery),
         ]);
         const links = parseLinksForSubmission(creationData.links || []);
+
+        const advancedSettingsCirclesPayload =
+          creationData.advancedSettings?.circles
+            ?.filter((circle) => circle.selected)
+            .map((circle) => ({
+              circleId: circle.circleId,
+              ...(circle.synced && {
+                inheritFrom: {
+                  governanceId: circle.inheritFrom?.governanceId,
+                  circleId: circle.inheritFrom?.circleId,
+                },
+              }),
+            }));
+
         const payload: CreateProjectPayload = {
           name: creationData.spaceName,
           byline: creationData.byline,
@@ -64,6 +78,11 @@ export const useProjectCreation = (): Return => {
             : undefined,
           links,
           highestCircleId: creationData.highestCircleId,
+          advancedSettings: {
+            permissionGovernanceId:
+              creationData.advancedSettings?.permissionGovernanceId,
+            circles: advancedSettingsCirclesPayload,
+          },
         };
         const createdProject = await ProjectService.createNewProject(
           parentCommonId,

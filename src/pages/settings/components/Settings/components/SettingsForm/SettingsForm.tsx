@@ -113,10 +113,7 @@ const SettingsForm: FC<SettingsFormProps> = (props) => {
     >
       <Form className={classNames(styles.form, className)}>
         <Dropdown
-          className={classNames(
-            styles.formItem,
-            styles.pushNotificationsDropdown,
-          )}
+          className={classNames(styles.formItem)}
           name="pushNotificationPreference"
           label="Push notifications"
           options={PUSH_NOTIFICATIONS_OPTIONS}

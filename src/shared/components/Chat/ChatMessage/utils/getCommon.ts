@@ -1,9 +1,5 @@
 import { CommonService } from "@/services";
-import {
-  Common,
-  CommonState
-} from "@/shared/models";
-
+import { Common, CommonState } from "@/shared/models";
 
 export const getCommon = async (commonId: string): Promise<Common | null> =>
   (await CommonService.getCachedCommonById(commonId)) ||
