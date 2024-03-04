@@ -5,9 +5,22 @@
   z-index: 10;
   top: -3.75rem;
   right: 0;
+
+  em-emoji-picker {
+    height: 12.5rem;
+    min-height: unset;
+  }
 }
 
 .isNotCurrentUserMessage {
   left: 0;
   right: unset;
+}
+
+.emojiButton {
+  opacity: 0;
+
+  &.show {
+    opacity: 1;
+  }
 }

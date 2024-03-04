@@ -83,11 +83,15 @@ export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
 
   return (
     <div ref={wrapperRef} className={classNames(className)}>
-      {(showEmojiButton || showPicker) && (
-        <ButtonIcon ref={buttonRef} onClick={handleEmojiButtonClick}>
-          <EmojiIcon />
-        </ButtonIcon>
-      )}
+      <ButtonIcon
+        ref={buttonRef}
+        onClick={handleEmojiButtonClick}
+        className={classNames(styles.emojiButton, {
+          [styles.show]: showEmojiButton || showPicker,
+        })}
+      >
+        <EmojiIcon />
+      </ButtonIcon>
 
       {showPicker && (
         <div
@@ -107,7 +111,7 @@ export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
               data={data}
               onEmojiSelect={onEmojiSelect}
               theme={theme === Theme.Dark ? Theme.Dark : Theme.Light}
-              searchPosition="none"
+              //searchPosition="none"
               navPosition="none"
               maxFrequentRows={0}
               perLine={5}
