@@ -122,6 +122,9 @@ export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
             <CompactPicker
               setShowAllEmojis={setShowAllEmojis}
               onEmojiSelect={onEmojiSelect}
+              discussionMessageId={discussionMessageId}
+              chatMessageId={chatMessageId}
+              chatChannelId={chatChannelId}
             />
           )}
         </div>

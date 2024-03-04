@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import { useDispatch } from "react-redux";
 import classNames from "classnames";
+import { isEmpty } from "lodash";
 import { Element } from "slate";
 import { useLongPress } from "use-long-press";
 import * as oldCommonActions from "@/pages/OldCommon/store/actions";
@@ -455,6 +456,9 @@ export default function ChatMessage({
                   [styles.highlighted]: highlighted && isNotCurrentUserMessage,
                   [styles.highlightedOwn]:
                     highlighted && !isNotCurrentUserMessage,
+                  [styles.hasReactions]:
+                    isUserDiscussionMessage &&
+                    !isEmpty(discussionMessage.reactionCounts),
                 })}
                 {...getLongPressProps()}
               >

@@ -43,7 +43,7 @@ export const Reactions: FC<ReactionsProps> = (props) => {
         setUserReaction(userReaction);
       }
     })();
-  }, [reactions, discussionMessageId]);
+  }, [reactions, discussionMessageId, chatMessageId, chatChannelId]);
 
   if (!reactions || isEmpty(reactions)) {
     return null;

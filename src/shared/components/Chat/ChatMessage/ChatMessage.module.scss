@@ -272,6 +272,10 @@
   background-color: var(--primary-fill);
 }
 
+.hasReactions {
+  margin-bottom: 1rem;
+}
+
 @keyframes highlighted {
   100% {
     border-color: transparent;
