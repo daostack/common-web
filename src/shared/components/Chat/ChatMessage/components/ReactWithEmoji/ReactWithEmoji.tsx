@@ -22,6 +22,7 @@ interface ReactWithEmojiProps {
   pickerContainerClassName?: string;
   chatMessageId?: string;
   chatChannelId?: string;
+  isNotCurrentUserMessage: boolean;
 }
 
 export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
@@ -32,6 +33,7 @@ export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
     pickerContainerClassName,
     chatMessageId,
     chatChannelId,
+    isNotCurrentUserMessage,
   } = props;
   const theme = useSelector(selectTheme);
   const [showPicker, setShowPicker] = useState(false);
@@ -39,7 +41,7 @@ export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
   const wrapperRef = useRef(null);
   const { isOutside, setOutsideValue } = useOutsideClick(wrapperRef);
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const [pickerPosition, setPickerPosition] = useState({ top: 0, left: 0 });
+  //const [pickerPosition, setPickerPosition] = useState({ top: 0, left: 0 });
   const { reactToDiscussionMessage } = useDiscussionMessageReaction();
   const { reactToChatMessage } = useChatMessageReaction();
 
@@ -69,25 +71,18 @@ export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
   };
 
   const handleEmojiButtonClick = () => {
-    if (buttonRef.current) {
-      const rect = buttonRef.current.getBoundingClientRect();
-      setPickerPosition({
-        top: rect.top + rect.height,
-        left: rect.left,
-      });
-    }
+    // if (buttonRef.current) {
+    //   const rect = buttonRef.current.getBoundingClientRect();
+    //   setPickerPosition({
+    //     top: rect.top + rect.height,
+    //     left: rect.left,
+    //   });
+    // }
     setShowPicker(!showPicker);
   };
 
   return (
-    <div
-      ref={wrapperRef}
-      className={classNames(className)}
-      style={{
-        top: `${pickerPosition.top}px`,
-        left: `${pickerPosition.left}px`,
-      }}
-    >
+    <div ref={wrapperRef} className={classNames(className)}>
       {(showEmojiButton || showPicker) && (
         <ButtonIcon ref={buttonRef} onClick={handleEmojiButtonClick}>
           <EmojiIcon />
@@ -98,7 +93,14 @@ export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
         <div
           className={classNames(
             pickerContainerClassName || styles.pickerContainer,
+            {
+              [styles.isNotCurrentUserMessage]: isNotCurrentUserMessage,
+            },
           )}
+          // style={{
+          //   top: `${pickerPosition.top}px`,
+          //   left: `${pickerPosition.left}px`,
+          // }}
         >
           {showAllEmojis ? (
             <Picker

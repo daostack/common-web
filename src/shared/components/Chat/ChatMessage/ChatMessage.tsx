@@ -420,6 +420,7 @@ export default function ChatMessage({
               showEmojiButton={showReactWithEmoji}
               discussionMessageId={discussionMessage.id}
               className={styles.reactWithEmojiSelf}
+              isNotCurrentUserMessage={isNotCurrentUserMessage}
             />
           )}
           {isNotCurrentUserMessage && isUserDiscussionMessage && (
@@ -553,6 +554,7 @@ export default function ChatMessage({
               showEmojiButton={showReactWithEmoji}
               discussionMessageId={discussionMessage.id}
               className={styles.reactWithEmoji}
+              isNotCurrentUserMessage={isNotCurrentUserMessage}
             />
           )}
         </div>

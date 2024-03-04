@@ -3,4 +3,11 @@
 .pickerContainer {
   position: absolute;
   z-index: 10;
+  top: -3.75rem;
+  right: 0;
+}
+
+.isNotCurrentUserMessage {
+  left: 0;
+  right: unset;
 }

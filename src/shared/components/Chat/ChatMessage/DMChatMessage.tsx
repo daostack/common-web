@@ -420,6 +420,7 @@ export default function DMChatMessage({
               showEmojiButton={showReactWithEmoji}
               discussionMessageId={discussionMessage.id}
               className={styles.reactWithEmojiSelf}
+              isNotCurrentUserMessage={isNotCurrentUserMessage}
             />
           )}
           {isNotCurrentUserMessage && isUserDiscussionMessage && (
@@ -560,6 +561,7 @@ export default function DMChatMessage({
               chatMessageId={discussionMessage.id}
               chatChannelId={chatChannelId}
               className={styles.reactWithEmoji}
+              isNotCurrentUserMessage={isNotCurrentUserMessage}
             />
           )}
         </div>
