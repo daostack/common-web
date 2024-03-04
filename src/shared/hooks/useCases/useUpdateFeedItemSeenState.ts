@@ -10,7 +10,10 @@ import {
 import { cacheActions } from "@/store/states";
 
 interface Return {
-  markFeedItemAsSeen: (payload: MarkCommonFeedItemAsSeenPayload) => void;
+  markFeedItemAsSeen: (
+    payload: MarkCommonFeedItemAsSeenPayload,
+    delay?: number,
+  ) => void;
   markFeedItemAsUnseen: (payload: MarkCommonFeedItemAsUnseenPayload) => void;
 }
 
@@ -62,8 +65,10 @@ export const useUpdateFeedItemSeenState = (): Return => {
   };
 
   const markFeedItemAsSeen = useCallback(
-    async (payload: MarkCommonFeedItemAsSeenPayload) => {
-      updateSeenState(payload, true);
+    async (payload: MarkCommonFeedItemAsSeenPayload, delay = 0) => {
+      setTimeout(() => {
+        updateSeenState(payload, true);
+      }, delay);
     },
     [userId],
   );

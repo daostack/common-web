@@ -21,7 +21,7 @@ interface Return {
   markChatMessageItemAsSeen: ReturnType<
     typeof useMarkChatMessageAsSeen
   >["markChatMessageAsSeen"];
-  markChatChannelAsSeen: (id: string) => void;
+  markChatChannelAsSeen: (id: string, delay?: number) => void;
   chatUsers: User[];
   fetchChatUsers: () => void;
 }

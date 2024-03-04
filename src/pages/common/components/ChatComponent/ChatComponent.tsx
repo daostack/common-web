@@ -235,6 +235,13 @@ export default function ChatComponent({
   };
 
   const [isMultiLineInput, setIsMultiLineInput] = useState(false);
+  const prevFeedItemId = useRef<string>();
+
+  useEffect(() => {
+    return () => {
+      prevFeedItemId.current = feedItemId;
+    };
+  }, [feedItemId]);
 
   useEffect(() => {
     setIsMultiLineInput(chatInputHeight > BASE_CHAT_INPUT_HEIGHT);
@@ -592,13 +599,18 @@ export default function ChatComponent({
       return;
     }
 
+    const delay = prevFeedItemId.current ? 0 : 1500;
+
     if (isChatChannel) {
-      markChatChannelAsSeen(feedItemId);
+      markChatChannelAsSeen(feedItemId, delay);
     } else if (commonId) {
-      markDiscussionMessageItemAsSeen({
-        feedObjectId: feedItemId,
-        commonId,
-      });
+      markDiscussionMessageItemAsSeen(
+        {
+          feedObjectId: feedItemId,
+          commonId,
+        },
+        delay,
+      );
     }
   }, [feedItemId, commonId]);
 
