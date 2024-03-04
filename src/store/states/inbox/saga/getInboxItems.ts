@@ -1,10 +1,12 @@
 import { call, put, select } from "redux-saga/effects";
+import { selectUser } from "@/pages/Auth/store/selectors";
 import { UserService } from "@/services";
 import {
-  ChatChannelToLayoutItemConverter,
-  FeedItemFollowToLayoutItemWithFollowDataConverter,
-} from "@/shared/converters";
-import { Awaited, FeedLayoutItemWithFollowData } from "@/shared/interfaces";
+  Awaited,
+  checkIsChatChannelLayoutItem,
+  FeedLayoutItemWithFollowData,
+} from "@/shared/interfaces";
+import { User } from "@/shared/models";
 import { isError } from "@/shared/utils";
 import * as actions from "../actions";
 import { selectInboxItems } from "../selectors";
@@ -32,30 +34,33 @@ export function* getInboxItems(
   } = action;
 
   try {
+    const user = (yield select(selectUser())) as User | null;
+
+    if (!user) {
+      throw new Error("There is no user for inbox items fetch");
+    }
+
     const currentItems = (yield select(selectInboxItems)) as InboxItems;
     const isFirstRequest = !currentItems.lastDocTimestamp;
     const { data, firstDocTimestamp, lastDocTimestamp, hasMore } = (yield call(
       UserService.getInboxItemsWithMetadata,
       {
+        userId: user.uid,
         startAfter: currentItems.lastDocTimestamp,
         limit,
         unread,
       },
     )) as Awaited<ReturnType<typeof UserService.getInboxItemsWithMetadata>>;
-    const chatChannelItems = data.chatChannels
-      .map((item) => ChatChannelToLayoutItemConverter.toTargetEntity(item))
-      .filter((item) => item.chatChannel.messageCount > 0);
-    const feedItemFollowItems = data.feedItemFollows.map((item) =>
-      FeedItemFollowToLayoutItemWithFollowDataConverter.toTargetEntity(item),
+    const filteredData = data.filter(
+      (item) =>
+        !checkIsChatChannelLayoutItem(item) ||
+        item.chatChannel.messageCount > 0,
     );
-    const convertedData = sortItems([
-      ...chatChannelItems,
-      ...feedItemFollowItems,
-    ]);
+    const sortedData = sortItems(filteredData);
 
     yield put(
       actions.getInboxItems.success({
-        data: convertedData,
+        data: sortedData,
         lastDocTimestamp,
         hasMore,
         firstDocTimestamp: isFirstRequest
@@ -65,7 +70,7 @@ export function* getInboxItems(
       }),
     );
 
-    yield searchFetchedInboxItems(convertedData);
+    yield searchFetchedInboxItems(sortedData);
   } catch (error) {
     if (isError(error)) {
       yield put(actions.getInboxItems.failure(error));
