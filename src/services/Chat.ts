@@ -15,6 +15,7 @@ import {
   Collection,
   SubCollections,
   Timestamp,
+  UserReaction,
 } from "@/shared/models";
 import {
   convertObjectDatesToFirestoreTimestamps,
@@ -29,6 +30,7 @@ const chatChannelConverter = firestoreDataConverter<ChatChannel>();
 const chatMessagesConverter = firestoreDataConverter<ChatMessage>();
 const chatChannelUserStatusConverter =
   firestoreDataConverter<ChatChannelUserStatus>();
+const getUserReactionConverter = firestoreDataConverter<UserReaction>();
 
 class ChatService {
   private getChatChannelCollection = () =>
@@ -395,6 +397,24 @@ class ChatService {
       callback(data || null);
     });
   };
+
+  public getDMUserReaction = async (
+    chatMessageId: string,
+    chatChannelId: string,
+    userId: string,
+  ): Promise<UserReaction | null> =>
+    (
+      await firebase
+        .firestore()
+        .collection(Collection.ChatChannel)
+        .doc(chatChannelId)
+        .collection(SubCollections.ChatMessages)
+        .doc(chatMessageId)
+        .collection(Collection.Reactions)
+        .withConverter(getUserReactionConverter)
+        .doc(userId)
+        .get()
+    ).data() || null;
 }
 
 export default new ChatService();

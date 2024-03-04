@@ -25,7 +25,7 @@ export const Reactions: FC<ReactionsProps> = (props) => {
   const userId = user?.uid;
   const { removeDiscussionMessageReaction } = useDiscussionMessageReaction();
   const { removeChatMessageReaction } = useChatMessageReaction();
-  const { getUserReaction } = useUserReaction();
+  const { getUserReaction, getDMUserReaction } = useUserReaction();
   const [userReaction, setUserReaction] = useState<
     UserReaction | null | undefined
   >(null);
@@ -34,6 +34,12 @@ export const Reactions: FC<ReactionsProps> = (props) => {
     (async () => {
       if (discussionMessageId) {
         const userReaction = await getUserReaction(discussionMessageId);
+        setUserReaction(userReaction);
+      } else if (chatMessageId && chatChannelId) {
+        const userReaction = await getDMUserReaction(
+          chatMessageId,
+          chatChannelId,
+        );
         setUserReaction(userReaction);
       }
     })();

@@ -1,6 +1,6 @@
 import { BaseEntity } from "./BaseEntity";
 import { CommonLink } from "./Common";
-import { ParentDiscussionMessage } from "./DiscussionMessage";
+import { ParentDiscussionMessage, ReactionCounts } from "./DiscussionMessage";
 import { Timestamp } from "./Timestamp";
 import { User } from "./User";
 
@@ -19,4 +19,5 @@ export interface ChatMessage extends BaseEntity {
   owner?: User | null;
   parentMessage?: ParentDiscussionMessage | null;
   hasUncheckedItems: boolean;
+  reactionCounts?: ReactionCounts;
 }
