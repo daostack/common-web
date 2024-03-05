@@ -402,6 +402,19 @@ export default function ChatMessage({
     [isMessageEditLoading, handleCheckboxChange, isMessageEditAllowed],
   );
 
+  const emojiButton = (
+    <ReactWithEmoji
+      showEmojiButton={showReactWithEmoji}
+      discussionMessageId={discussionMessage.id}
+      className={
+        isNotCurrentUserMessage
+          ? styles.reactWithEmoji
+          : styles.reactWithEmojiSelf
+      }
+      isNotCurrentUserMessage={isNotCurrentUserMessage}
+    />
+  );
+
   return (
     <ChatMessageContext.Provider value={chatMessageContextValue}>
       <li
@@ -416,14 +429,7 @@ export default function ChatMessage({
             [styles.systemMessageContainer]: isSystemMessage,
           })}
         >
-          {!isSystemMessage && !isNotCurrentUserMessage && (
-            <ReactWithEmoji
-              showEmojiButton={showReactWithEmoji}
-              discussionMessageId={discussionMessage.id}
-              className={styles.reactWithEmojiSelf}
-              isNotCurrentUserMessage={isNotCurrentUserMessage}
-            />
-          )}
+          {!isSystemMessage && !isNotCurrentUserMessage && emojiButton}
           {isNotCurrentUserMessage && isUserDiscussionMessage && (
             <div className={styles.iconWrapper} onClick={handleUserClick}>
               <UserAvatar
@@ -550,14 +556,7 @@ export default function ChatMessage({
               </div>
             </>
           )}
-          {!isSystemMessage && isNotCurrentUserMessage && (
-            <ReactWithEmoji
-              showEmojiButton={showReactWithEmoji}
-              discussionMessageId={discussionMessage.id}
-              className={styles.reactWithEmoji}
-              isNotCurrentUserMessage={isNotCurrentUserMessage}
-            />
-          )}
+          {!isSystemMessage && isNotCurrentUserMessage && emojiButton}
         </div>
       </li>
     </ChatMessageContext.Provider>

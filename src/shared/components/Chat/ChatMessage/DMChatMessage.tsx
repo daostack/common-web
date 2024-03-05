@@ -402,6 +402,20 @@ export default function DMChatMessage({
     [isMessageEditLoading, handleCheckboxChange],
   );
 
+  const emojiButton = (
+    <ReactWithEmoji
+      showEmojiButton={showReactWithEmoji}
+      chatMessageId={discussionMessage.id}
+      chatChannelId={chatChannelId}
+      className={
+        isNotCurrentUserMessage
+          ? styles.reactWithEmoji
+          : styles.reactWithEmojiSelf
+      }
+      isNotCurrentUserMessage={isNotCurrentUserMessage}
+    />
+  );
+
   return (
     <ChatMessageContext.Provider value={chatMessageContextValue}>
       <li
@@ -416,15 +430,7 @@ export default function DMChatMessage({
             [styles.systemMessageContainer]: isSystemMessage,
           })}
         >
-          {!isSystemMessage && !isNotCurrentUserMessage && (
-            <ReactWithEmoji
-              showEmojiButton={showReactWithEmoji}
-              chatMessageId={discussionMessage.id}
-              chatChannelId={chatChannelId}
-              className={styles.reactWithEmojiSelf}
-              isNotCurrentUserMessage={isNotCurrentUserMessage}
-            />
-          )}
+          {!isSystemMessage && !isNotCurrentUserMessage && emojiButton}
           {isNotCurrentUserMessage && isUserDiscussionMessage && (
             <div className={styles.iconWrapper} onClick={handleUserClick}>
               <UserAvatar
@@ -556,15 +562,7 @@ export default function DMChatMessage({
               </div>
             </>
           )}
-          {isNotCurrentUserMessage && (
-            <ReactWithEmoji
-              showEmojiButton={showReactWithEmoji}
-              chatMessageId={discussionMessage.id}
-              chatChannelId={chatChannelId}
-              className={styles.reactWithEmoji}
-              isNotCurrentUserMessage={isNotCurrentUserMessage}
-            />
-          )}
+          {isNotCurrentUserMessage && emojiButton}
         </div>
       </li>
     </ChatMessageContext.Provider>
