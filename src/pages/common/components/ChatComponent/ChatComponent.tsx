@@ -236,6 +236,7 @@ export default function ChatComponent({
 
   const [isMultiLineInput, setIsMultiLineInput] = useState(false);
   const prevFeedItemId = useRef<string>();
+  const timeoutId = useRef<ReturnType<typeof setTimeout> | null>();
 
   useEffect(() => {
     return () => {
@@ -595,6 +596,11 @@ export default function ChatComponent({
   );
 
   useEffect(() => {
+    if (timeoutId.current) {
+      clearTimeout(timeoutId.current);
+      timeoutId.current = null;
+    }
+
     if (seenOnce && notEmpty(seen) && seen) {
       return;
     }
@@ -602,9 +608,9 @@ export default function ChatComponent({
     const delay = prevFeedItemId.current ? 0 : 1500;
 
     if (isChatChannel) {
-      markChatChannelAsSeen(feedItemId, delay);
+      timeoutId.current = markChatChannelAsSeen(feedItemId, delay);
     } else if (commonId) {
-      markDiscussionMessageItemAsSeen(
+      timeoutId.current = markDiscussionMessageItemAsSeen(
         {
           feedObjectId: feedItemId,
           commonId,

@@ -6,7 +6,10 @@ import { getChatChannelUserStatusKey } from "@/shared/constants";
 import { cacheActions } from "@/store/states";
 
 interface Return {
-  markChatChannelAsSeen: (chatChannelId: string, delay?: number) => void;
+  markChatChannelAsSeen: (
+    chatChannelId: string,
+    delay?: number,
+  ) => ReturnType<typeof setTimeout>;
   markChatChannelAsUnseen: (chatChannelId: string) => void;
 }
 
@@ -54,8 +57,8 @@ export const useUpdateChatChannelSeenState = (): Return => {
   };
 
   const markChatChannelAsSeen = useCallback(
-    async (chatChannelId: string, delay = 0) => {
-      setTimeout(() => {
+    (chatChannelId: string, delay = 0) => {
+      return setTimeout(() => {
         updateSeenState(chatChannelId, true);
       }, delay);
     },
@@ -63,7 +66,7 @@ export const useUpdateChatChannelSeenState = (): Return => {
   );
 
   const markChatChannelAsUnseen = useCallback(
-    async (chatChannelId: string) => {
+    (chatChannelId: string) => {
       updateSeenState(chatChannelId, false);
     },
     [userId],

@@ -13,7 +13,7 @@ interface Return {
   markFeedItemAsSeen: (
     payload: MarkCommonFeedItemAsSeenPayload,
     delay?: number,
-  ) => void;
+  ) => ReturnType<typeof setTimeout>;
   markFeedItemAsUnseen: (payload: MarkCommonFeedItemAsUnseenPayload) => void;
 }
 
@@ -65,8 +65,8 @@ export const useUpdateFeedItemSeenState = (): Return => {
   };
 
   const markFeedItemAsSeen = useCallback(
-    async (payload: MarkCommonFeedItemAsSeenPayload, delay = 0) => {
-      setTimeout(() => {
+    (payload: MarkCommonFeedItemAsSeenPayload, delay = 0) => {
+      return setTimeout(() => {
         updateSeenState(payload, true);
       }, delay);
     },
@@ -74,7 +74,7 @@ export const useUpdateFeedItemSeenState = (): Return => {
   );
 
   const markFeedItemAsUnseen = useCallback(
-    async (payload: MarkCommonFeedItemAsUnseenPayload) => {
+    (payload: MarkCommonFeedItemAsUnseenPayload) => {
       updateSeenState(payload, false);
     },
     [userId],
