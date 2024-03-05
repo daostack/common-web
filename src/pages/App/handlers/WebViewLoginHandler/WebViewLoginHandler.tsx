@@ -24,8 +24,9 @@ const WebViewLoginHandler: FC = () => {
         history.push(data?.redirectUrl);
       }
 
-      if (!data?.providerId) {
+      if (!data?.providerId && !data?.customToken) {
         window.ReactNativeWebView.postMessage("toast-failed-provider");
+        window.ReactNativeWebView.postMessage(WebviewActions.loginError);
         return;
       }
 
