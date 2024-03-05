@@ -550,11 +550,7 @@ export default function DMChatMessage({
                 )}
 
                 {isUserDiscussionMessage && (
-                  <Reactions
-                    reactions={discussionMessage.reactionCounts}
-                    chatMessageId={discussionMessage.id}
-                    chatChannelId={chatChannelId}
-                  />
+                  <Reactions reactions={discussionMessage.reactionCounts} />
                 )}
               </div>
             </>

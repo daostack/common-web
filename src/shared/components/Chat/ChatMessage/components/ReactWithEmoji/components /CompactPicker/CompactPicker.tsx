@@ -3,7 +3,11 @@ import { useSelector } from "react-redux";
 import classnames from "classnames";
 import { Skin } from "@emoji-mart/data";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { useUserReaction } from "@/shared/hooks/useCases";
+import {
+  useChatMessageReaction,
+  useDiscussionMessageReaction,
+  useUserReaction,
+} from "@/shared/hooks/useCases";
 import { PlusIcon } from "@/shared/icons";
 import { UserReaction } from "@/shared/models";
 import { Button, ButtonIcon, ButtonVariant } from "@/shared/ui-kit";
@@ -16,6 +20,7 @@ interface CompactPickerProps {
   discussionMessageId?: string;
   chatMessageId?: string;
   chatChannelId?: string;
+  setShowPicker: (value: boolean) => void;
 }
 
 export const CompactPicker: FC<CompactPickerProps> = (props) => {
@@ -25,8 +30,11 @@ export const CompactPicker: FC<CompactPickerProps> = (props) => {
     discussionMessageId,
     chatMessageId,
     chatChannelId,
+    setShowPicker,
   } = props;
   const { getUserReaction, getDMUserReaction } = useUserReaction();
+  const { removeDiscussionMessageReaction } = useDiscussionMessageReaction();
+  const { removeChatMessageReaction } = useChatMessageReaction();
   const [userReaction, setUserReaction] = useState<
     UserReaction | null | undefined
   >(null);
@@ -48,6 +56,23 @@ export const CompactPicker: FC<CompactPickerProps> = (props) => {
     })();
   }, [discussionMessageId, chatMessageId, chatChannelId]);
 
+  const onEmojiRemove = () => {
+    if (chatMessageId && chatChannelId) {
+      removeChatMessageReaction(chatMessageId, chatChannelId);
+    } else if (discussionMessageId) {
+      removeDiscussionMessageReaction(discussionMessageId);
+    }
+    setShowPicker(false);
+  };
+
+  const handleEmojiSelect = (isCurrentUserReaction: boolean, emoji: Skin) => {
+    if (isCurrentUserReaction) {
+      onEmojiRemove();
+    } else {
+      onEmojiSelect(emoji);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <ButtonIcon
@@ -67,7 +92,7 @@ export const CompactPicker: FC<CompactPickerProps> = (props) => {
             className={classnames(styles.emojiButton, {
               [styles.emojiActive]: isCurrentUserReaction,
             })}
-            onClick={() => onEmojiSelect(emoji)}
+            onClick={() => handleEmojiSelect(isCurrentUserReaction, emoji)}
             variant={ButtonVariant.Transparent}
           >
             {emoji.native}

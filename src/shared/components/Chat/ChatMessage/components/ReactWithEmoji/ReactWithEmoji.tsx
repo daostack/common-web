@@ -125,6 +125,7 @@ export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
               discussionMessageId={discussionMessageId}
               chatMessageId={chatMessageId}
               chatChannelId={chatChannelId}
+              setShowPicker={setShowPicker}
             />
           )}
         </div>

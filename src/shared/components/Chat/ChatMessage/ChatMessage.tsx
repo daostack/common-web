@@ -545,10 +545,7 @@ export default function ChatMessage({
                 )}
 
                 {!isSystemMessage && isUserDiscussionMessage && (
-                  <Reactions
-                    reactions={discussionMessage.reactionCounts}
-                    discussionMessageId={discussionMessage.id}
-                  />
+                  <Reactions reactions={discussionMessage.reactionCounts} />
                 )}
               </div>
             </>
