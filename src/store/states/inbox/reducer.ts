@@ -1,5 +1,6 @@
 import produce from "immer";
 import { WritableDraft } from "immer/dist/types/types-external";
+import { pick } from "lodash";
 import { ActionType, createReducer } from "typesafe-actions";
 import { InboxItemType, QueryParamKey } from "@/shared/constants";
 import {
@@ -11,7 +12,7 @@ import { ChatChannel, CommonFeed, Timestamp } from "@/shared/models";
 import { areTimestampsEqual } from "@/shared/utils";
 import { getQueryParam } from "@/shared/utils/queryParams";
 import * as actions from "./actions";
-import { InboxItems, InboxSearchState, InboxState } from "./types";
+import { InboxItems, InboxSearchState, InboxState, LastState } from "./types";
 import { getFeedLayoutItemDateForSorting } from "./utils";
 
 type Action = ActionType<typeof actions>;
@@ -39,6 +40,8 @@ export const INITIAL_INBOX_STATE: InboxState = {
   sharedItem: null,
   chatChannelItems: [],
   nextChatChannelItemId: null,
+  lastReadState: null,
+  lastUnreadState: null,
 };
 
 const sortInboxItems = (data: FeedLayoutItemWithFollowData[]): void => {
@@ -446,12 +449,26 @@ export const reducer = createReducer<InboxState, Action>(INITIAL_INBOX_STATE)
 
     return { ...INITIAL_INBOX_STATE };
   })
-  .handleAction(actions.getInboxItems.request, (state) =>
+  .handleAction(actions.getInboxItems.request, (state, { payload }) =>
     produce(state, (nextState) => {
-      nextState.items = {
-        ...nextState.items,
-        loading: true,
-      };
+      const { unread = false, shouldUseLastStateIfExists = false } = payload;
+      const lastState = unread
+        ? nextState.lastUnreadState
+        : nextState.lastReadState;
+
+      if (!shouldUseLastStateIfExists || !lastState) {
+        nextState.items = {
+          ...nextState.items,
+          loading: true,
+        };
+        return;
+      }
+
+      nextState.items = lastState.items;
+      nextState.sharedFeedItemId = lastState.sharedFeedItemId;
+      nextState.sharedItem = lastState.sharedItem;
+      nextState.chatChannelItems = lastState.chatChannelItems;
+      nextState.nextChatChannelItemId = lastState.nextChatChannelItemId;
     }),
   )
   .handleAction(actions.getInboxItems.success, (state, { payload }) =>
@@ -727,4 +744,35 @@ export const reducer = createReducer<InboxState, Action>(INITIAL_INBOX_STATE)
           );
         }
       }),
+  )
+  .handleAction(actions.saveLastState, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const { shouldSaveAsReadState } = payload;
+      const stateToSave: LastState = pick(nextState, [
+        "items",
+        "sharedFeedItemId",
+        "sharedItem",
+        "chatChannelItems",
+        "nextChatChannelItemId",
+      ]);
+      const data = stateToSave.items.data || [];
+      stateToSave.items = {
+        ...stateToSave.items,
+        loading: false,
+        hasMore: true,
+        firstDocTimestamp:
+          (data[0] && getFeedLayoutItemDateForSorting(data[0])) || null,
+        lastDocTimestamp:
+          (data[data.length - 1] &&
+            getFeedLayoutItemDateForSorting(data[data.length - 1])) ||
+          null,
+        batchNumber: data.length > 15 ? stateToSave.items.batchNumber : 2,
+      };
+
+      if (shouldSaveAsReadState) {
+        nextState.lastReadState = stateToSave;
+      } else {
+        nextState.lastUnreadState = stateToSave;
+      }
+    }),
   );
