@@ -7,6 +7,7 @@ export * from "./DMUser";
 export * from "./feedLayout";
 export * from "./FeedItemIdentificationData";
 export * from "./ChatChannelFeedLayoutItemProps";
+export * from "./InboxItemBatch";
 export * from "./LinkStreamPayload";
 export * from "./LoadingState";
 export * from "./ChatChannelIdentificationData";

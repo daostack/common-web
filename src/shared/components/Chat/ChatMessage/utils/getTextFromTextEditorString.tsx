@@ -36,6 +36,7 @@ interface TextFromDescendant {
   directParent?: DirectParent | null;
   onUserClick?: (userId: string) => void;
   onInternalLinkClick?: (data: InternalLinkData) => void;
+  showPlainText?: boolean;
 }
 
 const getTextFromDescendant = async ({
@@ -47,9 +48,13 @@ const getTextFromDescendant = async ({
   directParent,
   onUserClick,
   onInternalLinkClick,
+  showPlainText,
 }: TextFromDescendant): Promise<Text> => {
   if (!Element.isElement(descendant)) {
     const separatedText = descendant.text.split(" ");
+    if (showPlainText) {
+      return descendant.text;
+    }
     const mappedText = await Promise.all(
       separatedText.map(async (text) => {
         return await generateInternalLink({ text, onInternalLinkClick });
@@ -75,6 +80,7 @@ const getTextFromDescendant = async ({
                   directParent,
                   onUserClick,
                   onInternalLinkClick,
+                  showPlainText,
                 })}
               </React.Fragment>
             )),
@@ -143,6 +149,7 @@ export const getTextFromTextEditorString = async (
     directParent,
     onUserClick,
     onInternalLinkClick,
+    showPlainText,
   } = data;
 
   const isCurrentUser = userId === ownerId;
@@ -199,6 +206,7 @@ export const getTextFromTextEditorString = async (
           directParent,
           onUserClick,
           onInternalLinkClick,
+          showPlainText,
         })}
       </React.Fragment>
     )),
