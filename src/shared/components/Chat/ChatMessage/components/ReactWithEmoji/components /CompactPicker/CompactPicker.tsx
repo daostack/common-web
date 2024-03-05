@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import classnames from "classnames";
 import { Skin } from "@emoji-mart/data";
@@ -73,6 +73,19 @@ export const CompactPicker: FC<CompactPickerProps> = (props) => {
     }
   };
 
+  const isEmojiInCommonPanel = useMemo(
+    () => commonEmojis.some((emoji) => emoji.native === userReaction?.emoji),
+    [commonEmojis, userReaction],
+  );
+
+  const finalCommonEmojis =
+    userReaction && !isEmojiInCommonPanel
+      ? [
+          ...commonEmojis,
+          { unified: userReaction.emoji, native: userReaction.emoji },
+        ]
+      : commonEmojis;
+
   return (
     <div className={styles.container}>
       <ButtonIcon
@@ -81,7 +94,7 @@ export const CompactPicker: FC<CompactPickerProps> = (props) => {
       >
         <PlusIcon />
       </ButtonIcon>
-      {commonEmojis.map((emoji) => {
+      {finalCommonEmojis?.map((emoji) => {
         const isCurrentUserReaction =
           userReaction?.userId === userId &&
           userReaction?.emoji === emoji.native;
