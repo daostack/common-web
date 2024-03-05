@@ -419,7 +419,8 @@ export default function DMChatMessage({
           {!isSystemMessage && !isNotCurrentUserMessage && (
             <ReactWithEmoji
               showEmojiButton={showReactWithEmoji}
-              discussionMessageId={discussionMessage.id}
+              chatMessageId={discussionMessage.id}
+              chatChannelId={chatChannelId}
               className={styles.reactWithEmojiSelf}
               isNotCurrentUserMessage={isNotCurrentUserMessage}
             />
