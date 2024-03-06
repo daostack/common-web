@@ -32,6 +32,8 @@ import { UnsavedChangesPrompt } from "../UnsavedChangesPrompt";
 import { getConfiguration } from "./configuration";
 import { ProjectCreationFormValues } from "./types";
 import styles from "./ProjectCreationForm.module.scss";
+import { FeatureFlags } from "@/shared/constants";
+import { useFeatureFlag } from "@/shared/hooks/useFeatureFlag";
 
 const NOTION_INTEGRATION_TOKEN_MASK = "************";
 
@@ -138,6 +140,8 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
     projectId: project?.id || updatedProject?.id,
     isNotionIntegrationEnabled: Boolean(initialCommon?.notion),
   });
+  const featureFlags = useFeatureFlag();
+  const isAdvancedSettingsEnabled = featureFlags?.get(FeatureFlags.AdvancedSettings);
   const isLoading =
     isProjectCreationLoading ||
     isCommonUpdateLoading ||
@@ -230,7 +234,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
 
   const handleProjectCreate = (values: ProjectCreationFormValues) => {
     setNotionIntegrationFormData(values.notion);
-    createProject(parentCommonId, values);
+    createProject(parentCommonId, values, isAdvancedSettingsEnabled);
   };
 
   const handleProjectUpdate = (values: ProjectCreationFormValues) => {

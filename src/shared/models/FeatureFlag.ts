@@ -1,7 +1,14 @@
-import { FeatureFlags } from "../constants";
+import { FeatureFlags, FeatureFlagVisibility } from "../constants";
 
-export type UserFeatureFlags = Partial<Record<FeatureFlags, boolean>>;
+export type FeatureFlagOptions = {
+  enabled: boolean;
+  visibility: FeatureFlagVisibility;
+  users: string[];
+  feature: FeatureFlags;
+}
 
 export interface FeatureFlag {
-  enabled: boolean;
+  features: FeatureFlagOptions[];
+  // AdvancedSettings: FeatureFlagOptions;
+  teamIds: string[];
 }
