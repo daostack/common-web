@@ -1,28 +1,25 @@
-import { stringify } from "query-string";
 import { store } from "@/shared/appConfig";
 import { ApiEndpoint } from "@/shared/constants";
-import { UnsubscribeFunction } from "@/shared/interfaces";
-import { GetInboxResponse, UpdateUserDto } from "@/shared/interfaces/api";
 import {
-  ChatChannel,
+  FeedLayoutItemWithFollowData,
+  UnsubscribeFunction,
+} from "@/shared/interfaces";
+import { UpdateUserDto } from "@/shared/interfaces/api";
+import {
   Collection,
-  CommonFeed,
-  FeedItemFollowWithMetadata,
   InboxItem,
   SubCollections,
   Timestamp,
   User,
 } from "@/shared/models";
 import {
-  convertObjectDatesToFirestoreTimestamps,
-  convertToTimestamp,
   firestoreDataConverter,
   transformFirebaseDataList,
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
 import * as cacheActions from "@/store/states/cache/actions";
 import Api from "./Api";
-import { waitForUserToBeLoaded } from "./utils";
+import { addMetadataToItemsBatch, waitForUserToBeLoaded } from "./utils";
 
 const converter = firestoreDataConverter<User>();
 const inboxConverter = firestoreDataConverter<InboxItem>();
@@ -162,66 +159,56 @@ class UserService {
     });
   };
 
-  public getInboxItemsWithMetadata = async (
-    options: {
-      startAfter?: Timestamp | null;
-      limit?: number;
-      unread?: boolean;
-    } = {},
-  ): Promise<{
-    data: GetInboxResponse["data"]["inboxWithMetadata"];
+  public getInboxItemsWithMetadata = async (options: {
+    userId: string;
+    startAfter?: Timestamp | null;
+    limit?: number;
+    unread?: boolean;
+  }): Promise<{
+    data: FeedLayoutItemWithFollowData[];
     firstDocTimestamp: Timestamp | null;
     lastDocTimestamp: Timestamp | null;
     hasMore: boolean;
   }> => {
-    const { startAfter, limit = 10 } = options;
-    const queryParams: Record<string, unknown> = {
-      limit,
-    };
-
-    if (startAfter) {
-      queryParams.startAfter = startAfter.toDate().toISOString();
-    }
-
-    if (options.unread) {
-      queryParams.unread = true;
-    }
-
-    const {
-      data: { data },
-    } = await Api.get<GetInboxResponse>(
-      `${ApiEndpoint.GetInbox}?${stringify(queryParams)}`,
+    const { userId, startAfter, limit = 10, unread } = options;
+    let query = this.getInboxSubCollection(userId).orderBy(
+      "itemUpdatedAt",
+      "desc",
     );
-    const inboxItems: GetInboxResponse["data"]["inboxWithMetadata"] = {
-      chatChannels: data.inboxWithMetadata.chatChannels.map((item) =>
-        convertObjectDatesToFirestoreTimestamps<ChatChannel>(item, [
-          "lastMessage.createdAt",
-        ]),
-      ),
-      feedItemFollows: data.inboxWithMetadata.feedItemFollows.map((item) =>
-        convertObjectDatesToFirestoreTimestamps<FeedItemFollowWithMetadata>(
-          {
-            ...item,
-            feedItem: convertObjectDatesToFirestoreTimestamps<CommonFeed>(
-              item.feedItem,
-            ),
+
+    if (unread) {
+      query = query.where("unread", "==", true);
+    }
+    if (startAfter) {
+      query = query.startAfter(startAfter);
+    }
+    if (limit) {
+      query = query.limit(limit);
+    }
+
+    const snapshot = await query.get();
+    const inboxItems = snapshot.docs.map((doc) => doc.data());
+    const inboxItemsWithMetadata = (
+      await addMetadataToItemsBatch(
+        userId,
+        inboxItems.map((item) => ({
+          item,
+          statuses: {
+            isAdded: false,
+            isRemoved: false,
           },
-          ["lastSeen", "lastActivity"],
-        ),
-      ),
-    };
-    const firstDocTimestamp =
-      (data.firstDocTimestamp && convertToTimestamp(data.firstDocTimestamp)) ||
-      null;
+        })),
+      )
+    ).map(({ item }) => item);
+    const firstDocTimestamp = inboxItems[0]?.itemUpdatedAt || null;
     const lastDocTimestamp =
-      (data.lastDocTimestamp && convertToTimestamp(data.lastDocTimestamp)) ||
-      null;
+      inboxItems[inboxItems.length - 1]?.itemUpdatedAt || null;
 
     return {
-      data: inboxItems,
+      data: inboxItemsWithMetadata,
       firstDocTimestamp,
       lastDocTimestamp,
-      hasMore: data.hasMore,
+      hasMore: inboxItems.length === limit,
     };
   };
 

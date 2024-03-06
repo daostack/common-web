@@ -12,22 +12,29 @@ const WebViewLoginHandler: FC = () => {
   const dispatch = useDispatch();
 
   const handleWebviewLogin = React.useCallback(async (event) => {
-    const data = parseJson(event.data) as FirebaseCredentials;
-    const user = await firebase.auth().currentUser;
-
-    if (data?.redirectUrl) {
-      history.push(data?.redirectUrl);
-    }
-
-    if (!data?.providerId) {
-      return;
-    }
-
-    if (user) {
-      window.ReactNativeWebView.postMessage(WebviewActions.loginSuccess);
-    }
-
     try {
+      window.ReactNativeWebView.postMessage("toast-receive-data");
+      const data = parseJson(event.data) as FirebaseCredentials;
+      window.ReactNativeWebView.postMessage("toast-parse-data");
+      const user = await firebase.auth().currentUser;
+      window.ReactNativeWebView.postMessage("toast-get-user");
+
+      if (data?.redirectUrl) {
+        window.ReactNativeWebView.postMessage("toast-redirect");
+        history.push(data?.redirectUrl);
+      }
+
+      if (!data?.providerId && !data?.customToken) {
+        window.ReactNativeWebView.postMessage("toast-failed-provider");
+        window.ReactNativeWebView.postMessage(WebviewActions.loginError);
+        return;
+      }
+
+      if (user) {
+        window.ReactNativeWebView.postMessage(WebviewActions.loginSuccess);
+      }
+
+      window.ReactNativeWebView.postMessage("toast-call-weblogin");
       dispatch(
         webviewLogin.request({
           payload: data,

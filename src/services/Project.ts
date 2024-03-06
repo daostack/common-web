@@ -107,21 +107,16 @@ class ProjectService {
     isAdvancedSettingsEnabled = true,
   ): Promise<Common> => {
     const { advancedSettings, ...subCommonData } = data;
-    const {
-      data: { circleProjectSubcommon },
-    } = await Api.post<{ circleProjectSubcommon: Common }>(
-      ApiEndpoint.CreateAction,
-      {
-        type: isAdvancedSettingsEnabled ? GovernanceActions.CREATE_SUBCOMMON : GovernanceActions.CREATE_PROJECT,
-        args: {
-          commonId: parentCommonId,
-          subcommonDefinition: subCommonData,
-          ...(isAdvancedSettingsEnabled && { ...advancedSettings }),
-        },
-      },
-    );
+     const { data: project } = await Api.post<Common>(ApiEndpoint.CreateAction, {
+       type: isAdvancedSettingsEnabled ? GovernanceActions.CREATE_SUBCOMMON : GovernanceActions.CREATE_PROJECT,
+       args: {
+         commonId: parentCommonId,
+         subcommonDefinition: subCommonData,
+         ...(isAdvancedSettingsEnabled && { ...advancedSettings }),
+       },
+    });
 
-    return circleProjectSubcommon;
+    return project;
   };
 }
 
