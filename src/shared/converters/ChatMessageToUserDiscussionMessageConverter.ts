@@ -27,6 +27,7 @@ class ChatMessageToUserDiscussionMessageConverter extends Converter<
     owner: chatMessage.owner,
     parentMessage: chatMessage.parentMessage || null,
     hasUncheckedItems: chatMessage.hasUncheckedItems,
+    reactionCounts: chatMessage?.reactionCounts,
   });
 
   public toBaseEntity = (

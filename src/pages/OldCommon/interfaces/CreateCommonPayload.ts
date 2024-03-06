@@ -4,6 +4,7 @@ import {
   CommonLink,
   NotionIntegrationPayloadIntermediate,
   Roles,
+  SpaceAdvancedSettingsIntermediate,
 } from "@/shared/models";
 import { MemberAdmittanceLimitations } from "@/shared/models/governance/proposals";
 import { TextEditorValue } from "@/shared/ui-kit/TextEditor/types";
@@ -65,6 +66,7 @@ export interface IntermediateUpdateCommonData {
   links?: CommonLink[];
   roles?: Roles;
   notion?: NotionIntegrationPayloadIntermediate;
+  advancedSettings?: SpaceAdvancedSettingsIntermediate;
 }
 
 export interface UpdateCommonData {

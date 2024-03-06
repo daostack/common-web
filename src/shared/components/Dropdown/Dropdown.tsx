@@ -19,6 +19,7 @@ import {
   closeMenu,
 } from "react-aria-menubutton";
 import classNames from "classnames";
+import { isEqual } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { useChatContentContext } from "@/pages/common/components/CommonContent/context";
 import { Loader } from "@/shared/components";
@@ -43,6 +44,7 @@ export interface Option {
   searchText?: string;
   value: unknown;
   className?: string;
+  key?: string;
 }
 
 export enum ElementDropdownMenuItems {
@@ -105,7 +107,7 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
   const menuButtonRef = useRef<HTMLElement>(null);
   const [menuRef, setMenuRef] = useState<HTMLUListElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const selectedOption = options.find((option) => option.value === value);
+  const selectedOption = options.find((option) => isEqual(option.value, value));
   const dropdownId = useMemo(() => `dropdown-${uuidv4()}`, []);
   const { isScrolling: isChatScrolling, chatContentRect } =
     useChatContentContext();
@@ -164,7 +166,9 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
     <>
       <MenuWrapper
         id={dropdownId}
-        className={classNames("custom-dropdown-wrapper", className)}
+        className={classNames("custom-dropdown-wrapper", className, {
+          ["--open"]: isOpen,
+        })}
         onSelection={handleSelection}
         onMenuToggle={handleMenuToggle}
       >
@@ -249,7 +253,7 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
             >
               {options.map((option) => (
                 <MenuItem
-                  key={String(option.value)}
+                  key={String(option.key) || String(option.value)}
                   className={classNames(
                     "custom-dropdown-wrapper__menu-item",
                     styles?.menuItem,

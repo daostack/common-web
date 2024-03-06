@@ -175,8 +175,11 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
           subspaces and single-topic streams.
         </p>
         <ProjectCreationForm
+          rootCommonId={parentCommon.rootCommonId ?? parentCommon.id}
           parentCommonId={parentCommon.id}
+          parentCommonName={parentCommon.name}
           governanceCircles={parentGovernance.circles}
+          parentGovernanceId={parentGovernance.id}
           initialCommon={initialCommon}
           isEditing={isEditing}
           onFinish={handleCreatedProject}

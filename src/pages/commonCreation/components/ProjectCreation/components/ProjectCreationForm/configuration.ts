@@ -1,4 +1,9 @@
-import { NotionIntegration, Roles, SyncLeaseStatus } from "@/shared/models";
+import {
+  NotionIntegration,
+  Roles,
+  SpaceAdvancedSettingsIntermediate,
+  SyncLeaseStatus,
+} from "@/shared/models";
 import { TextEditorSize } from "@/shared/ui-kit";
 import { CreationFormItem, CreationFormItemType } from "../../../CreationForm";
 import {
@@ -15,6 +20,9 @@ interface Options {
   shouldBeUnique?: { existingNames: string[] };
   isImageRequired?: boolean;
   notionIntegration?: NotionIntegration | null;
+  advancedSettings?: SpaceAdvancedSettingsIntermediate;
+  parentCommonName?: string;
+  isEditing?: boolean;
 }
 
 export const getConfiguration = (options: Options): CreationFormItem[] => {
@@ -23,7 +31,10 @@ export const getConfiguration = (options: Options): CreationFormItem[] => {
     roles,
     shouldBeUnique,
     notionIntegration,
+    advancedSettings,
+    parentCommonName,
     isImageRequired = false,
+    isEditing,
   } = options;
   const type = isProject ? "Space" : "Common";
 
@@ -128,7 +139,11 @@ export const getConfiguration = (options: Options): CreationFormItem[] => {
     },
   ];
 
-  if (roles) {
+  /**
+   * For now, if we have advancedSettings we don't show the roles editing section.
+   * It's showen only for root commons since advancedSettings is enabled only for spaces.
+   */
+  if (!advancedSettings && roles) {
     items.push({
       type: CreationFormItemType.Roles,
       props: {
@@ -171,6 +186,19 @@ export const getConfiguration = (options: Options): CreationFormItem[] => {
         },
       },
     });
+
+    /**
+     * We don't support editing roles inheritance in the BE yet.
+     */
+    if (!isEditing && advancedSettings) {
+      items.push({
+        type: CreationFormItemType.AdvancedSettings,
+        props: {
+          name: "advancedSettings",
+          parentCommonName,
+        },
+      });
+    }
   }
 
   return items;

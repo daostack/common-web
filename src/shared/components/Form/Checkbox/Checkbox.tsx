@@ -45,7 +45,8 @@ const Checkbox: FC<CheckboxProps> = (props) => {
         <div
           className={classNames(
             "custom-checkbox__input-wrapper",
-            styles?.inputWrapper
+            styles?.inputWrapper,
+            { ["disabled"]: restProps.disabled },
           )}
         >
           <input

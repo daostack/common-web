@@ -61,6 +61,10 @@ const useCommonUpdate = (commonId?: string): Return => {
   const dispatch = useDispatch();
   const user = useSelector(selectUser());
 
+  /**
+   * NOTE that currently we don't support editing roles inheritance in the BE.
+   * For now, we don't handle it here.
+   */
   const updateCommon = useCallback(
     async (updatedData: IntermediateUpdateCommonData) => {
       if (isCommonUpdateLoading || !commonId) {

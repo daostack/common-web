@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import { useDispatch } from "react-redux";
 import classNames from "classnames";
+import { isEmpty } from "lodash";
 import { Element } from "slate";
 import { useLongPress } from "use-long-press";
 import * as oldCommonActions from "@/pages/OldCommon/store/actions";
@@ -49,7 +50,12 @@ import { StaticLinkType, getUserName } from "@/shared/utils";
 import { InternalLinkData } from "@/shared/utils";
 import { convertBytes } from "@/shared/utils/convertBytes";
 import { EditMessageInput } from "../EditMessageInput";
-import { ChatMessageLinkify, Time } from "./components";
+import {
+  ChatMessageLinkify,
+  ReactWithEmoji,
+  Reactions,
+  Time,
+} from "./components";
 import { ChatMessageContext, ChatMessageContextValue } from "./context";
 import { getTextFromTextEditorString } from "./utils";
 import styles from "./ChatMessage.module.scss";
@@ -112,6 +118,7 @@ export default function ChatMessage({
   }>();
   const [isEditMode, setEditMode] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showReactWithEmoji, setShowReactWithEmoji] = useState(false);
   const [isMessageEditLoading, setIsMessageEditLoading] = useState(false);
   const isTabletView = useIsTabletView();
   const isUserDiscussionMessage =
@@ -395,11 +402,26 @@ export default function ChatMessage({
     [isMessageEditLoading, handleCheckboxChange, isMessageEditAllowed],
   );
 
+  const emojiButton = (
+    <ReactWithEmoji
+      showEmojiButton={showReactWithEmoji}
+      discussionMessageId={discussionMessage.id}
+      className={
+        isNotCurrentUserMessage
+          ? styles.reactWithEmoji
+          : styles.reactWithEmojiSelf
+      }
+      isNotCurrentUserMessage={isNotCurrentUserMessage}
+    />
+  );
+
   return (
     <ChatMessageContext.Provider value={chatMessageContextValue}>
       <li
         id={discussionMessage.id}
         className={classNames(styles.container, className)}
+        onMouseEnter={() => setShowReactWithEmoji(true)}
+        onMouseLeave={() => setShowReactWithEmoji(false)}
       >
         <div
           className={classNames(styles.message, {
@@ -407,6 +429,7 @@ export default function ChatMessage({
             [styles.systemMessageContainer]: isSystemMessage,
           })}
         >
+          {!isSystemMessage && !isNotCurrentUserMessage && emojiButton}
           {isNotCurrentUserMessage && isUserDiscussionMessage && (
             <div className={styles.iconWrapper} onClick={handleUserClick}>
               <UserAvatar
@@ -439,6 +462,9 @@ export default function ChatMessage({
                   [styles.highlighted]: highlighted && isNotCurrentUserMessage,
                   [styles.highlightedOwn]:
                     highlighted && !isNotCurrentUserMessage,
+                  [styles.hasReactions]:
+                    isUserDiscussionMessage &&
+                    !isEmpty(discussionMessage.reactionCounts),
                 })}
                 {...getLongPressProps()}
               >
@@ -523,9 +549,14 @@ export default function ChatMessage({
                     onDelete={onMessageDelete}
                   />
                 )}
+
+                {!isSystemMessage && isUserDiscussionMessage && (
+                  <Reactions reactions={discussionMessage.reactionCounts} />
+                )}
               </div>
             </>
           )}
+          {!isSystemMessage && isNotCurrentUserMessage && emojiButton}
         </div>
       </li>
     </ChatMessageContext.Provider>

@@ -126,8 +126,22 @@ export interface Common extends BaseEntity {
   notion?: CommonNotion;
 }
 
+export interface InheritedCircle {
+  circleId?: string;
+  inheritFrom?: {
+    governanceId?: string;
+    circleId?: string;
+  };
+}
+
+export interface SpaceAdvancedSettings {
+  permissionGovernanceId?: string;
+  circles?: InheritedCircle[];
+}
+
 export interface Project extends Common {
   directParent: DirectParent;
+  advancedSettings?: SpaceAdvancedSettings;
 }
 
 /**

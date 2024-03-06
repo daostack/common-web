@@ -97,31 +97,26 @@ class ProjectService {
     );
   };
 
+  /**
+   * Using new CREATE_SUBCOMMON to support advanced settings.
+   * As far as I understood from Daniel, we don't need anymore newCircleArgs. Need to confirm.
+   */
   public createNewProject = async (
     parentCommonId: string,
     data: CreateProjectPayload,
+    isAdvancedSettingsEnabled = true,
   ): Promise<Common> => {
-    const { highestCircleId, ...subCommonData } = data;
-    const {
-      data: { circleProjectSubcommon },
-    } = await Api.post<{ circleProjectSubcommon: Common }>(
-      ApiEndpoint.CreateAction,
-      {
-        type: GovernanceActions.CREATE_PROJECT,
-        args: {
-          commonId: parentCommonId,
-          subcommonDefinition: subCommonData,
-          newCircleArgs: {
-            circleDefinition: getProjectCircleDefinition(
-              subCommonData.name,
-              highestCircleId,
-            ),
-          },
-        },
-      },
-    );
+    const { advancedSettings, ...subCommonData } = data;
+     const { data: project } = await Api.post<Common>(ApiEndpoint.CreateAction, {
+       type: isAdvancedSettingsEnabled ? GovernanceActions.CREATE_SUBCOMMON : GovernanceActions.CREATE_PROJECT,
+       args: {
+         commonId: parentCommonId,
+         subcommonDefinition: subCommonData,
+         ...(isAdvancedSettingsEnabled && { ...advancedSettings }),
+       },
+    });
 
-    return circleProjectSubcommon;
+    return project;
   };
 }
 

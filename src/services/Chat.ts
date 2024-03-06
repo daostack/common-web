@@ -2,6 +2,8 @@ import { stringify } from "query-string";
 import { ApiEndpoint, FirestoreDataSource } from "@/shared/constants";
 import { DMUser, UnsubscribeFunction } from "@/shared/interfaces";
 import {
+  CreateChatMessageReaction,
+  DeleteChatMessageReaction,
   GetChatChannelMessagesResponse,
   SendChatMessageDto,
   UpdateChatMessageDto,
@@ -13,6 +15,7 @@ import {
   Collection,
   SubCollections,
   Timestamp,
+  UserReaction,
 } from "@/shared/models";
 import {
   convertObjectDatesToFirestoreTimestamps,
@@ -27,6 +30,7 @@ const chatChannelConverter = firestoreDataConverter<ChatChannel>();
 const chatMessagesConverter = firestoreDataConverter<ChatMessage>();
 const chatChannelUserStatusConverter =
   firestoreDataConverter<ChatChannelUserStatus>();
+const getUserReactionConverter = firestoreDataConverter<UserReaction>();
 
 class ChatService {
   private getChatChannelCollection = () =>
@@ -236,6 +240,18 @@ class ChatService {
     );
   };
 
+  public createMessageReaction = async (
+    payload: CreateChatMessageReaction,
+  ): Promise<void> => {
+    await Api.post(ApiEndpoint.CreateChatMessageReaction, payload);
+  };
+
+  public deleteMessageReaction = async (
+    payload: DeleteChatMessageReaction,
+  ): Promise<void> => {
+    await Api.post(ApiEndpoint.DeleteChatMessageReaction, payload);
+  };
+
   public subscribeToChatChannel = (
     chatChannelId: string,
     participantId: string,
@@ -381,6 +397,24 @@ class ChatService {
       callback(data || null);
     });
   };
+
+  public getDMUserReaction = async (
+    chatMessageId: string,
+    chatChannelId: string,
+    userId: string,
+  ): Promise<UserReaction | null> =>
+    (
+      await firebase
+        .firestore()
+        .collection(Collection.ChatChannel)
+        .doc(chatChannelId)
+        .collection(SubCollections.ChatMessages)
+        .doc(chatMessageId)
+        .collection(Collection.Reactions)
+        .withConverter(getUserReactionConverter)
+        .doc(userId)
+        .get()
+    ).data() || null;
 }
 
 export default new ChatService();

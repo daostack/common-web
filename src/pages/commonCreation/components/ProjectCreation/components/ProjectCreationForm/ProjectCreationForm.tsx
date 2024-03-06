@@ -8,7 +8,14 @@ import {
   useNotionIntegration,
   useProjectCreation,
 } from "@/shared/hooks/useCases";
-import { Circles, Common, Governance, Project, Roles } from "@/shared/models";
+import {
+  Circles,
+  Common,
+  Governance,
+  Project,
+  Roles,
+  SpaceAdvancedSettingsIntermediate,
+} from "@/shared/models";
 import {
   Loader,
   LoaderVariant,
@@ -25,14 +32,19 @@ import { UnsavedChangesPrompt } from "../UnsavedChangesPrompt";
 import { getConfiguration } from "./configuration";
 import { ProjectCreationFormValues } from "./types";
 import styles from "./ProjectCreationForm.module.scss";
+import { FeatureFlags } from "@/shared/constants";
+import { useFeatureFlag } from "@/shared/hooks/useFeatureFlag";
 
 const NOTION_INTEGRATION_TOKEN_MASK = "************";
 
 const CreationForm = generateCreationForm<ProjectCreationFormValues>();
 
 interface ProjectCreationFormProps {
+  rootCommonId: string;
   parentCommonId: string;
+  parentCommonName?: string;
   governanceCircles: Circles;
+  parentGovernanceId?: string;
   initialCommon?: Project;
   isEditing: boolean;
   onFinish: (data: { project: Common; governance: Governance }) => void;
@@ -43,6 +55,7 @@ const getInitialValues = (
   governanceCircles: Circles,
   initialCommon?: Project,
   roles?: Roles,
+  advancedSettings?: SpaceAdvancedSettingsIntermediate,
 ): ProjectCreationFormValues => {
   const circlesWithHighestTier = getCirclesWithHighestTier(
     Object.values(governanceCircles),
@@ -77,13 +90,18 @@ const getInitialValues = (
       databaseId: initialCommon?.notion?.databaseId || "",
       token: isNotionIntegrationEnabled ? NOTION_INTEGRATION_TOKEN_MASK : "",
     },
+    advancedSettings: advancedSettings,
+    initialAdvancedSettings: advancedSettings,
   };
 };
 
 const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   const {
+    rootCommonId,
     parentCommonId,
+    parentCommonName,
     governanceCircles,
+    parentGovernanceId,
     initialCommon,
     isEditing,
     onFinish,
@@ -93,6 +111,11 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   const projects = useSelector(selectCommonLayoutProjects);
   const formRef = useRef<CreationFormRef>(null);
   const { data: governance, fetchGovernance } = useGovernanceByCommonId();
+  const { data: rootGovernance, fetchGovernance: fetchRootGovernance } =
+    useGovernanceByCommonId();
+  const isParentIsRoot = initialCommon
+    ? initialCommon?.directParent.commonId === initialCommon?.rootCommonId
+    : parentCommonId === rootCommonId;
   const {
     isProjectCreationLoading,
     project,
@@ -117,6 +140,8 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
     projectId: project?.id || updatedProject?.id,
     isNotionIntegrationEnabled: Boolean(initialCommon?.notion),
   });
+  const featureFlags = useFeatureFlag();
+  const isAdvancedSettingsEnabled = featureFlags?.get(FeatureFlags.AdvancedSettings);
   const isLoading =
     isProjectCreationLoading ||
     isCommonUpdateLoading ||
@@ -130,16 +155,67 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   }, [initialCommon?.id]);
 
   const nonProjectCircles = useMemo(
-    () => removeProjectCircles(Object.values(governance?.circles || {})),
-    [governance?.circles],
+    () => removeProjectCircles(Object.values(governanceCircles || {})),
+    [governance?.circles || governanceCircles],
   );
   const roles: Roles = nonProjectCircles.map((circle) => ({
     circleId: circle.id,
     circleName: circle.name,
+    tier: circle.hierarchy?.tier,
   }));
+  const nonProjectRootCircles = useMemo(
+    () => removeProjectCircles(Object.values(rootGovernance?.circles || {})),
+    [rootGovernance?.circles],
+  );
+  const rootCommonRoles: Roles = isParentIsRoot
+    ? roles
+    : nonProjectRootCircles.map((circle) => ({
+        circleId: circle.id,
+        circleName: circle.name,
+        tier: circle.hierarchy?.tier,
+      }));
+
+  const advancedSettings: SpaceAdvancedSettingsIntermediate =
+    initialCommon?.advancedSettings ||
+    useMemo(() => {
+      return {
+        permissionGovernanceId: isParentIsRoot
+          ? parentGovernanceId
+          : rootGovernance?.id,
+        circles: rootCommonRoles.map((role, index) => {
+          return {
+            circleId: role.circleId,
+            circleName: `${role.circleName}s`,
+            selected: true,
+            synced: index === 0 ? true : false,
+            ...(roles[index]?.circleId && {
+              inheritFrom: {
+                governanceId: parentGovernanceId,
+                circleId: roles[index]?.circleId,
+                circleName: `${roles[index]?.circleName}s`,
+                tier: roles[index]?.tier,
+              },
+            }),
+          };
+        }),
+      };
+    }, [
+      rootGovernance?.id,
+      parentGovernanceId,
+      rootCommonRoles,
+      isParentIsRoot,
+      roles,
+    ]);
+
   const initialValues = useMemo(
-    () => getInitialValues(governanceCircles, initialCommon, roles),
-    [governanceCircles, nonProjectCircles],
+    () =>
+      getInitialValues(
+        governanceCircles,
+        initialCommon,
+        roles,
+        advancedSettings,
+      ),
+    [governanceCircles, roles, nonProjectCircles, advancedSettings],
   );
   const projectId = initialCommon?.id || project?.id;
 
@@ -158,7 +234,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
 
   const handleProjectCreate = (values: ProjectCreationFormValues) => {
     setNotionIntegrationFormData(values.notion);
-    createProject(parentCommonId, values);
+    createProject(parentCommonId, values, isAdvancedSettingsEnabled);
   };
 
   const handleProjectUpdate = (values: ProjectCreationFormValues) => {
@@ -194,6 +270,12 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   }, [projectId]);
 
   useEffect(() => {
+    if (rootCommonId) {
+      fetchRootGovernance(rootCommonId);
+    }
+  }, [rootCommonId]);
+
+  useEffect(() => {
     const finalProject = project || updatedProject;
 
     if (finalProject && governance && isNotionIntegrationUpdated) {
@@ -220,9 +302,12 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
           isProject: true,
           roles,
           notionIntegration,
+          advancedSettings,
+          parentCommonName,
           shouldBeUnique: {
             existingNames: existingProjectsNames,
           },
+          isEditing,
         })}
         submitButtonText={isEditing ? "Save changes" : "Create Space"}
         disabled={isLoading}

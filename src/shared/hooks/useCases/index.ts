@@ -44,5 +44,8 @@ export { useDiscussionMessagesById } from "./useDiscussionMessagesById";
 export { useUserPendingJoin } from "./useUserPendingJoin";
 export { useCommonMemberWithUserInfo } from "./useCommonMemberWithUserInfo";
 export { useEligibleVoters } from "./useEligibleVoters";
+export { useDiscussionMessageReaction } from "./useDiscussionMessageReaction";
+export { useChatMessageReaction } from "./useChatMessageReaction";
+export { useUserReaction } from "./useUserReaction";
 export * from "./useCommonFollow";
 export * from "./usePreloadDiscussionMessagesById";
