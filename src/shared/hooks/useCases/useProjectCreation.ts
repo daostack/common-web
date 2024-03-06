@@ -20,6 +20,7 @@ interface Return {
   createProject: (
     parentCommonId: string,
     creationData: IntermediateCreateProjectPayload,
+    isAdvancedSettingsEnabled?: boolean,
   ) => Promise<void>;
 }
 
@@ -33,6 +34,7 @@ export const useProjectCreation = (): Return => {
     async (
       parentCommonId: string,
       creationData: IntermediateCreateProjectPayload,
+      isAdvancedSettingsEnabled = true,
     ) => {
       const [projectImageFile] = creationData.projectImages;
 
@@ -72,9 +74,9 @@ export const useProjectCreation = (): Return => {
           gallery,
           video: creationData.videoUrl
             ? {
-                title: `Space ${creationData.spaceName} Video`,
-                value: creationData.videoUrl,
-              }
+              title: `Space ${creationData.spaceName} Video`,
+              value: creationData.videoUrl,
+            }
             : undefined,
           links,
           highestCircleId: creationData.highestCircleId,
@@ -87,12 +89,13 @@ export const useProjectCreation = (): Return => {
         const createdProject = await ProjectService.createNewProject(
           parentCommonId,
           payload,
+          isAdvancedSettingsEnabled
         );
         setProject(createdProject);
       } catch (error) {
         const errorMessage =
           isRequestError(error) &&
-          error.response?.data?.errorCode === ErrorCode.ArgumentDuplicatedError
+            error.response?.data?.errorCode === ErrorCode.ArgumentDuplicatedError
             ? `Space with name "${creationData.spaceName}" already exists`
             : "Something went wrong...";
 

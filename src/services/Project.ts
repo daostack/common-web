@@ -104,6 +104,7 @@ class ProjectService {
   public createNewProject = async (
     parentCommonId: string,
     data: CreateProjectPayload,
+    isAdvancedSettingsEnabled = true,
   ): Promise<Common> => {
     const { advancedSettings, ...subCommonData } = data;
     const {
@@ -111,11 +112,11 @@ class ProjectService {
     } = await Api.post<{ circleProjectSubcommon: Common }>(
       ApiEndpoint.CreateAction,
       {
-        type: GovernanceActions.CREATE_SUBCOMMON,
+        type: isAdvancedSettingsEnabled ? GovernanceActions.CREATE_SUBCOMMON : GovernanceActions.CREATE_PROJECT,
         args: {
           commonId: parentCommonId,
           subcommonDefinition: subCommonData,
-          ...advancedSettings,
+          ...(isAdvancedSettingsEnabled && { ...advancedSettings }),
         },
       },
     );
