@@ -138,7 +138,7 @@ export default function ChatComponent({
   feedItemId,
   isAuthorized,
   isHidden = false,
-  seenOnce = false,
+  seenOnce,
   seen,
   onMessagesAmountChange,
   directParent,
