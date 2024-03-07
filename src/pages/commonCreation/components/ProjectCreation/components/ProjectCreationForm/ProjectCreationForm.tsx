@@ -65,12 +65,12 @@ const getInitialValues = (
   return {
     projectImages: initialCommon?.image
       ? [
-          {
-            id: "space_image",
-            title: "space_image",
-            file: initialCommon.image,
-          },
-        ]
+        {
+          id: "space_image",
+          title: "space_image",
+          file: initialCommon.image,
+        },
+      ]
       : [],
     spaceName: initialCommon?.name || "",
     byline: initialCommon?.byline || "",
@@ -170,14 +170,17 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   const rootCommonRoles: Roles = isParentIsRoot
     ? roles
     : nonProjectRootCircles.map((circle) => ({
-        circleId: circle.id,
-        circleName: circle.name,
-        tier: circle.hierarchy?.tier,
-      }));
+      circleId: circle.id,
+      circleName: circle.name,
+      tier: circle.hierarchy?.tier,
+    }));
 
   const advancedSettings: SpaceAdvancedSettingsIntermediate =
-    initialCommon?.advancedSettings ||
     useMemo(() => {
+      if (initialCommon?.advancedSettings) {
+        return initialCommon?.advancedSettings
+      }
+
       return {
         permissionGovernanceId: isParentIsRoot
           ? parentGovernanceId
@@ -205,6 +208,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
       rootCommonRoles,
       isParentIsRoot,
       roles,
+      initialCommon?.advancedSettings
     ]);
 
   const initialValues = useMemo(
