@@ -1,3 +1,4 @@
+import React from "react";
 import { ContextMenuItem } from "@/shared/interfaces";
 import {
   Common,
@@ -9,7 +10,6 @@ import {
   User,
 } from "@/shared/models";
 import { getUserName } from "@/shared/utils";
-import React from "react";
 import {
   FeedCardContent,
   FeedCardHeader,
@@ -88,6 +88,7 @@ export function DiscussionFeedCardContent(props: DiscussionFeedCardProps) {
         }
       />
       <FeedCardContent
+        item={item}
         description={isHome ? common?.description : discussion?.message}
         images={isHome ? common?.gallery : discussion?.images}
         notion={discussionNotion}
