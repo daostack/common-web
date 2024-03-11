@@ -1,4 +1,3 @@
-import { stringify } from "query-string";
 import {
   ApiEndpoint,
   GovernanceActions,
@@ -12,10 +11,7 @@ import {
   UnsubscribeFunction,
 } from "@/shared/interfaces";
 import { UnlinkStreamPayload } from "@/shared/interfaces/UnlinkStreamPayload";
-import {
-  GetFeedItemsResponse,
-  GetPinnedFeedItemsResponse,
-} from "@/shared/interfaces/api";
+import { GetPinnedFeedItemsResponse } from "@/shared/interfaces/api";
 import {
   Collection,
   CommonFeed,
@@ -26,11 +22,12 @@ import {
 } from "@/shared/models";
 import {
   convertObjectDatesToFirestoreTimestamps,
-  convertToTimestamp,
   firestoreDataConverter,
 } from "@/shared/utils";
 import firebase, { isFirestoreCacheError } from "@/shared/utils/firebase";
 import Api, { CancelToken } from "./Api";
+import CommonService from "./Common";
+import { checkIsFeedItemDefined } from "./utils";
 
 const converter = firestoreDataConverter<CommonFeed>();
 
@@ -89,6 +86,7 @@ class CommonFeedService {
 
   public getCommonFeedItemsByUpdatedAt = async (
     commonId: string,
+    userId?: string,
     options: {
       startAfter?: Timestamp | null;
       feedItemId?: string;
@@ -101,37 +99,61 @@ class CommonFeedService {
     hasMore: boolean;
   }> => {
     const { startAfter, feedItemId, limit = 10 } = options;
-    const endpoint = ApiEndpoint.GetCommonFeedItems.replace(
-      ":commonId",
-      commonId,
-    );
-    const queryParams: Record<string, unknown> = {
-      feedItemId,
-      limit,
-    };
+    const [desiredFeedItem, common, commonMember] = await Promise.all([
+      feedItemId ? this.getCommonFeedItemById(commonId, feedItemId) : null,
+      CommonService.getCommonById(commonId),
+      userId ? CommonService.getCommonMemberByUserId(commonId, userId) : null,
+    ]);
+    const pinnedFeedItems = common?.pinnedFeedItems || [];
+    let query = this.getCommonFeedSubCollection(commonId)
+      .where("isDeleted", "==", false)
+      .orderBy("updatedAt", "desc");
 
+    if (desiredFeedItem) {
+      query = query.where("updatedAt", ">=", desiredFeedItem.updatedAt);
+    }
     if (startAfter) {
-      queryParams.startAfter = startAfter.toDate().toISOString();
+      query = query.startAfter(startAfter);
+    }
+    if (!desiredFeedItem && limit) {
+      query = query.limit(limit);
     }
 
-    const { data } = await Api.get<GetFeedItemsResponse>(
-      `${endpoint}?${stringify(queryParams)}`,
-    );
-    const commonFeedItems = data.data.feedItems.map((item) =>
-      convertObjectDatesToFirestoreTimestamps<CommonFeed>(item),
-    );
-    const firstDocTimestamp =
-      (data.firstDocTimestamp && convertToTimestamp(data.firstDocTimestamp)) ||
-      null;
+    const snapshot = await query.get();
+    const feedItems = snapshot.docs.map((doc) => ({ ...doc.data(), commonId }));
+    const filteredFeedItems = feedItems
+      .map((item) => {
+        if (
+          pinnedFeedItems.some(
+            (pinnedFeedItem) => pinnedFeedItem.feedObjectId === item.id,
+          )
+        ) {
+          return null;
+        }
+        if (item.circleVisibility.length === 0) {
+          return item;
+        }
+        if (
+          commonMember?.circleIds &&
+          item.circleVisibility.some((circleId) =>
+            commonMember.circleIds.includes(circleId),
+          )
+        ) {
+          return item;
+        }
+
+        return null;
+      })
+      .filter(checkIsFeedItemDefined);
+    const firstDocTimestamp = filteredFeedItems[0]?.updatedAt || null;
     const lastDocTimestamp =
-      (data.lastDocTimestamp && convertToTimestamp(data.lastDocTimestamp)) ||
-      null;
+      filteredFeedItems[filteredFeedItems.length - 1]?.updatedAt || null;
 
     return {
-      data: commonFeedItems,
+      data: filteredFeedItems,
       firstDocTimestamp,
       lastDocTimestamp,
-      hasMore: data.hasMore,
+      hasMore: feedItems.length === limit,
     };
   };
 
