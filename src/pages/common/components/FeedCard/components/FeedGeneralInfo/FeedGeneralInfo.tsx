@@ -2,7 +2,7 @@ import React, { ReactNode, useMemo } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import classNames from "classnames";
 import { useFullText } from "@/shared/hooks";
-import { CommonLink } from "@/shared/models";
+import { CommonFeed, CommonLink } from "@/shared/models";
 import {
   checkIsTextEditorValueEmpty,
   parseStringToTextEditorValue,
@@ -12,13 +12,14 @@ import {
 import styles from "./FeedGeneralInfo.module.scss";
 
 interface FeedGeneralInfoProps {
+  item?: CommonFeed;
   subtitle?: ReactNode;
   description?: string;
   images?: CommonLink[];
 }
 
 export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
-  const { subtitle, description, images = [] } = props;
+  const { item, subtitle, description, images = [] } = props;
   const {
     setRef: setDescriptionRef,
     shouldShowFullText: shouldShowFullContent,
@@ -38,13 +39,17 @@ export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
     toggleFullText();
   };
 
+  const handleError = (error: Error) => {
+    console.error(item, error);
+  };
+
   return (
     <div className={styles.container}>
       {subtitle && (
         <p className={classNames(styles.text, styles.subtitle)}>{subtitle}</p>
       )}
       {!isDescriptionEmpty && (
-        <ErrorBoundary fallback={null}>
+        <ErrorBoundary fallback={null} onError={handleError}>
           <TextEditorWithReinitialization
             editorRef={setDescriptionRef}
             editorClassName={classNames(styles.description, {
