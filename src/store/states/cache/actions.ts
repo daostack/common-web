@@ -263,3 +263,11 @@ export const updateCommonMemberStateByUserAndCommonIds = createStandardAction(
   commonId: string;
   state: LoadingState<(CommonMember & CirclesPermissions) | null>;
 }>();
+
+export const updateDiscussionMessageReactions = createStandardAction(
+  CacheActionType.UPDATE_DISCUSSION_MESSAGE_REACTIONS,
+)<{
+  discussionId?: string;
+  discussionMessageId: string;
+  emoji: string;
+}>();

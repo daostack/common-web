@@ -1,8 +1,9 @@
 import React, { FC, useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import data, { Skin } from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
+import { Logger } from "@/services";
 import { Theme } from "@/shared/constants";
 import { useOutsideClick } from "@/shared/hooks";
 import {
@@ -12,11 +13,13 @@ import {
 import { EmojiIcon } from "@/shared/icons";
 import { selectTheme } from "@/shared/store/selectors";
 import { ButtonIcon } from "@/shared/ui-kit";
+import { cacheActions } from "@/store/states";
 import { CompactPicker } from "./components /CompactPicker";
 import styles from "./ReactWithEmoji.module.scss";
 
 interface ReactWithEmojiProps {
   showEmojiButton: boolean;
+  discussionId?: string;
   discussionMessageId?: string;
   className?: string;
   pickerContainerClassName?: string;
@@ -28,6 +31,7 @@ interface ReactWithEmojiProps {
 export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
   const {
     showEmojiButton,
+    discussionId,
     discussionMessageId,
     className,
     pickerContainerClassName,
@@ -35,6 +39,7 @@ export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
     chatChannelId,
     isNotCurrentUserMessage,
   } = props;
+  const dispatch = useDispatch();
   const theme = useSelector(selectTheme);
   const [showPicker, setShowPicker] = useState(false);
   const [showAllEmojis, setShowAllEmojis] = useState(false);
@@ -63,6 +68,17 @@ export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
         emoji: emoji.native,
         discussionMessageId,
       });
+      try {
+        dispatch(
+          cacheActions.updateDiscussionMessageReactions({
+            discussionId,
+            discussionMessageId,
+            emoji: emoji.native,
+          }),
+        );
+      } catch (error) {
+        Logger.error(error);
+      }
     }
     setShowAllEmojis(false);
     setShowPicker(false);
