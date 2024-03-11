@@ -270,4 +270,5 @@ export const updateDiscussionMessageReactions = createStandardAction(
   discussionId?: string;
   discussionMessageId: string;
   emoji: string;
+  prevUserEmoji?: string;
 }>();

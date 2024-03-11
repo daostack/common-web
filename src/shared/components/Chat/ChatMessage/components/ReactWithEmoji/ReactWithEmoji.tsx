@@ -9,8 +9,10 @@ import { useOutsideClick } from "@/shared/hooks";
 import {
   useChatMessageReaction,
   useDiscussionMessageReaction,
+  useUserReaction,
 } from "@/shared/hooks/useCases";
 import { EmojiIcon } from "@/shared/icons";
+import { UserReaction } from "@/shared/models";
 import { selectTheme } from "@/shared/store/selectors";
 import { ButtonIcon } from "@/shared/ui-kit";
 import { cacheActions } from "@/store/states";
@@ -43,10 +45,14 @@ export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
   const theme = useSelector(selectTheme);
   const [showPicker, setShowPicker] = useState(false);
   const [showAllEmojis, setShowAllEmojis] = useState(false);
+  const [userReaction, setUserReaction] = useState<
+    UserReaction | null | undefined
+  >(null);
   const wrapperRef = useRef(null);
   const { isOutside, setOutsideValue } = useOutsideClick(wrapperRef);
   const { reactToDiscussionMessage } = useDiscussionMessageReaction();
   const { reactToChatMessage } = useChatMessageReaction();
+  const { getUserReaction, getDMUserReaction } = useUserReaction();
 
   useEffect(() => {
     if (isOutside) {
@@ -55,6 +61,21 @@ export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
       setOutsideValue();
     }
   }, [isOutside, setOutsideValue]);
+
+  useEffect(() => {
+    (async () => {
+      if (discussionMessageId) {
+        const userReaction = await getUserReaction(discussionMessageId);
+        setUserReaction(userReaction);
+      } else if (chatMessageId && chatChannelId) {
+        const userReaction = await getDMUserReaction(
+          chatMessageId,
+          chatChannelId,
+        );
+        setUserReaction(userReaction);
+      }
+    })();
+  }, [discussionMessageId, chatMessageId, chatChannelId]);
 
   const onEmojiSelect = (emoji: Skin) => {
     if (chatMessageId && chatChannelId) {
@@ -74,6 +95,7 @@ export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
             discussionId,
             discussionMessageId,
             emoji: emoji.native,
+            prevUserEmoji: userReaction?.emoji,
           }),
         );
       } catch (error) {
@@ -123,10 +145,12 @@ export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
             <CompactPicker
               setShowAllEmojis={setShowAllEmojis}
               onEmojiSelect={onEmojiSelect}
+              discussionId={discussionId}
               discussionMessageId={discussionMessageId}
               chatMessageId={chatMessageId}
               chatChannelId={chatChannelId}
               setShowPicker={setShowPicker}
+              userReaction={userReaction}
             />
           )}
         </div>
