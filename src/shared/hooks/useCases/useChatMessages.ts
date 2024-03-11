@@ -1,4 +1,5 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { Logger, ChatService, UserService } from "@/services";
 import { useLoadingState } from "@/shared/hooks";
 import { LoadingState } from "@/shared/interfaces";
@@ -51,10 +52,14 @@ const addParentMessageToMessages = (
   });
 
 export const useChatMessages = (): Return => {
+  const currentLoadingIdRef = useRef("");
   const [state, setState] = useLoadingState<ChatMessage[]>([]);
   const currentChatChannelId = state.data?.[0]?.chatChannelId;
 
   const fetchChatMessages = useCallback(async (chatChannelId: string) => {
+    const loadingId = uuidv4();
+    currentLoadingIdRef.current = loadingId;
+
     try {
       setState({
         loading: true,
@@ -73,18 +78,22 @@ export const useChatMessages = (): Return => {
         await addOwnersToMessages(fetchedChatMessages),
       );
 
-      setState({
-        loading: false,
-        fetched: true,
-        data: chatMessages,
-      });
+      if (currentLoadingIdRef.current === loadingId) {
+        setState({
+          loading: false,
+          fetched: true,
+          data: chatMessages,
+        });
+      }
     } catch (error) {
-      Logger.error(error);
-      setState({
-        loading: false,
-        fetched: false,
-        data: [],
-      });
+      if (currentLoadingIdRef.current === loadingId) {
+        Logger.error(error);
+        setState({
+          loading: false,
+          fetched: false,
+          data: [],
+        });
+      }
     }
   }, []);
 
