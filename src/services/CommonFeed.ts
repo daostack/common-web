@@ -11,7 +11,6 @@ import {
   UnsubscribeFunction,
 } from "@/shared/interfaces";
 import { UnlinkStreamPayload } from "@/shared/interfaces/UnlinkStreamPayload";
-import { GetPinnedFeedItemsResponse } from "@/shared/interfaces/api";
 import {
   Collection,
   CommonFeed,
@@ -49,8 +48,9 @@ class CommonFeedService {
       const snapshot = await this.getCommonFeedSubCollection(commonId)
         .doc(commonFeedId)
         .get({ source: cached ? "cache" : "default" });
+      const feedItem = snapshot?.data() || null;
 
-      return snapshot?.data() || null;
+      return feedItem && { ...feedItem, commonId };
     } catch (error) {
       if (cached && isFirestoreCacheError(error)) {
         return this.getCommonFeedItemById(commonId, commonFeedId);
@@ -162,18 +162,19 @@ class CommonFeedService {
   ): Promise<{
     data: CommonFeed[];
   }> => {
-    const endpoint = ApiEndpoint.GetCommonPinnedFeedItems.replace(
-      ":commonId",
-      commonId,
-    );
-
-    const { data } = await Api.get<GetPinnedFeedItemsResponse>(`${endpoint}`);
-    const commonPinnedFeedItems = data.data.pinnedFeedItems.map((item) =>
-      convertObjectDatesToFirestoreTimestamps<CommonFeed>(item),
-    );
+    const common = await CommonService.getCommonById(commonId);
+    const pinnedItemsIds = common?.pinnedFeedItems || [];
+    const pinnedFeedItems = (
+      await Promise.all(
+        pinnedItemsIds.map(
+          async (item) =>
+            await this.getCommonFeedItemById(commonId, item.feedObjectId),
+        ),
+      )
+    ).filter(checkIsFeedItemDefined);
 
     return {
-      data: commonPinnedFeedItems,
+      data: pinnedFeedItems,
     };
   };
 
