@@ -13,6 +13,7 @@ const WebViewLoginHandler: FC = () => {
 
   const handleWebviewLogin = React.useCallback(async (event) => {
     try {
+      window?.ReactNativeWebView?.postMessage(`toast-${event.data}`);
       window?.ReactNativeWebView?.postMessage("toast-receive-data");
       const data = parseJson(event.data) as FirebaseCredentials;
       window?.ReactNativeWebView?.postMessage("toast-parse-data");
@@ -26,7 +27,6 @@ const WebViewLoginHandler: FC = () => {
 
       if (!data?.providerId && !data?.customToken) {
         window?.ReactNativeWebView?.postMessage("toast-failed-provider");
-        window?.ReactNativeWebView?.postMessage(WebviewActions.loginError);
         return;
       }
 
@@ -54,7 +54,9 @@ const WebViewLoginHandler: FC = () => {
               history.push(getInboxPagePath());
             } else {
               window?.ReactNativeWebView?.postMessage("toast-loginError");
-              window?.ReactNativeWebView?.postMessage(WebviewActions.loginError);
+              window?.ReactNativeWebView?.postMessage(
+                WebviewActions.loginError,
+              );
             }
           },
         }),
