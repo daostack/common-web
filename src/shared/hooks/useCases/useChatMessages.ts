@@ -1,12 +1,5 @@
-import { useCallback, useEffect, useRef } from "react";
-import {
-  CancelTokenSource,
-  isRequestCancelled,
-  getCancelTokenSource,
-  Logger,
-  ChatService,
-  UserService,
-} from "@/services";
+import { useCallback, useEffect } from "react";
+import { Logger, ChatService, UserService } from "@/services";
 import { useLoadingState } from "@/shared/hooks";
 import { LoadingState } from "@/shared/interfaces";
 import { ChatMessage } from "@/shared/models";
@@ -58,49 +51,36 @@ const addParentMessageToMessages = (
   });
 
 export const useChatMessages = (): Return => {
-  const cancelTokenRef = useRef<CancelTokenSource | null>(null);
   const [state, setState] = useLoadingState<ChatMessage[]>([]);
   const currentChatChannelId = state.data?.[0]?.chatChannelId;
 
   const fetchChatMessages = useCallback(async (chatChannelId: string) => {
-    if (cancelTokenRef.current) {
-      cancelTokenRef.current.cancel();
-    }
-
     try {
       setState({
         loading: true,
         fetched: false,
         data: [],
       });
-      cancelTokenRef.current = getCancelTokenSource();
 
-      const fetchedChatMessages = await ChatService.getChatMessages(
+      const fetchedChatMessages = await ChatService.getChatMessagesByChannelId(
         chatChannelId,
-        {
-          cancelToken: cancelTokenRef.current.token,
-        },
       );
       const chatMessages = addParentMessageToMessages(
         await addOwnersToMessages(fetchedChatMessages),
       );
 
-      cancelTokenRef.current = null;
       setState({
         loading: false,
         fetched: true,
         data: chatMessages,
       });
     } catch (error) {
-      if (!isRequestCancelled(error)) {
-        Logger.error(error);
-        cancelTokenRef.current = null;
-        setState({
-          loading: false,
-          fetched: false,
-          data: [],
-        });
-      }
+      Logger.error(error);
+      setState({
+        loading: false,
+        fetched: false,
+        data: [],
+      });
     }
   }, []);
 
