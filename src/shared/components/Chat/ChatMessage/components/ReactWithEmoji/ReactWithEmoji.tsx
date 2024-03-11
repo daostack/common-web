@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import data, { Skin } from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
+import { selectUser } from "@/pages/Auth/store/selectors";
 import { Logger } from "@/services";
 import { Theme } from "@/shared/constants";
 import { useOutsideClick } from "@/shared/hooks";
@@ -42,6 +43,8 @@ export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
     isNotCurrentUserMessage,
   } = props;
   const dispatch = useDispatch();
+  const user = useSelector(selectUser());
+  const userId = user?.uid;
   const theme = useSelector(selectTheme);
   const [showPicker, setShowPicker] = useState(false);
   const [showAllEmojis, setShowAllEmojis] = useState(false);
@@ -102,6 +105,9 @@ export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
         Logger.error(error);
       }
     }
+    if (userId) {
+      setUserReaction({ emoji: emoji.native, userId: userId });
+    }
     setShowAllEmojis(false);
     setShowPicker(false);
   };
@@ -151,6 +157,7 @@ export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
               chatChannelId={chatChannelId}
               setShowPicker={setShowPicker}
               userReaction={userReaction}
+              setUserReaction={setUserReaction}
             />
           )}
         </div>

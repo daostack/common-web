@@ -24,6 +24,7 @@ interface CompactPickerProps {
   chatChannelId?: string;
   setShowPicker: (value: boolean) => void;
   userReaction?: UserReaction | null;
+  setUserReaction: (userReacion?: UserReaction | null) => void;
 }
 
 export const CompactPicker: FC<CompactPickerProps> = (props) => {
@@ -36,6 +37,7 @@ export const CompactPicker: FC<CompactPickerProps> = (props) => {
     chatChannelId,
     setShowPicker,
     userReaction,
+    setUserReaction,
   } = props;
 
   const dispatch = useDispatch();
@@ -58,6 +60,7 @@ export const CompactPicker: FC<CompactPickerProps> = (props) => {
             prevUserEmoji: userReaction?.emoji,
           }),
         );
+        setUserReaction(null);
       } catch (error) {
         Logger.error(error);
       }
