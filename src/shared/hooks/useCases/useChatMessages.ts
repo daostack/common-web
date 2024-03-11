@@ -66,9 +66,9 @@ export const useChatMessages = (): Return => {
         await ChatService.getChatMessages({
           chatChannelId,
           limit: null,
+          sortingDirection: "asc",
         })
       ).chatMessages;
-      fetchedChatMessages.reverse();
       const chatMessages = addParentMessageToMessages(
         await addOwnersToMessages(fetchedChatMessages),
       );
