@@ -165,27 +165,6 @@ class ChatService {
     };
   };
 
-  public getChatMessagesByChannelId = async (
-    chatChannelId: string,
-  ): Promise<ChatMessage[]> => {
-    const messages: ChatMessage[] = [];
-    let hasMore = true;
-    let startAfter: Timestamp | null = null;
-
-    while (hasMore) {
-      const data = await this.getChatMessages({
-        chatChannelId,
-        startAfter,
-        limit: null,
-      });
-      messages.push(...data.chatMessages);
-      hasMore = data.hasMore;
-      startAfter = data.lastDocTimestamp;
-    }
-
-    return messages.reverse();
-  };
-
   public createChatChannel = async (
     participants: string[],
   ): Promise<ChatChannel> => {
