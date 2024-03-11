@@ -317,13 +317,12 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
 
         if (!isUserDiscussionMessage) return;
 
-        if (
-          updatedMessage.reactionCounts ||
-          updatedMessage.reactionCounts?.[emoji]
-        ) {
+        if (!updatedMessage.reactionCounts) {
+          updatedMessage.reactionCounts = {};
+          updatedMessage.reactionCounts[emoji] = 1;
+        } else if (updatedMessage.reactionCounts[emoji]) {
           updatedMessage.reactionCounts[emoji] += 1;
         } else {
-          updatedMessage.reactionCounts = {};
           updatedMessage.reactionCounts[emoji] = 1;
         }
 
