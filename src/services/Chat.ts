@@ -13,6 +13,7 @@ import {
   Collection,
   SubCollections,
   Timestamp,
+  User,
   UserReaction,
 } from "@/shared/models";
 import {
@@ -22,6 +23,7 @@ import {
 } from "@/shared/utils";
 import firebase, { isFirestoreCacheError } from "@/shared/utils/firebase";
 import Api, { CancelToken } from "./Api";
+import UserService from "./User";
 
 const chatChannelConverter = firestoreDataConverter<ChatChannel>();
 const chatMessagesConverter = firestoreDataConverter<ChatMessage>();
@@ -57,6 +59,34 @@ class ChatService {
       ...item,
       userName: getUserName(item),
     }));
+  };
+
+  public getDMUsersByUserId = async (userId: string): Promise<DMUser[]> => {
+    const snapshot = await this.getChatChannelCollection()
+      .where("participants", "array-contains", userId)
+      .get();
+    const userIds = new Set<string>();
+    snapshot.docs.forEach((doc) => {
+      doc.data().participants.forEach((participant) => {
+        userIds.add(participant);
+      });
+    });
+    const users = (await UserService.getUsersByIds(Array.from(userIds))).filter(
+      (user): user is User => Boolean(user),
+    );
+
+    return users.map((user) => {
+      const userName = getUserName(user);
+
+      return {
+        userName,
+        uid: user.uid,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        displayName: user.displayName || userName,
+        photoURL: user.photoURL || "",
+      };
+    });
   };
 
   public getUserOwnChatChannel = async (
