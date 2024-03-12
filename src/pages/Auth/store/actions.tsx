@@ -37,12 +37,26 @@ export const loginWithFirebaseUser = createAsyncAction(
 >();
 
 export const webviewLogin = createAsyncAction(
+  AuthActionTypes.WEBVIEW_LOGIN_WITH_USER,
+  AuthActionTypes.WEBVIEW_LOGIN_WITH_USER_SUCCESS,
+  AuthActionTypes.WEBVIEW_LOGIN_WITH_USER_FAILURE,
+)<
+  PayloadWithOptionalCallback<
+    FirebaseCredentials,
+    { user: User; isNewUser: boolean },
+    boolean
+  >,
+  User,
+  Error
+>();
+
+export const webviewLoginWithUser = createAsyncAction(
   AuthActionTypes.WEBVIEW_LOGIN,
   AuthActionTypes.WEBVIEW_LOGIN_SUCCESS,
   AuthActionTypes.WEBVIEW_LOGIN_FAILURE,
 )<
   PayloadWithOptionalCallback<
-    FirebaseCredentials,
+    { user: firebase.User | FirebaseUser },
     { user: User; isNewUser: boolean },
     boolean
   >,

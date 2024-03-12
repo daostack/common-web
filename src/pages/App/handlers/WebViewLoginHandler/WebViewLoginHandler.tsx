@@ -1,6 +1,6 @@
 import React, { FC, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { webviewLogin } from "@/pages/Auth/store/actions";
+import { webviewLogin, webviewLoginWithUser } from "@/pages/Auth/store/actions";
 import { history } from "@/shared/appConfig";
 import { Theme, WebviewActions } from "@/shared/constants";
 import { FirebaseCredentials } from "@/shared/interfaces/FirebaseCredentials";
@@ -25,13 +25,45 @@ const WebViewLoginHandler: FC = () => {
         history.push(data?.redirectUrl);
       }
 
-      if (!data?.providerId && !data?.customToken) {
-        window?.ReactNativeWebView?.postMessage("toast-failed-provider");
+      if (user) {
+        dispatch(
+          webviewLoginWithUser.request({
+            payload: {
+              user,
+            },
+            callback: (isLoggedIn) => {
+              if (isLoggedIn) {
+                const isDarkThemePreferred = window.matchMedia(
+                  `(prefers-color-scheme: ${Theme.Dark})`,
+                );
+
+                if (isDarkThemePreferred) {
+                  window?.ReactNativeWebView?.postMessage(Theme.Dark);
+                }
+                window?.ReactNativeWebView?.postMessage("toast-user-loggedIn");
+                window?.ReactNativeWebView?.postMessage(
+                  WebviewActions.loginSuccess,
+                );
+              } else {
+                window?.ReactNativeWebView?.postMessage(
+                  "toast-user-loginError",
+                );
+                window?.ReactNativeWebView?.postMessage(
+                  WebviewActions.loginError,
+                );
+              }
+            },
+          }),
+        );
+
         return;
       }
 
-      if (user) {
-        window?.ReactNativeWebView?.postMessage(WebviewActions.loginSuccess);
+      if (!data?.providerId && !data?.customToken && !user) {
+        window?.ReactNativeWebView?.postMessage(
+          `toast-failed-provider-${event.data}`,
+        );
+        return;
       }
 
       window?.ReactNativeWebView?.postMessage("toast-call-weblogin");
