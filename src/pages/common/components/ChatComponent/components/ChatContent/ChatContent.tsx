@@ -6,6 +6,7 @@ import React, {
   ForwardRefRenderFunction,
   useImperativeHandle,
   forwardRef,
+  memo,
 } from "react";
 import { useSelector } from "react-redux";
 import { scroller, animateScroll } from "react-scroll";
@@ -344,4 +345,4 @@ const ChatContent: ForwardRefRenderFunction<
   );
 };
 
-export default forwardRef(ChatContent);
+export default memo(forwardRef(ChatContent));
