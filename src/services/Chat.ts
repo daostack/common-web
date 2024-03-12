@@ -1,10 +1,8 @@
-import { stringify } from "query-string";
 import { ApiEndpoint, FirestoreDataSource } from "@/shared/constants";
 import { DMUser, UnsubscribeFunction } from "@/shared/interfaces";
 import {
   CreateChatMessageReaction,
   DeleteChatMessageReaction,
-  GetChatChannelMessagesResponse,
   SendChatMessageDto,
   UpdateChatMessageDto,
 } from "@/shared/interfaces/api";
@@ -19,7 +17,6 @@ import {
 } from "@/shared/models";
 import {
   convertObjectDatesToFirestoreTimestamps,
-  convertToTimestamp,
   firestoreDataConverter,
   getUserName,
 } from "@/shared/utils";
@@ -125,42 +122,47 @@ class ChatService {
     return docSnapshot.data();
   };
 
-  public getChatMessages = async (
-    chatChannelId: string,
-    options: { cancelToken?: CancelToken } = {},
-  ): Promise<ChatMessage[]> => {
-    const { cancelToken } = options;
-    const messages: ChatMessage[] = [];
-    let hasMore = true;
-    let startAfter: Timestamp | null = null;
+  public getChatMessages = async (options: {
+    chatChannelId: string;
+    startAfter?: Timestamp | null;
+    limit?: number | null;
+    sortingDirection?: firebase.firestore.OrderByDirection;
+  }): Promise<{
+    chatMessages: ChatMessage[];
+    firstDocTimestamp: Timestamp | null;
+    lastDocTimestamp: Timestamp | null;
+    hasMore: boolean;
+  }> => {
+    const {
+      chatChannelId,
+      startAfter,
+      limit = 10,
+      sortingDirection = "desc",
+    } = options;
+    let query = this.getChatMessagesSubCollection(chatChannelId).orderBy(
+      "createdAt",
+      sortingDirection,
+    );
 
-    while (hasMore) {
-      const queryParams: Record<string, unknown> = { limit: 50 };
-
-      if (startAfter) {
-        queryParams.startAfter = startAfter.toDate().toISOString();
-      }
-
-      const {
-        data: { data },
-      } = await Api.get<GetChatChannelMessagesResponse>(
-        `${ApiEndpoint.GetChatChannelMessages(chatChannelId)}?${stringify(
-          queryParams,
-        )}`,
-        { cancelToken },
-      );
-      messages.push(...data.chatMessages);
-      hasMore = data.hasMore;
-      startAfter =
-        (data.lastDocTimestamp && convertToTimestamp(data.lastDocTimestamp)) ||
-        null;
+    if (startAfter) {
+      query = query.startAfter(startAfter);
+    }
+    if (limit !== null) {
+      query = query.limit(limit);
     }
 
-    return messages
-      .reverse()
-      .map((message) =>
-        convertObjectDatesToFirestoreTimestamps(message, ["editedAt"]),
-      );
+    const snapshot = await query.get();
+    const chatMessages = snapshot.docs.map((doc) => doc.data());
+    const firstDocTimestamp = chatMessages[0]?.updatedAt || null;
+    const lastDocTimestamp =
+      chatMessages[chatMessages.length - 1]?.updatedAt || null;
+
+    return {
+      chatMessages,
+      firstDocTimestamp,
+      lastDocTimestamp,
+      hasMore: Boolean(limit && chatMessages.length === limit),
+    };
   };
 
   public createChatChannel = async (
