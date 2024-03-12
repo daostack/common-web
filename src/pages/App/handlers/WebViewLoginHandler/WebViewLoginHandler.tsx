@@ -26,7 +26,6 @@ const WebViewLoginHandler: FC = () => {
       }
 
       if (user) {
-        window?.ReactNativeWebView?.postMessage(WebviewActions.loginSuccess);
         dispatch(
           webviewLoginWithUser.request({
             payload: {
