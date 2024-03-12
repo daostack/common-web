@@ -25,15 +25,16 @@ const WebViewLoginHandler: FC = () => {
         history.push(data?.redirectUrl);
       }
 
+      if (user) {
+        window?.ReactNativeWebView?.postMessage(WebviewActions.loginSuccess);
+        return;
+      }
+
       if (!data?.providerId && !data?.customToken) {
         window?.ReactNativeWebView?.postMessage(
           `toast-failed-provider-${event.data}`,
         );
         return;
-      }
-
-      if (user) {
-        window?.ReactNativeWebView?.postMessage(WebviewActions.loginSuccess);
       }
 
       window?.ReactNativeWebView?.postMessage("toast-call-weblogin");
