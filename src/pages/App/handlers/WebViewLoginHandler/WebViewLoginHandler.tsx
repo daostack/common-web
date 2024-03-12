@@ -13,15 +13,10 @@ const WebViewLoginHandler: FC = () => {
 
   const handleWebviewLogin = React.useCallback(async (event) => {
     try {
-      window?.ReactNativeWebView?.postMessage(`toast-${event.data}`);
-      window?.ReactNativeWebView?.postMessage("toast-receive-data");
       const data = parseJson(event.data) as FirebaseCredentials;
-      window?.ReactNativeWebView?.postMessage("toast-parse-data");
       const user = await firebase.auth().currentUser;
-      window?.ReactNativeWebView?.postMessage("toast-get-user");
 
       if (data?.redirectUrl) {
-        window?.ReactNativeWebView?.postMessage("toast-redirect");
         history.push(data?.redirectUrl);
       }
 
@@ -40,14 +35,10 @@ const WebViewLoginHandler: FC = () => {
                 if (isDarkThemePreferred) {
                   window?.ReactNativeWebView?.postMessage(Theme.Dark);
                 }
-                window?.ReactNativeWebView?.postMessage("toast-user-loggedIn");
                 window?.ReactNativeWebView?.postMessage(
                   WebviewActions.loginSuccess,
                 );
               } else {
-                window?.ReactNativeWebView?.postMessage(
-                  "toast-user-loginError",
-                );
                 window?.ReactNativeWebView?.postMessage(
                   WebviewActions.loginError,
                 );
@@ -60,13 +51,9 @@ const WebViewLoginHandler: FC = () => {
       }
 
       if (!data?.providerId && !data?.customToken && !user) {
-        window?.ReactNativeWebView?.postMessage(
-          `toast-failed-provider-${event.data}`,
-        );
         return;
       }
 
-      window?.ReactNativeWebView?.postMessage("toast-call-weblogin");
       dispatch(
         webviewLogin.request({
           payload: data,
@@ -79,13 +66,11 @@ const WebViewLoginHandler: FC = () => {
               if (isDarkThemePreferred) {
                 window?.ReactNativeWebView?.postMessage(Theme.Dark);
               }
-              window?.ReactNativeWebView?.postMessage("toast-loggedIn");
               window?.ReactNativeWebView?.postMessage(
                 WebviewActions.loginSuccess,
               );
               history.push(getInboxPagePath());
             } else {
-              window?.ReactNativeWebView?.postMessage("toast-loginError");
               window?.ReactNativeWebView?.postMessage(
                 WebviewActions.loginError,
               );
