@@ -71,22 +71,22 @@ class ChatService {
         userIds.add(participant);
       });
     });
-    const users = (await UserService.getUsersByIds(Array.from(userIds))).filter(
-      (user): user is User => Boolean(user),
-    );
+    const users = await UserService.getUsersByIds(Array.from(userIds));
 
-    return users.map((user) => {
-      const userName = getUserName(user);
+    return users
+      .filter((user): user is User => Boolean(user))
+      .map((user) => {
+        const userName = getUserName(user);
 
-      return {
-        userName,
-        uid: user.uid,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        displayName: user.displayName || userName,
-        photoURL: user.photoURL || "",
-      };
-    });
+        return {
+          userName,
+          uid: user.uid,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          displayName: user.displayName || userName,
+          photoURL: user.photoURL || "",
+        };
+      });
   };
 
   public getUserOwnChatChannel = async (
