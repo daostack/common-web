@@ -60,11 +60,11 @@ export const CompactPicker: FC<CompactPickerProps> = (props) => {
             prevUserEmoji: userReaction?.emoji,
           }),
         );
-        setUserReaction(null);
       } catch (error) {
         Logger.error(error);
       }
     }
+    setUserReaction(null);
     setShowPicker(false);
   };
 

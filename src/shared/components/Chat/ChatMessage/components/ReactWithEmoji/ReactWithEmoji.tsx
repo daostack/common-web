@@ -17,6 +17,7 @@ import { UserReaction } from "@/shared/models";
 import { selectTheme } from "@/shared/store/selectors";
 import { ButtonIcon } from "@/shared/ui-kit";
 import { cacheActions } from "@/store/states";
+import { DMChatMessageReaction } from "../../DMChatMessage";
 import { CompactPicker } from "./components /CompactPicker";
 import styles from "./ReactWithEmoji.module.scss";
 
@@ -29,6 +30,7 @@ interface ReactWithEmojiProps {
   chatMessageId?: string;
   chatChannelId?: string;
   isNotCurrentUserMessage: boolean;
+  setDMEmoji?: (dmEmoji: DMChatMessageReaction) => void;
 }
 
 export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
@@ -41,6 +43,7 @@ export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
     chatMessageId,
     chatChannelId,
     isNotCurrentUserMessage,
+    setDMEmoji,
   } = props;
   const dispatch = useDispatch();
   const user = useSelector(selectUser());
@@ -81,12 +84,13 @@ export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
   }, [discussionMessageId, chatMessageId, chatChannelId]);
 
   const onEmojiSelect = (emoji: Skin) => {
-    if (chatMessageId && chatChannelId) {
+    if (chatMessageId && chatChannelId && setDMEmoji) {
       reactToChatMessage({
         emoji: emoji.native,
         chatMessageId,
         chatChannelId,
       });
+      setDMEmoji({ emoji: emoji.native, prevUserEmoji: userReaction?.emoji });
     } else if (discussionMessageId) {
       reactToDiscussionMessage({
         emoji: emoji.native,
