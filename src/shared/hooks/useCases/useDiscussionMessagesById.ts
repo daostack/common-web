@@ -137,64 +137,76 @@ export const useDiscussionMessagesById = ({
     [discussionId],
   );
 
-  const fetchRepliedMessages = async (
-    messageId: string,
-    endDate: Date,
-  ): Promise<void> => {
-    if (state.data?.find((item) => item.id === messageId)) {
-      return Promise.resolve();
-    }
+  const fetchRepliedMessages = useCallback(
+    async (messageId: string, endDate: Date): Promise<void> => {
+      if (state.data?.find((item) => item.id === messageId)) {
+        return Promise.resolve();
+      }
 
-    const {
-      updatedDiscussionMessages,
-      removedDiscussionMessages,
-      lastVisibleSnapshot,
-    } = await DiscussionMessageService.getDiscussionMessagesByEndDate(
-      discussionId,
-      lastVisible && lastVisible[discussionId],
-      endDate,
-    );
-
-    setLastVisible((prevVisible) => ({
-      ...prevVisible,
-      [discussionId]: lastVisibleSnapshot,
-    }));
-    const discussionsWithText = await Promise.all(
-      updatedDiscussionMessages.map(async (discussionMessage) => {
-        const isUserDiscussionMessage =
-          checkIsUserDiscussionMessage(discussionMessage);
-        const isSystemMessage =
-          checkIsSystemDiscussionMessage(discussionMessage);
-
-        const parsedText = await getTextFromTextEditorString({
-          userId,
-          ownerId: isUserDiscussionMessage ? discussionMessage.ownerId : null,
-          textEditorString: discussionMessage.text,
-          users,
-          commonId: discussionMessage.commonId,
-          systemMessage: isSystemMessage ? discussionMessage : undefined,
-          getCommonPagePath,
-          getCommonPageAboutTabPath,
-          directParent,
-          onUserClick,
-          onFeedItemClick,
-          onInternalLinkClick,
-        });
-
-        return {
-          ...discussionMessage,
-          parsedText,
-        };
-      }),
-    );
-    dispatch(
-      cacheActions.updateDiscussionMessagesStateByDiscussionId({
-        discussionId,
+      const {
+        updatedDiscussionMessages,
         removedDiscussionMessages,
-        updatedDiscussionMessages: discussionsWithText,
-      }),
-    );
-  };
+        lastVisibleSnapshot,
+      } = await DiscussionMessageService.getDiscussionMessagesByEndDate(
+        discussionId,
+        lastVisible && lastVisible[discussionId],
+        endDate,
+      );
+
+      setLastVisible((prevVisible) => ({
+        ...prevVisible,
+        [discussionId]: lastVisibleSnapshot,
+      }));
+      const discussionsWithText = await Promise.all(
+        updatedDiscussionMessages.map(async (discussionMessage) => {
+          const isUserDiscussionMessage =
+            checkIsUserDiscussionMessage(discussionMessage);
+          const isSystemMessage =
+            checkIsSystemDiscussionMessage(discussionMessage);
+
+          const parsedText = await getTextFromTextEditorString({
+            userId,
+            ownerId: isUserDiscussionMessage ? discussionMessage.ownerId : null,
+            textEditorString: discussionMessage.text,
+            users,
+            commonId: discussionMessage.commonId,
+            systemMessage: isSystemMessage ? discussionMessage : undefined,
+            getCommonPagePath,
+            getCommonPageAboutTabPath,
+            directParent,
+            onUserClick,
+            onFeedItemClick,
+            onInternalLinkClick,
+          });
+
+          return {
+            ...discussionMessage,
+            parsedText,
+          };
+        }),
+      );
+      dispatch(
+        cacheActions.updateDiscussionMessagesStateByDiscussionId({
+          discussionId,
+          removedDiscussionMessages,
+          updatedDiscussionMessages: discussionsWithText,
+        }),
+      );
+    },
+    [
+      state.data,
+      discussionId,
+      userId,
+      users,
+      directParent,
+      lastVisible,
+      getCommonPagePath,
+      getCommonPageAboutTabPath,
+      onUserClick,
+      onFeedItemClick,
+      onInternalLinkClick,
+    ],
+  );
 
   const fetchDiscussionMessages = () => {
     if (!discussionId || isEndOfList[discussionId]) {
