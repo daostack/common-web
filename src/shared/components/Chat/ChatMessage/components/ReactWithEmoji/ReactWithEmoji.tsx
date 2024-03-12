@@ -162,6 +162,7 @@ export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
               setShowPicker={setShowPicker}
               userReaction={userReaction}
               setUserReaction={setUserReaction}
+              setDMEmoji={setDMEmoji}
             />
           )}
         </div>

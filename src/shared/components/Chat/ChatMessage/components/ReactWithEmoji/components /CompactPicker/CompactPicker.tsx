@@ -12,6 +12,7 @@ import { PlusIcon } from "@/shared/icons";
 import { UserReaction } from "@/shared/models";
 import { Button, ButtonIcon, ButtonVariant } from "@/shared/ui-kit";
 import { cacheActions } from "@/store/states";
+import { DMChatMessageReaction } from "../../../../DMChatMessage";
 import { commonEmojis } from "./commonEmojis";
 import styles from "./CompactPicker.module.scss";
 
@@ -25,6 +26,7 @@ interface CompactPickerProps {
   setShowPicker: (value: boolean) => void;
   userReaction?: UserReaction | null;
   setUserReaction: (userReacion?: UserReaction | null) => void;
+  setDMEmoji?: (dmEmoji: DMChatMessageReaction) => void;
 }
 
 export const CompactPicker: FC<CompactPickerProps> = (props) => {
@@ -38,6 +40,7 @@ export const CompactPicker: FC<CompactPickerProps> = (props) => {
     setShowPicker,
     userReaction,
     setUserReaction,
+    setDMEmoji,
   } = props;
 
   const dispatch = useDispatch();
@@ -47,8 +50,9 @@ export const CompactPicker: FC<CompactPickerProps> = (props) => {
   const userId = user?.uid;
 
   const onEmojiRemove = (emoji: string) => {
-    if (chatMessageId && chatChannelId) {
+    if (chatMessageId && chatChannelId && setDMEmoji) {
       removeChatMessageReaction(chatMessageId, chatChannelId);
+      setDMEmoji({ emoji: emoji, prevUserEmoji: userReaction?.emoji });
     } else if (discussionMessageId) {
       removeDiscussionMessageReaction(discussionMessageId);
       try {

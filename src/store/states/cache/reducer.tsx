@@ -318,20 +318,17 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
 
         if (!isUserDiscussionMessage) return;
 
-        if (updatedMessage.reactionCounts && prevUserEmoji === emoji) {
-          // remove emoji
+        if (!updatedMessage.reactionCounts) {
+          updatedMessage.reactionCounts = {};
+          updatedMessage.reactionCounts[emoji] = 1;
+        } else if (prevUserEmoji === emoji) {
           updatedMessage.reactionCounts[emoji] -= 1;
         } else {
-          // add emoji
-          if (!updatedMessage.reactionCounts) {
-            updatedMessage.reactionCounts = {};
-            updatedMessage.reactionCounts[emoji] = 1;
-          } else if (updatedMessage.reactionCounts[emoji]) {
+          if (updatedMessage.reactionCounts[emoji]) {
             updatedMessage.reactionCounts[emoji] += 1;
           } else {
             updatedMessage.reactionCounts[emoji] = 1;
           }
-
           if (prevUserEmoji) {
             updatedMessage.reactionCounts[prevUserEmoji] -= 1;
           }

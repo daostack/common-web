@@ -423,38 +423,36 @@ export default function DMChatMessage({
     />
   );
 
-  /**
-   * TODO:
-   * 1. handle remove emoji.
-   * 2. need to setDMEmoji(null) but check how to avoid the console error.
-   */
   const finalReactionCounts = useMemo(() => {
-    if (isUserDiscussionMessage) {
-      if (!dmEmoji) {
-        return discussionMessage.reactionCounts;
+    if (!isUserDiscussionMessage) return;
+    if (!dmEmoji) {
+      return discussionMessage.reactionCounts;
+    }
+
+    const reactions = discussionMessage.reactionCounts;
+
+    if (!reactions) {
+      return {
+        [dmEmoji.emoji]: 1,
+      };
+    }
+
+    if (dmEmoji.prevUserEmoji === dmEmoji.emoji) {
+      reactions[dmEmoji.emoji] -= 1;
+    } else {
+      if (reactions[dmEmoji.emoji]) {
+        reactions[dmEmoji.emoji] += 1;
       } else {
-        const reactions = discussionMessage.reactionCounts;
+        reactions[dmEmoji.emoji] = 1;
+      }
 
-        if (!reactions) {
-          return {
-            [dmEmoji.emoji]: 1,
-          };
-        } else {
-          if (reactions[dmEmoji.emoji]) {
-            reactions[dmEmoji.emoji] += 1;
-          } else {
-            reactions[dmEmoji.emoji] = 1;
-          }
-        }
-
-        if (dmEmoji.prevUserEmoji) {
-          reactions[dmEmoji.prevUserEmoji] -= 1;
-        }
-
-        //setDMEmoji(null);
-        return reactions;
+      if (dmEmoji.prevUserEmoji) {
+        reactions[dmEmoji.prevUserEmoji] -= 1;
       }
     }
+
+    setDMEmoji(null);
+    return reactions;
   }, [dmEmoji, discussionMessage]);
 
   return (
