@@ -372,6 +372,40 @@ function* loginWithFirebaseUserSaga({
   }
 }
 
+export function* webviewLoginWithUserSaga({
+  payload,
+}: ReturnType<typeof actions.webviewLoginWithUser.request>) {
+  try {
+    yield put(actions.startAuthLoading());
+
+    const { user }: { user: User } = yield call(
+      verifyLoggedInUser,
+      payload.payload.user,
+      true,
+      AUTH_CODE_FOR_SIGN_UP,
+    );
+
+    const firebaseUser: User = yield call(getUserData, user.uid ?? "");
+    if (firebaseUser) {
+      yield put(actions.webviewLoginWithUser.success(firebaseUser));
+    }
+
+    if (payload.callback) {
+      payload.callback(true);
+    }
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.webviewLoginWithUser.failure(error));
+    }
+
+    if (payload.callback) {
+      payload.callback(false);
+    }
+  } finally {
+    yield put(actions.stopAuthLoading());
+  }
+}
+
 function* webviewLoginSaga({
   payload,
 }: ReturnType<typeof actions.webviewLogin.request>) {
@@ -578,6 +612,7 @@ function* deleteUser({
 }
 
 function* authSagas() {
+  yield takeLatest(actions.webviewLoginWithUser.request, webviewLoginWithUserSaga);
   yield takeLatest(actions.webviewLogin.request, webviewLoginSaga);
   yield takeLatest(actions.socialLogin.request, socialLoginSaga);
   yield takeLatest(
