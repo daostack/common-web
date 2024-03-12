@@ -372,6 +372,52 @@ function* loginWithFirebaseUserSaga({
   }
 }
 
+export function* webviewLoginWithUserSaga({
+  payload,
+}: ReturnType<typeof actions.webviewLoginWithUser.request>) {
+  try {
+    yield put(actions.startAuthLoading());
+    window?.ReactNativeWebView?.postMessage("toast-user-start-auth");
+
+    const { user }: { user: User } = yield call(
+      verifyLoggedInUser,
+      payload.payload.user,
+      true,
+      AUTH_CODE_FOR_SIGN_UP,
+    );
+
+    window?.ReactNativeWebView?.postMessage("toast-user-verifyLoggedInUser");
+    const firebaseUser: User = yield call(getUserData, user.uid ?? "");
+    window?.ReactNativeWebView?.postMessage("toast-firebaseUser");
+    if (firebaseUser) {
+      window?.ReactNativeWebView?.postMessage(
+        "toast-user-firebaseUser-success",
+      );
+      yield put(actions.webviewLoginWithUser.success(firebaseUser));
+    }
+
+    if (payload.callback) {
+      window?.ReactNativeWebView?.postMessage(
+        "toast-user-firebaseUser-callback",
+      );
+      payload.callback(true);
+    }
+  } catch (error) {
+    window?.ReactNativeWebView?.postMessage(
+      "toast-user-webviewLoginSaga-error",
+    );
+    if (isError(error)) {
+      yield put(actions.webviewLoginWithUser.failure(error));
+    }
+
+    if (payload.callback) {
+      payload.callback(false);
+    }
+  } finally {
+    yield put(actions.stopAuthLoading());
+  }
+}
+
 function* webviewLoginSaga({
   payload,
 }: ReturnType<typeof actions.webviewLogin.request>) {
