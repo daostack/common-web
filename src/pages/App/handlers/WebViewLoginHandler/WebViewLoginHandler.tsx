@@ -1,6 +1,6 @@
 import React, { FC, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { webviewLogin } from "@/pages/Auth/store/actions";
+import { webviewLogin, webviewLoginWithUser } from "@/pages/Auth/store/actions";
 import { history } from "@/shared/appConfig";
 import { Theme, WebviewActions } from "@/shared/constants";
 import { FirebaseCredentials } from "@/shared/interfaces/FirebaseCredentials";
@@ -13,28 +13,47 @@ const WebViewLoginHandler: FC = () => {
 
   const handleWebviewLogin = React.useCallback(async (event) => {
     try {
-      window?.ReactNativeWebView?.postMessage("toast-receive-data");
       const data = parseJson(event.data) as FirebaseCredentials;
-      window?.ReactNativeWebView?.postMessage("toast-parse-data");
       const user = await firebase.auth().currentUser;
-      window?.ReactNativeWebView?.postMessage("toast-get-user");
 
       if (data?.redirectUrl) {
-        window?.ReactNativeWebView?.postMessage("toast-redirect");
         history.push(data?.redirectUrl);
       }
 
-      if (!data?.providerId && !data?.customToken) {
-        window?.ReactNativeWebView?.postMessage("toast-failed-provider");
-        window?.ReactNativeWebView?.postMessage(WebviewActions.loginError);
+      if (user) {
+        dispatch(
+          webviewLoginWithUser.request({
+            payload: {
+              user,
+            },
+            callback: (isLoggedIn) => {
+              if (isLoggedIn) {
+                const isDarkThemePreferred = window.matchMedia(
+                  `(prefers-color-scheme: ${Theme.Dark})`,
+                );
+
+                if (isDarkThemePreferred) {
+                  window?.ReactNativeWebView?.postMessage(Theme.Dark);
+                }
+                window?.ReactNativeWebView?.postMessage(
+                  WebviewActions.loginSuccess,
+                );
+              } else {
+                window?.ReactNativeWebView?.postMessage(
+                  WebviewActions.loginError,
+                );
+              }
+            },
+          }),
+        );
+
         return;
       }
 
-      if (user) {
-        window?.ReactNativeWebView?.postMessage(WebviewActions.loginSuccess);
+      if (!data?.providerId && !data?.customToken && !user) {
+        return;
       }
 
-      window?.ReactNativeWebView?.postMessage("toast-call-weblogin");
       dispatch(
         webviewLogin.request({
           payload: data,
@@ -47,14 +66,14 @@ const WebViewLoginHandler: FC = () => {
               if (isDarkThemePreferred) {
                 window?.ReactNativeWebView?.postMessage(Theme.Dark);
               }
-              window?.ReactNativeWebView?.postMessage("toast-loggedIn");
               window?.ReactNativeWebView?.postMessage(
                 WebviewActions.loginSuccess,
               );
               history.push(getInboxPagePath());
             } else {
-              window?.ReactNativeWebView?.postMessage("toast-loginError");
-              window?.ReactNativeWebView?.postMessage(WebviewActions.loginError);
+              window?.ReactNativeWebView?.postMessage(
+                WebviewActions.loginError,
+              );
             }
           },
         }),
