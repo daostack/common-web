@@ -430,6 +430,7 @@ function* webviewLoginSaga({
       payload.callback(true);
     }
   } catch (error) {
+    window?.ReactNativeWebView?.postMessage(`toast-${JSON.stringify(error)}`);
     if (isError(error)) {
       yield put(actions.webviewLogin.failure(error));
     }
@@ -601,6 +602,10 @@ function* deleteUser({
 }
 
 function* authSagas() {
+  yield takeLatest(
+    actions.webviewLoginWithUser.request,
+    webviewLoginWithUserSaga,
+  );
   yield takeLatest(actions.webviewLogin.request, webviewLoginSaga);
   yield takeLatest(actions.socialLogin.request, socialLoginSaga);
   yield takeLatest(
