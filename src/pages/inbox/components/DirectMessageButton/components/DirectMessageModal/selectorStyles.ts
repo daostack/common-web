@@ -33,6 +33,7 @@ export const selectorStyles = (
       "&:hover": {
         boxShadow: "rgba(255, 255, 255, 0)",
       },
+      cursor: "text",
     }),
     option: (provided, data) => ({
       ...provided,
