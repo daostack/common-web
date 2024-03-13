@@ -11,6 +11,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { NavLink } from "react-router-dom";
+import classnames from "classnames";
 import {
   CommonEvent,
   CommonEventEmitter,
@@ -197,10 +198,12 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     canJoinProjectAutomatically,
     isJoinPending,
     onJoinProjectAutomatically,
+    canJoin,
   } = useJoinProjectAutomatically(
     commonMember,
     commonData?.common,
     commonData?.parentCommon,
+    commonData?.governance,
   );
 
   const sharedFeedItem = useSelector(selectSharedFeedItem);
@@ -308,8 +311,15 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
       : onCommonJoinModalOpen;
 
     return (
-      <span className={styles.chatInputText} onClick={() => onJoinCommon()}>
-        Join
+      <span
+        className={classnames(styles.chatInputText, {
+          [styles.canNotJoin]: !canJoin,
+        })}
+        onClick={() => (canJoin ? onJoinCommon() : undefined)}
+      >
+        {canJoin
+          ? "Join"
+          : "Joining this space is not open to everyone. Please contact the admins for assistance."}
       </span>
     );
   };

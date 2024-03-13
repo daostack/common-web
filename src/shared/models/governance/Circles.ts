@@ -49,9 +49,19 @@ export enum CircleType {
   Project = "project",
 }
 
+export enum CircleAccessLevel {
+  Public = "public",
+  Inherit = "inherit",
+  Open = "open",
+  Close = "close",
+  Secret = "secret",
+}
+
 export type Circle = {
   name: string;
   id: string;
+  accessLevel?: CircleAccessLevel;
+  inheritGovernanceId?: string;
   allowedActions: AllowedActions;
   allowedProposals: AllowedProposals;
   hierarchy: {
