@@ -104,15 +104,16 @@ class ProjectService {
   public createNewProject = async (
     parentCommonId: string,
     data: CreateProjectPayload,
+    isAdvancedSettingsEnabled = true,
   ): Promise<Common> => {
     const { advancedSettings, ...subCommonData } = data;
-    const { data: project } = await Api.post<Common>(ApiEndpoint.CreateAction, {
-      type: GovernanceActions.CREATE_SUBCOMMON,
-      args: {
-        commonId: parentCommonId,
-        subcommonDefinition: subCommonData,
-        ...advancedSettings,
-      },
+     const { data: project } = await Api.post<Common>(ApiEndpoint.CreateAction, {
+       type: isAdvancedSettingsEnabled ? GovernanceActions.CREATE_SUBCOMMON : GovernanceActions.CREATE_PROJECT,
+       args: {
+         commonId: parentCommonId,
+         subcommonDefinition: subCommonData,
+         ...(isAdvancedSettingsEnabled && { ...advancedSettings }),
+       },
     });
 
     return project;

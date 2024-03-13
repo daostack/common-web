@@ -29,3 +29,4 @@ export * from "./UserActivity";
 export * from "./NotionIntegration";
 export * from "./SpaceAdvancedSettings";
 export * from "./FeatureFlag";
+export * from "./UserReaction";

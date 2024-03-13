@@ -809,6 +809,7 @@ export default function ChatComponent({
               Object.keys(discussionMessages).length === 0 // for direct messages chats
             }
             isMessageEditAllowed={!shouldHideChatInput}
+            chatChannelId={chatChannel?.id}
           />
         </ChatContentContext.Provider>
       </div>

@@ -22,6 +22,7 @@ export const useCommonFeedItems = (
   const feedItems = useSelector(selectFeedItems);
   const filteredFeedItems = useSelector(selectFilteredFeedItems);
   const idsForNotListeningRef = useRef<string[]>(idsForNotListening || []);
+  const isSubscriptionAllowed = feedItems.data !== null;
 
   const fetch = (feedItemId?: string) => {
     dispatch(
@@ -39,6 +40,10 @@ export const useCommonFeedItems = (
   }, [idsForNotListening]);
 
   useEffect(() => {
+    if (!isSubscriptionAllowed) {
+      return;
+    }
+
     const endBefore = feedItems.firstDocTimestamp || undefined;
 
     const unsubscribe = CommonFeedService.subscribeToNewUpdatedCommonFeedItems(
@@ -63,7 +68,7 @@ export const useCommonFeedItems = (
     );
 
     return unsubscribe;
-  }, [feedItems.firstDocTimestamp, commonId]);
+  }, [isSubscriptionAllowed, feedItems.firstDocTimestamp, commonId]);
 
   useEffect(() => {
     return () => {

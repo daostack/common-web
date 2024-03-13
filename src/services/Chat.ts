@@ -1,8 +1,8 @@
-import { stringify } from "query-string";
 import { ApiEndpoint, FirestoreDataSource } from "@/shared/constants";
 import { DMUser, UnsubscribeFunction } from "@/shared/interfaces";
 import {
-  GetChatChannelMessagesResponse,
+  CreateChatMessageReaction,
+  DeleteChatMessageReaction,
   SendChatMessageDto,
   UpdateChatMessageDto,
 } from "@/shared/interfaces/api";
@@ -13,20 +13,23 @@ import {
   Collection,
   SubCollections,
   Timestamp,
+  User,
+  UserReaction,
 } from "@/shared/models";
 import {
   convertObjectDatesToFirestoreTimestamps,
-  convertToTimestamp,
   firestoreDataConverter,
   getUserName,
 } from "@/shared/utils";
 import firebase, { isFirestoreCacheError } from "@/shared/utils/firebase";
 import Api, { CancelToken } from "./Api";
+import UserService from "./User";
 
 const chatChannelConverter = firestoreDataConverter<ChatChannel>();
 const chatMessagesConverter = firestoreDataConverter<ChatMessage>();
 const chatChannelUserStatusConverter =
   firestoreDataConverter<ChatChannelUserStatus>();
+const getUserReactionConverter = firestoreDataConverter<UserReaction>();
 
 class ChatService {
   private getChatChannelCollection = () =>
@@ -56,6 +59,34 @@ class ChatService {
       ...item,
       userName: getUserName(item),
     }));
+  };
+
+  public getDMUsersByUserId = async (userId: string): Promise<DMUser[]> => {
+    const snapshot = await this.getChatChannelCollection()
+      .where("participants", "array-contains", userId)
+      .get();
+    const userIds = new Set<string>();
+    snapshot.docs.forEach((doc) => {
+      doc.data().participants.forEach((participant) => {
+        userIds.add(participant);
+      });
+    });
+    const users = await UserService.getUsersByIds(Array.from(userIds));
+
+    return users
+      .filter((user): user is User => Boolean(user))
+      .map((user) => {
+        const userName = getUserName(user);
+
+        return {
+          userName,
+          uid: user.uid,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          displayName: user.displayName || userName,
+          photoURL: user.photoURL || "",
+        };
+      });
   };
 
   public getUserOwnChatChannel = async (
@@ -121,42 +152,47 @@ class ChatService {
     return docSnapshot.data();
   };
 
-  public getChatMessages = async (
-    chatChannelId: string,
-    options: { cancelToken?: CancelToken } = {},
-  ): Promise<ChatMessage[]> => {
-    const { cancelToken } = options;
-    const messages: ChatMessage[] = [];
-    let hasMore = true;
-    let startAfter: Timestamp | null = null;
+  public getChatMessages = async (options: {
+    chatChannelId: string;
+    startAfter?: Timestamp | null;
+    limit?: number | null;
+    sortingDirection?: firebase.firestore.OrderByDirection;
+  }): Promise<{
+    chatMessages: ChatMessage[];
+    firstDocTimestamp: Timestamp | null;
+    lastDocTimestamp: Timestamp | null;
+    hasMore: boolean;
+  }> => {
+    const {
+      chatChannelId,
+      startAfter,
+      limit = 10,
+      sortingDirection = "desc",
+    } = options;
+    let query = this.getChatMessagesSubCollection(chatChannelId).orderBy(
+      "createdAt",
+      sortingDirection,
+    );
 
-    while (hasMore) {
-      const queryParams: Record<string, unknown> = { limit: 50 };
-
-      if (startAfter) {
-        queryParams.startAfter = startAfter.toDate().toISOString();
-      }
-
-      const {
-        data: { data },
-      } = await Api.get<GetChatChannelMessagesResponse>(
-        `${ApiEndpoint.GetChatChannelMessages(chatChannelId)}?${stringify(
-          queryParams,
-        )}`,
-        { cancelToken },
-      );
-      messages.push(...data.chatMessages);
-      hasMore = data.hasMore;
-      startAfter =
-        (data.lastDocTimestamp && convertToTimestamp(data.lastDocTimestamp)) ||
-        null;
+    if (startAfter) {
+      query = query.startAfter(startAfter);
+    }
+    if (limit !== null) {
+      query = query.limit(limit);
     }
 
-    return messages
-      .reverse()
-      .map((message) =>
-        convertObjectDatesToFirestoreTimestamps(message, ["editedAt"]),
-      );
+    const snapshot = await query.get();
+    const chatMessages = snapshot.docs.map((doc) => doc.data());
+    const firstDocTimestamp = chatMessages[0]?.updatedAt || null;
+    const lastDocTimestamp =
+      chatMessages[chatMessages.length - 1]?.updatedAt || null;
+
+    return {
+      chatMessages,
+      firstDocTimestamp,
+      lastDocTimestamp,
+      hasMore: Boolean(limit && chatMessages.length === limit),
+    };
   };
 
   public createChatChannel = async (
@@ -234,6 +270,18 @@ class ChatService {
       undefined,
       { cancelToken },
     );
+  };
+
+  public createMessageReaction = async (
+    payload: CreateChatMessageReaction,
+  ): Promise<void> => {
+    await Api.post(ApiEndpoint.CreateChatMessageReaction, payload);
+  };
+
+  public deleteMessageReaction = async (
+    payload: DeleteChatMessageReaction,
+  ): Promise<void> => {
+    await Api.post(ApiEndpoint.DeleteChatMessageReaction, payload);
   };
 
   public subscribeToChatChannel = (
@@ -381,6 +429,24 @@ class ChatService {
       callback(data || null);
     });
   };
+
+  public getDMUserReaction = async (
+    chatMessageId: string,
+    chatChannelId: string,
+    userId: string,
+  ): Promise<UserReaction | null> =>
+    (
+      await firebase
+        .firestore()
+        .collection(Collection.ChatChannel)
+        .doc(chatChannelId)
+        .collection(SubCollections.ChatMessages)
+        .doc(chatMessageId)
+        .collection(Collection.Reactions)
+        .withConverter(getUserReactionConverter)
+        .doc(userId)
+        .get()
+    ).data() || null;
 }
 
 export default new ChatService();

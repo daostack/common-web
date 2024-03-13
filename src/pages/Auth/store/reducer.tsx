@@ -26,6 +26,7 @@ const reducer = createReducer<AuthStateType, Action>(initialState)
       actions.loginUsingEmailAndPassword.success,
       actions.confirmVerificationCode.success,
       actions.webviewLogin.success,
+      actions.webviewLoginWithUser.success,
     ],
     (state, action) =>
       produce(state, (nextState) => {

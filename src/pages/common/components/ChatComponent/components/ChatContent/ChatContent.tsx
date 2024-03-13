@@ -6,6 +6,7 @@ import React, {
   ForwardRefRenderFunction,
   useImperativeHandle,
   forwardRef,
+  memo,
 } from "react";
 import { useSelector } from "react-redux";
 import { scroller, animateScroll } from "react-scroll";
@@ -65,6 +66,7 @@ interface ChatContentInterface {
   isChatChannel: boolean;
   isMessageEditAllowed: boolean;
   fetchReplied: (messageId: string, endDate: Date) => Promise<void>;
+  chatChannelId?: string;
 }
 
 const isToday = (someDate: Date) => {
@@ -104,6 +106,7 @@ const ChatContent: ForwardRefRenderFunction<
     isMessageEditAllowed,
     fetchReplied,
     discussionMessages,
+    chatChannelId,
   },
   chatContentRef,
 ) => {
@@ -288,6 +291,7 @@ const ChatContent: ForwardRefRenderFunction<
                       onUserClick={onUserClick}
                       onFeedItemClick={onFeedItemClick}
                       onInternalLinkClick={onInternalLinkClick}
+                      chatChannelId={chatChannelId}
                     />
                   ) : (
                     <ChatMessage
@@ -348,4 +352,4 @@ const ChatContent: ForwardRefRenderFunction<
   );
 };
 
-export default forwardRef(ChatContent);
+export default memo(forwardRef(ChatContent));

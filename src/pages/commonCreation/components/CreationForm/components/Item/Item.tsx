@@ -9,6 +9,8 @@ import {
   NotionIntegration,
   AdvancedSettings,
 } from "@/shared/components/Form/Formik";
+import { FeatureFlags } from "@/shared/constants";
+import { useFeatureFlag } from "@/shared/hooks/useFeatureFlag";
 import { CreationFormItemType } from "../../constants";
 import { CreationFormItem } from "../../types";
 import styles from "./Item.module.scss";
@@ -22,6 +24,8 @@ interface ItemProps {
 const Item: FC<ItemProps> = (props) => {
   const { className: outerClassName, item, disabled } = props;
   const className = classNames(outerClassName, item.className);
+  const featureFlags = useFeatureFlag();
+  const isAdvancedSettingsEnabled = featureFlags?.get(FeatureFlags.AdvancedSettings);
 
   switch (item.type) {
     case CreationFormItemType.TextField:
@@ -84,7 +88,7 @@ const Item: FC<ItemProps> = (props) => {
     case CreationFormItemType.NotionIntegration:
       return <NotionIntegration {...item.props} className={className} />;
     case CreationFormItemType.AdvancedSettings:
-      return <AdvancedSettings {...item.props} />;
+      return isAdvancedSettingsEnabled ? <AdvancedSettings {...item.props} /> : null;
     default:
       return null;
   }

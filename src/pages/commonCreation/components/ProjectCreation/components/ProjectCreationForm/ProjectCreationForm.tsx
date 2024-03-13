@@ -32,6 +32,8 @@ import { UnsavedChangesPrompt } from "../UnsavedChangesPrompt";
 import { getConfiguration } from "./configuration";
 import { ProjectCreationFormValues } from "./types";
 import styles from "./ProjectCreationForm.module.scss";
+import { FeatureFlags } from "@/shared/constants";
+import { useFeatureFlag } from "@/shared/hooks/useFeatureFlag";
 
 const NOTION_INTEGRATION_TOKEN_MASK = "************";
 
@@ -63,12 +65,12 @@ const getInitialValues = (
   return {
     projectImages: initialCommon?.image
       ? [
-          {
-            id: "space_image",
-            title: "space_image",
-            file: initialCommon.image,
-          },
-        ]
+        {
+          id: "space_image",
+          title: "space_image",
+          file: initialCommon.image,
+        },
+      ]
       : [],
     spaceName: initialCommon?.name || "",
     byline: initialCommon?.byline || "",
@@ -138,6 +140,8 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
     projectId: project?.id || updatedProject?.id,
     isNotionIntegrationEnabled: Boolean(initialCommon?.notion),
   });
+  const featureFlags = useFeatureFlag();
+  const isAdvancedSettingsEnabled = featureFlags?.get(FeatureFlags.AdvancedSettings);
   const isLoading =
     isProjectCreationLoading ||
     isCommonUpdateLoading ||
@@ -166,14 +170,17 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   const rootCommonRoles: Roles = isParentIsRoot
     ? roles
     : nonProjectRootCircles.map((circle) => ({
-        circleId: circle.id,
-        circleName: circle.name,
-        tier: circle.hierarchy?.tier,
-      }));
+      circleId: circle.id,
+      circleName: circle.name,
+      tier: circle.hierarchy?.tier,
+    }));
 
   const advancedSettings: SpaceAdvancedSettingsIntermediate =
-    initialCommon?.advancedSettings ||
     useMemo(() => {
+      if (initialCommon?.advancedSettings) {
+        return initialCommon?.advancedSettings
+      }
+
       return {
         permissionGovernanceId: isParentIsRoot
           ? parentGovernanceId
@@ -201,6 +208,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
       rootCommonRoles,
       isParentIsRoot,
       roles,
+      initialCommon?.advancedSettings
     ]);
 
   const initialValues = useMemo(
@@ -230,7 +238,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
 
   const handleProjectCreate = (values: ProjectCreationFormValues) => {
     setNotionIntegrationFormData(values.notion);
-    createProject(parentCommonId, values);
+    createProject(parentCommonId, values, isAdvancedSettingsEnabled);
   };
 
   const handleProjectUpdate = (values: ProjectCreationFormValues) => {
