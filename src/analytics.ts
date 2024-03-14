@@ -6,5 +6,9 @@ import {
 } from "./shared/constants";
 
 if (REACT_APP_ENV === Environment.Production) {
-  ReactGA.initialize(GA_MEASUREMENT_ID);
+  ReactGA.initialize(GA_MEASUREMENT_ID, {
+    gaOptions: {
+      cookieFlags: "SameSite=None; Secure",
+    },
+  });
 }

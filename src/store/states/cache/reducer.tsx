@@ -1,11 +1,12 @@
 import produce from "immer";
-import { unionBy } from "lodash";
+import { unionBy, cloneDeep } from "lodash";
 import { ActionType, createReducer } from "typesafe-actions";
 import {
   getChatChannelUserStatusKey,
   getCommonMemberStateKey,
 } from "@/shared/constants";
 import { getFeedItemUserMetadataKey } from "@/shared/constants/getFeedItemUserMetadataKey";
+import { checkIsUserDiscussionMessage } from "@/shared/models";
 import * as actions from "./actions";
 import { CacheState } from "./types";
 
@@ -152,6 +153,8 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
 
       if (state.data !== null && currentState?.data?.isSeenUpdating) {
         state.data.seen = currentState.data.seen;
+        state.data.seenOnce = currentState.data.seenOnce;
+        state.data.count = currentState.data.count;
       }
 
       nextState.feedItemUserMetadataStates[key] = { ...state };
@@ -167,6 +170,10 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
         state.seenOnce = true;
         state.count = 0;
         state.isSeenUpdating = isSeenUpdating;
+
+        // if (seen) {
+        //   state.seenOnce = true;
+        // }
       }
     }),
   )
@@ -295,5 +302,47 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
             commonId,
           })
         ] = { ...state };
+      }),
+  )
+  .handleAction(
+    actions.updateDiscussionMessageReactions,
+    (state, { payload }) =>
+      produce(state, (nextState) => {
+        const { discussionMessageId, discussionId, emoji, prevUserEmoji } =
+          payload;
+
+        if (!discussionId) return;
+
+        const updatedDiscussionMessages = cloneDeep(
+          state.discussionMessagesStates[discussionId],
+        );
+        const updatedMessage = updatedDiscussionMessages.data?.find(
+          (msg) => msg.id === discussionMessageId,
+        );
+        const isUserDiscussionMessage =
+          checkIsUserDiscussionMessage(updatedMessage);
+
+        if (!isUserDiscussionMessage) return;
+
+        if (!updatedMessage.reactionCounts) {
+          updatedMessage.reactionCounts = {};
+          updatedMessage.reactionCounts[emoji] = 1;
+        } else if (prevUserEmoji === emoji) {
+          updatedMessage.reactionCounts[emoji] -= 1;
+        } else {
+          if (updatedMessage.reactionCounts[emoji]) {
+            updatedMessage.reactionCounts[emoji] += 1;
+          } else {
+            updatedMessage.reactionCounts[emoji] = 1;
+          }
+          if (prevUserEmoji) {
+            updatedMessage.reactionCounts[prevUserEmoji] -= 1;
+          }
+        }
+
+        nextState.discussionMessagesStates[discussionId] = {
+          ...state.discussionMessagesStates[discussionId],
+          data: updatedDiscussionMessages.data,
+        };
       }),
   );
