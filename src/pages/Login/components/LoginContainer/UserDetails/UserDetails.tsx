@@ -17,9 +17,9 @@ import {
   ANONYMOUS_USER_LAST_NAME,
 } from "@/shared/constants";
 import { useImageSizeCheck } from "@/shared/hooks";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { countryList } from "../../../../../shared/assets/countries";
 import {
-  Button,
   DropdownOption,
   Loader,
   UserAvatar,
@@ -344,6 +344,7 @@ const UserDetails: ForwardRefRenderFunction<
                   className="user-details__save-button"
                   type="submit"
                   disabled={!isValid || loading || isSubmitting}
+                  variant={ButtonVariant.PrimaryPink}
                 >
                   Save
                 </Button>
