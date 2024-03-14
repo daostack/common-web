@@ -138,7 +138,7 @@ export default function ChatComponent({
   feedItemId,
   isAuthorized,
   isHidden = false,
-  seenOnce = false,
+  seenOnce,
   seen,
   onMessagesAmountChange,
   directParent,
@@ -237,6 +237,14 @@ export default function ChatComponent({
   };
 
   const [isMultiLineInput, setIsMultiLineInput] = useState(false);
+  const prevFeedItemId = useRef<string>();
+  const timeoutId = useRef<ReturnType<typeof setTimeout> | null>();
+
+  useEffect(() => {
+    return () => {
+      prevFeedItemId.current = feedItemId;
+    };
+  }, [feedItemId]);
 
   useEffect(() => {
     setIsMultiLineInput(chatInputHeight > BASE_CHAT_INPUT_HEIGHT);
@@ -592,17 +600,27 @@ export default function ChatComponent({
   );
 
   useEffect(() => {
+    if (timeoutId.current) {
+      clearTimeout(timeoutId.current);
+      timeoutId.current = null;
+    }
+
     if (seenOnce && notEmpty(seen) && seen) {
       return;
     }
 
+    const delay = prevFeedItemId.current ? 0 : 1500;
+
     if (isChatChannel) {
-      markChatChannelAsSeen(feedItemId);
+      timeoutId.current = markChatChannelAsSeen(feedItemId, delay);
     } else if (commonId) {
-      markDiscussionMessageItemAsSeen({
-        feedObjectId: feedItemId,
-        commonId,
-      });
+      timeoutId.current = markDiscussionMessageItemAsSeen(
+        {
+          feedObjectId: feedItemId,
+          commonId,
+        },
+        delay,
+      );
     }
   }, [feedItemId, commonId]);
 

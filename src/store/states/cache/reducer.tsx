@@ -152,6 +152,8 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
 
       if (state.data !== null && currentState?.data?.isSeenUpdating) {
         state.data.seen = currentState.data.seen;
+        state.data.seenOnce = currentState.data.seenOnce;
+        state.data.count = currentState.data.count;
       }
 
       nextState.feedItemUserMetadataStates[key] = { ...state };
@@ -167,6 +169,10 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
         state.seenOnce = true;
         state.count = 0;
         state.isSeenUpdating = isSeenUpdating;
+
+        // if (seen) {
+        //   state.seenOnce = true;
+        // }
       }
     }),
   )
