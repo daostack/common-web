@@ -69,18 +69,30 @@ export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
   }, [isOutside, setOutsideValue]);
 
   useEffect(() => {
+    let isMounted = true;
+
     (async () => {
       if (discussionMessageId) {
         const userReaction = await getUserReaction(discussionMessageId);
-        setUserReaction(userReaction);
+
+        if (isMounted) {
+          setUserReaction(userReaction);
+        }
       } else if (chatMessageId && chatChannelId) {
         const userReaction = await getDMUserReaction(
           chatMessageId,
           chatChannelId,
         );
-        setUserReaction(userReaction);
+
+        if (isMounted) {
+          setUserReaction(userReaction);
+        }
       }
     })();
+
+    return () => {
+      isMounted = false;
+    };
   }, [discussionMessageId, chatMessageId, chatChannelId]);
 
   const onEmojiSelect = (emoji: Skin) => {

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
 import {
   CommonMemberEventEmitter,
   CommonMemberEvent,
@@ -9,6 +10,7 @@ import {
 } from "@/events";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { ErrorCode } from "@/shared/constants";
+import { useIsMounted } from "@/shared/hooks";
 import { LoadingState } from "@/shared/interfaces";
 import {
   Circles,
@@ -68,6 +70,8 @@ export const useCommonMember = (options: Options = {}): Return => {
     governanceCircles,
   } = options;
   const dispatch = useDispatch();
+  const currentLoadingIdRef = useRef("");
+  const isMounted = useIsMounted();
   const [state, setState] = useState<State>({
     loading: false,
     fetched: false,
@@ -109,6 +113,8 @@ export const useCommonMember = (options: Options = {}): Return => {
         });
         return;
       }
+      const loadingId = uuidv4();
+      currentLoadingIdRef.current = loadingId;
       setIdentificationInfo({ userId, commonId });
 
       setState({
@@ -127,7 +133,9 @@ export const useCommonMember = (options: Options = {}): Return => {
 
         if (
           identificationInfoRef.current?.commonId !== commonId ||
-          identificationInfoRef.current?.userId !== userId
+          identificationInfoRef.current?.userId !== userId ||
+          currentLoadingIdRef.current !== loadingId ||
+          !isMounted()
         ) {
           return;
         }
@@ -175,13 +183,14 @@ export const useCommonMember = (options: Options = {}): Return => {
           );
         }
       } catch (e) {
-        Logger.error({ state, e });
-
-        setState({
-          loading: false,
-          fetched: true,
-          data: null,
-        });
+        if (currentLoadingIdRef.current === loadingId) {
+          Logger.error({ state, e });
+          setState({
+            loading: false,
+            fetched: true,
+            data: null,
+          });
+        }
       }
     },
     [state, userId],
