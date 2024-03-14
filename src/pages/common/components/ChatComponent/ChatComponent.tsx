@@ -138,7 +138,7 @@ export default function ChatComponent({
   feedItemId,
   isAuthorized,
   isHidden = false,
-  seenOnce = false,
+  seenOnce,
   seen,
   onMessagesAmountChange,
   directParent,
@@ -202,8 +202,10 @@ export default function ChatComponent({
     : discussionMessagesData.data || [];
   const isFetchedDiscussionMessages =
     discussionMessagesData.fetched || chatMessagesData.fetched;
-  const isLoadingDiscussionMessages =
-    discussionMessagesData.loading || chatMessagesData.loading;
+  const areInitialMessagesLoading = isChatChannel
+    ? chatMessagesData.loading
+    : discussionMessagesData.loading;
+  const areMessagesLoading = discussionMessagesData.isBatchLoading;
   const currentFilesPreview = useSelector(selectFilesPreview());
   const chatContentRef = useRef<ChatContentRef>(null);
   const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
@@ -235,6 +237,14 @@ export default function ChatComponent({
   };
 
   const [isMultiLineInput, setIsMultiLineInput] = useState(false);
+  const prevFeedItemId = useRef<string>();
+  const timeoutId = useRef<ReturnType<typeof setTimeout> | null>();
+
+  useEffect(() => {
+    return () => {
+      prevFeedItemId.current = feedItemId;
+    };
+  }, [feedItemId]);
 
   useEffect(() => {
     setIsMultiLineInput(chatInputHeight > BASE_CHAT_INPUT_HEIGHT);
@@ -569,6 +579,7 @@ export default function ChatComponent({
     }
 
     if (enteredHotkey === HotKeys.Enter && !isMobile()) {
+      event.preventDefault();
       sendChatMessage();
       return;
     }
@@ -590,17 +601,27 @@ export default function ChatComponent({
   );
 
   useEffect(() => {
+    if (timeoutId.current) {
+      clearTimeout(timeoutId.current);
+      timeoutId.current = null;
+    }
+
     if (seenOnce && notEmpty(seen) && seen) {
       return;
     }
 
+    const delay = prevFeedItemId.current ? 0 : 1500;
+
     if (isChatChannel) {
-      markChatChannelAsSeen(feedItemId);
+      timeoutId.current = markChatChannelAsSeen(feedItemId, delay);
     } else if (commonId) {
-      markDiscussionMessageItemAsSeen({
-        feedObjectId: feedItemId,
-        commonId,
-      });
+      timeoutId.current = markDiscussionMessageItemAsSeen(
+        {
+          feedObjectId: feedItemId,
+          commonId,
+        },
+        delay,
+      );
     }
   }, [feedItemId, commonId]);
 
@@ -754,16 +775,19 @@ export default function ChatComponent({
 
   useEffect(() => {
     if (discussionId) {
-      discussionMessagesData.fetchDiscussionMessages();
       dispatch(chatActions.clearCurrentDiscussionMessageReply());
     }
   }, [discussionId, dispatch]);
 
   useEffect(() => {
-    if (isTopReached && discussionId) {
+    if (!discussionId) {
+      return;
+    }
+
+    if (!discussionMessagesData.isFirstBatchLoaded || isTopReached) {
       discussionMessagesData.fetchDiscussionMessages();
     }
-  }, [isTopReached, discussionId]);
+  }, [isTopReached, discussionId, discussionMessagesData.isFirstBatchLoaded]);
 
   return (
     <div className={styles.chatWrapper}>
@@ -791,7 +815,8 @@ export default function ChatComponent({
             hasPermissionToHide={hasPermissionToHide}
             users={users}
             feedItemId={feedItemId}
-            isLoading={!discussion || isLoadingDiscussionMessages}
+            isInitialLoading={!discussion || areInitialMessagesLoading}
+            isLoading={areMessagesLoading}
             onMessageDelete={handleMessageDelete}
             directParent={directParent}
             onUserClick={onUserClick}
