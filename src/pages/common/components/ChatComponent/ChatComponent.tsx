@@ -579,6 +579,7 @@ export default function ChatComponent({
     }
 
     if (enteredHotkey === HotKeys.Enter && !isMobile()) {
+      event.preventDefault();
       sendChatMessage();
       return;
     }
