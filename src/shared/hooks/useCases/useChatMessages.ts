@@ -1,12 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
-import {
-  CancelTokenSource,
-  isRequestCancelled,
-  getCancelTokenSource,
-  Logger,
-  ChatService,
-  UserService,
-} from "@/services";
+import { v4 as uuidv4 } from "uuid";
+import { Logger, ChatService, UserService } from "@/services";
 import { useLoadingState } from "@/shared/hooks";
 import { LoadingState } from "@/shared/interfaces";
 import { ChatMessage } from "@/shared/models";
@@ -58,14 +52,13 @@ const addParentMessageToMessages = (
   });
 
 export const useChatMessages = (): Return => {
-  const cancelTokenRef = useRef<CancelTokenSource | null>(null);
+  const currentLoadingIdRef = useRef("");
   const [state, setState] = useLoadingState<ChatMessage[]>([]);
   const currentChatChannelId = state.data?.[0]?.chatChannelId;
 
   const fetchChatMessages = useCallback(async (chatChannelId: string) => {
-    if (cancelTokenRef.current) {
-      cancelTokenRef.current.cancel();
-    }
+    const loadingId = uuidv4();
+    currentLoadingIdRef.current = loadingId;
 
     try {
       setState({
@@ -73,28 +66,28 @@ export const useChatMessages = (): Return => {
         fetched: false,
         data: [],
       });
-      cancelTokenRef.current = getCancelTokenSource();
 
-      const fetchedChatMessages = await ChatService.getChatMessages(
-        chatChannelId,
-        {
-          cancelToken: cancelTokenRef.current.token,
-        },
-      );
+      const fetchedChatMessages = (
+        await ChatService.getChatMessages({
+          chatChannelId,
+          limit: null,
+          sortingDirection: "asc",
+        })
+      ).chatMessages;
       const chatMessages = addParentMessageToMessages(
         await addOwnersToMessages(fetchedChatMessages),
       );
 
-      cancelTokenRef.current = null;
-      setState({
-        loading: false,
-        fetched: true,
-        data: chatMessages,
-      });
+      if (currentLoadingIdRef.current === loadingId) {
+        setState({
+          loading: false,
+          fetched: true,
+          data: chatMessages,
+        });
+      }
     } catch (error) {
-      if (!isRequestCancelled(error)) {
+      if (currentLoadingIdRef.current === loadingId) {
         Logger.error(error);
-        cancelTokenRef.current = null;
         setState({
           loading: false,
           fetched: false,

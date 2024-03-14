@@ -1,8 +1,10 @@
 import { uniqBy } from "lodash";
 import { call, put, select } from "redux-saga/effects";
+import { selectUser } from "@/pages/Auth/store/selectors";
 import { CommonFeedService } from "@/services";
 import { InboxItemType } from "@/shared/constants";
 import { Awaited, FeedItemFollowLayoutItem } from "@/shared/interfaces";
+import { User } from "@/shared/models";
 import { isError } from "@/shared/utils";
 import { selectFeedStateByCommonId } from "@/store/states";
 import * as actions from "../actions";
@@ -22,6 +24,8 @@ export function* getFeedItems(
   try {
     const currentFeedItems = (yield select(selectFeedItems)) as FeedItems;
     const cachedFeedState = yield select(selectFeedStateByCommonId(commonId));
+    const user = (yield select(selectUser())) as User | null;
+    const userId = user?.uid;
 
     if (!currentFeedItems.data && !feedItemId && cachedFeedState) {
       yield put(
@@ -53,6 +57,7 @@ export function* getFeedItems(
     const { data, firstDocTimestamp, lastDocTimestamp, hasMore } = (yield call(
       CommonFeedService.getCommonFeedItemsByUpdatedAt,
       commonId,
+      userId,
       {
         startAfter: currentFeedItems.lastDocTimestamp,
         feedItemId,

@@ -22,7 +22,7 @@ export const Reactions: FC<ReactionsProps> = (props) => {
 
   const emojis = Object.keys(reactions)
     .filter((key) => reactions[key] > 0)
-    .map((emoji) => <span>{emoji}</span>);
+    .map((emoji, index) => <span key={index}>{emoji}</span>);
 
   return (
     <div className={styles.container}>
