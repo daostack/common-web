@@ -602,10 +602,7 @@ function* deleteUser({
 }
 
 function* authSagas() {
-  yield takeLatest(
-    actions.webviewLoginWithUser.request,
-    webviewLoginWithUserSaga,
-  );
+  yield takeLatest(actions.webviewLoginWithUser.request, webviewLoginWithUserSaga);
   yield takeLatest(actions.webviewLogin.request, webviewLoginSaga);
   yield takeLatest(actions.socialLogin.request, socialLoginSaga);
   yield takeLatest(
