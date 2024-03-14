@@ -1,7 +1,7 @@
 import { Timestamp } from "./Timestamp";
 
 export interface UserReaction {
-  createdAt: Timestamp;
+  createdAt?: Timestamp;
   emoji: string;
   userId: string;
 }
