@@ -1,7 +1,11 @@
 import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useUpdateEffect } from "react-use";
-import { DiscussionMessageService, UserService } from "@/services";
+import {
+  DiscussionMessageService,
+  MESSAGES_NUMBER_IN_BATCH,
+  UserService,
+} from "@/services";
 import { getTextFromTextEditorString } from "@/shared/components/Chat/ChatMessage/utils";
 import { useRoutesContext } from "@/shared/contexts";
 import { LoadingState } from "@/shared/interfaces";
@@ -55,6 +59,8 @@ interface Return extends State {
   ) => void;
   deleteDiscussionMessage: (discussionMessageId: string) => void;
   isEndOfList: Record<string, boolean> | null;
+  isFirstBatchLoaded?: boolean;
+  isBatchLoading: boolean;
   rawData: DiscussionMessage[] | null;
 }
 
@@ -82,7 +88,10 @@ export const useDiscussionMessagesById = ({
     Record<string, firebase.firestore.QueryDocumentSnapshot<DiscussionMessage>>
   >({});
   const [isEndOfList, setIsEndOfList] = useState<Record<string, boolean>>({});
-  const [isLoading, setIsLoading] = useState(true);
+  const [isFirstBatchLoaded, setIsFirstBatchLoaded] = useState<
+    Record<string, boolean>
+  >({});
+  const [isBatchLoading, setIsBatchLoading] = useState(false);
   const state =
     useSelector(selectDiscussionMessagesStateByDiscussionId(discussionId)) ||
     defaultState;
@@ -93,6 +102,10 @@ export const useDiscussionMessagesById = ({
     if (discussionId) {
       setDiscussionMessagesWithOwners([]);
     }
+
+    return () => {
+      setIsBatchLoading(false);
+    };
   }, [discussionId]);
 
   const addDiscussionMessage = async (
@@ -209,12 +222,19 @@ export const useDiscussionMessagesById = ({
   );
 
   const fetchDiscussionMessages = () => {
-    if (!discussionId || isEndOfList[discussionId]) {
+    if (
+      !discussionId ||
+      isEndOfList[discussionId] ||
+      state.loading ||
+      isBatchLoading
+    ) {
       return null;
     }
 
     if (!state.data?.length) {
       setDefaultState({ ...DEFAULT_STATE });
+    } else if (state.data.length >= MESSAGES_NUMBER_IN_BATCH) {
+      setIsBatchLoading(true);
     }
 
     DiscussionMessageService.subscribeToDiscussionMessagesByDiscussionId(
@@ -267,6 +287,15 @@ export const useDiscussionMessagesById = ({
             };
           }),
         );
+        if (
+          discussionsWithText.length < MESSAGES_NUMBER_IN_BATCH &&
+          !hasLastVisibleDocument
+        ) {
+          setIsEndOfList((prevIsEndOfList) => ({
+            ...prevIsEndOfList,
+            [discussionId]: true,
+          }));
+        }
         dispatch(
           cacheActions.updateDiscussionMessagesStateByDiscussionId({
             discussionId,
@@ -274,22 +303,19 @@ export const useDiscussionMessagesById = ({
             updatedDiscussionMessages: discussionsWithText,
           }),
         );
-        if (discussionsWithText.length < 15 && !hasLastVisibleDocument) {
-          setIsEndOfList((prevIsEndOfList) => ({
-            ...prevIsEndOfList,
-            [discussionId]: true,
-          }));
-        }
+        setIsBatchLoading(false);
       },
     );
   };
 
   useEffect(() => {
     (async () => {
-      if (discussionMessagesWithOwners?.length === 0) {
-        setIsLoading(true);
+      if (!state.data || state.data.length === 0) {
+        setDiscussionMessagesWithOwners([]);
+        return;
       }
-      const discussionMessages = [...(state.data || [])];
+
+      const discussionMessages = [...state.data];
 
       // if (discussionMessages.length > 0 && users.length === 0) {
       // return;
@@ -345,16 +371,21 @@ export const useDiscussionMessagesById = ({
       );
 
       setDiscussionMessagesWithOwners(loadedDiscussionMessages);
-      setIsLoading(false);
+      setIsFirstBatchLoaded((prev) => ({
+        ...prev,
+        [discussionId]: true,
+      }));
     })();
   }, [state.data, hasPermissionToHide, users, externalCommonUsers]);
 
   return {
     ...state,
-    loading: isLoading || state.loading,
+    loading: !isFirstBatchLoaded[discussionId] || state.loading,
     data: discussionMessagesWithOwners,
     rawData: state.data,
     isEndOfList,
+    isFirstBatchLoaded: isFirstBatchLoaded[discussionId],
+    isBatchLoading,
     fetchDiscussionMessages,
     fetchRepliedMessages,
     addDiscussionMessage,
