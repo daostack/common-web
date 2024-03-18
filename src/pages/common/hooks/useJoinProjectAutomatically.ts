@@ -101,18 +101,13 @@ export const useJoinProjectAutomatically = (
   }, [parentGovernance?.id, circleId]);
 
   useEffect(() => {
-    const checkIfCanJoin = async () => {
-      const res = checkIfCanJoinSpace(commonGovernace, rootGovernance);
-      setCanJoin(res);
-    };
-
     const hasMemberAdmittance = Boolean(
       commonGovernace?.proposals[ProposalsTypes.MEMBER_ADMITTANCE],
     );
     if (hasMemberAdmittance) {
       setCanJoin(true);
     } else {
-      checkIfCanJoin();
+      setCanJoin(checkIfCanJoinSpace(commonGovernace, rootGovernance));
     }
   }, [commonGovernace, rootGovernance]);
 
