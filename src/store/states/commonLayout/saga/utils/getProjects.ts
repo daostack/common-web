@@ -1,6 +1,7 @@
 import { CommonService, GovernanceService, ProjectService } from "@/services";
 import { ProjectsStateItem } from "../../../projects";
 import { getPermissionsDataByAllUserCommonMemberInfo } from "./getPermissionsDataByAllUserCommonMemberInfo";
+import { SpaceListVisibility } from "@/shared/interfaces";
 
 export const getProjects = async (
   commonId: string,
@@ -47,6 +48,13 @@ export const getProjects = async (
       hasPermissionToLinkToHere,
       hasPermissionToMoveToHere,
       notificationsAmount: 0,
+      listVisibility: common.listVisibility
     }),
-  );
+  ).filter((common) => {
+    if(common.listVisibility === SpaceListVisibility.Members && !common.hasMembership) {
+      return false;
+    }
+
+    return true;
+  });
 };

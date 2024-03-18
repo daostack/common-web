@@ -132,6 +132,7 @@ class FeedItemFollowsService {
       commonName: itemCommon.name,
       parentCommonName: itemParentCommon?.name,
       commonAvatar: itemCommon.image,
+      listVisibility: itemCommon.listVisibility,
     };
   };
 

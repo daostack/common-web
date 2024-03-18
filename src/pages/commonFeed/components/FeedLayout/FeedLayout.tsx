@@ -779,6 +779,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                         commonImage={commonData?.image || ""}
                         commonNotion={outerCommon?.notion}
                         pinnedFeedItems={outerCommon?.pinnedFeedItems}
+                        listVisibility={commonData?.listVisibility}
                         isProject={commonData?.isProject}
                         isPinned={isPinned}
                         item={item.feedItem}

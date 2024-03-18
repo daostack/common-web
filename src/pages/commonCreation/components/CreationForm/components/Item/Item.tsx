@@ -8,6 +8,7 @@ import {
   RolesArrayWrapper,
   NotionIntegration,
   AdvancedSettings,
+  SecretSpace,
 } from "@/shared/components/Form/Formik";
 import { CreationFormItemType } from "../../constants";
 import { CreationFormItem } from "../../types";
@@ -23,6 +24,7 @@ const Item: FC<ItemProps> = (props) => {
   const { className: outerClassName, item, disabled } = props;
   const className = classNames(outerClassName, item.className);
 
+  console.log("--item", item);
   switch (item.type) {
     case CreationFormItemType.TextField:
       return (
@@ -85,6 +87,8 @@ const Item: FC<ItemProps> = (props) => {
       return <NotionIntegration {...item.props} className={className} />;
     case CreationFormItemType.AdvancedSettings:
       return <AdvancedSettings {...item.props} />;
+    case CreationFormItemType.SecretSpace:
+      return <SecretSpace />;
     default:
       return null;
   }

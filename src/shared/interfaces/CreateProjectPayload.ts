@@ -10,6 +10,11 @@ import { TextEditorValue } from "@/shared/ui-kit";
 import { SpaceAdvancedSettingsIntermediate } from "../models/SpaceAdvancedSettings";
 import { UploadFile } from "./UploadFile";
 
+export enum SpaceListVisibility {
+  Public = "public",
+  Members = "members"
+}
+
 export interface CreateProjectPayload {
   name: string;
   byline?: string;
@@ -23,6 +28,7 @@ export interface CreateProjectPayload {
   highestCircleId: string;
   notion?: NotionIntegrationPayload;
   advancedSettings?: SpaceAdvancedSettings;
+  listVisibility?: SpaceListVisibility;
 }
 
 export interface IntermediateCreateProjectPayload {
@@ -38,4 +44,5 @@ export interface IntermediateCreateProjectPayload {
   initialAdvancedSettings?: SpaceAdvancedSettingsIntermediate;
   highestCircleId: string;
   notion?: NotionIntegrationPayloadIntermediate;
+  listVisibility?: SpaceListVisibility;
 }

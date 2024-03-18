@@ -1,6 +1,9 @@
 import React, { forwardRef, memo, useEffect, useMemo } from "react";
 import { useFeedItemFollow } from "@/shared/hooks/useCases";
-import { FeedLayoutItemChangeData } from "@/shared/interfaces";
+import {
+  FeedLayoutItemChangeData,
+  SpaceListVisibility,
+} from "@/shared/interfaces";
 import {
   Circles,
   CirclesPermissions,
@@ -47,6 +50,7 @@ interface FeedItemProps {
   shouldPreLoadMessages?: boolean;
   onFeedItemClick: (feedItemId: string) => void;
   onInternalLinkClick: (data: InternalLinkData) => void;
+  listVisibility?: SpaceListVisibility;
 }
 
 const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
@@ -75,6 +79,7 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     shouldPreLoadMessages = false,
     onFeedItemClick,
     onInternalLinkClick,
+    listVisibility,
   } = props;
   const {
     onFeedItemUpdate,
@@ -150,6 +155,10 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     onFeedItemClick,
     onInternalLinkClick,
   };
+
+  if (!commonMember && listVisibility === SpaceListVisibility.Members) {
+    return null;
+  }
 
   if (item.data.type === CommonFeedType.Discussion) {
     return <DiscussionFeedCard {...generalProps} />;

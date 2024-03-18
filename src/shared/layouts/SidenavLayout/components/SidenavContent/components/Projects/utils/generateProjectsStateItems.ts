@@ -29,6 +29,7 @@ export const getItemFromProjectsStateItem = (
     hasMembership: projectsStateItem.hasMembership,
     hasPermissionToAddProject: projectsStateItem.hasPermissionToAddProject,
     notificationsAmount: projectsStateItem.notificationsAmount,
+    listVisibility: projectsStateItem.listVisibility,
     items,
     ...(getAdditionalItemData?.(projectsStateItem) || {}),
   };

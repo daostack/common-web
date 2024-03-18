@@ -28,6 +28,7 @@ function* getProjects(action: ReturnType<typeof actions.getProjects.request>) {
         rootCommonId: common.rootCommonId,
         hasMembership,
         notificationsAmount: 0,
+        listVisibility: common.listVisibility,
       }),
     );
 

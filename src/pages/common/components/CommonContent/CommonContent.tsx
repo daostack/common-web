@@ -1,8 +1,11 @@
 import React, { FC, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import { CommonPageSettings } from "@/pages/common/types";
 import { useRoutesContext } from "@/shared/contexts";
+import { useGoBack } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
+import { SpaceListVisibility } from "@/shared/interfaces";
 import { CommonSidenavLayoutPageContent } from "@/shared/layouts";
 import {
   CirclesPermissions,
@@ -12,6 +15,7 @@ import {
   SupportersData,
 } from "@/shared/models";
 import { Container } from "@/shared/ui-kit";
+import { getInboxPagePath } from "@/shared/utils";
 import { commonActions, selectIsNewProjectCreated } from "@/store/states";
 import { CommonDataProvider } from "../../providers";
 import { CommonHeader } from "../CommonHeader";
@@ -64,6 +68,8 @@ const CommonContent: FC<CommonContentProps> = (props) => {
   } = props;
   const isTabletView = useIsTabletView();
   const dispatch = useDispatch();
+  const history = useHistory();
+  const { canGoBack, goBack } = useGoBack();
   const { getCommonPagePath } = useRoutesContext();
   const isCommonMember = Boolean(commonMember);
   const allowedTabs = useMemo(
@@ -92,6 +98,15 @@ const CommonContent: FC<CommonContentProps> = (props) => {
       }),
     );
   }, [allowedTabs]);
+
+  useEffect(() => {
+    if (
+      !isCommonMember &&
+      common.listVisibility === SpaceListVisibility.Members
+    ) {
+      canGoBack ? goBack() : history.push(getInboxPagePath());
+    }
+  }, [isCommonMember, common, history, goBack, canGoBack]);
 
   useEffect(() => {
     return () => {

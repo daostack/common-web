@@ -90,6 +90,7 @@ const getInitialValues = (
     },
     advancedSettings: advancedSettings,
     initialAdvancedSettings: advancedSettings,
+    listVisibility: initialCommon?.listVisibility,
   };
 };
 

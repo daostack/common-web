@@ -1,3 +1,4 @@
+import { SpaceListVisibility } from "@/shared/interfaces";
 import { ReactNode } from "react";
 
 export interface Item {
@@ -12,4 +13,5 @@ export interface Item {
   rightContent?: ReactNode;
   items?: Item[];
   disabled?: boolean;
+  listVisibility?: SpaceListVisibility;
 }
