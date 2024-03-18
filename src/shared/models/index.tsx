@@ -8,6 +8,7 @@ export * from "./ChatMessage";
 export * from "./Common";
 export * from "./CommonFeed";
 export * from "./CommonFeedObjectUserUnique";
+export * from "./CommonFlatTree";
 export * from "./shared";
 export * from "./SoftDeleteEntity";
 export * from "./Proposals";

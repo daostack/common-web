@@ -1,23 +1,20 @@
 import { ApiEndpoint, GovernanceActions } from "@/shared/constants";
 import { CreateProjectPayload } from "@/shared/interfaces";
 import { Common, CommonState, Governance } from "@/shared/models";
-import {
-  generateCirclesDataForCommonMember,
-  getProjectCircleDefinition,
-} from "@/shared/utils";
+import { generateCirclesDataForCommonMember } from "@/shared/utils";
 import Api from "./Api";
 import CommonService from "./Common";
 
 class ProjectService {
-  public parseDataToProjectsInfo = (
-    commons: Common[],
+  public parseDataToProjectsInfo = <T extends Pick<Common, "id" | "state">>(
+    commons: T[],
     commonIdsWithMembership: string[] = [],
     permissionsData?: {
       governance: Governance;
       commonMemberCircleIds: string[];
     }[],
   ): {
-    common: Common;
+    common: T;
     hasMembership: boolean;
     hasPermissionToAddProject?: boolean;
     hasPermissionToLinkToHere?: boolean;
@@ -107,13 +104,15 @@ class ProjectService {
     isAdvancedSettingsEnabled = true,
   ): Promise<Common> => {
     const { advancedSettings, ...subCommonData } = data;
-     const { data: project } = await Api.post<Common>(ApiEndpoint.CreateAction, {
-       type: isAdvancedSettingsEnabled ? GovernanceActions.CREATE_SUBCOMMON : GovernanceActions.CREATE_PROJECT,
-       args: {
-         commonId: parentCommonId,
-         subcommonDefinition: subCommonData,
-         ...(isAdvancedSettingsEnabled && { ...advancedSettings }),
-       },
+    const { data: project } = await Api.post<Common>(ApiEndpoint.CreateAction, {
+      type: isAdvancedSettingsEnabled
+        ? GovernanceActions.CREATE_SUBCOMMON
+        : GovernanceActions.CREATE_PROJECT,
+      args: {
+        commonId: parentCommonId,
+        subcommonDefinition: subCommonData,
+        ...(isAdvancedSettingsEnabled && { ...advancedSettings }),
+      },
     });
 
     return project;

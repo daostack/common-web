@@ -15,6 +15,7 @@ import { UnsubscribeFunction } from "@/shared/interfaces";
 import {
   Collection,
   Common,
+  CommonFlatTree,
   CommonMember,
   CommonState,
   SubCollections,
@@ -30,6 +31,7 @@ import { waitForCommonToBeLoaded } from "./utils";
 
 const converter = firestoreDataConverter<Common>();
 const commonMemberConverter = firestoreDataConverter<CommonMember>();
+const commonFlatTreeConverter = firestoreDataConverter<CommonFlatTree>();
 
 class CommonService {
   public getCommonById = async (
@@ -545,6 +547,19 @@ class CommonService {
       type: GovernanceActions.DELETE_COMMON,
       args: { userId, commonId },
     });
+  };
+
+  public getCommonFlatTree = async (
+    rootCommonId: string,
+  ): Promise<CommonFlatTree | null> => {
+    const snapshot = await firebase
+      .firestore()
+      .collection(Collection.DaosFlatTree)
+      .doc(rootCommonId)
+      .withConverter(commonFlatTreeConverter)
+      .get();
+
+    return snapshot.data() || null;
   };
 }
 

@@ -11,14 +11,12 @@ export const getProjects = async (
   commonId: string,
   userId?: string,
 ): Promise<ProjectsStateItem[]> => {
-  const commonsWithSubCommons = await CommonService.getCommonsWithSubCommons([
-    commonId,
+  const [commonFlatTree, userMembershipsWithId] = await Promise.all([
+    CommonService.getCommonFlatTree(commonId),
+    userId ? UserService.getUserMemberships(userId) : null,
   ]);
-  const commonsWithoutMainParentCommon = commonsWithSubCommons.filter(
-    (common) => common.id !== commonId,
-  );
-  const userMemberships =
-    (userId && (await UserService.getUserMemberships(userId))?.commons) || {};
+  const spaces = commonFlatTree?.spaces || {};
+  const userMemberships = userMembershipsWithId?.commons || {};
   const userCommonIds = Object.keys(userMemberships);
   const governanceList = await GovernanceService.getGovernanceListByCommonIds(
     userCommonIds,
@@ -28,7 +26,7 @@ export const getProjects = async (
     governanceList,
   );
   const data = ProjectService.parseDataToProjectsInfo(
-    commonsWithoutMainParentCommon,
+    Object.values(spaces),
     userCommonIds,
     permissionsData,
   );
@@ -42,10 +40,13 @@ export const getProjects = async (
       hasPermissionToMoveToHere,
     }) => ({
       commonId: common.id,
-      image: common.image,
+      image: common.image || "",
       name: common.name,
-      directParent: common.directParent,
-      rootCommonId: common.rootCommonId,
+      directParent: {
+        commonId: common.parentId,
+        circleId: "",
+      },
+      rootCommonId: commonId,
       hasMembership,
       hasPermissionToAddProject,
       hasPermissionToLinkToHere,

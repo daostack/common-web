@@ -27,6 +27,7 @@ export enum Collection {
   Discussion = "discussion",
   Users = "users",
   Daos = "daos",
+  DaosFlatTree = "daosFlatTree",
   DiscussionMessage = "discussionMessage",
   Payments = "payments",
   Subscriptions = "subscriptions",
