@@ -30,9 +30,15 @@ const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
     canJoinProjectAutomatically,
     isJoinPending,
     onJoinProjectAutomatically,
-  } = useJoinProjectAutomatically(commonMember, common, parentCommon, {
-    shouldRedirectToFeed: true,
-  });
+  } = useJoinProjectAutomatically(
+    commonMember,
+    common,
+    parentCommon,
+    undefined,
+    {
+      shouldRedirectToFeed: true,
+    },
+  );
 
   return (
     <>
