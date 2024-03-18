@@ -7,7 +7,13 @@ import React, {
 } from "react";
 import classNames from "classnames";
 import isHotkey from "is-hotkey";
-import { Editable, ReactEditor, useSlate } from "slate-react";
+import {
+  DefaultPlaceholder,
+  Editable,
+  ReactEditor,
+  RenderPlaceholderProps,
+  useSlate,
+} from "slate-react";
 import { DOMRange } from "slate-react/dist/utils/dom";
 import { Element, Leaf } from "../../components";
 import { HOTKEYS, TextEditorSize } from "../../constants";
@@ -28,6 +34,24 @@ interface EditorProps {
   onKeyDown?: (event: KeyboardEvent<HTMLElement>) => void;
   scrollSelectionIntoView?: (editor: ReactEditor, domRange: DOMRange) => void;
 }
+
+const renderPlaceholder = ({
+  attributes,
+  children,
+}: RenderPlaceholderProps) => (
+  <DefaultPlaceholder
+    attributes={{
+      ...attributes,
+      style: {
+        ...attributes.style,
+        top: "50%",
+        transform: "translateY(-50%)",
+      },
+    }}
+  >
+    {children}
+  </DefaultPlaceholder>
+);
 
 const Editor: FC<EditorProps> = (props) => {
   const {
@@ -80,6 +104,7 @@ const Editor: FC<EditorProps> = (props) => {
       renderElement={renderElement}
       renderLeaf={renderLeaf}
       placeholder={placeholder}
+      renderPlaceholder={renderPlaceholder}
       spellCheck
       readOnly={readOnly || disabled}
       onBlur={onBlur}

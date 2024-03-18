@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import { useDispatch } from "react-redux";
 import classNames from "classnames";
+import { isEmpty } from "lodash";
 import { Element } from "slate";
 import { useLongPress } from "use-long-press";
 import { ChatService, Logger } from "@/services";
@@ -48,7 +49,12 @@ import { StaticLinkType, getUserName } from "@/shared/utils";
 import { InternalLinkData } from "@/shared/utils";
 import { convertBytes } from "@/shared/utils/convertBytes";
 import { EditMessageInput } from "../EditMessageInput";
-import { ChatMessageLinkify, Time } from "./components";
+import {
+  ChatMessageLinkify,
+  ReactWithEmoji,
+  Reactions,
+  Time,
+} from "./components";
 import { ChatMessageContext, ChatMessageContextValue } from "./context";
 import { getTextFromTextEditorString } from "./utils";
 import styles from "./ChatMessage.module.scss";
@@ -70,6 +76,12 @@ interface ChatMessageProps {
   onUserClick?: (userId: string) => void;
   onFeedItemClick?: (feedItemId: string) => void;
   onInternalLinkClick?: (data: InternalLinkData) => void;
+  chatChannelId?: string;
+}
+
+export interface DMChatMessageReaction {
+  emoji: string;
+  prevUserEmoji?: string;
 }
 
 const getStaticLinkByChatType = (chatType: ChatType): StaticLinkType => {
@@ -100,6 +112,7 @@ export default function DMChatMessage({
   onUserClick,
   onFeedItemClick,
   onInternalLinkClick,
+  chatChannelId,
 }: ChatMessageProps) {
   const dispatch = useDispatch();
   const { notify } = useNotification();
@@ -110,7 +123,9 @@ export default function DMChatMessage({
   }>();
   const [isEditMode, setEditMode] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showReactWithEmoji, setShowReactWithEmoji] = useState(false);
   const [isMessageEditLoading, setIsMessageEditLoading] = useState(false);
+  const [dmEmoji, setDMEmoji] = useState<DMChatMessageReaction | null>();
   const isTabletView = useIsTabletView();
   const isUserDiscussionMessage =
     checkIsUserDiscussionMessage(discussionMessage);
@@ -297,6 +312,8 @@ export default function DMChatMessage({
               styles.messageContent,
               styles.replyMessageContent,
               {
+                [styles.replyMessageContentNotCurrentUser]:
+                  isNotCurrentUserMessage,
                 [styles.replyMessageContentWithImage]: image,
                 [styles.replyMessageContentWithFile]: file,
                 [styles.messageContentRtl]: isRtlWithNoMentions(
@@ -393,11 +410,60 @@ export default function DMChatMessage({
     [isMessageEditLoading, handleCheckboxChange],
   );
 
+  const emojiButton = (
+    <ReactWithEmoji
+      showEmojiButton={showReactWithEmoji}
+      chatMessageId={discussionMessage.id}
+      chatChannelId={chatChannelId}
+      className={
+        isNotCurrentUserMessage
+          ? styles.reactWithEmoji
+          : styles.reactWithEmojiSelf
+      }
+      isNotCurrentUserMessage={isNotCurrentUserMessage}
+      setDMEmoji={setDMEmoji}
+    />
+  );
+
+  const finalReactionCounts = useMemo(() => {
+    if (!isUserDiscussionMessage) return;
+    if (!dmEmoji) {
+      return discussionMessage.reactionCounts;
+    }
+
+    const reactions = discussionMessage.reactionCounts;
+
+    if (!reactions) {
+      return {
+        [dmEmoji.emoji]: 1,
+      };
+    }
+
+    if (dmEmoji.prevUserEmoji === dmEmoji.emoji) {
+      reactions[dmEmoji.emoji] -= 1;
+    } else {
+      if (reactions[dmEmoji.emoji]) {
+        reactions[dmEmoji.emoji] += 1;
+      } else {
+        reactions[dmEmoji.emoji] = 1;
+      }
+
+      if (dmEmoji.prevUserEmoji) {
+        reactions[dmEmoji.prevUserEmoji] -= 1;
+      }
+    }
+
+    setDMEmoji(null);
+    return reactions;
+  }, [dmEmoji, discussionMessage]);
+
   return (
     <ChatMessageContext.Provider value={chatMessageContextValue}>
       <li
         id={discussionMessage.id}
         className={classNames(styles.container, className)}
+        onMouseEnter={() => setShowReactWithEmoji(true)}
+        onMouseLeave={() => setShowReactWithEmoji(false)}
       >
         <div
           className={classNames(styles.message, {
@@ -405,6 +471,7 @@ export default function DMChatMessage({
             [styles.systemMessageContainer]: isSystemMessage,
           })}
         >
+          {!isSystemMessage && !isNotCurrentUserMessage && emojiButton}
           {isNotCurrentUserMessage && isUserDiscussionMessage && (
             <div className={styles.iconWrapper} onClick={handleUserClick}>
               <UserAvatar
@@ -438,6 +505,9 @@ export default function DMChatMessage({
                   [styles.highlighted]: highlighted && isNotCurrentUserMessage,
                   [styles.highlightedOwn]:
                     highlighted && !isNotCurrentUserMessage,
+                  [styles.hasReactions]:
+                    isUserDiscussionMessage &&
+                    !isEmpty(discussionMessage.reactionCounts),
                 })}
                 {...getLongPressProps()}
               >
@@ -526,9 +596,14 @@ export default function DMChatMessage({
                     onDelete={onMessageDelete}
                   />
                 )}
+
+                {isUserDiscussionMessage && (
+                  <Reactions reactions={finalReactionCounts} />
+                )}
               </div>
             </>
           )}
+          {isNotCurrentUserMessage && emojiButton}
         </div>
       </li>
     </ChatMessageContext.Provider>

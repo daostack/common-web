@@ -21,4 +21,5 @@ export interface TextData {
   onFeedItemClick?: (feedItemId: string) => void;
   onMessageUpdate?: (message: TextEditorValue) => void;
   onInternalLinkClick?: (data: InternalLinkData) => void;
+  showPlainText?: boolean;
 }

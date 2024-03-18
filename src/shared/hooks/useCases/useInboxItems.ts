@@ -1,27 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
+import { Logger, UserService } from "@/services";
+import { addMetadataToItemsBatch } from "@/services/utils";
 import {
-  ChatService,
-  CommonFeedService,
-  CommonService,
-  FeedItemFollowsService,
-  Logger,
-  UserService,
-} from "@/services";
-import { FirestoreDataSource, InboxItemType } from "@/shared/constants";
-import {
-  ChatChannelLayoutItem,
   checkIsFeedItemFollowLayoutItemWithFollowData,
   FeedLayoutItemWithFollowData,
+  InboxItemsBatch as ItemsBatch,
 } from "@/shared/interfaces";
-import {
-  ChatChannel,
-  FeedItemFollow,
-  FeedItemFollowWithMetadata,
-  InboxItem,
-  Timestamp,
-} from "@/shared/models";
+import { InboxItem, Timestamp } from "@/shared/models";
 import {
   inboxActions,
   InboxItems,
@@ -35,163 +22,44 @@ interface Return
   refetch: () => void;
 }
 
-interface ItemBatch<T = InboxItem> {
-  item: T;
-  statuses: {
-    isAdded: boolean;
-    isRemoved: boolean;
+const filterItemsInTheMiddle = (info: {
+  fetchedInboxItems: InboxItem[];
+  unread: boolean;
+  currentData: FeedLayoutItemWithFollowData[] | null;
+}): { addedItems: InboxItem[]; removedItems: InboxItem[] } => {
+  const { fetchedInboxItems, unread, currentData } = info;
+  const newItems = currentData
+    ? fetchedInboxItems.filter((fetchedItem) =>
+        currentData.every((item) =>
+          checkIsFeedItemFollowLayoutItemWithFollowData(item)
+            ? item.feedItemFollowWithMetadata.id !== fetchedItem.itemId
+            : item.itemId !== fetchedItem.itemId,
+        ),
+      )
+    : fetchedInboxItems;
+
+  if (!unread) {
+    return {
+      addedItems: newItems,
+      removedItems: [],
+    };
+  }
+
+  const removedItems = fetchedInboxItems.filter(
+    (fetchedItem) =>
+      !fetchedItem.unread &&
+      (currentData || []).some((item) =>
+        checkIsFeedItemFollowLayoutItemWithFollowData(item)
+          ? item.feedItemFollowWithMetadata.id === fetchedItem.itemId
+          : item.itemId === fetchedItem.itemId,
+      ),
+  );
+  const filteredItems = newItems.filter((item) => item.unread);
+
+  return {
+    addedItems: filteredItems,
+    removedItems,
   };
-}
-
-type ItemsBatch = ItemBatch[];
-
-const addMetadataToFeedItemFollowItemsBatch = async (
-  batch: ItemBatch<FeedItemFollow>[],
-): Promise<ItemBatch<FeedLayoutItemWithFollowData>[]> => {
-  const data = await Promise.all(
-    batch.map(async ({ item }) => {
-      try {
-        const [common, feedItem] = await Promise.all([
-          CommonService.getCachedCommonById(item.commonId),
-          CommonFeedService.getCommonFeedItemById(
-            item.commonId,
-            item.feedItemId,
-          ),
-        ]);
-
-        return {
-          common,
-          feedItem,
-        };
-      } catch (error) {
-        return null;
-      }
-    }),
-  );
-  const parentCommons = await Promise.all(
-    data.map(async (item) => {
-      try {
-        return item?.common?.directParent?.commonId
-          ? await CommonService.getCachedCommonById(
-              item.common?.directParent?.commonId,
-            )
-          : null;
-      } catch (error) {
-        return null;
-      }
-    }),
-  );
-  const finalData = batch.map<ItemBatch<FeedItemFollowWithMetadata> | null>(
-    (batchItem) => {
-      const foundItem = data.find(
-        (item) => item?.feedItem?.id === batchItem.item.feedItemId,
-      );
-
-      if (!foundItem || !foundItem.common || !foundItem.feedItem) {
-        return null;
-      }
-
-      const foundParentCommon = foundItem.common.directParent?.commonId
-        ? parentCommons.find(
-            (parentCommon) =>
-              parentCommon?.id === foundItem.common?.directParent?.commonId,
-          )
-        : null;
-
-      return {
-        ...batchItem,
-        item: {
-          ...batchItem.item,
-          listVisibility: foundItem.common.listVisibility,
-          commonName: foundItem.common.name,
-          parentCommonName: foundParentCommon?.name,
-          commonAvatar: foundItem.common.image,
-          feedItem: foundItem.feedItem,
-        },
-      };
-    },
-  );
-
-  return finalData
-    .filter((item): item is ItemBatch<FeedItemFollowWithMetadata> =>
-      Boolean(item),
-    )
-    .map<ItemBatch<FeedLayoutItemWithFollowData>>((item) => ({
-      statuses: item.statuses,
-      item: {
-        type: InboxItemType.FeedItemFollow,
-        itemId: item.item.feedItemId,
-        feedItem: item.item.feedItem,
-        feedItemFollowWithMetadata: item.item,
-      },
-    }));
-};
-
-const addMetadataToChatChannelsBatch = (
-  batch: ItemBatch<ChatChannel>[],
-): ItemBatch<ChatChannelLayoutItem>[] =>
-  batch
-    .filter(({ item: chatChannel }) => chatChannel.messageCount > 0)
-    .map(({ item: chatChannel, statuses }) => ({
-      item: {
-        itemId: chatChannel.id,
-        type: InboxItemType.ChatChannel,
-        chatChannel: chatChannel,
-      },
-      statuses,
-    }));
-
-const addMetadataToItemsBatch = async (
-  userId: string,
-  batch: ItemsBatch,
-  feedItemIdsForNotListening: string[] = [],
-): Promise<ItemBatch<FeedLayoutItemWithFollowData>[]> => {
-  const batchWithFeedItemFollowItems = (
-    await Promise.all(
-      batch.map(async (batchItem) => {
-        const item =
-          batchItem.item.type === InboxItemType.FeedItemFollow
-            ? await FeedItemFollowsService.getFeedItemFollowDataById(
-                userId,
-                batchItem.item.itemId,
-                FirestoreDataSource.Cache,
-              )
-            : null;
-
-        return item ? { item, statuses: batchItem.statuses } : null;
-      }, []),
-    )
-  ).filter((item): item is ItemBatch<FeedItemFollow> => Boolean(item));
-  const batchWithChatChannelLayoutItems = (
-    await Promise.all(
-      batch.map(async (batchItem) => {
-        if (batchItem.item.type !== InboxItemType.ChatChannel) {
-          return null;
-        }
-
-        let item = await ChatService.getChatChannelById(
-          batchItem.item.itemId,
-          FirestoreDataSource.Cache,
-        );
-
-        if (item?.messageCount === 0) {
-          item = await ChatService.getChatChannelById(
-            batchItem.item.itemId,
-            FirestoreDataSource.Server,
-          );
-        }
-
-        return item ? { item, statuses: batchItem.statuses } : null;
-      }, []),
-    )
-  ).filter((item): item is ItemBatch<ChatChannel> => Boolean(item));
-  const batchWithFeedLayoutItemWithFollowItems =
-    await addMetadataToFeedItemFollowItemsBatch(batchWithFeedItemFollowItems);
-
-  return [
-    ...batchWithFeedLayoutItemWithFollowItems,
-    ...addMetadataToChatChannelsBatch(batchWithChatChannelLayoutItems),
-  ].filter(({ item }) => !feedItemIdsForNotListening.includes(item.itemId));
 };
 
 export const useInboxItems = (
@@ -249,6 +117,7 @@ export const useInboxItems = (
           data,
           firstDocTimestamp: startAt,
           lastDocTimestamp: endAt,
+          unread,
         } = inboxItems;
 
         if (!userId || !startAt || !endAt) {
@@ -261,29 +130,34 @@ export const useInboxItems = (
           endAt,
         });
 
-        if (!isMounted || inboxItemsRef.current.unread) {
+        if (!isMounted) {
           return;
         }
 
-        const filteredItems = data
-          ? fetchedInboxItems.filter((fetchedItem) =>
-              data.every((item) =>
-                checkIsFeedItemFollowLayoutItemWithFollowData(item)
-                  ? item.feedItemFollowWithMetadata.id !== fetchedItem.itemId
-                  : item.itemId !== fetchedItem.itemId,
-              ),
-            )
-          : fetchedInboxItems;
+        const { addedItems, removedItems } = filterItemsInTheMiddle({
+          fetchedInboxItems,
+          unread,
+          currentData: data,
+        });
+        const addedItemsWithStatuses = addedItems.map((item) => ({
+          item,
+          statuses: {
+            isAdded: false,
+            isRemoved: false,
+          },
+        }));
+        const removedItemsWithStatuses = removedItems.map((item) => ({
+          item,
+          statuses: {
+            isAdded: false,
+            isRemoved: true,
+          },
+        }));
 
-        addNewInboxItems(
-          filteredItems.map((item) => ({
-            item,
-            statuses: {
-              isAdded: false,
-              isRemoved: false,
-            },
-          })),
-        );
+        addNewInboxItems([
+          ...addedItemsWithStatuses,
+          ...removedItemsWithStatuses,
+        ]);
       } catch (err) {
         Logger.error(err);
       }
@@ -292,7 +166,7 @@ export const useInboxItems = (
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [inboxItems.unread]);
 
   useEffect(() => {
     if (!inboxItems.firstDocTimestamp || !userId) {

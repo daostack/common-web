@@ -62,7 +62,6 @@
   font-size: $small;
   color: var(--primary-text);
   max-width: 33.563rem;
-  margin-right: 2.8rem;
 
   &:hover {
     .menuArrowButton {
@@ -93,7 +92,6 @@
 
 .messageTextCurrentUser {
   background-color: var(--primary-fill);
-  margin-left: 2.8rem;
   margin-right: unset;
 
   .mentionText {
@@ -274,6 +272,10 @@
   background-color: var(--primary-fill);
 }
 
+.hasReactions {
+  margin-bottom: 1rem;
+}
+
 @keyframes highlighted {
   100% {
     border-color: transparent;
@@ -323,4 +325,17 @@
 
 .multipleEmojiText {
   font-size: $large;
+}
+
+.reactWithEmoji {
+  display: flex;
+  align-items: center;
+  margin-right: 2.8rem;
+}
+
+.reactWithEmojiSelf {
+  display: flex;
+  align-items: center;
+  margin-right: unset;
+  margin-left: 2.8rem;
 }

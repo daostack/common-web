@@ -6,6 +6,7 @@ import React, {
   ForwardRefRenderFunction,
   useImperativeHandle,
   forwardRef,
+  memo,
 } from "react";
 import { useSelector } from "react-redux";
 import { scroller, animateScroll } from "react-scroll";
@@ -55,6 +56,7 @@ interface ChatContentInterface {
   discussionId: string;
   feedItemId: string;
   isLoading: boolean;
+  isInitialLoading: boolean;
   onMessageDelete?: (messageId: string) => void;
   directParent?: DirectParent | null;
   onUserClick?: (userId: string) => void;
@@ -64,6 +66,7 @@ interface ChatContentInterface {
   isChatChannel: boolean;
   isMessageEditAllowed: boolean;
   fetchReplied: (messageId: string, endDate: Date) => Promise<void>;
+  chatChannelId?: string;
 }
 
 const isToday = (someDate: Date) => {
@@ -91,6 +94,7 @@ const ChatContent: ForwardRefRenderFunction<
     discussionId,
     feedItemId,
     isLoading,
+    isInitialLoading,
     onMessageDelete,
     directParent,
     onUserClick,
@@ -102,6 +106,7 @@ const ChatContent: ForwardRefRenderFunction<
     isMessageEditAllowed,
     fetchReplied,
     discussionMessages,
+    chatChannelId,
   },
   chatContentRef,
 ) => {
@@ -219,9 +224,9 @@ const ChatContent: ForwardRefRenderFunction<
     [scrollToContainerBottom],
   );
 
-  if (isLoading) {
+  if (isInitialLoading) {
     return (
-      <div className={styles.loaderContainer}>
+      <div className={styles.initialLoaderContainer}>
         <Loader delay={LOADER_APPEARANCE_DELAY} />
       </div>
     );
@@ -286,6 +291,7 @@ const ChatContent: ForwardRefRenderFunction<
                       onUserClick={onUserClick}
                       onFeedItemClick={onFeedItemClick}
                       onInternalLinkClick={onInternalLinkClick}
+                      chatChannelId={chatChannelId}
                     />
                   ) : (
                     <ChatMessage
@@ -329,7 +335,12 @@ const ChatContent: ForwardRefRenderFunction<
           </Transition>
         );
       })}
-      {!isLoading && isEmpty && (
+      {isLoading && (
+        <div className={styles.loaderContainer}>
+          <Loader />
+        </div>
+      )}
+      {!isInitialLoading && isEmpty && (
         <p className={styles.noMessagesText}>
           There are no messages here yet.
           <br />
@@ -341,4 +352,4 @@ const ChatContent: ForwardRefRenderFunction<
   );
 };
 
-export default forwardRef(ChatContent);
+export default memo(forwardRef(ChatContent));

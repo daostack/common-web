@@ -50,6 +50,8 @@ export const ApiEndpoint = {
   DeleteDiscussion: (id: string) => `/discussions/delete/${id}`,
   CreateDiscussionMessage: "/discussions/message",
   DeleteDiscussionMessage: "/discussions/delete",
+  CreateDiscussionMessageReaction: "/discussions/create-message-reaction",
+  DeleteDiscussionMessageReaction: "/discussions/delete-message-reaction",
   GetProposalEligibleVoters:
     "/proposals/get-all-eligible-proposal-voters/:proposalId",
   GetDMUsers: "/chat/users",
@@ -67,4 +69,6 @@ export const ApiEndpoint = {
     `/chat/channel/${channelId}/unseen`,
   MarkChatMessageAsSeen: (chatMessageId: string) =>
     `/chat/message/${chatMessageId}/seen`,
+  CreateChatMessageReaction: "/chat/create-message-reaction",
+  DeleteChatMessageReaction: "/chat/delete-message-reaction",
 };

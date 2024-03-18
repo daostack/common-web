@@ -37,6 +37,7 @@ export enum Collection {
   NotionIntegration = "daoNotionIntegrations",
   UserFeatureFlags = "userFeatureFlags",
   FeatureFlags = "featureFlags",
+  Reactions = "reaction",
 }
 
 export enum SubCollections {

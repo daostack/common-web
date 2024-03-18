@@ -2,49 +2,46 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { FeatureFlagService, Logger } from "@/services";
-import { FeatureFlags } from "../constants";
+import { FeatureFlagVisibility, FeatureFlags } from "../constants";
+import { FeatureFlagOptions } from "../models";
 
-export const useUserFeatureFlag = (flag: FeatureFlags) => {
+export const useFeatureFlag = () => {
+  const [flags, setFlags] = useState<Map<FeatureFlags, boolean> | undefined>();
   const user = useSelector(selectUser());
-  const [isFlagEnabled, setIsFlagEnabled] = useState<boolean>(false);
 
-  useEffect(() => {
-    (async () => {
-      if (user) {
-        try {
-          const userFlags = await FeatureFlagService.getUserFeatureFlags(
-            user?.uid,
-          );
-          setIsFlagEnabled(userFlags?.[flag] ?? false);
-        } catch (error) {
-          Logger.error(error);
-          setIsFlagEnabled(false);
-        }
-      }
-    })();
-  }, [user?.uid, flag]);
+  const checkIsEnabled = (flag: FeatureFlagOptions, teamIds: string[]): boolean => {
+    if(!flag.enabled) {
+      return false;
+    }
 
-  return {
-    isFlagEnabled,
-  };
-};
+    if(flag.visibility === FeatureFlagVisibility.ALL) {
+      return true;
+    } else if (flag.visibility === FeatureFlagVisibility.USERS) {
+      return user?.uid ? flag.users.includes(user?.uid) : false;
+    } else if (flag.visibility === FeatureFlagVisibility.TEAM) {
+      return user?.uid ? teamIds.includes(user?.uid) : false;
+    }
 
-export const useFeatureFlag = (flag: FeatureFlags) => {
-  const [isFlagEnabled, setIsFlagEnabled] = useState<boolean>(false);
+    return true;
+  }
 
   useEffect(() => {
     (async () => {
       try {
-        const feature = await FeatureFlagService.getFeatureFlag(flag);
-        setIsFlagEnabled(feature?.enabled ?? false);
+        const feature = await FeatureFlagService.getFeatureFlag();
+        const featureFlags = new Map<FeatureFlags, boolean>();
+
+        feature?.features.forEach((flag) => {
+          const isEnabled = checkIsEnabled(flag, feature.teamIds);
+          featureFlags.set(flag.feature, isEnabled)
+        })
+
+        setFlags(featureFlags);
       } catch (error) {
         Logger.error(error);
-        setIsFlagEnabled(false);
       }
     })();
-  }, [flag]);
+  }, [user]);
 
-  return {
-    isFlagEnabled,
-  };
+  return flags;
 };

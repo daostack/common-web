@@ -193,15 +193,12 @@ const authorizeUser = async ({
 const authorizeUserViaCredentials = async (
   data: FirebaseCredentials,
 ): Promise<firebase.User | null> => {
-  window.ReactNativeWebView.postMessage("toast-authorizeUserViaCredentials");
   let credential;
   if (data.customToken) {
-    window.ReactNativeWebView.postMessage("toast-customToken");
     const { user } = await firebase
       .auth()
       .signInWithCustomToken(data.customToken);
 
-    window.ReactNativeWebView.postMessage("toast-return user");
     return user;
   } else if (data.providerId === AuthProviderID.Apple) {
     const provider = new firebase.auth.OAuthProvider(data.providerId);
@@ -372,19 +369,50 @@ function* loginWithFirebaseUserSaga({
   }
 }
 
+export function* webviewLoginWithUserSaga({
+  payload,
+}: ReturnType<typeof actions.webviewLoginWithUser.request>) {
+  try {
+    yield put(actions.startAuthLoading());
+
+    const { user }: { user: User } = yield call(
+      verifyLoggedInUser,
+      payload.payload.user,
+      true,
+      AUTH_CODE_FOR_SIGN_UP,
+    );
+
+    const firebaseUser: User = yield call(getUserData, user.uid ?? "");
+    if (firebaseUser) {
+      yield put(actions.webviewLoginWithUser.success(firebaseUser));
+    }
+
+    if (payload.callback) {
+      payload.callback(true);
+    }
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.webviewLoginWithUser.failure(error));
+    }
+
+    if (payload.callback) {
+      payload.callback(false);
+    }
+  } finally {
+    yield put(actions.stopAuthLoading());
+  }
+}
+
 function* webviewLoginSaga({
   payload,
 }: ReturnType<typeof actions.webviewLogin.request>) {
   try {
     yield put(actions.startAuthLoading());
-    window.ReactNativeWebView.postMessage("toast-start-auth");
 
     const loggedFirebaseUser = yield call(
       authorizeUserViaCredentials,
       payload.payload,
     );
-
-    window.ReactNativeWebView.postMessage("toast-loggedFirebaseUser");
 
     const { user }: { user: User } = yield call(
       verifyLoggedInUser,
@@ -393,20 +421,16 @@ function* webviewLoginSaga({
       AUTH_CODE_FOR_SIGN_UP,
     );
 
-    window.ReactNativeWebView.postMessage("toast-verifyLoggedInUser");
     const firebaseUser: User = yield call(getUserData, user.uid ?? "");
-    window.ReactNativeWebView.postMessage("toast-firebaseUser");
     if (firebaseUser) {
-      window.ReactNativeWebView.postMessage("toast-firebaseUser-success");
       yield put(actions.webviewLogin.success(firebaseUser));
     }
 
     if (payload.callback) {
-      window.ReactNativeWebView.postMessage("toast-firebaseUser-callback");
       payload.callback(true);
     }
   } catch (error) {
-    window.ReactNativeWebView.postMessage("toast-webviewLoginSaga-error");
+    window?.ReactNativeWebView?.postMessage(`toast-${JSON.stringify(error)}`);
     if (isError(error)) {
       yield put(actions.webviewLogin.failure(error));
     }
@@ -511,7 +535,7 @@ function* logOut() {
   firebase.auth().signOut();
 
   if (window.ReactNativeWebView) {
-    window.ReactNativeWebView.postMessage(WebviewActions.logout);
+    window?.ReactNativeWebView?.postMessage(WebviewActions.logout);
   }
 
   history.push(ROUTE_PATHS.HOME);
@@ -578,6 +602,7 @@ function* deleteUser({
 }
 
 function* authSagas() {
+  yield takeLatest(actions.webviewLoginWithUser.request, webviewLoginWithUserSaga);
   yield takeLatest(actions.webviewLogin.request, webviewLoginSaga);
   yield takeLatest(actions.socialLogin.request, socialLoginSaga);
   yield takeLatest(

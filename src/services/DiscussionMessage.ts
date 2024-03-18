@@ -1,7 +1,11 @@
 import { ApiEndpoint, DocChange } from "@/shared/constants";
 import { UnsubscribeFunction } from "@/shared/interfaces";
-import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
-import { Collection, DiscussionMessage } from "@/shared/models";
+import {
+  CreateDiscussionMessageDto,
+  CreateDiscussionMessageReaction,
+  DeleteDiscussionMessageReaction,
+} from "@/shared/interfaces/api/discussionMessages";
+import { Collection, DiscussionMessage, UserReaction } from "@/shared/models";
 import {
   convertObjectDatesToFirestoreTimestamps,
   firestoreDataConverter,
@@ -12,6 +16,9 @@ import firebase from "@/shared/utils/firebase";
 import { Api } from ".";
 
 const converter = firestoreDataConverter<DiscussionMessage>();
+const getUserReactionConverter = firestoreDataConverter<UserReaction>();
+
+export const MESSAGES_NUMBER_IN_BATCH = 30;
 
 const getDiscussionMessagesByStatus = (
   snapshot: firebase.firestore.QuerySnapshot<DiscussionMessage>,
@@ -103,7 +110,7 @@ class DiscussionMessageService {
   ): UnsubscribeFunction => {
     let query = this.getDiscussionMessageCollection()
       .where("discussionId", "==", discussionId)
-      .limit(15)
+      .limit(MESSAGES_NUMBER_IN_BATCH)
       .orderBy("createdAt", "desc");
 
     if (lastVisible) {
@@ -128,7 +135,7 @@ class DiscussionMessageService {
   ): Promise<DiscussionMessage[]> => {
     const discussionMessages = await this.getDiscussionMessageCollection()
       .where("discussionId", "==", discussionId)
-      .limit(15)
+      .limit(MESSAGES_NUMBER_IN_BATCH)
       .orderBy("createdAt", "desc")
       .get();
 
@@ -165,6 +172,33 @@ class DiscussionMessageService {
 
     return convertObjectDatesToFirestoreTimestamps(data);
   };
+
+  public createMessageReaction = async (
+    payload: CreateDiscussionMessageReaction,
+  ): Promise<void> => {
+    await Api.post(ApiEndpoint.CreateDiscussionMessageReaction, payload);
+  };
+
+  public deleteMessageReaction = async (
+    payload: DeleteDiscussionMessageReaction,
+  ): Promise<void> => {
+    await Api.post(ApiEndpoint.DeleteDiscussionMessageReaction, payload);
+  };
+
+  public getUserReaction = async (
+    discussionMsgId: string,
+    userId: string,
+  ): Promise<UserReaction | null> =>
+    (
+      await firebase
+        .firestore()
+        .collection(Collection.DiscussionMessage)
+        .doc(discussionMsgId)
+        .collection(Collection.Reactions)
+        .withConverter(getUserReactionConverter)
+        .doc(userId)
+        .get()
+    ).data() || null;
 }
 
 export default new DiscussionMessageService();

@@ -1,4 +1,6 @@
 import { useCallback, useState } from "react";
+import { useSelector } from "react-redux";
+import { selectUser } from "@/pages/Auth/store/selectors";
 import { ChatService } from "@/services";
 import { useIsMounted, useLoadingState } from "@/shared/hooks";
 import { DMUser } from "@/shared/interfaces";
@@ -14,10 +16,12 @@ export const useDMUsers = (): Return => {
   const isMounted = useIsMounted();
   const [state, setState] = useLoadingState<DMUser[]>([]);
   const [error, setError] = useState<boolean>(false);
+  const user = useSelector(selectUser());
+  const userId = user?.uid;
 
   const fetchDMUsers = useCallback(
     async (force = true) => {
-      if (!force && (state.loading || state.fetched)) {
+      if ((!force && (state.loading || state.fetched)) || !userId) {
         return;
       }
 
@@ -30,7 +34,7 @@ export const useDMUsers = (): Return => {
       let dmUsers: DMUser[] = [];
 
       try {
-        dmUsers = await ChatService.getDMUsers();
+        dmUsers = await ChatService.getDMUsersByUserId(userId);
       } catch (error) {
         setError(true);
       } finally {
@@ -43,7 +47,7 @@ export const useDMUsers = (): Return => {
         }
       }
     },
-    [state],
+    [state, userId],
   );
 
   return {
