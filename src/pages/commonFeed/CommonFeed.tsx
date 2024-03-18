@@ -309,13 +309,18 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     return (
       <span
         className={classnames(styles.chatInputText, {
-          [styles.canNotJoin]: !canJoin,
+          [styles.infoText]: !canJoin,
         })}
         onClick={() => (canJoin ? onJoinCommon() : undefined)}
       >
-        {canJoin
-          ? "Join"
-          : "Joining this space is not open to everyone. Please contact the admins for assistance."}
+        {canJoin ? (
+          <span>Join</span>
+        ) : (
+          <span>
+            Joining this space is not open to everyone. Please contact the
+            admins for assistance
+          </span>
+        )}
       </span>
     );
   };

@@ -32,10 +32,10 @@ interface Options {
   shouldRedirectToFeed: boolean;
 }
 
-const checkIfCanJoinSpace = async (
+const checkIfCanJoinSpace = (
   commonGovernace?: Governance,
   rootGovernance?: Governance | null,
-): Promise<boolean> => {
+): boolean => {
   if (!commonGovernace || !rootGovernance) return false;
 
   const circleWithLowestTier = getCirclesWithLowestTier(
@@ -80,7 +80,7 @@ export const useJoinProjectAutomatically = (
 
   useEffect(() => {
     if (common?.rootCommonId) {
-      fetchRootGovernance(common?.rootCommonId);
+      fetchRootGovernance(common.rootCommonId);
     }
   }, [common?.rootCommonId]);
 
@@ -102,7 +102,7 @@ export const useJoinProjectAutomatically = (
 
   useEffect(() => {
     const checkIfCanJoin = async () => {
-      const res = await checkIfCanJoinSpace(commonGovernace, rootGovernance);
+      const res = checkIfCanJoinSpace(commonGovernace, rootGovernance);
       setCanJoin(res);
     };
 
