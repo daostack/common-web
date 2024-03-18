@@ -1,7 +1,7 @@
 import { Common } from "@/shared/models";
 
 export const compareCommonsByLastActivity = (
-  prevCommon: Common,
+  prevCommon: Pick<Common, "lastActivity">,
   nextCommon: Common,
 ): number => {
   if (!nextCommon.lastActivity) {

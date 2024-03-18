@@ -5,6 +5,7 @@ import {
   GovernanceService,
   ProjectService,
   UserActivityService,
+  UserService,
 } from "@/services";
 import { Awaited } from "@/shared/interfaces";
 import { User } from "@/shared/models";
@@ -20,16 +21,18 @@ const getProjectsInfo = async (
   data: ReturnType<typeof ProjectService.parseDataToProjectsInfo>;
   currentCommonId: string | null;
 }> => {
-  const allUserCommonMemberInfo = userId
-    ? await CommonService.getAllUserCommonMemberInfo(userId)
-    : [];
-  const userCommonIds = allUserCommonMemberInfo.map((item) => item.commonId);
-  const [userCommons, governanceList] = await Promise.all([
-    CommonService.getParentCommonsByIds(userCommonIds),
-    GovernanceService.getGovernanceListByCommonIds(userCommonIds),
-  ]);
+  const userMembershipsWithId = userId
+    ? await UserService.getUserMemberships(userId)
+    : null;
+  const userMemberships = userMembershipsWithId?.commons || {};
+  const userCommonIds = Object.keys(userMemberships);
+  const userCommons = await CommonService.getParentCommonsByIds(userCommonIds);
+  const userParentCommonIds = userCommons.map((item) => item.id);
+  const governanceList = await GovernanceService.getGovernanceListByCommonIds(
+    userParentCommonIds,
+  );
   const permissionsData = getPermissionsDataByAllUserCommonMemberInfo(
-    allUserCommonMemberInfo,
+    userMemberships,
     governanceList,
   );
   const data = ProjectService.parseDataToProjectsInfo(
