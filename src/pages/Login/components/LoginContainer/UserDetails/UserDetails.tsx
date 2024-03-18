@@ -316,14 +316,16 @@ const UserDetails: ForwardRefRenderFunction<
                     isRequired
                     styles={styles}
                   />
-                  <Dropdown
-                    className="user-details__text-field user-details__country"
-                    name="country"
-                    label="Country"
-                    placeholder="---Select country---"
-                    options={options}
-                    shouldBeFixed={isCountryDropdownFixed}
-                  />
+                  {!isNewUser && (
+                    <Dropdown
+                      className="user-details__text-field user-details__country"
+                      name="country"
+                      label="Country"
+                      placeholder="---Select country---"
+                      options={options}
+                      shouldBeFixed={isCountryDropdownFixed}
+                    />
+                  )}
                   <TextField
                     className="user-details__textarea"
                     id="intro"
