@@ -20,7 +20,7 @@ const WebViewLoginHandler: FC = () => {
         history.push(data?.redirectUrl);
       }
 
-      if (user) {
+      if (user && window?.ReactNativeWebView?.postMessage) {
         dispatch(
           webviewLoginWithUser.request({
             payload: {
