@@ -5,9 +5,9 @@ import { FollowFeedItemAction } from "@/shared/constants";
 import { FeedItemFollow } from "@/shared/models";
 import {
   selectCommonFeedFollows,
-  selectFollowFeedItemMutationState,
   FollowFeedItemMutationState,
   commonFeedFollowsActions,
+  selectFollowFeedItemMutationStateById,
 } from "@/store/states";
 import { getFollowFeedItemMutationId } from "@/store/states/commonFeedFollows/utils";
 import { useUserFeedItemFollowData } from "./useUserFeedItemFollowData";
@@ -45,20 +45,18 @@ export function useFeedItemFollow(
     fetchUserFeedItemFollowData,
     setUserFeedItemFollowData,
   } = useUserFeedItemFollowData({ feedItemId, userId }, { withSubscription });
-  const followFeedItemMutationState = useSelector(
-    selectFollowFeedItemMutationState,
-  );
   const mutationId =
     commonId && feedItemId
       ? getFollowFeedItemMutationId(commonId, feedItemId)
       : undefined;
+  const followFeedItemMutationState = useSelector(
+    selectFollowFeedItemMutationStateById(mutationId),
+  );
   const { isFollowingInProgress }: FollowFeedItemMutationState =
-    mutationId && followFeedItemMutationState[mutationId]
-      ? followFeedItemMutationState[mutationId]
-      : {
-          isFollowingInProgress: false,
-          isFollowingFinished: false,
-        };
+    followFeedItemMutationState || {
+      isFollowingInProgress: false,
+      isFollowingFinished: false,
+    };
 
   const isDisabled = !isUserFeedItemFollowDataFetched || isFollowingInProgress;
 
