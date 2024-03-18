@@ -38,6 +38,7 @@ export enum Collection {
   UserFeatureFlags = "userFeatureFlags",
   FeatureFlags = "featureFlags",
   Reactions = "reaction",
+  UserMemberships = "userMemberships",
 }
 
 export enum SubCollections {

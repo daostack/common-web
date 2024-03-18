@@ -1,4 +1,9 @@
-import { CommonService, GovernanceService, ProjectService } from "@/services";
+import {
+  CommonService,
+  GovernanceService,
+  ProjectService,
+  UserService,
+} from "@/services";
 import { ProjectsStateItem } from "../../../projects";
 import { getPermissionsDataByAllUserCommonMemberInfo } from "./getPermissionsDataByAllUserCommonMemberInfo";
 
@@ -12,15 +17,14 @@ export const getProjects = async (
   const commonsWithoutMainParentCommon = commonsWithSubCommons.filter(
     (common) => common.id !== commonId,
   );
-  const allUserCommonMemberInfo = userId
-    ? await CommonService.getAllUserCommonMemberInfo(userId)
-    : [];
-  const userCommonIds = allUserCommonMemberInfo.map((item) => item.commonId);
+  const userMemberships =
+    (userId && (await UserService.getUserMemberships(userId))?.commons) || {};
+  const userCommonIds = Object.keys(userMemberships);
   const governanceList = await GovernanceService.getGovernanceListByCommonIds(
     userCommonIds,
   );
   const permissionsData = getPermissionsDataByAllUserCommonMemberInfo(
-    allUserCommonMemberInfo,
+    userMemberships,
     governanceList,
   );
   const data = ProjectService.parseDataToProjectsInfo(

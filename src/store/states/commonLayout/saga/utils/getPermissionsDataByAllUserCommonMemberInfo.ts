@@ -1,6 +1,4 @@
-import { CommonService } from "@/services";
-import { Awaited } from "@/shared/interfaces";
-import { Governance } from "@/shared/models";
+import { Governance, UserMemberships } from "@/shared/models";
 
 type Return = {
   governance: Governance;
@@ -8,20 +6,21 @@ type Return = {
 }[];
 
 export const getPermissionsDataByAllUserCommonMemberInfo = (
-  allUserCommonMemberInfo: Awaited<
-    ReturnType<typeof CommonService.getAllUserCommonMemberInfo>
-  >,
+  userMemberships: UserMemberships["commons"],
   governanceList: Governance[],
 ): Return =>
-  allUserCommonMemberInfo.reduce<Return>((acc, commonMember) => {
-    const governance = governanceList.find(
-      (governance) => governance.commonId === commonMember.commonId,
-    );
+  Object.entries(userMemberships).reduce<Return>(
+    (acc, [commonId, { circleIds }]) => {
+      const governance = governanceList.find(
+        (governance) => governance.commonId === commonId,
+      );
 
-    return governance
-      ? acc.concat({
-          governance,
-          commonMemberCircleIds: commonMember.circleIds,
-        })
-      : acc;
-  }, []);
+      return governance
+        ? acc.concat({
+            governance,
+            commonMemberCircleIds: circleIds,
+          })
+        : acc;
+    },
+    [],
+  );
