@@ -45,11 +45,7 @@ import {
 import { CommonSidenavLayoutTabs } from "@/shared/layouts";
 import { CirclesPermissions, CommonFeed, CommonMember } from "@/shared/models";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
-import {
-  checkIsAutomaticJoin,
-  checkIsProject,
-  getCommonPageAboutTabPath,
-} from "@/shared/utils";
+import { checkIsAutomaticJoin, checkIsProject } from "@/shared/utils";
 import {
   cacheActions,
   commonActions,
@@ -282,7 +278,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
       );
     }
 
-    if (commonData?.rootCommon && !isRootCommonMember) {
+    if (commonData?.rootCommon && !isRootCommonMember && canJoin) {
       return (
         <span
           className={styles.chatInputText}
@@ -333,9 +329,6 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
       isRootCommonMember
     ) {
       return;
-    }
-    if (!isRootCommonAutomaticAcceptance || !hasPublicItems) {
-      history.replace(getCommonPageAboutTabPath(commonId));
     }
   }, [
     isCommonDataFetched,
