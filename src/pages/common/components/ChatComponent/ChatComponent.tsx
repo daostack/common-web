@@ -91,6 +91,7 @@ interface ChatComponentInterface {
   feedItemId: string;
   isAuthorized?: boolean;
   isHidden: boolean;
+  count?: number;
   seenOnce?: boolean;
   seen?: boolean;
   onMessagesAmountChange?: (newMessagesAmount: number) => void;
@@ -138,6 +139,7 @@ export default function ChatComponent({
   feedItemId,
   isAuthorized,
   isHidden = false,
+  count,
   seenOnce,
   seen,
   onMessagesAmountChange,
@@ -606,7 +608,7 @@ export default function ChatComponent({
       timeoutId.current = null;
     }
 
-    if (seenOnce && notEmpty(seen) && seen) {
+    if (seenOnce && notEmpty(seen) && seen && count === 0) {
       return;
     }
 
