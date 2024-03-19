@@ -100,6 +100,13 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     [onUserSelect, commonId],
   );
 
+  const handleActiveItemDataChange = useCallback(
+    (data: FeedLayoutItemChangeData) => {
+      onActiveItemDataChange?.(data, commonId);
+    },
+    [onActiveItemDataChange, commonId],
+  );
+
   useEffect(() => {
     if (
       feedItemFollow.isUserFeedItemFollowDataFetched &&
@@ -123,13 +130,6 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
   ) {
     return null;
   }
-
-  const handleActiveItemDataChange = useCallback(
-    (data: FeedLayoutItemChangeData) => {
-      onActiveItemDataChange?.(data, commonId);
-    },
-    [onActiveItemDataChange, commonId],
-  );
 
   const generalProps = {
     ref,
