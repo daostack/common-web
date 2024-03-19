@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { FollowFeedItemAction } from "@/shared/constants";
@@ -60,21 +60,24 @@ export function useFeedItemFollow(
 
   const isDisabled = !isUserFeedItemFollowDataFetched || isFollowingInProgress;
 
-  const onFollowToggle = (action?: FollowFeedItemAction) => {
-    if (feedItemId && commonId) {
-      dispatch(
-        commonFeedFollowsActions.followFeedItem.request({
-          feedItemId,
-          commonId,
-          action:
-            action ||
-            (isFollowing
-              ? FollowFeedItemAction.Unfollow
-              : FollowFeedItemAction.Follow),
-        }),
-      );
-    }
-  };
+  const onFollowToggle = useCallback(
+    (action?: FollowFeedItemAction) => {
+      if (feedItemId && commonId) {
+        dispatch(
+          commonFeedFollowsActions.followFeedItem.request({
+            feedItemId,
+            commonId,
+            action:
+              action ||
+              (isFollowing
+                ? FollowFeedItemAction.Unfollow
+                : FollowFeedItemAction.Follow),
+          }),
+        );
+      }
+    },
+    [feedItemId, commonId, isFollowing],
+  );
 
   useEffect(() => {
     if (!userId) {
@@ -98,11 +101,20 @@ export function useFeedItemFollow(
     }
   }, [isUserFeedItemFollowDataFetched, userFeedItemFollowData]);
 
-  return {
-    isFollowing,
-    isDisabled,
-    onFollowToggle,
-    isUserFeedItemFollowDataFetched,
-    userFeedItemFollowData,
-  };
+  return useMemo(
+    () => ({
+      isFollowing,
+      isDisabled,
+      onFollowToggle,
+      isUserFeedItemFollowDataFetched,
+      userFeedItemFollowData,
+    }),
+    [
+      isFollowing,
+      isDisabled,
+      onFollowToggle,
+      isUserFeedItemFollowDataFetched,
+      userFeedItemFollowData,
+    ],
+  );
 }
