@@ -294,6 +294,20 @@ class CommonService {
     return finalCommons;
   };
 
+  public getCommonsByRootCommonId = async (
+    rootCommonId: string,
+  ): Promise<Common[]> => {
+    const snapshot = await firebase
+      .firestore()
+      .collection(Collection.Daos)
+      .where("state", "==", CommonState.ACTIVE)
+      .where("rootCommonId", "==", rootCommonId)
+      .withConverter(converter)
+      .get();
+
+    return snapshot.docs.map((doc) => doc.data());
+  };
+
   // Fetch all parent commons. Order: from root parent common to lowest ones
   public getAllParentCommonsForCommon = async (
     commonToCheck: Pick<Common, "directParent"> | string,
