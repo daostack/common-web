@@ -1,4 +1,10 @@
-import React, { forwardRef, memo, useEffect, useMemo } from "react";
+import React, {
+  forwardRef,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+} from "react";
 import { useFeedItemFollow } from "@/shared/hooks/useCases";
 import { FeedLayoutItemChangeData } from "@/shared/interfaces";
 import {
@@ -94,6 +100,13 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     [onUserSelect, commonId],
   );
 
+  const handleActiveItemDataChange = useCallback(
+    (data: FeedLayoutItemChangeData) => {
+      onActiveItemDataChange?.(data, commonId);
+    },
+    [onActiveItemDataChange, commonId],
+  );
+
   useEffect(() => {
     if (
       feedItemFollow.isUserFeedItemFollowDataFetched &&
@@ -117,10 +130,6 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
   ) {
     return null;
   }
-
-  const handleActiveItemDataChange = (data: FeedLayoutItemChangeData) => {
-    onActiveItemDataChange?.(data, commonId);
-  };
 
   const generalProps = {
     ref,
