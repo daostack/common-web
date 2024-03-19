@@ -4,10 +4,10 @@ import { selectUser } from "@/pages/Auth/store/selectors";
 import { FollowFeedItemAction } from "@/shared/constants";
 import { FeedItemFollow } from "@/shared/models";
 import {
-  selectCommonFeedFollows,
   FollowFeedItemMutationState,
   commonFeedFollowsActions,
   selectFollowFeedItemMutationStateById,
+  selectCommonFeedFollowsByIds,
 } from "@/store/states";
 import { getFollowFeedItemMutationId } from "@/store/states/commonFeedFollows/utils";
 import { useUserFeedItemFollowData } from "./useUserFeedItemFollowData";
@@ -36,9 +36,9 @@ export function useFeedItemFollow(
   const dispatch = useDispatch();
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const follows = useSelector(selectCommonFeedFollows);
-  const isFollowing =
-    feedItemId && commonId ? !!follows[commonId]?.[feedItemId] : false;
+  const isFollowing = useSelector(
+    selectCommonFeedFollowsByIds(commonId, feedItemId),
+  );
   const {
     fetched: isUserFeedItemFollowDataFetched,
     data: userFeedItemFollowData,

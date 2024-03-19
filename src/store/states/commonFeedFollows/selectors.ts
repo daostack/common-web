@@ -11,3 +11,10 @@ export const selectFollowFeedItemMutationStateById =
 
 export const selectCommonFeedFollows = (state: AppState) =>
   state.commonFeedFollows.follows;
+
+export const selectCommonFeedFollowsByIds =
+  (commonId?: string, feedItemId?: string) => (state: AppState) =>
+    (commonId &&
+      feedItemId &&
+      state.commonFeedFollows.follows[commonId]?.[feedItemId]) ||
+    false;
