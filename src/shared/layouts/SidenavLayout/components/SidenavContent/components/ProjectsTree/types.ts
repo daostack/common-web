@@ -7,6 +7,7 @@ export interface Item {
   name: string;
   nameRightContent?: ReactNode;
   path: string;
+  hasAccessToSpace?: boolean;
   hasMembership?: boolean;
   hasPermissionToAddProject?: boolean;
   notificationsAmount?: number;

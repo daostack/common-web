@@ -7,6 +7,7 @@ export interface ProjectsStateItem {
   name: string;
   directParent: Common["directParent"];
   rootCommonId?: string;
+  hasAccessToSpace?: boolean;
   hasMembership?: boolean;
   hasPermissionToAddProject?: boolean;
   hasPermissionToLinkToHere?: boolean;

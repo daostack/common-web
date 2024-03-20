@@ -7,6 +7,7 @@ import { GovernanceActions } from "@/shared/constants";
 import { Common } from "@/shared/models";
 import { generateCirclesDataForCommonMember } from "@/shared/utils";
 import { ProjectsStateItem } from "@/store/states";
+import { SpaceListVisibility } from "@/shared/interfaces";
 
 interface Data {
   activeItemId: string;
@@ -51,9 +52,12 @@ const getProjectItemFromCommon = async (
     CommonService.getCommonMemberByUserId(common.id, userId),
   ]);
 
+  const hasMembership = Boolean(commonMember);
+
   return {
     ...baseItem,
-    hasMembership: Boolean(commonMember),
+    hasMembership,
+    hasAccessToSpace: hasMembership || common.listVisibility === SpaceListVisibility.Public,
     hasPermissionToAddProject: Boolean(
       governance &&
         commonMember &&

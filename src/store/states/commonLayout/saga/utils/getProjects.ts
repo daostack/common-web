@@ -33,6 +33,7 @@ export const getProjects = async (
   return data.map(
     ({
       common,
+      hasAccessToSpace,
       hasMembership,
       hasPermissionToAddProject,
       hasPermissionToLinkToHere,
@@ -43,6 +44,7 @@ export const getProjects = async (
       name: common.name,
       directParent: common.directParent,
       rootCommonId: common.rootCommonId,
+      hasAccessToSpace,
       hasMembership,
       hasPermissionToAddProject,
       hasPermissionToLinkToHere,
@@ -50,8 +52,8 @@ export const getProjects = async (
       notificationsAmount: 0,
       listVisibility: common.listVisibility
     }),
-  ).filter((common) => {
-    if(common.listVisibility === SpaceListVisibility.Members && !common.hasMembership) {
+  ).filter(({hasAccessToSpace}) => {
+    if(!hasAccessToSpace) {
       return false;
     }
 

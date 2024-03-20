@@ -20,35 +20,35 @@ const WebViewLoginHandler: FC = () => {
         history.push(data?.redirectUrl);
       }
 
-      if (user) {
-        dispatch(
-          webviewLoginWithUser.request({
-            payload: {
-              user,
-            },
-            callback: (isLoggedIn) => {
-              if (isLoggedIn) {
-                const isDarkThemePreferred = window.matchMedia(
-                  `(prefers-color-scheme: ${Theme.Dark})`,
-                );
+      // if (user) {
+      //   dispatch(
+      //     webviewLoginWithUser.request({
+      //       payload: {
+      //         user,
+      //       },
+      //       callback: (isLoggedIn) => {
+      //         if (isLoggedIn) {
+      //           const isDarkThemePreferred = window.matchMedia(
+      //             `(prefers-color-scheme: ${Theme.Dark})`,
+      //           );
 
-                if (isDarkThemePreferred) {
-                  window?.ReactNativeWebView?.postMessage(Theme.Dark);
-                }
-                window?.ReactNativeWebView?.postMessage(
-                  WebviewActions.loginSuccess,
-                );
-              } else {
-                window?.ReactNativeWebView?.postMessage(
-                  WebviewActions.loginError,
-                );
-              }
-            },
-          }),
-        );
+      //           if (isDarkThemePreferred) {
+      //             window?.ReactNativeWebView?.postMessage(Theme.Dark);
+      //           }
+      //           window?.ReactNativeWebView?.postMessage(
+      //             WebviewActions.loginSuccess,
+      //           );
+      //         } else {
+      //           window?.ReactNativeWebView?.postMessage(
+      //             WebviewActions.loginError,
+      //           );
+      //         }
+      //       },
+      //     }),
+      //   );
 
-        return;
-      }
+      //   return;
+      // }
 
       if (!data?.providerId && !data?.customToken && !user) {
         return;

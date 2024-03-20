@@ -1,10 +1,12 @@
 import React, { FC, ReactNode, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import classNames from "classnames";
+import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { useFeedItemContext } from "@/pages/common";
 import { useRoutesContext } from "@/shared/contexts";
 import { useCommon, useFeedItemFollow } from "@/shared/hooks/useCases";
 import { OpenIcon } from "@/shared/icons";
+import { SpaceListVisibility } from "@/shared/interfaces";
 import { CommonFeed } from "@/shared/models";
 import { CommonAvatar, parseStringToTextEditorValue } from "@/shared/ui-kit";
 import { checkIsProject } from "@/shared/utils";
@@ -22,6 +24,11 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
   const { getCommonPagePath } = useRoutesContext();
   const { renderFeedItemBaseContent } = useFeedItemContext();
   const { data: common, fetched: isCommonFetched, fetchCommon } = useCommon();
+  const {
+    fetched: isCommonMemberFetched,
+    data: commonMember,
+    fetchCommonMember,
+  } = useCommonMember();
   const feedItemFollow = useFeedItemFollow(
     { feedItemId: item.id, commonId: item.data.id },
     { withSubscription: true },
@@ -61,8 +68,17 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
   );
 
   useEffect(() => {
+    fetchCommonMember(commonId);
     fetchCommon(commonId);
   }, [commonId]);
+
+  if (
+    isCommonMemberFetched &&
+    !commonMember &&
+    common?.listVisibility === SpaceListVisibility.Members
+  ) {
+    return null;
+  }
 
   return (
     (

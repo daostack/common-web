@@ -30,7 +30,6 @@ const Item: FC<ItemProps> = (props) => {
     FeatureFlags.AdvancedSettings,
   );
 
-  console.log("--item", item);
   switch (item.type) {
     case CreationFormItemType.TextField:
       return (
