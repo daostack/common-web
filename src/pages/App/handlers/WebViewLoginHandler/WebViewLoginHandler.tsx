@@ -31,22 +31,21 @@ const WebViewLoginHandler: FC = () => {
                 const isDarkThemePreferred = window.matchMedia(
                   `(prefers-color-scheme: ${Theme.Dark})`,
                 );
-              }
 
-              if (isDarkThemePreferred) {
-                   window?.ReactNativeWebView?.postMessage(Theme.Dark);
-                 }
-                 window?.ReactNativeWebView?.postMessage(
-                   WebviewActions.loginSuccess,
-                 );
-               } else {
-                 window?.ReactNativeWebView?.postMessage(
-                   WebviewActions.loginError,
-                 );
-               }
-             },
-           }),
-         );
+                if (isDarkThemePreferred) {
+                  window?.ReactNativeWebView?.postMessage(Theme.Dark);
+                }
+                window?.ReactNativeWebView?.postMessage(
+                  WebviewActions.loginSuccess,
+                );
+              } else {
+                window?.ReactNativeWebView?.postMessage(
+                  WebviewActions.loginError,
+                );
+              }
+            },
+          }),
+        );
 
         return;
       }
