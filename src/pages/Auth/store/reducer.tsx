@@ -6,7 +6,7 @@ import * as actions from "./actions";
 type Action = ActionType<typeof actions>;
 
 const initialState: AuthStateType = {
-  authentificated: Boolean(localStorage.getItem("token")),
+  isAuthenticated: Boolean(localStorage.getItem("token")),
   user: localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user") || "")
     : false,
@@ -30,7 +30,7 @@ const reducer = createReducer<AuthStateType, Action>(initialState)
     ],
     (state, action) =>
       produce(state, (nextState) => {
-        nextState.authentificated = true;
+        nextState.isAuthenticated = true;
         nextState.user = action.payload;
         nextState.userStreamsWithNotificationsAmount =
           action.payload.inboxCounter ?? null;
@@ -38,7 +38,7 @@ const reducer = createReducer<AuthStateType, Action>(initialState)
   )
   .handleAction(actions.logOut, (state) =>
     produce(state, (nextState) => {
-      nextState.authentificated = false;
+      nextState.isAuthenticated = false;
       nextState.user = null;
       nextState.userPhoneNumber = null;
       nextState.userStreamsWithNotificationsAmount = null;

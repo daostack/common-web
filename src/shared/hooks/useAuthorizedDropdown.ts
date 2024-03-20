@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { DropdownRef } from "@/shared/components";
 import { setLoginModalState } from "../../pages/Auth/store/actions";
 import {
-  authentificated,
+  selectIsAuthenticated,
   selectLoginModalState,
 } from "../../pages/Auth/store/selectors";
 
@@ -17,7 +17,7 @@ const useAuthorizedDropdown = (
   const [shouldShowDropdownOnLoginClose, setShouldShowDropdownOnLoginClose] =
     useState(false);
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector(authentificated());
+  const isAuthenticated = useSelector(selectIsAuthenticated());
   const { isShowing: isLoginModalShowing } = useSelector(
     selectLoginModalState(),
   );

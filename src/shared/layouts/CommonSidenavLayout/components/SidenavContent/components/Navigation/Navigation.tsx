@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import classNames from "classnames";
 import {
-  authentificated,
+  selectIsAuthenticated,
   selectUserStreamsWithNotificationsAmount,
 } from "@/pages/Auth/store/selectors";
 import { ROUTE_PATHS } from "@/shared/constants";
@@ -22,7 +22,7 @@ const Navigation: FC<NavigationProps> = (props) => {
   const { className } = props;
   const location = useLocation();
   const { getInboxPagePath } = useRoutesContext();
-  const isAuthenticated = useSelector(authentificated());
+  const isAuthenticated = useSelector(selectIsAuthenticated());
   const userStreamsWithNotificationsAmount = useSelector(
     selectUserStreamsWithNotificationsAmount(),
   );

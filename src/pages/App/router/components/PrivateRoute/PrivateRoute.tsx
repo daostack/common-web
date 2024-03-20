@@ -1,7 +1,10 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Route, Redirect, RouteProps } from "react-router-dom";
-import { authentificated, selectUserRoles } from "@/pages/Auth/store/selectors";
+import {
+  selectIsAuthenticated,
+  selectUserRoles,
+} from "@/pages/Auth/store/selectors";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { checkMandatoryRoles, checkAnyMandatoryRoles } from "@/shared/utils";
 import { PrivateRouteConfiguration } from "../../types";
@@ -28,7 +31,7 @@ const PrivateRoute: React.FunctionComponent<PrivateRouteProps> = (props) => {
     ...rest
   } = props;
   const userRoles = useSelector(selectUserRoles());
-  const authenticated = useSelector(authentificated());
+  const authenticated = useSelector(selectIsAuthenticated());
   const hasNecessaryRoles =
     (!mandatoryRoles || checkMandatoryRoles(mandatoryRoles, userRoles)) &&
     (!anyMandatoryRoles ||

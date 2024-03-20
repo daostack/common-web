@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import { authentificated } from "@/pages/Auth/store/selectors";
+import { selectIsAuthenticated } from "@/pages/Auth/store/selectors";
 import { useRoutesContext } from "@/shared/contexts";
 import {
   commonLayoutActions,
@@ -38,7 +38,7 @@ export const useProjectsData = (): Return => {
   const history = useHistory();
   const location = history.location;
   const { getCommonPagePath } = useRoutesContext();
-  const isAuthenticated = useSelector(authentificated());
+  const isAuthenticated = useSelector(selectIsAuthenticated());
   const currentCommonId = useSelector(selectCommonLayoutCommonId);
   const { commons, areCommonsLoading, areCommonsFetched } = useSelector(
     selectCommonLayoutCommonsState,
