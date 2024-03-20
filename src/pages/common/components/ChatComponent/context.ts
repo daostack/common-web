@@ -14,6 +14,7 @@ export interface ChatItem {
   circleVisibility?: string[];
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
   lastSeenAt?: CommonFeedObjectUserUnique["lastSeenAt"];
+  count?: number;
   seenOnce?: boolean;
   seen?: boolean;
   hasUnseenMention?: CommonFeedObjectUserUnique["hasUnseenMention"];
