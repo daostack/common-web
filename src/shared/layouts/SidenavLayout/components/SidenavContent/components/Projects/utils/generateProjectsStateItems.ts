@@ -21,7 +21,6 @@ export const getItemFromProjectsStateItem = (
       )
     : [];
 
-    console.log('---projectsStateItem',projectsStateItem);
   return {
     id: projectsStateItem.commonId,
     image: projectsStateItem.image,

@@ -2,12 +2,14 @@ import React, { FC, useCallback, useEffect, useMemo, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useCommonUpdate } from "@/pages/OldCommon/components/CommonListContainer/EditCommonModal/useCases";
 import { ConfirmationModal } from "@/shared/components";
+import { FeatureFlags } from "@/shared/constants";
 import { usePreventReload } from "@/shared/hooks";
 import {
   useGovernanceByCommonId,
   useNotionIntegration,
   useProjectCreation,
 } from "@/shared/hooks/useCases";
+import { useFeatureFlag } from "@/shared/hooks/useFeatureFlag";
 import {
   Circles,
   Common,
@@ -32,8 +34,6 @@ import { UnsavedChangesPrompt } from "../UnsavedChangesPrompt";
 import { getConfiguration } from "./configuration";
 import { ProjectCreationFormValues } from "./types";
 import styles from "./ProjectCreationForm.module.scss";
-import { FeatureFlags } from "@/shared/constants";
-import { useFeatureFlag } from "@/shared/hooks/useFeatureFlag";
 
 const NOTION_INTEGRATION_TOKEN_MASK = "************";
 
@@ -142,7 +142,9 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
     isNotionIntegrationEnabled: Boolean(initialCommon?.notion),
   });
   const featureFlags = useFeatureFlag();
-  const isAdvancedSettingsEnabled = featureFlags?.get(FeatureFlags.AdvancedSettings);
+  const isAdvancedSettingsEnabled = featureFlags?.get(
+    FeatureFlags.AdvancedSettings,
+  );
   const isLoading =
     isProjectCreationLoading ||
     isCommonUpdateLoading ||
@@ -176,41 +178,40 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
       tier: circle.hierarchy?.tier,
     }));
 
-  const advancedSettings: SpaceAdvancedSettingsIntermediate =
-    useMemo(() => {
-      if (initialCommon?.advancedSettings) {
-        return initialCommon?.advancedSettings
-      }
+  const advancedSettings: SpaceAdvancedSettingsIntermediate = useMemo(() => {
+    if (initialCommon?.advancedSettings) {
+      return initialCommon?.advancedSettings;
+    }
 
-      return {
-        permissionGovernanceId: isParentIsRoot
-          ? parentGovernanceId
-          : rootGovernance?.id,
-        circles: rootCommonRoles.map((role, index) => {
-          return {
-            circleId: role.circleId,
-            circleName: `${role.circleName}s`,
-            selected: true,
-            synced: index === 0 ? true : false,
-            ...(roles[index]?.circleId && {
-              inheritFrom: {
-                governanceId: parentGovernanceId,
-                circleId: roles[index]?.circleId,
-                circleName: `${roles[index]?.circleName}s`,
-                tier: roles[index]?.tier,
-              },
-            }),
-          };
-        }),
-      };
-    }, [
-      rootGovernance?.id,
-      parentGovernanceId,
-      rootCommonRoles,
-      isParentIsRoot,
-      roles,
-      initialCommon?.advancedSettings
-    ]);
+    return {
+      permissionGovernanceId: isParentIsRoot
+        ? parentGovernanceId
+        : rootGovernance?.id,
+      circles: rootCommonRoles.map((role, index) => {
+        return {
+          circleId: role.circleId,
+          circleName: `${role.circleName}s`,
+          selected: true,
+          synced: index === 0 ? true : false,
+          ...(roles[index]?.circleId && {
+            inheritFrom: {
+              governanceId: parentGovernanceId,
+              circleId: roles[index]?.circleId,
+              circleName: `${roles[index]?.circleName}s`,
+              tier: roles[index]?.tier,
+            },
+          }),
+        };
+      }),
+    };
+  }, [
+    rootGovernance?.id,
+    parentGovernanceId,
+    rootCommonRoles,
+    isParentIsRoot,
+    roles,
+    initialCommon?.advancedSettings,
+  ]);
 
   const initialValues = useMemo(
     () =>

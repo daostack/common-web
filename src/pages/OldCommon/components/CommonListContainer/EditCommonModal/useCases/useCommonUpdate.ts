@@ -17,6 +17,7 @@ import {
   UpdateCommonData,
   UpdateCommonPayload,
 } from "../../../../interfaces";
+import { SpaceListVisibility } from "@/shared/interfaces";
 
 interface Return {
   isCommonUpdateLoading: boolean;
@@ -100,6 +101,7 @@ const useCommonUpdate = (commonId?: string): Return => {
               : undefined,
             gallery,
             links: updatedData.links,
+            listVisibility: updatedData.listVisibility ?? SpaceListVisibility.Public,
           },
         };
 

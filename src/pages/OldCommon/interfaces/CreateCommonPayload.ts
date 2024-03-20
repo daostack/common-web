@@ -1,4 +1,4 @@
-import { UploadFile } from "@/shared/interfaces";
+import { SpaceListVisibility, UploadFile } from "@/shared/interfaces";
 import {
   BaseRule,
   CommonLink,
@@ -67,6 +67,7 @@ export interface IntermediateUpdateCommonData {
   roles?: Roles;
   notion?: NotionIntegrationPayloadIntermediate;
   advancedSettings?: SpaceAdvancedSettingsIntermediate;
+  listVisibility?: SpaceListVisibility;
 }
 
 export interface UpdateCommonData {
@@ -77,6 +78,7 @@ export interface UpdateCommonData {
   video?: CommonLink;
   gallery?: CommonLink[];
   links?: CommonLink[];
+  listVisibility?: SpaceListVisibility;
 }
 
 export interface UpdateCommonPayload {
