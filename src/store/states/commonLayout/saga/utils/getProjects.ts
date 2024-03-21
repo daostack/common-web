@@ -4,6 +4,7 @@ import {
   ProjectService,
   UserService,
 } from "@/services";
+import { SpaceListVisibility } from "@/shared/interfaces";
 import { ProjectsStateItem } from "../../../projects";
 import { getPermissionsDataByAllUserCommonMemberInfo } from "./getPermissionsDataByAllUserCommonMemberInfo";
 
@@ -31,27 +32,32 @@ export const getProjects = async (
     permissionsData,
   );
 
-  return data.map(
-    ({
-      common,
-      hasMembership,
-      hasPermissionToAddProject,
-      hasPermissionToLinkToHere,
-      hasPermissionToMoveToHere,
-    }) => ({
-      commonId: common.id,
-      image: common.image || "",
-      name: common.name,
-      directParent: {
-        commonId: common.parentId,
-        circleId: "",
-      },
-      rootCommonId: commonId,
-      hasMembership,
-      hasPermissionToAddProject,
-      hasPermissionToLinkToHere,
-      hasPermissionToMoveToHere,
-      notificationsAmount: 0,
-    }),
-  );
+  return data
+    .map(
+      ({
+        common,
+        hasAccessToSpace,
+        hasMembership,
+        hasPermissionToAddProject,
+        hasPermissionToLinkToHere,
+        hasPermissionToMoveToHere,
+      }) => ({
+        commonId: common.id,
+        image: common.image || "",
+        name: common.name,
+        directParent: {
+          commonId: common.parentId,
+          circleId: "",
+        },
+        rootCommonId: commonId,
+        hasAccessToSpace,
+        hasMembership,
+        hasPermissionToAddProject,
+        hasPermissionToLinkToHere,
+        hasPermissionToMoveToHere,
+        notificationsAmount: 0,
+        listVisibility: common.listVisibility,
+      }),
+    )
+    .filter(({ hasAccessToSpace }) => hasAccessToSpace);
 };

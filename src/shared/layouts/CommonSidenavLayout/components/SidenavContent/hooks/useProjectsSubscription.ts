@@ -4,6 +4,7 @@ import { CommonEvent, CommonEventEmitter } from "@/events";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { CommonService, GovernanceService, Logger } from "@/services";
 import { GovernanceActions } from "@/shared/constants";
+import { SpaceListVisibility } from "@/shared/interfaces";
 import { Common } from "@/shared/models";
 import { generateCirclesDataForCommonMember } from "@/shared/utils";
 import { ProjectsStateItem } from "@/store/states";
@@ -51,9 +52,13 @@ const getProjectItemFromCommon = async (
     CommonService.getCommonMemberByUserId(common.id, userId),
   ]);
 
+  const hasMembership = Boolean(commonMember);
+
   return {
     ...baseItem,
-    hasMembership: Boolean(commonMember),
+    hasMembership,
+    hasAccessToSpace:
+      hasMembership || common.listVisibility === SpaceListVisibility.Public,
     hasPermissionToAddProject: Boolean(
       governance &&
         commonMember &&

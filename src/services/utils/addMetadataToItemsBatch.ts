@@ -73,6 +73,7 @@ const addMetadataToFeedItemFollowItemsBatch = async (
         item: {
           ...batchItem.item,
           commonName: foundItem.common.name,
+          listVisibility: foundItem.common.listVisibility,
           parentCommonName: foundParentCommon?.name,
           commonAvatar: foundItem.common.image,
           feedItem: foundItem.feedItem,

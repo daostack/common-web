@@ -1,5 +1,5 @@
 import { ApiEndpoint, GovernanceActions } from "@/shared/constants";
-import { CreateProjectPayload } from "@/shared/interfaces";
+import { CreateProjectPayload, SpaceListVisibility } from "@/shared/interfaces";
 import { Common, CommonState, Governance } from "@/shared/models";
 import { generateCirclesDataForCommonMember } from "@/shared/utils";
 import Api from "./Api";
@@ -15,6 +15,7 @@ class ProjectService {
     }[],
   ): {
     common: T;
+    hasAccessToSpace: boolean;
     hasMembership: boolean;
     hasPermissionToAddProject?: boolean;
     hasPermissionToLinkToHere?: boolean;
@@ -27,11 +28,16 @@ class ProjectService {
           (item) => item.governance.commonId === common.id,
         );
 
+        const hasMembership = commonIdsWithMembership.some(
+          (commonId) => commonId === common.id,
+        );
+
         return {
           common,
-          hasMembership: commonIdsWithMembership.some(
-            (commonId) => commonId === common.id,
-          ),
+          hasAccessToSpace:
+            hasMembership ||
+            common.listVisibility === SpaceListVisibility.Public,
+          hasMembership,
           hasPermissionToAddProject:
             permissionsItem &&
             generateCirclesDataForCommonMember(
@@ -55,7 +61,9 @@ class ProjectService {
 
   public getUserProjectsInfo = async (
     userId: string,
-  ): Promise<{ common: Common; hasMembership: boolean }[]> => {
+  ): Promise<
+    { common: Common; hasMembership: boolean; hasAccessToSpace: boolean }[]
+  > => {
     const userCommonIds = await CommonService.getUserCommonIds(userId);
     const commons = await CommonService.getCommonsWithSubCommons(userCommonIds);
 
@@ -65,7 +73,9 @@ class ProjectService {
   public getProjectsInfo = async (
     userId?: string,
     additionalIdToFetch?: string,
-  ): Promise<{ common: Common; hasMembership: boolean }[]> => {
+  ): Promise<
+    { common: Common; hasMembership: boolean; hasAccessToSpace: boolean }[]
+  > => {
     const finalProjectsInfo = userId
       ? await this.getUserProjectsInfo(userId)
       : [];

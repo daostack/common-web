@@ -6,7 +6,10 @@ import React, {
   useMemo,
 } from "react";
 import { useFeedItemFollow } from "@/shared/hooks/useCases";
-import { FeedLayoutItemChangeData } from "@/shared/interfaces";
+import {
+  FeedLayoutItemChangeData,
+  SpaceListVisibility,
+} from "@/shared/interfaces";
 import {
   Circles,
   CirclesPermissions,
