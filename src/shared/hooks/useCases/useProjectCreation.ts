@@ -5,6 +5,7 @@ import { ErrorCode } from "@/shared/constants";
 import {
   CreateProjectPayload,
   IntermediateCreateProjectPayload,
+  SpaceListVisibility,
 } from "@/shared/interfaces";
 import { Common } from "@/shared/models";
 import {
@@ -85,6 +86,7 @@ export const useProjectCreation = (): Return => {
               creationData.advancedSettings?.permissionGovernanceId,
             circles: advancedSettingsCirclesPayload,
           },
+          listVisibility: creationData.listVisibility ?? SpaceListVisibility.Public,
         };
         const createdProject = await ProjectService.createNewProject(
           parentCommonId,

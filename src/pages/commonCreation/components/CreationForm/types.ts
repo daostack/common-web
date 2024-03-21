@@ -73,6 +73,11 @@ export interface AdvancedSettingsFormItem
   type: CreationFormItemType.AdvancedSettings;
 }
 
+export interface SecretSpaceFormItem
+  extends BaseFormItem<{name: string;}> {
+  type: CreationFormItemType.SecretSpace;
+}
+
 export type CreationFormItem =
   | TextFieldFormItem
   | TextEditorFormItem
@@ -80,4 +85,5 @@ export type CreationFormItem =
   | LinksFormItem
   | RolesFormItem
   | NotionIntegrationFormItem
-  | AdvancedSettingsFormItem;
+  | AdvancedSettingsFormItem
+  | SecretSpaceFormItem;

@@ -16,7 +16,7 @@
 .toggle-switch__label {
     font-size: 14px;
     margin-left: 8px;
-    color: $secondary-blue
+    color: var(--primary-text)
 }
 
 .toggle-switch__container__checkbox {
@@ -52,6 +52,10 @@
     background-color: #fff;
 }
 
-.toggle-switch__container__checkbox:checked+.toggle-switch__container__body {
+.toggle-switch__container__checkbox-blue:checked+.toggle-switch__container__body {
     background-color: $purple-2;
+}
+
+.toggle-switch__container__checkbox-pink:checked+.toggle-switch__container__body {
+    background-color: $c-pink-light-2;
 }

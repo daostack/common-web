@@ -1,3 +1,4 @@
+import { SpaceListVisibility } from "@/shared/interfaces";
 import { Common } from "@/shared/models";
 
 export interface ProjectsStateItem {
@@ -6,11 +7,13 @@ export interface ProjectsStateItem {
   name: string;
   directParent: Common["directParent"];
   rootCommonId?: string;
+  hasAccessToSpace?: boolean;
   hasMembership?: boolean;
   hasPermissionToAddProject?: boolean;
   hasPermissionToLinkToHere?: boolean;
   hasPermissionToMoveToHere?: boolean;
   notificationsAmount?: number;
+  listVisibility?: SpaceListVisibility
 }
 
 export interface ProjectsState {

@@ -167,6 +167,13 @@ export const getConfiguration = (options: Options): CreationFormItem[] => {
         notionIntegration.syncLease?.status === SyncLeaseStatus.Pending,
     );
 
+    items.unshift({
+      type: CreationFormItemType.SecretSpace,
+      props: {
+        name: "secretSpace"
+      }
+    })
+
     items.push({
       type: CreationFormItemType.NotionIntegration,
       props: {

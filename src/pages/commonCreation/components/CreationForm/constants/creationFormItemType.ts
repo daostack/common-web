@@ -6,4 +6,5 @@ export enum CreationFormItemType {
   Roles = "Roles",
   NotionIntegration = "NotionIntegration",
   AdvancedSettings = "AdvancedSettings",
+  SecretSpace = "SecretSpace",
 }
