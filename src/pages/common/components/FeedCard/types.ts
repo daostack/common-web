@@ -5,5 +5,6 @@ export interface FeedCardSettings {
 }
 
 export interface FeedCardRef {
+  itemId: string;
   scrollToItem: () => void;
 }
