@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { LoginModalType } from "../../pages/Auth/interface";
 import { setLoginModalState } from "../../pages/Auth/store/actions";
 import {
-  authentificated,
+  selectIsAuthenticated,
   selectLoginModalState,
 } from "../../pages/Auth/store/selectors";
 
@@ -18,7 +18,7 @@ const useAuthorizedModal = (): AuthorizedModalReturn => {
   const [shouldShowModalOnLoginClose, setShouldShowModalOnLoginClose] =
     useState(false);
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector(authentificated());
+  const isAuthenticated = useSelector(selectIsAuthenticated());
   const { isShowing: isLoginModalShowing } = useSelector(
     selectLoginModalState(),
   );

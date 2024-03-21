@@ -5,7 +5,10 @@ import { FundingAllocationStatus } from "@/shared/models/governance/proposals";
 import { Loader } from "../../../../shared/components";
 import { Proposal } from "../../../../shared/models";
 import { setLoginModalState } from "../../../Auth/store/actions";
-import { authentificated, selectUser } from "../../../Auth/store/selectors";
+import {
+  selectIsAuthenticated,
+  selectUser,
+} from "../../../Auth/store/selectors";
 import { fetchCommonDetail } from "../../../OldCommon/store/api";
 import { fetchProposal } from "../../api";
 import { ProposalDetails } from "../../components/ProposalDetails";
@@ -33,7 +36,7 @@ export default function SubmitInvoicesContainer() {
   const [proposal, setProposal] = useState<Proposal | null>(null);
   const [commonName, setCommonName] = useState("");
   const user = useSelector(selectUser());
-  const isAuthenticated = useSelector(authentificated());
+  const isAuthenticated = useSelector(selectIsAuthenticated());
 
   useEffect(() => {
     if (!isAuthenticated) {

@@ -1,6 +1,7 @@
 import React, {
   CSSProperties,
   FC,
+  ReactElement,
   ReactNode,
   useCallback,
   useEffect,
@@ -265,6 +266,12 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     [dispatch],
   );
 
+  const onJoinCommon = checkIsProject(commonData?.common)
+    ? canJoinProjectAutomatically
+      ? onJoinProjectAutomatically
+      : onProjectJoinModalOpen
+    : onCommonJoinModalOpen;
+
   const renderChatInput = (): ReactNode => {
     if (commonMember) {
       return;
@@ -300,12 +307,6 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
       );
     }
 
-    const onJoinCommon = checkIsProject(commonData?.common)
-      ? canJoinProjectAutomatically
-        ? onJoinProjectAutomatically
-        : onProjectJoinModalOpen
-      : onCommonJoinModalOpen;
-
     return (
       <span
         className={classnames(styles.chatInputText, {
@@ -322,6 +323,16 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
           </span>
         )}
       </span>
+    );
+  };
+
+  const renderLayoutTabs = (): ReactElement => {
+    return (
+      <div className={classnames(styles.tabs, styles.layoutTabs)}>
+        <span className={styles.layoutTabsText} onClick={() => onJoinCommon()}>
+          Join
+        </span>
+      </div>
     );
   };
 
@@ -481,7 +492,10 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
         <div className={styles.centerWrapper}>
           <Loader delay={LOADER_APPEARANCE_DELAY} />
         </div>
-        <CommonSidenavLayoutTabs className={styles.tabs} />
+        <CommonSidenavLayoutTabs
+          className={styles.tabs}
+          renderLayoutTabs={renderLayoutTabs}
+        />
       </>
     );
   }
@@ -496,7 +510,10 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
         <div className={styles.centerWrapper}>
           <NotFound />
         </div>
-        <CommonSidenavLayoutTabs className={styles.tabs} />
+        <CommonSidenavLayoutTabs
+          className={styles.tabs}
+          renderLayoutTabs={renderLayoutTabs}
+        />
       </>
     );
   }
@@ -575,7 +592,10 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
         renderChatInput={renderChatInput}
         onPullToRefresh={onPullToRefresh}
       />
-      <CommonSidenavLayoutTabs className={styles.tabs} />
+      <CommonSidenavLayoutTabs
+        className={styles.tabs}
+        renderLayoutTabs={renderLayoutTabs}
+      />
       {commonData.common && commonData.governance && (
         <>
           <MembershipRequestModal

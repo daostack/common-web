@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { useSelector } from "react-redux";
 import { Route, Redirect, RouteProps } from "react-router-dom";
-import { authentificated } from "@/pages/Auth/store/selectors";
+import { selectIsAuthenticated } from "@/pages/Auth/store/selectors";
 import { ROUTE_PATHS } from "@/shared/constants";
 
 interface OnlyPublicRouteProps extends RouteProps {
@@ -12,7 +12,7 @@ const DEFAULT_REDIRECT_PATH = ROUTE_PATHS.HOME;
 
 const OnlyPublicRoute: FC<OnlyPublicRouteProps> = (props) => {
   const { component: Component, redirectPath, children, ...rest } = props;
-  const authenticated = useSelector(authentificated());
+  const authenticated = useSelector(selectIsAuthenticated());
 
   return (
     <Route
