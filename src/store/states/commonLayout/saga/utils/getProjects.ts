@@ -52,11 +52,5 @@ export const getProjects = async (
       notificationsAmount: 0,
       listVisibility: common.listVisibility
     }),
-  ).filter(({hasAccessToSpace}) => {
-    if(!hasAccessToSpace) {
-      return false;
-    }
-
-    return true;
-  });
+  ).filter(({hasAccessToSpace}) => hasAccessToSpace);
 };
