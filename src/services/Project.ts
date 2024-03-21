@@ -12,7 +12,7 @@ class ProjectService {
     commons: T[],
     commonIdsWithMembership: string[] = [],
     permissionsData?: {
-      governance: Governance;
+      governance: Pick<Governance, "commonId" | "circles">;
       commonMemberCircleIds: string[];
     }[],
   ): {
@@ -29,10 +29,15 @@ class ProjectService {
         const permissionsItem = permissionsData?.find(
           (item) => item.governance.commonId === common.id,
         );
-
         const hasMembership = commonIdsWithMembership.some(
           (commonId) => commonId === common.id,
         );
+        const circlesPermissions =
+          permissionsItem &&
+          generateCirclesDataForCommonMember(
+            permissionsItem.governance.circles,
+            permissionsItem.commonMemberCircleIds,
+          );
 
         return {
           common,
@@ -41,23 +46,13 @@ class ProjectService {
             common.listVisibility === SpaceListVisibility.Public,
           hasMembership,
           hasPermissionToAddProject:
-            permissionsItem &&
-            generateCirclesDataForCommonMember(
-              permissionsItem.governance.circles,
-              permissionsItem.commonMemberCircleIds,
-            ).allowedActions[GovernanceActions.CREATE_PROJECT],
+            circlesPermissions?.allowedActions[
+              GovernanceActions.CREATE_PROJECT
+            ],
           hasPermissionToLinkToHere:
-            permissionsItem &&
-            generateCirclesDataForCommonMember(
-              permissionsItem.governance.circles,
-              permissionsItem.commonMemberCircleIds,
-            ).allowedActions[GovernanceActions.LINK_TO_HERE],
+            circlesPermissions?.allowedActions[GovernanceActions.LINK_TO_HERE],
           hasPermissionToMoveToHere:
-            permissionsItem &&
-            generateCirclesDataForCommonMember(
-              permissionsItem.governance.circles,
-              permissionsItem.commonMemberCircleIds,
-            ).allowedActions[GovernanceActions.MOVE_TO_HERE],
+            circlesPermissions?.allowedActions[GovernanceActions.MOVE_TO_HERE],
         };
       });
 

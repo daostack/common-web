@@ -1,9 +1,5 @@
-import {
-  CommonService,
-  GovernanceService,
-  ProjectService,
-  UserService,
-} from "@/services";
+import { CommonService, ProjectService, UserService } from "@/services";
+import { Governance } from "@/shared/models";
 import { ProjectsStateItem } from "../../../projects";
 import { getPermissionsDataByAllUserCommonMemberInfo } from "./getPermissionsDataByAllUserCommonMemberInfo";
 
@@ -18,9 +14,11 @@ export const getProjects = async (
   const spaces = commonFlatTree?.spaces || {};
   const userMemberships = userMembershipsWithId?.commons || {};
   const userCommonIds = Object.keys(userMemberships);
-  const governanceList = await GovernanceService.getGovernanceListByCommonIds(
-    userCommonIds,
-  );
+  const governanceList: Pick<Governance, "commonId" | "circles">[] =
+    Object.values(spaces).map((item) => ({
+      commonId: item.id,
+      circles: item.circles,
+    }));
   const permissionsData = getPermissionsDataByAllUserCommonMemberInfo(
     userMemberships,
     governanceList,

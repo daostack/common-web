@@ -1,13 +1,13 @@
 import { Governance, UserMemberships } from "@/shared/models";
 
 type Return = {
-  governance: Governance;
+  governance: Pick<Governance, "commonId" | "circles">;
   commonMemberCircleIds: string[];
 }[];
 
 export const getPermissionsDataByAllUserCommonMemberInfo = (
   userMemberships: UserMemberships["commons"],
-  governanceList: Governance[],
+  governanceList: Pick<Governance, "commonId" | "circles">[],
 ): Return =>
   Object.entries(userMemberships).reduce<Return>(
     (acc, [commonId, { circleIds }]) => {
