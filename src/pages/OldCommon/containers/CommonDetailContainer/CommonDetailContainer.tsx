@@ -45,7 +45,10 @@ import {
 } from "@/shared/utils";
 import CheckIcon from "../../../../shared/icons/check.icon";
 import { LoginModalType } from "../../../Auth/interface";
-import { authentificated, selectUser } from "../../../Auth/store/selectors";
+import {
+  selectIsAuthenticated,
+  selectUser,
+} from "../../../Auth/store/selectors";
 import {
   AboutTabComponent,
   PreviewInformationList,
@@ -177,7 +180,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   const isDiscussionsLoaded = useSelector(selectIsDiscussionsLoaded());
   const isProposalsLoaded = useSelector(selectIsProposalLoaded());
   const screenSize = useSelector(getScreenSize());
-  const isAuthenticated = useSelector(authentificated());
+  const isAuthenticated = useSelector(selectIsAuthenticated());
   const user = useSelector(selectUser());
   const activeTab = useSelector(selectCommonActiveTab());
   const {

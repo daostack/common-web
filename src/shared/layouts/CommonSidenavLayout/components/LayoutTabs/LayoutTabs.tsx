@@ -1,9 +1,9 @@
-import React, { CSSProperties, FC, ReactNode } from "react";
+import React, { CSSProperties, FC, ReactElement, ReactNode } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import classNames from "classnames";
 import {
-  authentificated,
+  selectIsAuthenticated,
   selectUser,
   selectUserStreamsWithNotificationsAmount,
 } from "@/pages/Auth/store/selectors";
@@ -23,6 +23,7 @@ import styles from "./LayoutTabs.module.scss";
 interface LayoutTabsProps {
   className?: string;
   activeTab?: LayoutTab;
+  renderLayoutTabs?: () => ReactElement | null;
 }
 
 interface TabConfiguration {
@@ -33,11 +34,11 @@ interface TabConfiguration {
 }
 
 const LayoutTabs: FC<LayoutTabsProps> = (props) => {
-  const { className } = props;
+  const { className, renderLayoutTabs } = props;
   const history = useHistory();
   const { getCommonPagePath, getInboxPagePath, getProfilePagePath } =
     useRoutesContext();
-  const isAuthenticated = useSelector(authentificated());
+  const isAuthenticated = useSelector(selectIsAuthenticated());
   const userStreamsWithNotificationsAmount = useSelector(
     selectUserStreamsWithNotificationsAmount(),
   );
@@ -74,6 +75,8 @@ const LayoutTabs: FC<LayoutTabsProps> = (props) => {
       icon: <InboxIcon active={activeTab === LayoutTab.Inbox} />,
       notificationsAmount: finalUserStreamsWithNotificationsAmount || null,
     });
+  } else {
+    return renderLayoutTabs ? renderLayoutTabs() : null;
   }
 
   const itemStyles = {

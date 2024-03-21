@@ -5,7 +5,7 @@ import { LoginModalState } from "../../Auth/interface";
 export interface AuthStateType {
   user: User | null;
   userPhoneNumber: string | null;
-  authentificated: boolean;
+  isAuthenticated: boolean;
   loginModalState: LoginModalState;
   isAuthLoading: boolean;
   authProvider: AuthProvider | null;

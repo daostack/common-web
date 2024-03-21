@@ -1,7 +1,10 @@
 import React, { FC } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
-import { authentificated, selectUser } from "@/pages/Auth/store/selectors";
+import {
+  selectIsAuthenticated,
+  selectUser,
+} from "@/pages/Auth/store/selectors";
 import { CommonLogo, Footer, FooterVariant } from "@/shared/ui-kit";
 import { getUserName } from "@/shared/utils";
 import { Navigation, Projects, UserInfo } from "./components";
@@ -13,7 +16,7 @@ interface SidenavContentProps {
 
 const SidenavContent: FC<SidenavContentProps> = (props) => {
   const { className } = props;
-  const isAuthenticated = useSelector(authentificated());
+  const isAuthenticated = useSelector(selectIsAuthenticated());
   const user = useSelector(selectUser());
   const separatorEl = <div className={styles.separator} />;
 
