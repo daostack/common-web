@@ -1,11 +1,12 @@
 import { BaseEntity } from "./BaseEntity";
-import { CommonState } from "./Common";
+import { Common, CommonState } from "./Common";
 
 interface CommonProperties {
   id: string;
   name: string;
-  state: CommonState;
   image?: string;
+  state: CommonState;
+  listVisibility: Common["listVisibility"] | undefined;
 }
 
 export interface CommonFlatTree extends BaseEntity, CommonProperties {

@@ -6,7 +6,9 @@ import Api from "./Api";
 import CommonService from "./Common";
 
 class ProjectService {
-  public parseDataToProjectsInfo = <T extends Pick<Common, "id" | "state">>(
+  public parseDataToProjectsInfo = <
+    T extends Pick<Common, "id" | "state" | "listVisibility">,
+  >(
     commons: T[],
     commonIdsWithMembership: string[] = [],
     permissionsData?: {

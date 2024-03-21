@@ -4,7 +4,6 @@ import {
   ProjectService,
   UserService,
 } from "@/services";
-import { SpaceListVisibility } from "@/shared/interfaces";
 import { ProjectsStateItem } from "../../../projects";
 import { getPermissionsDataByAllUserCommonMemberInfo } from "./getPermissionsDataByAllUserCommonMemberInfo";
 
