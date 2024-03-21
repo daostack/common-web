@@ -12,7 +12,7 @@ import { UploadFile } from "./UploadFile";
 
 export enum SpaceListVisibility {
   Public = "public",
-  Members = "members"
+  Members = "members",
 }
 
 export interface CreateProjectPayload {

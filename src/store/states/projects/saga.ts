@@ -20,7 +20,7 @@ function* getProjects(action: ReturnType<typeof actions.getProjects.request>) {
       additionalIdToFetch,
     )) as Awaited<ReturnType<typeof ProjectService.getProjectsInfo>>;
     const projectsData: ProjectsStateItem[] = data.map(
-      ({ common, hasMembership, hasAccessToSpace}) => ({
+      ({ common, hasMembership, hasAccessToSpace }) => ({
         commonId: common.id,
         image: common.image,
         name: common.name,

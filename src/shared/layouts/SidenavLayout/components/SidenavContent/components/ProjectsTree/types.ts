@@ -1,5 +1,5 @@
-import { SpaceListVisibility } from "@/shared/interfaces";
 import { ReactNode } from "react";
+import { SpaceListVisibility } from "@/shared/interfaces";
 
 export interface Item {
   id: string;

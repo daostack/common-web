@@ -27,7 +27,7 @@ const fetchProjectsInfoByActiveCommonId = async (
     directParent: common.directParent,
     rootCommonId: common.rootCommonId,
     hasMembership: true,
-    listVisibility: common?.listVisibility
+    listVisibility: common?.listVisibility,
   }));
 };
 

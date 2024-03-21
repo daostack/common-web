@@ -73,8 +73,7 @@ export interface AdvancedSettingsFormItem
   type: CreationFormItemType.AdvancedSettings;
 }
 
-export interface SecretSpaceFormItem
-  extends BaseFormItem<{name: string;}> {
+export interface SecretSpaceFormItem extends BaseFormItem<{ name: string }> {
   type: CreationFormItemType.SecretSpace;
 }
 

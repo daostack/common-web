@@ -65,7 +65,9 @@ export const useProjectsData = (): Return => {
     [currentCommon, generateItemCommonPagePath],
   );
   const items = useMemo(() => {
-    const filteredProjects = projects.filter((project) => project.hasAccessToSpace && Boolean(project.directParent));
+    const filteredProjects = projects.filter(
+      (project) => project.hasAccessToSpace && Boolean(project.directParent),
+    );
 
     const [item] = generateProjectsTreeItems(
       currentCommon ? filteredProjects.concat(currentCommon) : filteredProjects,

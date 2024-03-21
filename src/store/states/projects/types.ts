@@ -13,7 +13,7 @@ export interface ProjectsStateItem {
   hasPermissionToLinkToHere?: boolean;
   hasPermissionToMoveToHere?: boolean;
   notificationsAmount?: number;
-  listVisibility?: SpaceListVisibility
+  listVisibility?: SpaceListVisibility;
 }
 
 export interface ProjectsState {

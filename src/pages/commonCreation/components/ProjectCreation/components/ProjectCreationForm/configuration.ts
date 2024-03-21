@@ -170,9 +170,9 @@ export const getConfiguration = (options: Options): CreationFormItem[] => {
     items.unshift({
       type: CreationFormItemType.SecretSpace,
       props: {
-        name: "secretSpace"
-      }
-    })
+        name: "secretSpace",
+      },
+    });
 
     items.push({
       type: CreationFormItemType.NotionIntegration,

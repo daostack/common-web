@@ -54,7 +54,8 @@ export const generateProjectsTreeItems = (
   const mainItems = itemsGroupedByCommonParentId.get(null) || [];
 
   return mainItems.reduce<Item[]>(
-    (acc, item) => acc.concat(
+    (acc, item) =>
+      acc.concat(
         getItemFromProjectsStateItem(
           item,
           generatePath,
