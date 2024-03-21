@@ -73,9 +73,8 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
   }, [commonId]);
 
   if (
-    isCommonMemberFetched &&
-    !commonMember &&
-    common?.listVisibility === SpaceListVisibility.Members
+    !isCommonMemberFetched ||
+    (!commonMember && common?.listVisibility === SpaceListVisibility.Members)
   ) {
     return null;
   }
