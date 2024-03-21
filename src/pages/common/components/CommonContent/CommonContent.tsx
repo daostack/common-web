@@ -106,7 +106,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
     ) {
       canGoBack ? goBack() : history.push(getInboxPagePath());
     }
-  }, [isCommonMember, common, history, goBack, canGoBack]);
+  }, [isCommonMember, common.listVisibility, history.push, goBack, canGoBack]);
 
   useEffect(() => {
     return () => {
