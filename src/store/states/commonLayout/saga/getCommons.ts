@@ -8,17 +8,25 @@ import {
   UserService,
 } from "@/services";
 import { Awaited } from "@/shared/interfaces";
-import { User } from "@/shared/models";
+import { Common, User } from "@/shared/models";
 import { compareCommonsByLastActivity, isError } from "@/shared/utils";
 import { ProjectsStateItem } from "../../projects";
 import * as actions from "../actions";
 import { getPermissionsDataByAllUserCommonMemberInfo } from "./utils";
 
+type ProjectsInfoData = {
+  common: Common;
+  hasMembership: boolean;
+  hasPermissionToAddProject?: boolean;
+  hasPermissionToLinkToHere?: boolean;
+  hasPermissionToMoveToHere?: boolean;
+}[];
+
 const getProjectsInfo = async (
   commonId: string,
   userId?: string,
 ): Promise<{
-  data: ReturnType<typeof ProjectService.parseDataToProjectsInfo>;
+  data: ProjectsInfoData;
   currentCommonId: string | null;
 }> => {
   const userMembershipsWithId = userId
