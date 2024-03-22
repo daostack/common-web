@@ -11,6 +11,7 @@ import {
   SubCollections,
   Timestamp,
   User,
+  UserMemberships,
 } from "@/shared/models";
 import {
   firestoreDataConverter,
@@ -23,6 +24,7 @@ import { addMetadataToItemsBatch, waitForUserToBeLoaded } from "./utils";
 
 const converter = firestoreDataConverter<User>();
 const inboxConverter = firestoreDataConverter<InboxItem>();
+const userMembershipsConverter = firestoreDataConverter<UserMemberships>();
 
 class UserService {
   private getUsersCollection = () =>
@@ -33,6 +35,12 @@ class UserService {
       .doc(userId)
       .collection(SubCollections.Inbox)
       .withConverter(inboxConverter);
+
+  private getUserMembershipsCollection = () =>
+    firebase
+      .firestore()
+      .collection(Collection.UserMemberships)
+      .withConverter(userMembershipsConverter);
 
   public updateUser = async (user: User): Promise<User> => {
     const body: UpdateUserDto = {
@@ -271,6 +279,16 @@ class UserService {
       }));
       callback(data);
     });
+  };
+
+  public getUserMemberships = async (
+    userId: string,
+  ): Promise<UserMemberships | null> => {
+    const snapshot = await this.getUserMembershipsCollection()
+      .doc(userId)
+      .get();
+
+    return snapshot.data() || null;
   };
 }
 

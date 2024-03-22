@@ -36,7 +36,7 @@ import {
   stopAuthLoading,
 } from "../../../Auth/store/actions";
 import {
-  authentificated,
+  selectIsAuthenticated,
   selectIsAuthLoading,
   selectLoginModalState,
   selectUser,
@@ -58,7 +58,7 @@ const LoginContainer: FC = () => {
   const queryParams = useQueryParams();
   const location = useLocation();
   const { removeQueryParams } = useRemoveQueryParams();
-  const isAuthenticated = useSelector(authentificated());
+  const isAuthenticated = useSelector(selectIsAuthenticated());
   const isLoading = useSelector(selectIsAuthLoading());
   const user = useSelector(selectUser());
   const screenSize = useSelector(getScreenSize());

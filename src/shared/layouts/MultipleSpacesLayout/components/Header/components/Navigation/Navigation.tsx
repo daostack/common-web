@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import classNames from "classnames";
 import {
-  authentificated,
+  selectIsAuthenticated,
   selectUser,
   selectUserStreamsWithNotificationsAmount,
 } from "@/pages/Auth/store/selectors";
@@ -36,7 +36,7 @@ const Navigation: FC<NavigationProps> = (props) => {
     onOpen: onCreateCommonPromptOpen,
     onClose: onCreateCommonPromptClose,
   } = useModal(false);
-  const isAuthenticated = useSelector(authentificated());
+  const isAuthenticated = useSelector(selectIsAuthenticated());
   const userStreamsWithNotificationsAmount = useSelector(
     selectUserStreamsWithNotificationsAmount(),
   );

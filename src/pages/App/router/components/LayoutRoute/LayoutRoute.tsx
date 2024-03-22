@@ -2,7 +2,10 @@ import React, { FC, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { Route, RouteProps } from "react-router-dom";
 import { Route as RouteConfiguration } from "@/pages/App/router/types";
-import { authentificated, selectUserRoles } from "@/pages/Auth/store/selectors";
+import {
+  selectIsAuthenticated,
+  selectUserRoles,
+} from "@/pages/Auth/store/selectors";
 import { matchRoute } from "@/shared/utils";
 import { LayoutRouteContext, LayoutRouteContextValue } from "./context";
 import { renderRouteContent } from "./helpers";
@@ -14,7 +17,7 @@ interface PrivateRouteProps extends RouteProps {
 const LayoutRoute: FC<PrivateRouteProps> = (props) => {
   const { routeConfigurations, component, children, ...restProps } = props;
   const userRoles = useSelector(selectUserRoles());
-  const authenticated = useSelector(authentificated());
+  const authenticated = useSelector(selectIsAuthenticated());
   const pathname = restProps.location?.pathname || "";
   const routeConfiguration = routeConfigurations.find((configuration) =>
     matchRoute(pathname, configuration.path, { exact: configuration.exact }),

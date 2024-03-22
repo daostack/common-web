@@ -27,6 +27,7 @@ export enum Collection {
   Discussion = "discussion",
   Users = "users",
   Daos = "daos",
+  DaosFlatTree = "daosFlatTree",
   DiscussionMessage = "discussionMessage",
   Payments = "payments",
   Subscriptions = "subscriptions",
@@ -38,6 +39,7 @@ export enum Collection {
   UserFeatureFlags = "userFeatureFlags",
   FeatureFlags = "featureFlags",
   Reactions = "reaction",
+  UserMemberships = "userMemberships",
 }
 
 export enum SubCollections {

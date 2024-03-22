@@ -9,6 +9,7 @@ import {
 import { FileService, Logger } from "@/services";
 import { isRequestError } from "@/services/Api";
 import { ErrorCode } from "@/shared/constants";
+import { SpaceListVisibility } from "@/shared/interfaces";
 import { Common } from "@/shared/models";
 import { getStringFromTextEditorValue } from "@/shared/ui-kit/TextEditor/utils";
 import { getFileNameForUploading, uploadFile } from "@/shared/utils";
@@ -100,6 +101,8 @@ const useCommonUpdate = (commonId?: string): Return => {
               : undefined,
             gallery,
             links: updatedData.links,
+            listVisibility:
+              updatedData.listVisibility ?? SpaceListVisibility.Public,
           },
         };
 

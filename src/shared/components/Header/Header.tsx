@@ -19,7 +19,7 @@ import {
 import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { logOut, setLoginModalState } from "../../../pages/Auth/store/actions";
 import {
-  authentificated,
+  selectIsAuthenticated,
   selectUser,
 } from "../../../pages/Auth/store/selectors";
 import {
@@ -51,7 +51,7 @@ const Header = () => {
   const sharedHeaderState = useSelector(selectHeader());
   const areReportsLoading = useSelector(selectAreReportsLoading());
   const [showMenu, setShowMenu] = useState(false);
-  const isAuthorized = useSelector(authentificated());
+  const isAuthorized = useSelector(selectIsAuthenticated());
   const user = useSelector(selectUser());
   const myAccountBtnRef = useRef(null);
   const { isOutside } = useOutsideClick(myAccountBtnRef);

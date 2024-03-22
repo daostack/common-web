@@ -1,7 +1,10 @@
 import React, { FC } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
-import { authentificated, selectUser } from "@/pages/Auth/store/selectors";
+import {
+  selectIsAuthenticated,
+  selectUser,
+} from "@/pages/Auth/store/selectors";
 import commonLogoSrc from "@/shared/assets/images/logo-sidenav-2.svg";
 import { ButtonIcon } from "@/shared/components";
 import { useIsTabletView } from "@/shared/hooks/viewport";
@@ -23,7 +26,7 @@ interface SidenavContentProps {
 
 const SidenavContent: FC<SidenavContentProps> = (props) => {
   const { className } = props;
-  const isAuthenticated = useSelector(authentificated());
+  const isAuthenticated = useSelector(selectIsAuthenticated());
   const user = useSelector(selectUser());
   const isTabletView = useIsTabletView();
   const goToCreateCommon = useGoToCreateCommon();

@@ -597,6 +597,15 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     onPullToRefresh?.();
   };
 
+  const handleRefSet = useCallback(
+    (ref: FeedItemRef | null) => {
+      if (ref) {
+        refsByItemId.current[ref.itemId] = ref;
+      }
+    },
+    [refsByItemId],
+  );
+
   useEffect(() => {
     if (!outerGovernance && selectedItemCommonData?.id) {
       fetchGovernance(selectedItemCommonData.id);
@@ -769,9 +778,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
                     return (
                       <FeedItem
-                        ref={(ref) => {
-                          refsByItemId.current[item.itemId] = ref;
-                        }}
+                        ref={handleRefSet}
                         key={item.feedItem.id}
                         commonMember={commonMember}
                         commonId={commonData?.id}

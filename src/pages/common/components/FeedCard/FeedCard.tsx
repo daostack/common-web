@@ -218,6 +218,7 @@ export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
   };
 
   useImperativeHandle(ref, () => ({
+    itemId: feedItemId,
     scrollToItem: scrollToTargetAdjusted,
   }));
 
