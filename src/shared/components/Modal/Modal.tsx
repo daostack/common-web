@@ -53,6 +53,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
     fullHeight = false,
   } = props;
   const contentRef = useRef<HTMLDivElement>(null);
+  const modalWrapperRef = useRef<HTMLDivElement>(null);
   const isMounted = useMount({ isOpen, delay: 300 });
   const [footer, setFooter] = useState<ReactNode>(null);
   const [footerOptions, setFooterOptions] = useState<FooterOptions>({});
@@ -68,6 +69,11 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
   const handleModalContainerClick: MouseEventHandler = (event) => {
     event.stopPropagation();
   };
+
+  const handleRightClick = useCallback((event) => {
+    event.preventDefault();
+    event.stopPropagation();
+  }, []);
 
   const handleClose = useCallback<MouseEventHandler>(
     (event) => {
@@ -95,9 +101,12 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
     if (!isShowing) {
       return;
     }
-
     const modalRoot = document.getElementById(modalId);
     unlockBodyScroll();
+    modalWrapperRef.current?.removeEventListener(
+      "contextmenu",
+      handleRightClick,
+    );
 
     if (modalRoot) {
       document.body.removeChild(modalRoot);
@@ -108,10 +117,18 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
     if (!isShowing) {
       const modalRoot = document.getElementById(modalId);
       unlockBodyScroll();
+      modalWrapperRef.current?.removeEventListener(
+        "contextmenu",
+        handleRightClick,
+      );
       if (modalRoot) {
         document.body.removeChild(modalRoot);
       }
     } else {
+      modalWrapperRef.current?.addEventListener(
+        "contextmenu",
+        handleRightClick,
+      );
       lockBodyScroll();
     }
   }, [isShowing, modalId]);
@@ -241,7 +258,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
 
   return isShowing
     ? ReactDOM.createPortal(
-        <div id={modalId}>
+        <div id={modalId} ref={modalWrapperRef}>
           <Transition
             show={isOpen}
             transition={transition ? ModalTransition.FadeIn : null}
