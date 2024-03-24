@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useMemo } from "react";
 import classNames from "classnames";
 import { useCommonDataContext } from "@/pages/common/providers";
 import {
@@ -6,6 +6,7 @@ import {
   ViewportBreakpointVariant,
 } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
+import { useProjectsData } from "@/shared/hooks/useProjectsData";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import {
   CirclesPermissions,
@@ -46,6 +47,9 @@ const CommonProjects: FC<CommonProjectsProps> = (props) => {
   } = props;
   const { getCommonPagePath } = useRoutesContext();
   const { onProjectCreate } = useCommonDataContext();
+  const { data: projectsWithAdditionalData } = useProjectsData({
+    commons: subCommons,
+  });
   const isTabletView = useIsTabletView();
   const isAddingNewProjectAllowed = Boolean(
     commonMember &&
@@ -54,6 +58,12 @@ const CommonProjects: FC<CommonProjectsProps> = (props) => {
         governance: { circles },
         action: GovernanceActions.CREATE_PROJECT,
       }),
+  );
+
+  const availableProjects = useMemo(
+    () =>
+      projectsWithAdditionalData?.filter((project) => project.hasAccessToSpace),
+    [projectsWithAdditionalData],
   );
 
   return (
@@ -78,7 +88,7 @@ const CommonProjects: FC<CommonProjectsProps> = (props) => {
           outerStyles?.projectsWrapper,
         )}
       >
-        {subCommons.map((subCommon) => (
+        {availableProjects?.map((subCommon) => (
           <li key={subCommon.id} className={styles.projectsItem}>
             <Project
               title={subCommon.name}
