@@ -1,5 +1,5 @@
 import { User as FirebaseUser } from "firebase/auth";
-import { call, put, takeLatest } from "redux-saga/effects";
+import { call, put, takeLatest, takeLeading } from "redux-saga/effects";
 import {
   getProposalById,
   seenNotification,
@@ -14,7 +14,6 @@ import { isFundsAllocationProposal } from "@/shared/models/governance/proposals"
 import { showNotification } from "@/shared/store/actions";
 import { getProvider } from "@/shared/utils/authProvider";
 import { getFundingRequestNotification } from "@/shared/utils/notifications";
-import { takeLeadingByIdentifier } from "@/shared/utils/saga";
 import {
   cacheActions,
   commonActions,
@@ -603,17 +602,8 @@ function* deleteUser({
 }
 
 function* authSagas() {
-  yield takeLeadingByIdentifier(
-    actions.webviewLoginWithUser.request,
-    (action) => action.payload.payload?.user?.uid,
-    webviewLoginWithUserSaga,
-  );
-  yield takeLeadingByIdentifier(
-    actions.webviewLogin.request,
-    (action) =>
-      action.payload.payload?.customToken ?? action.payload.payload.accessToken,
-    webviewLoginSaga,
-  );
+  yield takeLeading(actions.webviewLoginWithUser.request, webviewLoginWithUserSaga);
+  yield takeLeading(actions.webviewLogin.request, webviewLoginSaga);
   yield takeLatest(actions.socialLogin.request, socialLoginSaga);
   yield takeLatest(
     actions.loginWithFirebaseUser.request,
