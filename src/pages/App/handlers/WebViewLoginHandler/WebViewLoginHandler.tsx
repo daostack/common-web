@@ -13,6 +13,10 @@ const WebViewLoginHandler: FC = () => {
 
   const handleWebviewLogin = React.useCallback(async (event) => {
     try {
+      if (!window?.ReactNativeWebView?.postMessage) {
+        return;
+      }
+
       const data = parseJson(event.data) as FirebaseCredentials;
       const user = await firebase.auth().currentUser;
 
@@ -20,7 +24,7 @@ const WebViewLoginHandler: FC = () => {
         history.push(data?.redirectUrl);
       }
 
-      if (user && window?.ReactNativeWebView?.postMessage) {
+      if (user) {
         dispatch(
           webviewLoginWithUser.request({
             payload: {

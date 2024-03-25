@@ -14,6 +14,7 @@ import { isFundsAllocationProposal } from "@/shared/models/governance/proposals"
 import { showNotification } from "@/shared/store/actions";
 import { getProvider } from "@/shared/utils/authProvider";
 import { getFundingRequestNotification } from "@/shared/utils/notifications";
+import { takeLeadingByIdentifier } from "@/shared/utils/saga";
 import {
   cacheActions,
   commonActions,
@@ -602,8 +603,17 @@ function* deleteUser({
 }
 
 function* authSagas() {
-  yield takeLatest(actions.webviewLoginWithUser.request, webviewLoginWithUserSaga);
-  yield takeLatest(actions.webviewLogin.request, webviewLoginSaga);
+  yield takeLeadingByIdentifier(
+    actions.webviewLoginWithUser.request,
+    (action) => action.payload.payload?.user?.uid,
+    webviewLoginWithUserSaga,
+  );
+  yield takeLeadingByIdentifier(
+    actions.webviewLogin.request,
+    (action) =>
+      action.payload.payload?.customToken ?? action.payload.payload.accessToken,
+    webviewLoginSaga,
+  );
   yield takeLatest(actions.socialLogin.request, socialLoginSaga);
   yield takeLatest(
     actions.loginWithFirebaseUser.request,
