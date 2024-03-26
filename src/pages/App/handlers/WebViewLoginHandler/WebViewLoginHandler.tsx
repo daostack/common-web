@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { webviewLogin, webviewLoginWithUser } from "@/pages/Auth/store/actions";
 import { history } from "@/shared/appConfig";
@@ -10,6 +10,7 @@ import { parseJson } from "@/shared/utils/json";
 
 const WebViewLoginHandler: FC = () => {
   const dispatch = useDispatch();
+  const [isRedirected, setRedirected] = useState(false);
 
   const handleWebviewLogin = React.useCallback(async (event) => {
     try {
@@ -42,6 +43,10 @@ const WebViewLoginHandler: FC = () => {
                 window?.ReactNativeWebView?.postMessage(
                   WebviewActions.loginSuccess,
                 );
+
+                if(!isRedirected) {
+                  history.push(getInboxPagePath());
+                }
               } else {
                 window?.ReactNativeWebView?.postMessage(
                   WebviewActions.loginError,
@@ -85,11 +90,11 @@ const WebViewLoginHandler: FC = () => {
     } catch (err) {
       window?.ReactNativeWebView?.postMessage(WebviewActions.loginError);
     }
-  }, []);
+  }, [isRedirected, setRedirected]);
 
   useEffect(() => {
     window.addEventListener("message", handleWebviewLogin);
-  }, []);
+  }, [isRedirected, setRedirected]);
 
   return null;
 };
