@@ -13,6 +13,10 @@ const WebViewLoginHandler: FC = () => {
 
   const handleWebviewLogin = React.useCallback(async (event) => {
     try {
+      if(!window?.ReactNativeWebView?.postMessage) {
+        return;
+      }
+      
       const data = parseJson(event.data) as FirebaseCredentials;
       const user = await firebase.auth().currentUser;
 
