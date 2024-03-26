@@ -63,7 +63,7 @@ const WebViewLoginHandler: FC = () => {
           return;
         }
 
-        if (!data?.providerId && !data?.customToken && !user) {
+        if (!data?.providerId && !data?.customToken) {
           return;
         }
 
