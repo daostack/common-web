@@ -1,5 +1,5 @@
 import { User as FirebaseUser } from "firebase/auth";
-import { call, put, takeLatest } from "redux-saga/effects";
+import { call, put, takeLatest, takeLeading } from "redux-saga/effects";
 import {
   getProposalById,
   seenNotification,
@@ -602,8 +602,8 @@ function* deleteUser({
 }
 
 function* authSagas() {
-  yield takeLatest(actions.webviewLoginWithUser.request, webviewLoginWithUserSaga);
-  yield takeLatest(actions.webviewLogin.request, webviewLoginSaga);
+  yield takeLeading(actions.webviewLoginWithUser.request, webviewLoginWithUserSaga);
+  yield takeLeading(actions.webviewLogin.request, webviewLoginSaga);
   yield takeLatest(actions.socialLogin.request, socialLoginSaga);
   yield takeLatest(
     actions.loginWithFirebaseUser.request,

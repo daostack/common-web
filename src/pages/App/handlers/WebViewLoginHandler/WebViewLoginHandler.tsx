@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { webviewLogin, webviewLoginWithUser } from "@/pages/Auth/store/actions";
 import { history } from "@/shared/appConfig";
@@ -10,22 +10,66 @@ import { parseJson } from "@/shared/utils/json";
 
 const WebViewLoginHandler: FC = () => {
   const dispatch = useDispatch();
+  const [isRedirected, setRedirected] = useState(false);
 
-  const handleWebviewLogin = React.useCallback(async (event) => {
-    try {
-      const data = parseJson(event.data) as FirebaseCredentials;
-      const user = await firebase.auth().currentUser;
+  const handleWebviewLogin = React.useCallback(
+    async (event) => {
+      try {
+        if (!window?.ReactNativeWebView?.postMessage) {
+          return;
+        }
 
-      if (data?.redirectUrl) {
-        history.push(data?.redirectUrl);
-      }
+        const data = parseJson(event.data) as FirebaseCredentials;
+        const user = await firebase.auth().currentUser;
 
-      if (user && window?.ReactNativeWebView?.postMessage) {
+        if (data?.redirectUrl) {
+          history.push(data?.redirectUrl);
+        }
+
+        if (user) {
+          dispatch(
+            webviewLoginWithUser.request({
+              payload: {
+                user,
+              },
+              callback: (isLoggedIn) => {
+                if (isLoggedIn) {
+                  const isDarkThemePreferred = window.matchMedia(
+                    `(prefers-color-scheme: ${Theme.Dark})`,
+                  );
+
+                  if (isDarkThemePreferred) {
+                    window?.ReactNativeWebView?.postMessage(Theme.Dark);
+                  }
+                  window?.ReactNativeWebView?.postMessage(
+                    WebviewActions.loginSuccess,
+                  );
+
+                  window?.ReactNativeWebView?.postMessage(
+                    `isRedirected=${isRedirected}`,
+                  );
+                  if (!isRedirected) {
+                    history.push(getInboxPagePath());
+                  }
+                } else {
+                  window?.ReactNativeWebView?.postMessage(
+                    WebviewActions.loginError,
+                  );
+                }
+              },
+            }),
+          );
+
+          return;
+        }
+
+        if (!data?.providerId && !data?.customToken) {
+          return;
+        }
+
         dispatch(
-          webviewLoginWithUser.request({
-            payload: {
-              user,
-            },
+          webviewLogin.request({
+            payload: data,
             callback: (isLoggedIn) => {
               if (isLoggedIn) {
                 const isDarkThemePreferred = window.matchMedia(
@@ -38,6 +82,11 @@ const WebViewLoginHandler: FC = () => {
                 window?.ReactNativeWebView?.postMessage(
                   WebviewActions.loginSuccess,
                 );
+
+                window?.ReactNativeWebView?.postMessage(
+                  `basic login with redirect`,
+                );
+                history.push(getInboxPagePath());
               } else {
                 window?.ReactNativeWebView?.postMessage(
                   WebviewActions.loginError,
@@ -46,46 +95,16 @@ const WebViewLoginHandler: FC = () => {
             },
           }),
         );
-
-        return;
+      } catch (err) {
+        window?.ReactNativeWebView?.postMessage(WebviewActions.loginError);
       }
-
-      if (!data?.providerId && !data?.customToken && !user) {
-        return;
-      }
-
-      dispatch(
-        webviewLogin.request({
-          payload: data,
-          callback: (isLoggedIn) => {
-            if (isLoggedIn) {
-              const isDarkThemePreferred = window.matchMedia(
-                `(prefers-color-scheme: ${Theme.Dark})`,
-              );
-
-              if (isDarkThemePreferred) {
-                window?.ReactNativeWebView?.postMessage(Theme.Dark);
-              }
-              window?.ReactNativeWebView?.postMessage(
-                WebviewActions.loginSuccess,
-              );
-              history.push(getInboxPagePath());
-            } else {
-              window?.ReactNativeWebView?.postMessage(
-                WebviewActions.loginError,
-              );
-            }
-          },
-        }),
-      );
-    } catch (err) {
-      window?.ReactNativeWebView?.postMessage(WebviewActions.loginError);
-    }
-  }, []);
+    },
+    [isRedirected, setRedirected],
+  );
 
   useEffect(() => {
     window.addEventListener("message", handleWebviewLogin);
-  }, []);
+  }, [isRedirected, setRedirected]);
 
   return null;
 };
