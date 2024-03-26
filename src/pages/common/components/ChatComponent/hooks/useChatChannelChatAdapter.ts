@@ -6,7 +6,7 @@ import {
   useChatMessages,
   useMarkChatMessageAsSeen,
   useUpdateChatChannelSeenState,
-  useUserById,
+  useUsersByIds,
 } from "@/shared/hooks/useCases";
 import { User, UserDiscussionMessage } from "@/shared/models";
 
@@ -34,11 +34,10 @@ export const useChatChannelChatAdapter = (options: Options): Return => {
   const chatMessagesData = useChatMessages();
   const { markChatMessageAsSeen } = useMarkChatMessageAsSeen();
   const { markChatChannelAsSeen } = useUpdateChatChannelSeenState();
-  const { fetchUser: fetchDMUser, data: dmUser } = useUserById();
+  const { fetchUsers: fetchDMUsers, data: dmUsers } = useUsersByIds();
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const dmUserId = participants.find((participant) => participant !== userId);
-  const users = useMemo(() => (dmUser ? [dmUser] : []), [dmUser]);
+  const users = useMemo(() => dmUsers ?? [], [dmUsers]);
   const messages = useMemo(
     () =>
       chatMessagesData.data.map((item) =>
@@ -48,10 +47,10 @@ export const useChatChannelChatAdapter = (options: Options): Return => {
   );
 
   const fetchChatUsers = useCallback(() => {
-    if (dmUserId) {
-      fetchDMUser(dmUserId);
+    if (participants) {
+      fetchDMUsers(participants.filter((uid) => uid !== userId));
     }
-  }, [fetchDMUser, dmUserId]);
+  }, [fetchDMUsers, participants]);
 
   return {
     chatMessagesData: {
