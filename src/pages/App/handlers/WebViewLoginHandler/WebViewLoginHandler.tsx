@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { webviewLogin, webviewLoginWithUser } from "@/pages/Auth/store/actions";
 import { history } from "@/shared/appConfig";
@@ -10,13 +10,14 @@ import { parseJson } from "@/shared/utils/json";
 
 const WebViewLoginHandler: FC = () => {
   const dispatch = useDispatch();
+  const [isRedirected, setRedirected] = useState(false);
 
   const handleWebviewLogin = React.useCallback(async (event) => {
     try {
-      if(!window?.ReactNativeWebView?.postMessage) {
+      if (!window?.ReactNativeWebView?.postMessage) {
         return;
       }
-      
+
       const data = parseJson(event.data) as FirebaseCredentials;
       const user = await firebase.auth().currentUser;
 
@@ -38,6 +39,10 @@ const WebViewLoginHandler: FC = () => {
 
                 if (isDarkThemePreferred) {
                   window?.ReactNativeWebView?.postMessage(Theme.Dark);
+                }
+
+                if (!isRedirected) {
+                  history.push(getInboxPagePath());
                 }
                 window?.ReactNativeWebView?.postMessage(
                   WebviewActions.loginSuccess,
@@ -70,10 +75,11 @@ const WebViewLoginHandler: FC = () => {
               if (isDarkThemePreferred) {
                 window?.ReactNativeWebView?.postMessage(Theme.Dark);
               }
+
+              history.push(getInboxPagePath());
               window?.ReactNativeWebView?.postMessage(
                 WebviewActions.loginSuccess,
               );
-              history.push(getInboxPagePath());
             } else {
               window?.ReactNativeWebView?.postMessage(
                 WebviewActions.loginError,
