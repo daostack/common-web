@@ -41,16 +41,13 @@ const WebViewLoginHandler: FC = () => {
                   if (isDarkThemePreferred) {
                     window?.ReactNativeWebView?.postMessage(Theme.Dark);
                   }
-                  window?.ReactNativeWebView?.postMessage(
-                    WebviewActions.loginSuccess,
-                  );
 
-                  window?.ReactNativeWebView?.postMessage(
-                    `isRedirected=${isRedirected}`,
-                  );
                   if (!isRedirected) {
                     history.push(getInboxPagePath());
                   }
+                  window?.ReactNativeWebView?.postMessage(
+                    WebviewActions.loginSuccess,
+                  );
                 } else {
                   window?.ReactNativeWebView?.postMessage(
                     WebviewActions.loginError,
@@ -79,14 +76,11 @@ const WebViewLoginHandler: FC = () => {
                 if (isDarkThemePreferred) {
                   window?.ReactNativeWebView?.postMessage(Theme.Dark);
                 }
+
+                history.push(getInboxPagePath());
                 window?.ReactNativeWebView?.postMessage(
                   WebviewActions.loginSuccess,
                 );
-
-                window?.ReactNativeWebView?.postMessage(
-                  `basic login with redirect`,
-                );
-                history.push(getInboxPagePath());
               } else {
                 window?.ReactNativeWebView?.postMessage(
                   WebviewActions.loginError,
