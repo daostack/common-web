@@ -116,13 +116,16 @@ const getCommonLink = (common?: Common | null, path?: string): Text =>
 
 const checkHasMembership = async (
   commonId: string,
-  userId: string,
+  userId?: string,
 ): Promise<boolean> => {
   const { projects } = selectCommonLayoutProjectsState(store.getState());
   const item = projects.find((project) => project.commonId === commonId);
 
   if (typeof item?.hasMembership !== "undefined") {
     return item.hasMembership;
+  }
+  if (!userId) {
+    return false;
   }
 
   const commonMember = await CommonService.getCommonMemberByUserId(
@@ -151,9 +154,10 @@ const getCommonCreatedSystemMessageText = async (
   const common = await getCommon(systemMessageData.commonId);
 
   if (common && common.listVisibility !== SpaceListVisibility.Public) {
-    const hasMembership = data.userId
-      ? await checkHasMembership(systemMessageData.commonId, data.userId)
-      : false;
+    const hasMembership = await checkHasMembership(
+      systemMessageData.commonId,
+      data.userId,
+    );
 
     if (!hasMembership) {
       return [];
