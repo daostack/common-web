@@ -151,10 +151,9 @@ const getCommonCreatedSystemMessageText = async (
   const common = await getCommon(systemMessageData.commonId);
 
   if (common && common.listVisibility !== SpaceListVisibility.Public) {
-    const hasMembership = await checkHasMembership(
-      systemMessageData.commonId,
-      systemMessageData.userId,
-    );
+    const hasMembership = data.userId
+      ? await checkHasMembership(systemMessageData.commonId, data.userId)
+      : false;
 
     if (!hasMembership) {
       return [];
