@@ -2,6 +2,8 @@
 @import "../../../../../../styles/sizes";
 
 .container {
+  padding-left: 0;
+
   &:hover {
     --title-color: var(--primary-fill);
 
@@ -28,6 +30,28 @@
   width: 0.875rem;
   height: 0.875rem;
   margin-left: 0.625rem;
+}
+
+.leftContent {
+  display: flex;
+  align-items: center;
+}
+
+.arrowIconButton {
+  padding: 0.75rem 0.5rem;
+}
+.arrowIconButtonHidden {
+  visibility: hidden;
+}
+
+.arrowIcon {
+  width: 0.5rem;
+  height: 0.625rem;
+  color: $c-neutrals-600;
+  transition: transform 0.2s;
+}
+.arrowIconOpen {
+  transform: rotate(90deg);
 }
 
 .image {
@@ -59,11 +83,13 @@
   color: $c-neutrals-600;
 }
 .commonCardActive {
-  border: 0.0625rem solid var(--gentle-stroke);
-  border-bottom-width: 0.125rem;
-  border-top: none;
+  border-bottom: 0.0625rem solid var(--gentle-stroke);
 
   @include tablet {
     margin-right: -1.5rem;
   }
+}
+
+.loader {
+  align-self: center;
 }

@@ -11,10 +11,11 @@ import { useHistory } from "react-router-dom";
 import classNames from "classnames";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { useFeedItemContext } from "@/pages/common";
+import { ButtonIcon } from "@/shared/components";
 import { useRoutesContext } from "@/shared/contexts";
 import { useCommon, useFeedItemFollow } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { OpenIcon } from "@/shared/icons";
+import { OpenIcon, SmallArrowIcon } from "@/shared/icons";
 import { SpaceListVisibility } from "@/shared/interfaces";
 import { CommonFeed } from "@/shared/models";
 import {
@@ -84,15 +85,28 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
   };
 
   const renderLeftContent = (): ReactNode => (
-    <CommonAvatar
-      className={classNames(styles.image, {
-        [styles.imageNonRounded]: !isProject,
-        [styles.imageRounded]: isProject,
-      })}
-      src={common?.image}
-      alt={`${common?.name}'s image`}
-      name={common?.name}
-    />
+    <div className={styles.leftContent}>
+      <ButtonIcon
+        className={styles.arrowIconButton}
+        onClick={handleExpand}
+        aria-label={`${isExpanded ? "Hide" : "Show"} ${common?.name}'s spaces`}
+      >
+        <SmallArrowIcon
+          className={classNames(styles.arrowIcon, {
+            [styles.arrowIconOpen]: isExpanded,
+          })}
+        />
+      </ButtonIcon>
+      <CommonAvatar
+        className={classNames(styles.image, {
+          [styles.imageNonRounded]: !isProject,
+          [styles.imageRounded]: isProject,
+        })}
+        src={common?.image}
+        alt={`${common?.name}'s image`}
+        name={common?.name}
+      />
+    </div>
   );
 
   useEffect(() => {
@@ -142,7 +156,7 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
           className={classNames(
             styles.commonCard,
             {
-              [styles.commonCardActive]: isExpanded && isTabletView,
+              [styles.commonCardActive]: isExpanded,
             },
             feedCardSettings?.commonCardClassName,
           )}
