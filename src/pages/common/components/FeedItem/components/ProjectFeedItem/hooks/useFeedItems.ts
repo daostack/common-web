@@ -1,7 +1,5 @@
 import { useRef, useState } from "react";
-import { useSelector } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
-import { selectUser } from "@/pages/Auth/store/selectors";
 import { CommonFeedService, Logger } from "@/services";
 import { InboxItemType } from "@/shared/constants";
 import { FeedItemFollowLayoutItem, LoadingState } from "@/shared/interfaces";
@@ -12,15 +10,13 @@ interface Return extends State {
   fetchFeedItems: () => void;
 }
 
-export const useFeedItems = (commonId: string): Return => {
+export const useFeedItems = (commonId: string, userId?: string): Return => {
   const currentLoadingIdRef = useRef("");
   const [state, setState] = useState<State>({
     loading: false,
     fetched: false,
     data: [],
   });
-  const user = useSelector(selectUser());
-  const userId = user?.uid;
 
   const fetchFeedItems = async () => {
     if (state.loading || state.fetched) {

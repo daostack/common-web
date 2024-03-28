@@ -93,3 +93,8 @@
 .loader {
   align-self: center;
 }
+
+.feedItemsContainer {
+  display: flex;
+  flex-direction: column;
+}

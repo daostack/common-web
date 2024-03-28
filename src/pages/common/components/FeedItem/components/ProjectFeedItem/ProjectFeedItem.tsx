@@ -3,17 +3,21 @@ import React, {
   MouseEventHandler,
   ReactNode,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
 import { useCollapse } from "react-collapsed";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import classNames from "classnames";
+import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { useFeedItemContext } from "@/pages/common";
 import { ButtonIcon } from "@/shared/components";
 import { useRoutesContext } from "@/shared/contexts";
 import { useCommon, useFeedItemFollow } from "@/shared/hooks/useCases";
+import { useIsTabletView } from "@/shared/hooks/viewport";
 import { OpenIcon, SmallArrowIcon } from "@/shared/icons";
 import { SpaceListVisibility } from "@/shared/interfaces";
 import { CommonFeed } from "@/shared/models";
@@ -22,9 +26,10 @@ import {
   Loader,
   parseStringToTextEditorValue,
 } from "@/shared/ui-kit";
-import { checkIsProject } from "@/shared/utils";
+import { checkIsProject, emptyFunction } from "@/shared/utils";
 import { CommonCard } from "../../../CommonCard";
 import { COLLAPSE_DURATION } from "../../../FeedCard/constants";
+import { FeedItem } from "../../../FeedItem";
 import { useFeedItemCounters } from "../../hooks";
 import { useFeedItems } from "./hooks";
 import styles from "./ProjectFeedItem.module.scss";
@@ -36,6 +41,7 @@ interface ProjectFeedItemProps {
 
 export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
   const { item, isMobileVersion } = props;
+  const isTabletView = useIsTabletView();
   const containerRef = useRef<HTMLDivElement>(null);
   const history = useHistory();
   const { getCommonPagePath } = useRoutesContext();
@@ -54,20 +60,31 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
     projectUnreadStreamsCount: unreadStreamsCount,
     projectUnreadMessages: unreadMessages,
   } = useFeedItemCounters(item.id, common?.directParent?.commonId);
+  const user = useSelector(selectUser());
+  const userId = user?.uid;
   const commonId = item.data.id;
-  const { data: feedItems, fetched, fetchFeedItems } = useFeedItems(commonId);
+  const {
+    data: feedItems,
+    fetched,
+    fetchFeedItems,
+  } = useFeedItems(commonId, userId);
   const [isExpanded, setIsExpanded] = useState(false);
   const { getCollapseProps, getToggleProps } = useCollapse({
     isExpanded,
     duration: COLLAPSE_DURATION,
   });
   const isLoading = !fetched;
+  const expandedFeedItemId = "";
   const lastMessage = parseStringToTextEditorValue(
     `${unreadStreamsCount ?? 0} unread stream${
       unreadStreamsCount === 1 ? "" : "s"
     }`,
   );
   const isProject = checkIsProject(common);
+  const userCircleIds = useMemo(
+    () => Object.values(commonMember?.circles.map ?? {}),
+    [commonMember?.circles.map],
+  );
   const titleEl = (
     <>
       <span className={styles.title}>{common?.name}</span>
@@ -128,7 +145,48 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
   }
 
   const renderContent = (): ReactNode => {
-    return null;
+    if (feedItems.length === 0) {
+      return null;
+    }
+
+    return (
+      <div className={styles.feedItemsContainer}>
+        {feedItems.map((item) => {
+          const isActive = false;
+          const isPinned = (common?.pinnedFeedItems || []).some(
+            (pinnedItem) => pinnedItem.feedObjectId === item.feedItem.id,
+          );
+
+          return (
+            <FeedItem
+              key={item.feedItem.id}
+              commonMember={commonMember}
+              commonId={common?.id}
+              commonName={common?.name || ""}
+              commonImage={common?.image || ""}
+              commonNotion={common?.notion}
+              pinnedFeedItems={common?.pinnedFeedItems}
+              isProject={isProject}
+              isPinned={isPinned}
+              item={item.feedItem}
+              isMobileVersion={isTabletView}
+              userCircleIds={userCircleIds}
+              isActive={isActive}
+              isExpanded={item.feedItem.id === expandedFeedItemId}
+              currentUserId={userId}
+              shouldCheckItemVisibility={
+                !item.feedItemFollowWithMetadata ||
+                item.feedItemFollowWithMetadata.userId !== userId
+              }
+              directParent={common?.directParent}
+              rootCommonId={common?.rootCommonId}
+              onFeedItemClick={emptyFunction}
+              onInternalLinkClick={emptyFunction}
+            />
+          );
+        })}
+      </div>
+    );
   };
 
   return (
