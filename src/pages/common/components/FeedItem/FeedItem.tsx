@@ -54,6 +54,7 @@ interface FeedItemProps {
   directParent?: DirectParent | null;
   rootCommonId?: string;
   shouldPreLoadMessages?: boolean;
+  level?: number;
   onFeedItemClick: (feedItemId: string) => void;
   onInternalLinkClick: (data: InternalLinkData) => void;
 }
@@ -82,6 +83,7 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     directParent,
     rootCommonId,
     shouldPreLoadMessages = false,
+    level,
     onFeedItemClick,
     onInternalLinkClick,
   } = props;
@@ -172,7 +174,13 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
   }
 
   if (item.data.type === CommonFeedType.Project) {
-    return <ProjectFeedItem item={item} isMobileVersion={isMobileVersion} />;
+    return (
+      <ProjectFeedItem
+        item={item}
+        isMobileVersion={isMobileVersion}
+        level={level}
+      />
+    );
   }
 
   return null;

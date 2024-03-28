@@ -1,4 +1,5 @@
 import React, {
+  CSSProperties,
   FC,
   MouseEventHandler,
   ReactNode,
@@ -37,10 +38,11 @@ import styles from "./ProjectFeedItem.module.scss";
 interface ProjectFeedItemProps {
   item: CommonFeed;
   isMobileVersion: boolean;
+  level?: number;
 }
 
 export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
-  const { item, isMobileVersion } = props;
+  const { item, isMobileVersion, level = 1 } = props;
   const isTabletView = useIsTabletView();
   const containerRef = useRef<HTMLDivElement>(null);
   const history = useHistory();
@@ -180,6 +182,7 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
               }
               directParent={common?.directParent}
               rootCommonId={common?.rootCommonId}
+              level={level + 1}
               onFeedItemClick={emptyFunction}
               onInternalLinkClick={emptyFunction}
             />
@@ -189,8 +192,16 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
     );
   };
 
+  const itemStyles = {
+    "--project-feed-item-level": level,
+  } as CSSProperties;
+
   return (
-    <div ref={containerRef}>
+    <div
+      ref={containerRef}
+      className={styles.collapseContainer}
+      style={itemStyles}
+    >
       <div {...getToggleProps()}>
         {renderFeedItemBaseContent?.({
           className: styles.container,

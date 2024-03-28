@@ -1,8 +1,18 @@
 @import "../../../../../../constants";
 @import "../../../../../../styles/sizes";
 
+$extra-pl: 1rem;
+
+.collapseContainer {
+  --base-content-container-extra-pl: calc(
+    #{$extra-pl} * var(--project-feed-item-level, 1)
+  );
+}
+
 .container {
-  padding-left: 0;
+  padding-left: calc(
+    #{$extra-pl} * calc(var(--project-feed-item-level, 1) - 1)
+  );
 
   &:hover {
     --title-color: var(--primary-fill);
