@@ -538,6 +538,7 @@ function* logOut() {
     window?.ReactNativeWebView?.postMessage(WebviewActions.logout);
   }
 
+  resetGlobalData(true);
   history.push(ROUTE_PATHS.HOME);
   yield true;
 }
@@ -602,7 +603,10 @@ function* deleteUser({
 }
 
 function* authSagas() {
-  yield takeLeading(actions.webviewLoginWithUser.request, webviewLoginWithUserSaga);
+  yield takeLeading(
+    actions.webviewLoginWithUser.request,
+    webviewLoginWithUserSaga,
+  );
   yield takeLeading(actions.webviewLogin.request, webviewLoginSaga);
   yield takeLatest(actions.socialLogin.request, socialLoginSaga);
   yield takeLatest(
