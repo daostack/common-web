@@ -14,7 +14,6 @@ import { useFeedItemContext } from "@/pages/common";
 import { ButtonIcon } from "@/shared/components";
 import { useRoutesContext } from "@/shared/contexts";
 import { useCommon, useFeedItemFollow } from "@/shared/hooks/useCases";
-import { useIsTabletView } from "@/shared/hooks/viewport";
 import { OpenIcon, SmallArrowIcon } from "@/shared/icons";
 import { SpaceListVisibility } from "@/shared/interfaces";
 import { CommonFeed } from "@/shared/models";
@@ -27,6 +26,7 @@ import { checkIsProject } from "@/shared/utils";
 import { CommonCard } from "../../../CommonCard";
 import { COLLAPSE_DURATION } from "../../../FeedCard/constants";
 import { useFeedItemCounters } from "../../hooks";
+import { useFeedItems } from "./hooks";
 import styles from "./ProjectFeedItem.module.scss";
 
 interface ProjectFeedItemProps {
@@ -37,7 +37,6 @@ interface ProjectFeedItemProps {
 export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
   const { item, isMobileVersion } = props;
   const containerRef = useRef<HTMLDivElement>(null);
-  const isTabletView = useIsTabletView();
   const history = useHistory();
   const { getCommonPagePath } = useRoutesContext();
   const { renderFeedItemBaseContent, feedCardSettings } = useFeedItemContext();
@@ -55,13 +54,14 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
     projectUnreadStreamsCount: unreadStreamsCount,
     projectUnreadMessages: unreadMessages,
   } = useFeedItemCounters(item.id, common?.directParent?.commonId);
+  const commonId = item.data.id;
+  const { data: feedItems, fetched, fetchFeedItems } = useFeedItems(commonId);
   const [isExpanded, setIsExpanded] = useState(false);
   const { getCollapseProps, getToggleProps } = useCollapse({
     isExpanded,
     duration: COLLAPSE_DURATION,
   });
-  const isLoading = true;
-  const commonId = item.data.id;
+  const isLoading = !fetched;
   const lastMessage = parseStringToTextEditorValue(
     `${unreadStreamsCount ?? 0} unread stream${
       unreadStreamsCount === 1 ? "" : "s"
@@ -113,6 +113,12 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
     fetchCommonMember(commonId);
     fetchCommon(commonId);
   }, [commonId]);
+
+  useEffect(() => {
+    if (isExpanded) {
+      fetchFeedItems();
+    }
+  }, [isExpanded]);
 
   if (
     !isCommonMemberFetched ||
