@@ -91,6 +91,7 @@ class CommonFeedService {
       startAfter?: Timestamp | null;
       feedItemId?: string;
       limit?: number;
+      withoutPinnedItems?: boolean;
     } = {},
   ): Promise<{
     data: CommonFeed[];
@@ -98,13 +99,19 @@ class CommonFeedService {
     lastDocTimestamp: Timestamp | null;
     hasMore: boolean;
   }> => {
-    const { startAfter, feedItemId, limit = 10 } = options;
+    const {
+      startAfter,
+      feedItemId,
+      limit = 10,
+      withoutPinnedItems = true,
+    } = options;
     const [desiredFeedItem, common, commonMember] = await Promise.all([
       feedItemId ? this.getCommonFeedItemById(commonId, feedItemId) : null,
-      CommonService.getCommonById(commonId),
+      withoutPinnedItems ? CommonService.getCommonById(commonId) : null,
       userId ? CommonService.getCommonMemberByUserId(commonId, userId) : null,
     ]);
-    const pinnedFeedItems = common?.pinnedFeedItems || [];
+    const pinnedFeedItems =
+      (withoutPinnedItems && common?.pinnedFeedItems) || [];
     let query = this.getCommonFeedSubCollection(commonId)
       .where("isDeleted", "==", false)
       .orderBy("updatedAt", "desc");
