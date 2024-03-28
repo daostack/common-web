@@ -49,3 +49,21 @@
 .imageRounded {
   border-radius: 50%;
 }
+
+.commonCard {
+  --feed-card-ph: 1.5rem;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  color: $c-neutrals-600;
+}
+.commonCardActive {
+  border: 0.0625rem solid var(--gentle-stroke);
+  border-bottom-width: 0.125rem;
+  border-top: none;
+
+  @include tablet {
+    margin-right: -1.5rem;
+  }
+}

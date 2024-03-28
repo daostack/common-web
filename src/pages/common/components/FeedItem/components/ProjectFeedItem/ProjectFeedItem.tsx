@@ -1,15 +1,30 @@
-import React, { FC, ReactNode, useEffect } from "react";
+import React, {
+  FC,
+  MouseEventHandler,
+  ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { useCollapse } from "react-collapsed";
 import { useHistory } from "react-router-dom";
 import classNames from "classnames";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { useFeedItemContext } from "@/pages/common";
 import { useRoutesContext } from "@/shared/contexts";
 import { useCommon, useFeedItemFollow } from "@/shared/hooks/useCases";
+import { useIsTabletView } from "@/shared/hooks/viewport";
 import { OpenIcon } from "@/shared/icons";
 import { SpaceListVisibility } from "@/shared/interfaces";
 import { CommonFeed } from "@/shared/models";
-import { CommonAvatar, parseStringToTextEditorValue } from "@/shared/ui-kit";
+import {
+  CommonAvatar,
+  Loader,
+  parseStringToTextEditorValue,
+} from "@/shared/ui-kit";
 import { checkIsProject } from "@/shared/utils";
+import { CommonCard } from "../../../CommonCard";
+import { COLLAPSE_DURATION } from "../../../FeedCard/constants";
 import { useFeedItemCounters } from "../../hooks";
 import styles from "./ProjectFeedItem.module.scss";
 
@@ -20,9 +35,11 @@ interface ProjectFeedItemProps {
 
 export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
   const { item, isMobileVersion } = props;
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isTabletView = useIsTabletView();
   const history = useHistory();
   const { getCommonPagePath } = useRoutesContext();
-  const { renderFeedItemBaseContent } = useFeedItemContext();
+  const { renderFeedItemBaseContent, feedCardSettings } = useFeedItemContext();
   const { data: common, fetched: isCommonFetched, fetchCommon } = useCommon();
   const {
     fetched: isCommonMemberFetched,
@@ -37,6 +54,12 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
     projectUnreadStreamsCount: unreadStreamsCount,
     projectUnreadMessages: unreadMessages,
   } = useFeedItemCounters(item.id, common?.directParent?.commonId);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const { getCollapseProps, getToggleProps } = useCollapse({
+    isExpanded,
+    duration: COLLAPSE_DURATION,
+  });
+  const isLoading = true;
   const commonId = item.data.id;
   const lastMessage = parseStringToTextEditorValue(
     `${unreadStreamsCount ?? 0} unread stream${
@@ -53,6 +76,11 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
 
   const handleClick = () => {
     history.push(getCommonPagePath(commonId));
+  };
+
+  const handleExpand: MouseEventHandler = (event) => {
+    event.stopPropagation();
+    setIsExpanded((v) => !v);
   };
 
   const renderLeftContent = (): ReactNode => (
@@ -79,9 +107,13 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
     return null;
   }
 
+  const renderContent = (): ReactNode => {
+    return null;
+  };
+
   return (
-    (
-      <>
+    <div ref={containerRef}>
+      <div {...getToggleProps()}>
         {renderFeedItemBaseContent?.({
           className: styles.container,
           titleWrapperClassName: styles.titleWrapper,
@@ -89,6 +121,7 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
           isMobileView: isMobileVersion,
           title: titleEl,
           onClick: handleClick,
+          onExpand: handleExpand,
           seenOnce: true,
           isLoading: !isCommonFetched,
           unreadMessages,
@@ -103,7 +136,21 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
           isFollowing: feedItemFollow.isFollowing,
           notion: common?.notion,
         })}
-      </>
-    ) || null
+      </div>
+      <div {...getCollapseProps()}>
+        <CommonCard
+          className={classNames(
+            styles.commonCard,
+            {
+              [styles.commonCardActive]: isExpanded && isTabletView,
+            },
+            feedCardSettings?.commonCardClassName,
+          )}
+          hideCardStyles={feedCardSettings?.shouldHideCardStyles ?? true}
+        >
+          {isLoading ? <Loader className={styles.loader} /> : renderContent()}
+        </CommonCard>
+      </div>
+    </div>
   );
 };
