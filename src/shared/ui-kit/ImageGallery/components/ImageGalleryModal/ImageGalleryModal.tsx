@@ -60,7 +60,13 @@ const ImageGalleryModal: FC<ImageGalleryProps> = (props) => {
             </SwiperSlide>
           )}
           {images.map((imageURL, index) => (
-            <SwiperSlide key={imageURL} className="slider-wrapper">
+            <SwiperSlide
+              key={imageURL}
+              className="slider-wrapper"
+              onClick={() =>
+                window.open(imageURL, "_blank", "noopener,noreferrer")
+              }
+            >
               <Image
                 hasZoom
                 className="slide-img"
@@ -70,12 +76,22 @@ const ImageGalleryModal: FC<ImageGalleryProps> = (props) => {
             </SwiperSlide>
           ))}
         </Swiper>
-        <ButtonIcon className="arrow-wrapper-left" onClick={handleLeftClick}>
-          <LeftArrowIcon className="arrow-icon" />
-        </ButtonIcon>
-        <ButtonIcon className="arrow-wrapper-right" onClick={handleRightClick}>
-          <RightArrowIcon className="arrow-icon" />
-        </ButtonIcon>
+        {images.length > 1 && (
+          <>
+            <ButtonIcon
+              className="arrow-wrapper-left"
+              onClick={handleLeftClick}
+            >
+              <LeftArrowIcon className="arrow-icon" />
+            </ButtonIcon>
+            <ButtonIcon
+              className="arrow-wrapper-right"
+              onClick={handleRightClick}
+            >
+              <RightArrowIcon className="arrow-icon" />
+            </ButtonIcon>
+          </>
+        )}
       </div>
     </Modal>
   );
