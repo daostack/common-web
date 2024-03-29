@@ -56,8 +56,6 @@ interface FeedItemProps {
   shouldPreLoadMessages?: boolean;
   level?: number;
   withoutMenu?: boolean;
-  onFeedItemClick: (feedItemId: string) => void;
-  onInternalLinkClick: (data: InternalLinkData) => void;
 }
 
 const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
@@ -86,8 +84,6 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     shouldPreLoadMessages = false,
     withoutMenu,
     level,
-    onFeedItemClick,
-    onInternalLinkClick,
   } = props;
   const {
     onFeedItemUpdate,
@@ -95,6 +91,8 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     getLastMessage,
     getNonAllowedItems,
     onUserSelect,
+    onFeedItemClick,
+    onInternalLinkClick,
   } = useFeedItemContext();
   const feedItemFollow = useFeedItemFollow(
     { feedItemId: item.id, commonId },

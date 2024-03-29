@@ -346,28 +346,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     [handleUserWithCommonClick, selectedItemCommonData?.id],
   );
 
-  // We should try to set here only the data which rarely can be changed,
-  // so we will not have extra re-renders of ALL rendered items
-  const feedItemContextValue = useMemo<FeedItemContextValue>(
-    () => ({
-      setExpandedFeedItemId,
-      renderFeedItemBaseContent,
-      onFeedItemUpdate,
-      onFeedItemUnfollowed,
-      getLastMessage,
-      getNonAllowedItems,
-      onUserSelect: handleUserWithCommonClick,
-    }),
-    [
-      renderFeedItemBaseContent,
-      onFeedItemUpdate,
-      onFeedItemUnfollowed,
-      getLastMessage,
-      getNonAllowedItems,
-      handleUserWithCommonClick,
-    ],
-  );
-
   const setActiveChatItem = useCallback((nextChatItem: ChatItem | null) => {
     setShouldAllowChatAutoOpen(false);
     setExpandedFeedItemId((currentExpandedFeedItemId) =>
@@ -507,12 +485,21 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       return;
     }
 
+    const queryParamsForPath = {
+      item: feedItemId,
+      message: messageId,
+    };
+
     if (commonId && commonId !== outerCommon?.id) {
+      history.push(getCommonPagePath(commonId, queryParamsForPath));
+      return;
+    }
+    if (chatItem?.nestedItemData) {
       history.push(
-        getCommonPagePath(commonId, {
-          item: feedItemId,
-          message: messageId,
-        }),
+        getCommonPagePath(
+          chatItem?.nestedItemData.common.id,
+          queryParamsForPath,
+        ),
       );
       return;
     }
@@ -615,6 +602,32 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       }
     },
     [refsByItemId],
+  );
+
+  // We should try to set here only the data which rarely can be changed,
+  // so we will not have extra re-renders of ALL rendered items
+  const feedItemContextValue = useMemo<FeedItemContextValue>(
+    () => ({
+      setExpandedFeedItemId,
+      renderFeedItemBaseContent,
+      onFeedItemUpdate,
+      onFeedItemUnfollowed,
+      getLastMessage,
+      getNonAllowedItems,
+      onUserSelect: handleUserWithCommonClick,
+      onFeedItemClick: handleFeedItemClickMemoized,
+      onInternalLinkClick: handleInternalLinkClickMemoized,
+    }),
+    [
+      renderFeedItemBaseContent,
+      onFeedItemUpdate,
+      onFeedItemUnfollowed,
+      getLastMessage,
+      getNonAllowedItems,
+      handleUserWithCommonClick,
+      handleFeedItemClickMemoized,
+      handleInternalLinkClickMemoized,
+    ],
   );
 
   useEffect(() => {
@@ -827,8 +840,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                         directParent={outerCommon?.directParent}
                         rootCommonId={outerCommon?.rootCommonId}
                         shouldPreLoadMessages={shouldPreLoadMessages}
-                        onFeedItemClick={handleFeedItemClickMemoized}
-                        onInternalLinkClick={handleInternalLinkClickMemoized}
                       />
                     );
                   }
