@@ -94,10 +94,6 @@ $extra-pl: 1rem;
 }
 .commonCardActive {
   border-bottom: 0.0625rem solid var(--gentle-stroke);
-
-  @include tablet {
-    margin-right: -1.5rem;
-  }
 }
 
 .loader {
