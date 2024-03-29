@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import {
@@ -7,6 +7,10 @@ import {
   useChatContext,
 } from "@/pages/common/components/ChatComponent";
 import { FeedItem } from "@/pages/common/components/FeedItem";
+import {
+  FeedLayoutEvent,
+  FeedLayoutEventEmitter,
+} from "@/pages/commonFeed/components/FeedLayout/events";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { FeedItemFollowLayoutItem } from "@/shared/interfaces";
 import { CirclesPermissions, Common, CommonMember } from "@/shared/models";
@@ -24,13 +28,16 @@ const FeedItems: FC<FeedItemsProps> = (props) => {
   const { common, commonMember, feedItems, level } = props;
   const chatContext = useChatContext();
   const isTabletView = useIsTabletView();
+  const [activeFeedItemId, setActiveFeedItemId] = useState<string | null>(null);
+  const [expandedFeedItemId, setExpandedFeedItemId] = useState<string | null>(
+    null,
+  );
   const userCircleIds = useMemo(
     () => Object.values(commonMember?.circles.map ?? {}),
     [commonMember?.circles.map],
   );
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const expandedFeedItemId = "";
 
   const chatContextValue = useMemo<ChatContextValue>(
     () => ({
@@ -43,6 +50,28 @@ const FeedItems: FC<FeedItemsProps> = (props) => {
     [chatContext, common, commonMember],
   );
 
+  useEffect(() => {
+    FeedLayoutEventEmitter.on(
+      FeedLayoutEvent.ActiveFeedItemUpdated,
+      setActiveFeedItemId,
+    );
+    FeedLayoutEventEmitter.on(
+      FeedLayoutEvent.ExpandedFeedItemUpdated,
+      setExpandedFeedItemId,
+    );
+
+    return () => {
+      FeedLayoutEventEmitter.off(
+        FeedLayoutEvent.ActiveFeedItemUpdated,
+        setActiveFeedItemId,
+      );
+      FeedLayoutEventEmitter.off(
+        FeedLayoutEvent.ExpandedFeedItemUpdated,
+        setExpandedFeedItemId,
+      );
+    };
+  }, []);
+
   if (feedItems.length === 0) {
     return null;
   }
@@ -51,7 +80,7 @@ const FeedItems: FC<FeedItemsProps> = (props) => {
     <ChatContext.Provider value={chatContextValue}>
       <div className={styles.container}>
         {feedItems.map((item) => {
-          const isActive = false;
+          const isActive = item.itemId === activeFeedItemId;
           const isPinned = (common.pinnedFeedItems || []).some(
             (pinnedItem) => pinnedItem.feedObjectId === item.feedItem.id,
           );

@@ -32,6 +32,10 @@ import {
   ChatContext,
 } from "@/pages/common/components/ChatComponent";
 import {
+  FeedLayoutEvent,
+  FeedLayoutEventEmitter,
+} from "@/pages/commonFeed/components/FeedLayout/events";
+import {
   InboxItemType,
   LOADER_APPEARANCE_DELAY,
   QueryParamKey,
@@ -637,7 +641,19 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     if (activeFeedItemId) {
       userForProfile.resetUserForProfileData(true);
     }
+
+    FeedLayoutEventEmitter.emit(
+      FeedLayoutEvent.ActiveFeedItemUpdated,
+      activeFeedItemId || null,
+    );
   }, [activeFeedItemId]);
+
+  useEffect(() => {
+    FeedLayoutEventEmitter.emit(
+      FeedLayoutEvent.ExpandedFeedItemUpdated,
+      expandedFeedItemId || null,
+    );
+  }, [expandedFeedItemId]);
 
   useEffect(() => {
     if (selectedFeedItem?.itemId && !isTabletView) {
