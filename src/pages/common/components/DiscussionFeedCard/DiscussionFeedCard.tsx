@@ -12,7 +12,7 @@ import { debounce } from "lodash";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { DiscussionService } from "@/services";
 import { DeletePrompt, GlobalOverlay, ReportModal } from "@/shared/components";
-import { EntityTypes } from "@/shared/constants";
+import { EntityTypes, InboxItemType } from "@/shared/constants";
 import { useModal, useNotification } from "@/shared/hooks";
 import {
   FeedItemFollowState,
@@ -87,8 +87,12 @@ interface DiscussionFeedCardProps {
 
 const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
   (props, ref) => {
-    const { setChatItem, feedItemIdForAutoChatOpen, shouldAllowChatAutoOpen } =
-      useChatContext();
+    const {
+      setChatItem,
+      feedItemIdForAutoChatOpen,
+      shouldAllowChatAutoOpen,
+      nestedItemData,
+    } = useChatContext();
     const { notify } = useNotification();
     const {
       item,
@@ -229,6 +233,14 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
           seenOnce: feedItemUserMetadata?.seenOnce,
           seen: feedItemUserMetadata?.seen,
           hasUnseenMention: feedItemUserMetadata?.hasUnseenMention,
+          nestedItemData: nestedItemData && {
+            ...nestedItemData,
+            feedItem: {
+              type: InboxItemType.FeedItemFollow,
+              itemId: item.id,
+              feedItem: item,
+            },
+          },
         });
       }
     }, [
@@ -241,6 +253,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       feedItemUserMetadata?.seenOnce,
       feedItemUserMetadata?.seen,
       feedItemUserMetadata?.hasUnseenMention,
+      nestedItemData,
     ]);
 
     const onDiscussionDelete = useCallback(async () => {

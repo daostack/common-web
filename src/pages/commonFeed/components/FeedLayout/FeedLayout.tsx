@@ -29,8 +29,8 @@ import {
 import {
   ChatContextValue,
   ChatItem,
+  ChatContext,
 } from "@/pages/common/components/ChatComponent";
-import { ChatContext } from "@/pages/common/components/ChatComponent/context";
 import {
   InboxItemType,
   LOADER_APPEARANCE_DELAY,
