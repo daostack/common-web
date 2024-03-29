@@ -92,6 +92,7 @@ interface ProposalFeedCardProps {
   feedItemFollow: FeedItemFollowState;
   onActiveItemDataChange?: (data: FeedLayoutItemChangeData) => void;
   shouldPreLoadMessages: boolean;
+  withoutMenu?: boolean;
   onUserClick?: (userId: string) => void;
   onFeedItemClick: (feedItemId: string) => void;
   onInternalLinkClick: (data: InternalLinkData) => void;
@@ -118,6 +119,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       feedItemFollow,
       onActiveItemDataChange,
       shouldPreLoadMessages,
+      withoutMenu,
       onUserClick,
       onFeedItemClick,
       onInternalLinkClick,
@@ -218,6 +220,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
         feedItemFollow,
         getNonAllowedItems,
         feedItemUserMetadata,
+        withoutMenu,
       },
       {
         report: () => {},

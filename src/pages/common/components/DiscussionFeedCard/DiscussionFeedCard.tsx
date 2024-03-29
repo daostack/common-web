@@ -79,6 +79,7 @@ interface DiscussionFeedCardProps {
   rootCommonId?: string;
   feedItemFollow: FeedItemFollowState;
   shouldPreLoadMessages: boolean;
+  withoutMenu?: boolean;
   onUserClick?: (userId: string) => void;
   onFeedItemClick: (feedItemId: string) => void;
   onInternalLinkClick: (data: InternalLinkData) => void;
@@ -111,6 +112,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       rootCommonId,
       feedItemFollow,
       shouldPreLoadMessages,
+      withoutMenu,
       onUserClick,
       onFeedItemClick,
       onInternalLinkClick,
@@ -188,6 +190,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
         feedItemFollow,
         getNonAllowedItems,
         feedItemUserMetadata,
+        withoutMenu,
       },
       {
         report: onReportModalOpen,

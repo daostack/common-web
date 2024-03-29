@@ -55,6 +55,7 @@ interface FeedItemProps {
   rootCommonId?: string;
   shouldPreLoadMessages?: boolean;
   level?: number;
+  withoutMenu?: boolean;
   onFeedItemClick: (feedItemId: string) => void;
   onInternalLinkClick: (data: InternalLinkData) => void;
 }
@@ -83,6 +84,7 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     directParent,
     rootCommonId,
     shouldPreLoadMessages = false,
+    withoutMenu,
     level,
     onFeedItemClick,
     onInternalLinkClick,
@@ -160,6 +162,7 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     feedItemFollow,
     onUserSelect,
     shouldPreLoadMessages,
+    withoutMenu,
     onUserClick: handleUserClick,
     onFeedItemClick,
     onInternalLinkClick,

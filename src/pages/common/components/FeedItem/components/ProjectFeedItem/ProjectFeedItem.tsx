@@ -183,6 +183,7 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
               directParent={common?.directParent}
               rootCommonId={common?.rootCommonId}
               level={level + 1}
+              withoutMenu
               onFeedItemClick={emptyFunction}
               onInternalLinkClick={emptyFunction}
             />
