@@ -8,7 +8,11 @@ import {
   FeedItemFollowLayoutItem,
 } from "@/shared/interfaces";
 import { CommonFeed } from "@/shared/models";
-import { areTimestampsEqual, convertToTimestamp } from "@/shared/utils";
+import {
+  areTimestampsEqual,
+  convertToTimestamp,
+  sortFeedItemFollowLayoutItems as sortFeedItems,
+} from "@/shared/utils";
 import * as actions from "./actions";
 import {
   CommonSearchState,
@@ -60,13 +64,6 @@ const initialState: CommonState = {
   governance: null,
   recentStreamId: "",
   recentAssignedCircleByMember: {},
-};
-
-const sortFeedItems = (data: FeedItemFollowLayoutItem[]): void => {
-  data.sort(
-    (prevItem, nextItem) =>
-      nextItem.feedItem.updatedAt.seconds - prevItem.feedItem.updatedAt.seconds,
-  );
 };
 
 const updateFeedItemInList = (

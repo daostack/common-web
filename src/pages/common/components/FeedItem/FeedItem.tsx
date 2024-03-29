@@ -56,6 +56,7 @@ interface FeedItemProps {
   shouldPreLoadMessages?: boolean;
   level?: number;
   withoutMenu?: boolean;
+  onFeedItemUpdate?: (item: CommonFeed, isRemoved: boolean) => void;
 }
 
 const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
@@ -84,6 +85,7 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     shouldPreLoadMessages = false,
     withoutMenu,
     level,
+    onFeedItemUpdate: outerOnFeedItemUpdate,
   } = props;
   const {
     onFeedItemUpdate,
@@ -98,7 +100,11 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     { feedItemId: item.id, commonId },
     { withSubscription: true },
   );
-  useFeedItemSubscription(item.id, commonId, onFeedItemUpdate);
+  useFeedItemSubscription(
+    item.id,
+    commonId,
+    outerOnFeedItemUpdate || onFeedItemUpdate,
+  );
 
   const handleUserClick = useMemo(
     () => onUserSelect && ((userId: string) => onUserSelect(userId, commonId)),

@@ -13,7 +13,12 @@ import {
 } from "@/pages/commonFeed/components/FeedLayout/events";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { FeedItemFollowLayoutItem } from "@/shared/interfaces";
-import { CirclesPermissions, Common, CommonMember } from "@/shared/models";
+import {
+  CirclesPermissions,
+  Common,
+  CommonFeed,
+  CommonMember,
+} from "@/shared/models";
 import { checkIsProject } from "@/shared/utils";
 import styles from "./FeedItems.module.scss";
 
@@ -22,10 +27,11 @@ interface FeedItemsProps {
   commonMember?: (CommonMember & CirclesPermissions) | null;
   feedItems: FeedItemFollowLayoutItem[];
   level: number;
+  onFeedItemUpdate: (item: CommonFeed, isRemoved: boolean) => void;
 }
 
 const FeedItems: FC<FeedItemsProps> = (props) => {
-  const { common, commonMember, feedItems, level } = props;
+  const { common, commonMember, feedItems, level, onFeedItemUpdate } = props;
   const chatContext = useChatContext();
   const isTabletView = useIsTabletView();
   const [activeFeedItemId, setActiveFeedItemId] = useState<string | null>(null);
@@ -110,6 +116,7 @@ const FeedItems: FC<FeedItemsProps> = (props) => {
               rootCommonId={common.rootCommonId}
               level={level + 1}
               withoutMenu
+              onFeedItemUpdate={onFeedItemUpdate}
             />
           );
         })}

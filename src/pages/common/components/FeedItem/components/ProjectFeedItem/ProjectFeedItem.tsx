@@ -67,6 +67,7 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
     data: feedItems,
     fetched,
     fetchFeedItems,
+    onFeedItemUpdate,
   } = useFeedItems(commonId, userId);
   const [isExpanded, setIsExpanded] = useState(false);
   const { getCollapseProps, getToggleProps } = useCollapse({
@@ -195,6 +196,7 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
               commonMember={commonMember}
               feedItems={feedItems}
               level={level}
+              onFeedItemUpdate={onFeedItemUpdate}
             />
           )}
         </CommonCard>
