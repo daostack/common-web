@@ -617,6 +617,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       onUserSelect: handleUserWithCommonClick,
       onFeedItemClick: handleFeedItemClickMemoized,
       onInternalLinkClick: handleInternalLinkClickMemoized,
+      onActiveItemDataChange: handleActiveFeedItemDataChange,
     }),
     [
       renderFeedItemBaseContent,
@@ -627,6 +628,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       handleUserWithCommonClick,
       handleFeedItemClickMemoized,
       handleInternalLinkClickMemoized,
+      handleActiveFeedItemDataChange,
     ],
   );
 
@@ -836,7 +838,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                           !item.feedItemFollowWithMetadata ||
                           item.feedItemFollowWithMetadata.userId !== userId
                         }
-                        onActiveItemDataChange={handleActiveFeedItemDataChange}
                         directParent={outerCommon?.directParent}
                         rootCommonId={outerCommon?.rootCommonId}
                         shouldPreLoadMessages={shouldPreLoadMessages}

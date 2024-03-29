@@ -79,7 +79,7 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     sizeKey,
     currentUserId,
     shouldCheckItemVisibility = true,
-    onActiveItemDataChange,
+    onActiveItemDataChange: outerOnActiveItemDataChange,
     directParent,
     rootCommonId,
     shouldPreLoadMessages = false,
@@ -95,6 +95,7 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     onUserSelect,
     onFeedItemClick,
     onInternalLinkClick,
+    onActiveItemDataChange: contextOnActiveItemDataChange,
   } = useFeedItemContext();
   const feedItemFollow = useFeedItemFollow(
     { feedItemId: item.id, commonId },
@@ -105,6 +106,8 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     commonId,
     outerOnFeedItemUpdate || onFeedItemUpdate,
   );
+  const onActiveItemDataChange =
+    outerOnActiveItemDataChange || contextOnActiveItemDataChange;
 
   const handleUserClick = useMemo(
     () => onUserSelect && ((userId: string) => onUserSelect(userId, commonId)),

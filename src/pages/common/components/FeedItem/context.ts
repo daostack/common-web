@@ -1,5 +1,5 @@
 import React, { MouseEventHandler, ReactNode, useContext } from "react";
-import { ContextMenuItem } from "@/shared/interfaces";
+import { ContextMenuItem, FeedLayoutItemChangeData } from "@/shared/interfaces";
 import {
   CommonFeed,
   CommonFeedType,
@@ -81,6 +81,10 @@ export interface FeedItemContextValue {
   onUserSelect?: (userId: string, commonId?: string) => void;
   onFeedItemClick: (feedItemId: string) => void;
   onInternalLinkClick: (data: InternalLinkData) => void;
+  onActiveItemDataChange?: (
+    data: FeedLayoutItemChangeData,
+    commonId?: string,
+  ) => void;
 }
 
 export const FeedItemContext = React.createContext<FeedItemContextValue>({
