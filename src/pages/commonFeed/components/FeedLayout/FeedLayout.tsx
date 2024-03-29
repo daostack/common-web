@@ -209,9 +209,14 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   } = useCommonMember({
     shouldAutoReset: false,
   });
-  const commonMember = outerCommonMember || fetchedCommonMember;
+  const commonMember =
+    chatItem?.nestedItemData?.commonMember ||
+    outerCommonMember ||
+    fetchedCommonMember;
   const userForProfile = useUserForProfile();
-  const governance = outerGovernance || fetchedGovernance;
+  const governance = chatItem?.nestedItemData
+    ? fetchedGovernance
+    : outerGovernance || fetchedGovernance;
   const [splitPaneRef, setSplitPaneRef] = useState<Element | null>(null);
   const maxContentSize =
     settings?.getSplitViewMaxSize?.(windowWidth) ??
@@ -306,15 +311,17 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   );
 
   const selectedFeedItem = useMemo(
-    () => allFeedItems?.find((item) => item.itemId === activeFeedItemId),
-    [allFeedItems, activeFeedItemId],
+    () =>
+      chatItem?.nestedItemData?.feedItem ||
+      allFeedItems?.find((item) => item.itemId === activeFeedItemId),
+    [chatItem?.nestedItemData?.feedItem, allFeedItems, activeFeedItemId],
   );
   const selectedItemCommonData = checkIsFeedItemFollowLayoutItem(
     selectedFeedItem,
   )
     ? getItemCommonData(
         selectedFeedItem?.feedItemFollowWithMetadata,
-        outerCommon,
+        chatItem?.nestedItemData?.common || outerCommon,
       )
     : null;
 

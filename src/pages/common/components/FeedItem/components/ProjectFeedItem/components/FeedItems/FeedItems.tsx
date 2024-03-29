@@ -9,7 +9,7 @@ import { FeedItem } from "../../../../../FeedItem";
 import styles from "./FeedItems.module.scss";
 
 interface FeedItemsProps {
-  common?: Common | null;
+  common: Common;
   commonMember?: (CommonMember & CirclesPermissions) | null;
   feedItems: FeedItemFollowLayoutItem[];
   level: number;
@@ -34,7 +34,7 @@ const FeedItems: FC<FeedItemsProps> = (props) => {
     <div className={styles.container}>
       {feedItems.map((item) => {
         const isActive = false;
-        const isPinned = (common?.pinnedFeedItems || []).some(
+        const isPinned = (common.pinnedFeedItems || []).some(
           (pinnedItem) => pinnedItem.feedObjectId === item.feedItem.id,
         );
 
@@ -42,11 +42,11 @@ const FeedItems: FC<FeedItemsProps> = (props) => {
           <FeedItem
             key={item.feedItem.id}
             commonMember={commonMember}
-            commonId={common?.id}
-            commonName={common?.name || ""}
-            commonImage={common?.image || ""}
-            commonNotion={common?.notion}
-            pinnedFeedItems={common?.pinnedFeedItems}
+            commonId={common.id}
+            commonName={common.name || ""}
+            commonImage={common.image || ""}
+            commonNotion={common.notion}
+            pinnedFeedItems={common.pinnedFeedItems}
             isProject={checkIsProject(common)}
             isPinned={isPinned}
             item={item.feedItem}
@@ -59,8 +59,8 @@ const FeedItems: FC<FeedItemsProps> = (props) => {
               !item.feedItemFollowWithMetadata ||
               item.feedItemFollowWithMetadata.userId !== userId
             }
-            directParent={common?.directParent}
-            rootCommonId={common?.rootCommonId}
+            directParent={common.directParent}
+            rootCommonId={common.rootCommonId}
             level={level + 1}
             withoutMenu
             onFeedItemClick={emptyFunction}

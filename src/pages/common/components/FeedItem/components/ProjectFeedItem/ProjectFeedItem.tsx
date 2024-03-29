@@ -188,9 +188,8 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
           )}
           hideCardStyles={feedCardSettings?.shouldHideCardStyles ?? true}
         >
-          {isLoading ? (
-            <Loader className={styles.loader} />
-          ) : (
+          {isLoading && <Loader className={styles.loader} />}
+          {!isLoading && common && (
             <FeedItems
               common={common}
               commonMember={commonMember}
