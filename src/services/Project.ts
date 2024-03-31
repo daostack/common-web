@@ -43,6 +43,7 @@ class ProjectService {
           common,
           hasAccessToSpace:
             hasMembership ||
+            !common.listVisibility ||
             common.listVisibility === SpaceListVisibility.Public,
           hasMembership,
           hasPermissionToAddProject:

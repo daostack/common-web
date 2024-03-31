@@ -43,7 +43,7 @@ export const useProjectsData = (options: Options): Return => {
 
   const fetchAdditionalCommonInfo = useCallback(
     async () => {
-      if (state.loading || state.fetched || !userId) {
+      if (state.loading || state.fetched) {
         return;
       }
 
@@ -57,7 +57,7 @@ export const useProjectsData = (options: Options): Return => {
         try {
           const [governance, commonMember] = await Promise.all([
             GovernanceService.getGovernanceByCommonId(common.id),
-            CommonService.getCommonMemberByUserId(common.id, userId),
+            userId ? CommonService.getCommonMemberByUserId(common.id, userId) : null,
           ]);
 
           if (governance && commonMember) {
@@ -72,21 +72,21 @@ export const useProjectsData = (options: Options): Return => {
             return {
               ...common,
               commonMember: commonMemberData,
-              hasAccessToSpace: (common.listVisibility === SpaceListVisibility.Public) || Boolean(commonMemberData),
+              hasAccessToSpace: (common.listVisibility === SpaceListVisibility.Public) || Boolean(commonMemberData) || !common.listVisibility,
             };
           }
         } catch (e) {
           return {
             ...common,
             commonMember: null,
-            hasAccessToSpace: common.listVisibility === SpaceListVisibility.Public
+            hasAccessToSpace: common.listVisibility === SpaceListVisibility.Public || !common.listVisibility
           }
         }
 
         return {
           ...common,
           commonMember: null,
-          hasAccessToSpace: common.listVisibility === SpaceListVisibility.Public,
+          hasAccessToSpace: common.listVisibility === SpaceListVisibility.Public || !common.listVisibility,
         }
       }
       ));
