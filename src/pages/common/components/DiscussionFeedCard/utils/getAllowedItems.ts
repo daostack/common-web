@@ -33,6 +33,10 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
   [FeedItemMenuItem.MarkUnread]: ({ feedItemUserMetadata }) => {
     const { count, seen, isSeenUpdating } = feedItemUserMetadata || {};
 
+    if (!feedItemUserMetadata) {
+      return true;
+    }
+
     if (isSeenUpdating) {
       return false;
     }

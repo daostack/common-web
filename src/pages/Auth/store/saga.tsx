@@ -538,6 +538,7 @@ function* logOut() {
     window?.ReactNativeWebView?.postMessage(WebviewActions.logout);
   }
 
+  resetGlobalData(true);
   history.push(ROUTE_PATHS.HOME);
   yield true;
 }
