@@ -13,3 +13,34 @@
 .totalCount {
   margin-right: 0.25rem;
 }
+
+.reactionsTooltipTrigger {
+  border: none;
+  background-color: var(--secondary-background);
+}
+
+.reactionsTooltipContent {
+  z-index: 999;
+  min-width: 1rem;
+  min-height: 1rem;
+  background-color: var(--primary-background);
+}
+
+.listItem {
+  display: flex;
+  align-items: center;
+  margin: 0.5rem 0;
+  //border: 0.0625rem solid var(--gentle-stroke);
+}
+
+.userAvatar {
+  margin-right: 0.5rem;
+}
+
+.listUsername {
+  margin-right: 0.5rem;
+}
+
+.listItemEmoji {
+  margin-left: auto;
+}

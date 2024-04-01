@@ -1,7 +1,9 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import { isEmpty } from "lodash";
+import { UserAvatar } from "@/shared/components/UserAvatar";
 import { useUserReaction, useUsersByIds } from "@/shared/hooks/useCases";
 import { ReactionCounts, UserReaction } from "@/shared/models";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui-kit";
 import styles from "./Reactions.module.scss";
 
 interface ReactionsProps {
@@ -12,18 +14,10 @@ interface ReactionsProps {
 export const Reactions: FC<ReactionsProps> = (props) => {
   const { reactions, discussionMessageId } = props;
   const { getUserReaction } = useUserReaction({ fetchAll: true });
-  const { fetchUsers, data: users } = useUsersByIds();
+  const { fetchUsers, data: users, fetched } = useUsersByIds();
   const [usersReactions, setUsersReactions] = useState<
     UserReaction[] | null | undefined
   >(null);
-
-  if (usersReactions) {
-    console.log(usersReactions);
-  }
-
-  if (users) {
-    console.log(users);
-  }
 
   useEffect(() => {
     let isMounted = true;
@@ -52,7 +46,7 @@ export const Reactions: FC<ReactionsProps> = (props) => {
     return () => {
       isMounted = false;
     };
-  }, [discussionMessageId]); // , chatMessageId, chatChannelId
+  }, [discussionMessageId, reactions]); // , chatMessageId, chatChannelId
 
   useEffect(() => {
     if (usersReactions) {
@@ -74,12 +68,40 @@ export const Reactions: FC<ReactionsProps> = (props) => {
     .filter((key) => reactions[key] > 0)
     .map((emoji, index) => <span key={index}>{emoji}</span>);
 
+  const list = useMemo(() => {
+    if (users) {
+      return users.map((user) => {
+        const userReaction = usersReactions?.find(
+          (elem) => elem.userId === user.uid,
+        )?.emoji;
+        return (
+          <div className={styles.listItem}>
+            <UserAvatar
+              photoURL={user.photoURL}
+              className={styles.userAvatar}
+            />
+            <span className={styles.listUsername}>{user.displayName}</span>
+            <span className={styles.listItemEmoji}>{userReaction}</span>
+          </div>
+        );
+      });
+    }
+  }, [users, usersReactions]);
+
   return (
     <div className={styles.container}>
       {totalCount > 1 && (
         <span className={styles.totalCount}>{totalCount}</span>
       )}
-      {emojis}
+      <Tooltip>
+        <TooltipTrigger className={styles.reactionsTooltipTrigger}>
+          {emojis}
+        </TooltipTrigger>
+        <TooltipContent className={styles.reactionsTooltipContent}>
+          {!fetched && !users && "Loading..."}
+          {fetched && list}
+        </TooltipContent>
+      </Tooltip>
     </div>
   );
 };
