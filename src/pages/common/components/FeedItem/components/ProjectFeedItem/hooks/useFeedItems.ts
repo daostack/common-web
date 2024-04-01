@@ -1,12 +1,19 @@
 import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import { CommonFeedService, Logger } from "@/services";
-import { FirestoreDataSource, InboxItemType } from "@/shared/constants";
+import { InboxItemType } from "@/shared/constants";
 import { FeedItemFollowLayoutItem, LoadingState } from "@/shared/interfaces";
-import { CirclesPermissions, CommonFeed, CommonMember } from "@/shared/models";
+import {
+  CirclesPermissions,
+  Common,
+  CommonFeed,
+  CommonMember,
+} from "@/shared/models";
 import { sortFeedItemFollowLayoutItems } from "@/shared/utils";
-import { selectFeedStateByCommonId } from "@/store/states";
+import { FeedItems, selectFeedStateByCommonId } from "@/store/states";
+import * as actions from "@/store/states/cache/actions";
+import { getFeedLayoutItemDateForSorting } from "@/store/states/inbox/utils";
 
 const ITEMS_LIMIT = 5;
 
@@ -27,6 +34,7 @@ export const useFeedItems = (
   options: Options = {},
 ): Return => {
   const { commonMember } = options;
+  const dispatch = useDispatch();
   const currentLoadingIdRef = useRef("");
   const [state, setState] = useState<State>({
     loading: false,
@@ -34,6 +42,51 @@ export const useFeedItems = (
     data: [],
   });
   const feedState = useSelector(selectFeedStateByCommonId(commonId));
+
+  const updateCachedFeedState = (
+    feedItemsForUpdate: FeedItemFollowLayoutItem[],
+    pinnedFeedItems: Common["pinnedFeedItems"],
+  ) => {
+    const feedItemsData = feedItemsForUpdate.filter(
+      (item) =>
+        !pinnedFeedItems.some(
+          (pinnedItem) => pinnedItem.feedObjectId === item.feedItem.id,
+        ),
+    );
+    const pinnedFeedItemsData = feedItemsForUpdate.filter((item) =>
+      pinnedFeedItems.some(
+        (pinnedItem) => pinnedItem.feedObjectId === item.feedItem.id,
+      ),
+    );
+    const feedItems: FeedItems = {
+      data: feedItemsData,
+      loading: false,
+      hasMore: true,
+      firstDocTimestamp: feedItemsForUpdate?.[0]
+        ? getFeedLayoutItemDateForSorting(feedItemsForUpdate[0])
+        : null,
+      lastDocTimestamp: feedItemsForUpdate?.[feedItemsForUpdate.length - 1]
+        ? getFeedLayoutItemDateForSorting(
+            feedItemsForUpdate[feedItemsForUpdate.length - 1],
+          )
+        : null,
+      batchNumber: 1,
+    };
+
+    dispatch(
+      actions.updateFeedStateByCommonId({
+        commonId,
+        state: {
+          feedItems,
+          pinnedFeedItems: {
+            data: pinnedFeedItemsData,
+            loading: false,
+          },
+          sharedFeedItem: null,
+        },
+      }),
+    );
+  };
 
   const fetchFeedItems = async () => {
     if (state.loading || state.fetched) {
@@ -64,15 +117,16 @@ export const useFeedItems = (
     currentLoadingIdRef.current = loadingId;
 
     try {
-      const { data } = await CommonFeedService.getCommonFeedItemsByUpdatedAt(
-        commonId,
-        userId,
-        {
-          commonMember,
-          limit: ITEMS_LIMIT,
-          withoutPinnedItems: false,
-        },
-      );
+      const { data, pinnedFeedItems } =
+        await CommonFeedService.getCommonFeedItemsByUpdatedAt(
+          commonId,
+          userId,
+          {
+            commonMember,
+            limit: ITEMS_LIMIT,
+            withoutPinnedItems: false,
+          },
+        );
       const convertedData: FeedItemFollowLayoutItem[] = data.map((item) => ({
         type: InboxItemType.FeedItemFollow,
         itemId: item.id,
@@ -85,6 +139,10 @@ export const useFeedItems = (
           fetched: true,
           data: convertedData,
         });
+
+        if (cachedFeedItems.length < convertedData.length) {
+          updateCachedFeedState(convertedData, pinnedFeedItems);
+        }
       }
     } catch (err) {
       if (currentLoadingIdRef.current === loadingId) {

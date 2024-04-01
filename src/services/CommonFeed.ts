@@ -15,6 +15,7 @@ import { UnlinkStreamPayload } from "@/shared/interfaces/UnlinkStreamPayload";
 import {
   CirclesPermissions,
   Collection,
+  Common,
   CommonFeed,
   CommonFeedObjectUserUnique,
   CommonFeedType,
@@ -103,6 +104,7 @@ class CommonFeedService {
     firstDocTimestamp: Timestamp | null;
     lastDocTimestamp: Timestamp | null;
     hasMore: boolean;
+    pinnedFeedItems: Common["pinnedFeedItems"];
   }> => {
     const {
       startAfter,
@@ -116,7 +118,7 @@ class CommonFeedService {
       feedItemId
         ? this.getCommonFeedItemById(commonId, feedItemId, cached)
         : null,
-      withoutPinnedItems ? CommonService.getCommonById(commonId, cached) : null,
+      CommonService.getCommonById(commonId, cached),
       options.commonMember ||
         (userId &&
           CommonService.getCommonMemberByUserId(commonId, userId, source)) ||
@@ -181,6 +183,7 @@ class CommonFeedService {
       firstDocTimestamp,
       lastDocTimestamp,
       hasMore: feedItems.length === limit,
+      pinnedFeedItems: common?.pinnedFeedItems || [],
     };
   };
 
