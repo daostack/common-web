@@ -31,10 +31,7 @@ export const generateCirclesDataForCommonMember = (
       ([_, circle]) => circle.id === id,
     );
     if (!circle || !circle[1]) {
-      throw new GeneralError({
-        message: `could not find circle in governance ${id}`,
-        code: ErrorCode.CCircleInGovernanceNotFound,
-      });
+      return;
     }
     circleIdsByHierarchy.add(circle[1].id);
     circlesIndexesByHierarchy.add(circleIndexGuard(circle[0]));
@@ -71,10 +68,7 @@ export const generateCirclesDataForCommonMember = (
     );
 
     if (!circle) {
-      throw new GeneralError({
-        message: "could not find cirlce in governance",
-        code: ErrorCode.CCircleInGovernanceNotFound,
-      });
+      return;
     }
     Object.keys(circle[1].allowedActions).forEach((action) => {
       allowedActions.add(action as GovernanceActions);
@@ -109,12 +103,7 @@ export const generateCirclesDataForCommonMember = (
     (prev, next) => {
       const circle = governanceCircles[next];
       if (!circle) {
-        throw new GeneralError({
-          message: `could not find cirlce in governance ${JSON.stringify(
-            circle,
-          )}`,
-          code: ErrorCode.CCircleInGovernanceNotFound,
-        });
+        return prev;
       }
       circleIdsByHierarchy.add(circle[1]?.id);
       return { ...prev, [next]: circle.id };
