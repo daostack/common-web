@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import { CommonFeedService, Logger } from "@/services";
@@ -136,6 +136,12 @@ export const useFeedItems = (
       data: nextData,
     }));
   };
+
+  useEffect(() => {
+    return () => {
+      currentLoadingIdRef.current = "";
+    };
+  }, []);
 
   return {
     ...state,
