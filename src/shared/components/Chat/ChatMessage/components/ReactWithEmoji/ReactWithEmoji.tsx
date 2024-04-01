@@ -85,7 +85,7 @@ export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
         );
 
         if (isMounted) {
-          setUserReaction(userReaction);
+          setUserReaction(userReaction?.[0]);
         }
       }
     })();

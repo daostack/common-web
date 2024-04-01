@@ -11,7 +11,7 @@ interface Return {
   getDMUserReaction: (
     chatMessageId: string,
     chatChannelId: string,
-  ) => Promise<UserReaction | null | undefined>;
+  ) => Promise<UserReaction[] | null | undefined>;
 }
 
 interface Options {
@@ -45,6 +45,7 @@ export const useUserReaction = ({ fetchAll }: Options): Return => {
             chatMessageId,
             chatChannelId,
             userId,
+            fetchAll,
           );
         } catch (error) {
           Logger.error(error);

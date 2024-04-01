@@ -9,11 +9,16 @@ import styles from "./Reactions.module.scss";
 interface ReactionsProps {
   reactions?: ReactionCounts | null;
   discussionMessageId?: string;
+  chatMessageId?: string;
+  chatChannelId?: string;
 }
 
 export const Reactions: FC<ReactionsProps> = (props) => {
-  const { reactions, discussionMessageId } = props;
-  const { getUserReaction } = useUserReaction({ fetchAll: true });
+  const { reactions, discussionMessageId, chatMessageId, chatChannelId } =
+    props;
+  const { getUserReaction, getDMUserReaction } = useUserReaction({
+    fetchAll: true,
+  });
   const { fetchUsers, data: users, fetched } = useUsersByIds();
   const [usersReactions, setUsersReactions] = useState<
     UserReaction[] | null | undefined
@@ -29,24 +34,22 @@ export const Reactions: FC<ReactionsProps> = (props) => {
         if (isMounted) {
           setUsersReactions(usersReactions as UserReaction[]);
         }
+      } else if (chatMessageId && chatChannelId) {
+        const userReaction = await getDMUserReaction(
+          chatMessageId,
+          chatChannelId,
+        );
+
+        if (isMounted) {
+          setUsersReactions(userReaction as UserReaction[]);
+        }
       }
-
-      // else if (chatMessageId && chatChannelId) {
-      //   const userReaction = await getDMUserReaction(
-      //     chatMessageId,
-      //     chatChannelId,
-      //   );
-
-      //   if (isMounted) {
-      //     setUserReaction(userReaction);
-      //   }
-      // }
     })();
 
     return () => {
       isMounted = false;
     };
-  }, [discussionMessageId, reactions]); // , chatMessageId, chatChannelId
+  }, [discussionMessageId, chatMessageId, chatChannelId, reactions]);
 
   useEffect(() => {
     if (usersReactions) {
