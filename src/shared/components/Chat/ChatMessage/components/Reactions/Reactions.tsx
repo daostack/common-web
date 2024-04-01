@@ -1,14 +1,64 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { isEmpty } from "lodash";
-import { ReactionCounts } from "@/shared/models";
+import { useUserReaction, useUsersByIds } from "@/shared/hooks/useCases";
+import { ReactionCounts, UserReaction } from "@/shared/models";
 import styles from "./Reactions.module.scss";
 
 interface ReactionsProps {
   reactions?: ReactionCounts | null;
+  discussionMessageId?: string;
 }
 
 export const Reactions: FC<ReactionsProps> = (props) => {
-  const { reactions } = props;
+  const { reactions, discussionMessageId } = props;
+  const { getUserReaction } = useUserReaction({ fetchAll: true });
+  const { fetchUsers, data: users } = useUsersByIds();
+  const [usersReactions, setUsersReactions] = useState<
+    UserReaction[] | null | undefined
+  >(null);
+
+  if (usersReactions) {
+    console.log(usersReactions);
+  }
+
+  if (users) {
+    console.log(users);
+  }
+
+  useEffect(() => {
+    let isMounted = true;
+
+    (async () => {
+      if (discussionMessageId) {
+        const usersReactions = await getUserReaction(discussionMessageId);
+
+        if (isMounted) {
+          setUsersReactions(usersReactions as UserReaction[]);
+        }
+      }
+
+      // else if (chatMessageId && chatChannelId) {
+      //   const userReaction = await getDMUserReaction(
+      //     chatMessageId,
+      //     chatChannelId,
+      //   );
+
+      //   if (isMounted) {
+      //     setUserReaction(userReaction);
+      //   }
+      // }
+    })();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [discussionMessageId]); // , chatMessageId, chatChannelId
+
+  useEffect(() => {
+    if (usersReactions) {
+      fetchUsers(usersReactions.map((user) => user.userId));
+    }
+  }, [usersReactions]);
 
   if (!reactions || isEmpty(reactions)) {
     return null;
