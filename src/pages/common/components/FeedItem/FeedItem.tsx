@@ -26,7 +26,7 @@ import { DiscussionFeedCard } from "../DiscussionFeedCard";
 import { ProposalFeedCard } from "../ProposalFeedCard";
 import { ProjectFeedItem } from "./components";
 import { useFeedItemContext } from "./context";
-import { FeedItemRef } from "./types";
+import { FeedItemRef, GetNonAllowedItemsOptions } from "./types";
 
 interface FeedItemProps {
   commonId?: string;
@@ -57,6 +57,7 @@ interface FeedItemProps {
   level?: number;
   withoutMenu?: boolean;
   onFeedItemUpdate?: (item: CommonFeed, isRemoved: boolean) => void;
+  getNonAllowedItems?: GetNonAllowedItemsOptions;
 }
 
 const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
@@ -86,12 +87,13 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     withoutMenu,
     level,
     onFeedItemUpdate: outerOnFeedItemUpdate,
+    getNonAllowedItems: outerGetNonAllowedItems,
   } = props;
   const {
     onFeedItemUpdate,
     onFeedItemUnfollowed,
     getLastMessage,
-    getNonAllowedItems,
+    getNonAllowedItems: contextGetNonAllowedItems,
     onUserSelect,
     onFeedItemClick,
     onInternalLinkClick,
@@ -108,6 +110,8 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
   );
   const onActiveItemDataChange =
     outerOnActiveItemDataChange || contextOnActiveItemDataChange;
+  const getNonAllowedItems =
+    outerGetNonAllowedItems || contextGetNonAllowedItems;
 
   const handleUserClick = useMemo(
     () => onUserSelect && ((userId: string) => onUserSelect(userId, commonId)),

@@ -20,6 +20,7 @@ import {
   CommonMember,
 } from "@/shared/models";
 import { checkIsProject } from "@/shared/utils";
+import { getNonAllowedItems } from "./utils";
 import styles from "./FeedItems.module.scss";
 
 interface FeedItemsProps {
@@ -115,8 +116,8 @@ const FeedItems: FC<FeedItemsProps> = (props) => {
               directParent={common.directParent}
               rootCommonId={common.rootCommonId}
               level={level + 1}
-              withoutMenu
               onFeedItemUpdate={onFeedItemUpdate}
+              getNonAllowedItems={getNonAllowedItems}
             />
           );
         })}
