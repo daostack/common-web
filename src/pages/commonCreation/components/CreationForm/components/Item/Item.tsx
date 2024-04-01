@@ -8,6 +8,7 @@ import {
   RolesArrayWrapper,
   NotionIntegration,
   AdvancedSettings,
+  SecretSpace,
 } from "@/shared/components/Form/Formik";
 import { FeatureFlags } from "@/shared/constants";
 import { useFeatureFlag } from "@/shared/hooks/useFeatureFlag";
@@ -25,7 +26,9 @@ const Item: FC<ItemProps> = (props) => {
   const { className: outerClassName, item, disabled } = props;
   const className = classNames(outerClassName, item.className);
   const featureFlags = useFeatureFlag();
-  const isAdvancedSettingsEnabled = featureFlags?.get(FeatureFlags.AdvancedSettings);
+  const isAdvancedSettingsEnabled = featureFlags?.get(
+    FeatureFlags.AdvancedSettings,
+  );
 
   switch (item.type) {
     case CreationFormItemType.TextField:
@@ -88,7 +91,11 @@ const Item: FC<ItemProps> = (props) => {
     case CreationFormItemType.NotionIntegration:
       return <NotionIntegration {...item.props} className={className} />;
     case CreationFormItemType.AdvancedSettings:
-      return isAdvancedSettingsEnabled ? <AdvancedSettings {...item.props} /> : null;
+      return isAdvancedSettingsEnabled ? (
+        <AdvancedSettings {...item.props} />
+      ) : null;
+    case CreationFormItemType.SecretSpace:
+      return <SecretSpace />;
     default:
       return null;
   }

@@ -1,4 +1,5 @@
-import { CommonService, GovernanceService, ProjectService } from "@/services";
+import { CommonService, ProjectService, UserService } from "@/services";
+import { Governance } from "@/shared/models";
 import { ProjectsStateItem } from "../../../projects";
 import { getPermissionsDataByAllUserCommonMemberInfo } from "./getPermissionsDataByAllUserCommonMemberInfo";
 
@@ -6,47 +7,54 @@ export const getProjects = async (
   commonId: string,
   userId?: string,
 ): Promise<ProjectsStateItem[]> => {
-  const commonsWithSubCommons = await CommonService.getCommonsWithSubCommons([
-    commonId,
+  const [commonFlatTree, userMembershipsWithId] = await Promise.all([
+    CommonService.getCommonFlatTree(commonId),
+    userId ? UserService.getUserMemberships(userId) : null,
   ]);
-  const commonsWithoutMainParentCommon = commonsWithSubCommons.filter(
-    (common) => common.id !== commonId,
-  );
-  const allUserCommonMemberInfo = userId
-    ? await CommonService.getAllUserCommonMemberInfo(userId)
-    : [];
-  const userCommonIds = allUserCommonMemberInfo.map((item) => item.commonId);
-  const governanceList = await GovernanceService.getGovernanceListByCommonIds(
-    userCommonIds,
-  );
+  const spaces = commonFlatTree?.spaces || {};
+  const userMemberships = userMembershipsWithId?.commons || {};
+  const userCommonIds = Object.keys(userMemberships);
+  const governanceList: Pick<Governance, "commonId" | "circles">[] =
+    Object.values(spaces).map((item) => ({
+      commonId: item.id,
+      circles: item.circles,
+    }));
   const permissionsData = getPermissionsDataByAllUserCommonMemberInfo(
-    allUserCommonMemberInfo,
+    userMemberships,
     governanceList,
   );
   const data = ProjectService.parseDataToProjectsInfo(
-    commonsWithoutMainParentCommon,
+    Object.values(spaces),
     userCommonIds,
     permissionsData,
   );
 
-  return data.map(
-    ({
-      common,
-      hasMembership,
-      hasPermissionToAddProject,
-      hasPermissionToLinkToHere,
-      hasPermissionToMoveToHere,
-    }) => ({
-      commonId: common.id,
-      image: common.image,
-      name: common.name,
-      directParent: common.directParent,
-      rootCommonId: common.rootCommonId,
-      hasMembership,
-      hasPermissionToAddProject,
-      hasPermissionToLinkToHere,
-      hasPermissionToMoveToHere,
-      notificationsAmount: 0,
-    }),
-  );
+  return data
+    .map(
+      ({
+        common,
+        hasAccessToSpace,
+        hasMembership,
+        hasPermissionToAddProject,
+        hasPermissionToLinkToHere,
+        hasPermissionToMoveToHere,
+      }) => ({
+        commonId: common.id,
+        image: common.image || "",
+        name: common.name,
+        directParent: {
+          commonId: common.parentId,
+          circleId: "",
+        },
+        rootCommonId: commonId,
+        hasAccessToSpace,
+        hasMembership,
+        hasPermissionToAddProject,
+        hasPermissionToLinkToHere,
+        hasPermissionToMoveToHere,
+        notificationsAmount: 0,
+        listVisibility: common.listVisibility,
+      }),
+    )
+    .filter(({ hasAccessToSpace }) => hasAccessToSpace);
 };

@@ -73,12 +73,14 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
             id: chatChannelUserStatus.lastSeenChatMessageId,
           }
         : undefined,
+      count: chatChannelUserStatus?.notSeenCount,
       seenOnce: chatChannelUserStatus?.seenOnce,
       seen: chatChannelUserStatus?.seen,
     });
   }, [
     chatChannel,
     chatChannelUserStatus?.lastSeenChatMessageId,
+    chatChannelUserStatus?.notSeenCount,
     chatChannelUserStatus?.seenOnce,
     chatChannelUserStatus?.seen,
   ]);
@@ -130,6 +132,12 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
       handleOpenChat();
     }
   }, [isChatChannelUserStatusFetched, shouldAllowChatAutoOpen]);
+
+  useEffect(() => {
+    if (isActive && shouldAllowChatAutoOpen !== null) {
+      handleOpenChat();
+    }
+  }, [isActive, shouldAllowChatAutoOpen, handleOpenChat]);
 
   useEffect(() => {
     if (isActive && finalTitle && dmUsersNames) {

@@ -5,6 +5,7 @@ import { ErrorCode } from "@/shared/constants";
 import {
   CreateProjectPayload,
   IntermediateCreateProjectPayload,
+  SpaceListVisibility,
 } from "@/shared/interfaces";
 import { Common } from "@/shared/models";
 import {
@@ -74,9 +75,9 @@ export const useProjectCreation = (): Return => {
           gallery,
           video: creationData.videoUrl
             ? {
-              title: `Space ${creationData.spaceName} Video`,
-              value: creationData.videoUrl,
-            }
+                title: `Space ${creationData.spaceName} Video`,
+                value: creationData.videoUrl,
+              }
             : undefined,
           links,
           highestCircleId: creationData.highestCircleId,
@@ -85,17 +86,19 @@ export const useProjectCreation = (): Return => {
               creationData.advancedSettings?.permissionGovernanceId,
             circles: advancedSettingsCirclesPayload,
           },
+          listVisibility:
+            creationData.listVisibility ?? SpaceListVisibility.Public,
         };
         const createdProject = await ProjectService.createNewProject(
           parentCommonId,
           payload,
-          isAdvancedSettingsEnabled
+          isAdvancedSettingsEnabled,
         );
         setProject(createdProject);
       } catch (error) {
         const errorMessage =
           isRequestError(error) &&
-            error.response?.data?.errorCode === ErrorCode.ArgumentDuplicatedError
+          error.response?.data?.errorCode === ErrorCode.ArgumentDuplicatedError
             ? `Space with name "${creationData.spaceName}" already exists`
             : "Something went wrong...";
 

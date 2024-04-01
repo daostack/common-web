@@ -7,7 +7,7 @@
   font-family: PoppinsSans, sans-serif;
   font-size: $xsmall;
   text-align: center;
-  color: $purple-2;
+  color: var(--primary-fill);
 
   .user-auth-info__provider-icon {
     flex-shrink: 0;
@@ -18,6 +18,6 @@
   .user-auth-info__provider-icon--phone {
     width: 1.25rem;
     height: 1.25rem;
-    color: $purple;
+    color: var(--primary-fill);
   }
 }

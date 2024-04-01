@@ -79,6 +79,11 @@ interface ChatMessageProps {
   chatChannelId?: string;
 }
 
+export interface DMChatMessageReaction {
+  emoji: string;
+  prevUserEmoji?: string;
+}
+
 const getStaticLinkByChatType = (chatType: ChatType): StaticLinkType => {
   switch (chatType) {
     case ChatType.ProposalComments:
@@ -120,6 +125,7 @@ export default function DMChatMessage({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showReactWithEmoji, setShowReactWithEmoji] = useState(false);
   const [isMessageEditLoading, setIsMessageEditLoading] = useState(false);
+  const [dmEmoji, setDMEmoji] = useState<DMChatMessageReaction | null>();
   const isTabletView = useIsTabletView();
   const isUserDiscussionMessage =
     checkIsUserDiscussionMessage(discussionMessage);
@@ -306,6 +312,8 @@ export default function DMChatMessage({
               styles.messageContent,
               styles.replyMessageContent,
               {
+                [styles.replyMessageContentNotCurrentUser]:
+                  isNotCurrentUserMessage,
                 [styles.replyMessageContentWithImage]: image,
                 [styles.replyMessageContentWithFile]: file,
                 [styles.messageContentRtl]: isRtlWithNoMentions(
@@ -413,8 +421,41 @@ export default function DMChatMessage({
           : styles.reactWithEmojiSelf
       }
       isNotCurrentUserMessage={isNotCurrentUserMessage}
+      setDMEmoji={setDMEmoji}
     />
   );
+
+  const finalReactionCounts = useMemo(() => {
+    if (!isUserDiscussionMessage) return;
+    if (!dmEmoji) {
+      return discussionMessage.reactionCounts;
+    }
+
+    const reactions = discussionMessage.reactionCounts;
+
+    if (!reactions) {
+      return {
+        [dmEmoji.emoji]: 1,
+      };
+    }
+
+    if (dmEmoji.prevUserEmoji === dmEmoji.emoji) {
+      reactions[dmEmoji.emoji] -= 1;
+    } else {
+      if (reactions[dmEmoji.emoji]) {
+        reactions[dmEmoji.emoji] += 1;
+      } else {
+        reactions[dmEmoji.emoji] = 1;
+      }
+
+      if (dmEmoji.prevUserEmoji) {
+        reactions[dmEmoji.prevUserEmoji] -= 1;
+      }
+    }
+
+    setDMEmoji(null);
+    return reactions;
+  }, [dmEmoji, discussionMessage]);
 
   return (
     <ChatMessageContext.Provider value={chatMessageContextValue}>
@@ -557,7 +598,7 @@ export default function DMChatMessage({
                 )}
 
                 {isUserDiscussionMessage && (
-                  <Reactions reactions={discussionMessage.reactionCounts} />
+                  <Reactions reactions={finalReactionCounts} />
                 )}
               </div>
             </>

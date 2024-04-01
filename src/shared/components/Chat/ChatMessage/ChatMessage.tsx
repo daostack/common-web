@@ -405,6 +405,7 @@ export default function ChatMessage({
   const emojiButton = (
     <ReactWithEmoji
       showEmojiButton={showReactWithEmoji}
+      discussionId={discussionMessage.discussionId}
       discussionMessageId={discussionMessage.id}
       className={
         isNotCurrentUserMessage

@@ -1,7 +1,10 @@
 import React, { FC } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import { authentificated, selectUser } from "@/pages/Auth/store/selectors";
+import {
+  selectIsAuthenticated,
+  selectUser,
+} from "@/pages/Auth/store/selectors";
 import { ButtonIcon } from "@/shared/components";
 import { useGoBack } from "@/shared/hooks";
 import { LongLeftArrowIcon } from "@/shared/icons";
@@ -35,7 +38,7 @@ const Header: FC<HeaderProps> = (props) => {
   } = props;
   const { canGoBack, goBack } = useGoBack();
   const history = useHistory();
-  const isAuthenticated = useSelector(authentificated());
+  const isAuthenticated = useSelector(selectIsAuthenticated());
   const user = useSelector(selectUser());
   const userInfoContentStyles: ContentStyles = {
     container: styles.userInfoContentButton,

@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import { authentificated } from "@/pages/Auth/store/selectors";
+import { selectIsAuthenticated } from "@/pages/Auth/store/selectors";
 import { CreateCommonModal } from "@/pages/OldCommon/components";
 import { useRoutesContext } from "@/shared/contexts";
 import { useAuthorizedModal } from "@/shared/hooks";
@@ -36,7 +36,7 @@ const Projects: FC = () => {
     onOpen: onCreateCommonModalOpen,
     onClose: onCreateCommonModalClose,
   } = useAuthorizedModal();
-  const isAuthenticated = useSelector(authentificated());
+  const isAuthenticated = useSelector(selectIsAuthenticated());
   const projects = useSelector(selectProjectsData);
   const areProjectsLoading = useSelector(selectAreProjectsLoading);
   const areProjectsFetched = useSelector(selectAreProjectsFetched);

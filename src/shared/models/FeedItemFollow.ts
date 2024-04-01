@@ -1,3 +1,4 @@
+import { SpaceListVisibility } from "../interfaces";
 import { BaseEntity } from "./BaseEntity";
 import { CommonFeed, CommonFeedType } from "./CommonFeed";
 import { Timestamp } from "./Timestamp";
@@ -19,4 +20,5 @@ export interface FeedItemFollowWithMetadata extends FeedItemFollow {
   commonName: string;
   parentCommonName?: string;
   commonAvatar: string;
+  listVisibility?: SpaceListVisibility;
 }

@@ -1,23 +1,23 @@
 import { ApiEndpoint, GovernanceActions } from "@/shared/constants";
-import { CreateProjectPayload } from "@/shared/interfaces";
+import { CreateProjectPayload, SpaceListVisibility } from "@/shared/interfaces";
 import { Common, CommonState, Governance } from "@/shared/models";
-import {
-  generateCirclesDataForCommonMember,
-  getProjectCircleDefinition,
-} from "@/shared/utils";
+import { generateCirclesDataForCommonMember } from "@/shared/utils";
 import Api from "./Api";
 import CommonService from "./Common";
 
 class ProjectService {
-  public parseDataToProjectsInfo = (
-    commons: Common[],
+  public parseDataToProjectsInfo = <
+    T extends Pick<Common, "id" | "state" | "listVisibility">,
+  >(
+    commons: T[],
     commonIdsWithMembership: string[] = [],
     permissionsData?: {
-      governance: Governance;
+      governance: Pick<Governance, "commonId" | "circles">;
       commonMemberCircleIds: string[];
     }[],
   ): {
-    common: Common;
+    common: T;
+    hasAccessToSpace: boolean;
     hasMembership: boolean;
     hasPermissionToAddProject?: boolean;
     hasPermissionToLinkToHere?: boolean;
@@ -29,36 +29,38 @@ class ProjectService {
         const permissionsItem = permissionsData?.find(
           (item) => item.governance.commonId === common.id,
         );
+        const hasMembership = commonIdsWithMembership.some(
+          (commonId) => commonId === common.id,
+        );
+        const circlesPermissions =
+          permissionsItem &&
+          generateCirclesDataForCommonMember(
+            permissionsItem.governance.circles,
+            permissionsItem.commonMemberCircleIds,
+          );
 
         return {
           common,
-          hasMembership: commonIdsWithMembership.some(
-            (commonId) => commonId === common.id,
-          ),
+          hasAccessToSpace:
+            hasMembership ||
+            common.listVisibility === SpaceListVisibility.Public,
+          hasMembership,
           hasPermissionToAddProject:
-            permissionsItem &&
-            generateCirclesDataForCommonMember(
-              permissionsItem.governance.circles,
-              permissionsItem.commonMemberCircleIds,
-            ).allowedActions[GovernanceActions.CREATE_PROJECT],
+            circlesPermissions?.allowedActions[
+              GovernanceActions.CREATE_PROJECT
+            ],
           hasPermissionToLinkToHere:
-            permissionsItem &&
-            generateCirclesDataForCommonMember(
-              permissionsItem.governance.circles,
-              permissionsItem.commonMemberCircleIds,
-            ).allowedActions[GovernanceActions.LINK_TO_HERE],
+            circlesPermissions?.allowedActions[GovernanceActions.LINK_TO_HERE],
           hasPermissionToMoveToHere:
-            permissionsItem &&
-            generateCirclesDataForCommonMember(
-              permissionsItem.governance.circles,
-              permissionsItem.commonMemberCircleIds,
-            ).allowedActions[GovernanceActions.MOVE_TO_HERE],
+            circlesPermissions?.allowedActions[GovernanceActions.MOVE_TO_HERE],
         };
       });
 
   public getUserProjectsInfo = async (
     userId: string,
-  ): Promise<{ common: Common; hasMembership: boolean }[]> => {
+  ): Promise<
+    { common: Common; hasMembership: boolean; hasAccessToSpace: boolean }[]
+  > => {
     const userCommonIds = await CommonService.getUserCommonIds(userId);
     const commons = await CommonService.getCommonsWithSubCommons(userCommonIds);
 
@@ -68,7 +70,9 @@ class ProjectService {
   public getProjectsInfo = async (
     userId?: string,
     additionalIdToFetch?: string,
-  ): Promise<{ common: Common; hasMembership: boolean }[]> => {
+  ): Promise<
+    { common: Common; hasMembership: boolean; hasAccessToSpace: boolean }[]
+  > => {
     const finalProjectsInfo = userId
       ? await this.getUserProjectsInfo(userId)
       : [];
@@ -107,13 +111,15 @@ class ProjectService {
     isAdvancedSettingsEnabled = true,
   ): Promise<Common> => {
     const { advancedSettings, ...subCommonData } = data;
-     const { data: project } = await Api.post<Common>(ApiEndpoint.CreateAction, {
-       type: isAdvancedSettingsEnabled ? GovernanceActions.CREATE_SUBCOMMON : GovernanceActions.CREATE_PROJECT,
-       args: {
-         commonId: parentCommonId,
-         subcommonDefinition: subCommonData,
-         ...(isAdvancedSettingsEnabled && { ...advancedSettings }),
-       },
+    const { data: project } = await Api.post<Common>(ApiEndpoint.CreateAction, {
+      type: isAdvancedSettingsEnabled
+        ? GovernanceActions.CREATE_SUBCOMMON
+        : GovernanceActions.CREATE_PROJECT,
+      args: {
+        commonId: parentCommonId,
+        subcommonDefinition: subCommonData,
+        ...(isAdvancedSettingsEnabled && { ...advancedSettings }),
+      },
     });
 
     return project;

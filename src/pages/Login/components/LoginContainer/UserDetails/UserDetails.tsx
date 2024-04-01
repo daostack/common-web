@@ -17,9 +17,9 @@ import {
   ANONYMOUS_USER_LAST_NAME,
 } from "@/shared/constants";
 import { useImageSizeCheck } from "@/shared/hooks";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { countryList } from "../../../../../shared/assets/countries";
 import {
-  Button,
   DropdownOption,
   Loader,
   UserAvatar,
@@ -316,14 +316,16 @@ const UserDetails: ForwardRefRenderFunction<
                     isRequired
                     styles={styles}
                   />
-                  <Dropdown
-                    className="user-details__text-field user-details__country"
-                    name="country"
-                    label="Country"
-                    placeholder="---Select country---"
-                    options={options}
-                    shouldBeFixed={isCountryDropdownFixed}
-                  />
+                  {!isNewUser && (
+                    <Dropdown
+                      className="user-details__text-field user-details__country"
+                      name="country"
+                      label="Country"
+                      placeholder="---Select country---"
+                      options={options}
+                      shouldBeFixed={isCountryDropdownFixed}
+                    />
+                  )}
                   <TextField
                     className="user-details__textarea"
                     id="intro"
@@ -344,6 +346,7 @@ const UserDetails: ForwardRefRenderFunction<
                   className="user-details__save-button"
                   type="submit"
                   disabled={!isValid || loading || isSubmitting}
+                  variant={ButtonVariant.PrimaryPink}
                 >
                   Save
                 </Button>

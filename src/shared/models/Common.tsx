@@ -1,3 +1,4 @@
+import { SpaceListVisibility } from "../interfaces";
 import { BaseEntity } from "./BaseEntity";
 import { Discussion } from "./Discussion";
 import { DiscussionMessage } from "./DiscussionMessage";
@@ -124,6 +125,8 @@ export interface Common extends BaseEntity {
   lastActivity?: Timestamp;
 
   notion?: CommonNotion;
+
+  listVisibility?: SpaceListVisibility;
 }
 
 export interface InheritedCircle {

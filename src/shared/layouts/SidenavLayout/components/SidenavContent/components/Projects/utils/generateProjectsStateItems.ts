@@ -26,9 +26,11 @@ export const getItemFromProjectsStateItem = (
     image: projectsStateItem.image,
     name: projectsStateItem.name,
     path: generatePath(projectsStateItem),
+    hasAccessToSpace: projectsStateItem.hasAccessToSpace,
     hasMembership: projectsStateItem.hasMembership,
     hasPermissionToAddProject: projectsStateItem.hasPermissionToAddProject,
     notificationsAmount: projectsStateItem.notificationsAmount,
+    listVisibility: projectsStateItem.listVisibility,
     items,
     ...(getAdditionalItemData?.(projectsStateItem) || {}),
   };

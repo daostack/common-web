@@ -429,6 +429,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
             onUserSelect={onUserClick && (() => onUserClick(item.userId))}
           />
           <FeedCardContent
+            item={item}
             subtitle={getProposalSubtitle(
               proposal,
               proposalSpecificData,
