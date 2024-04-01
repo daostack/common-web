@@ -71,7 +71,6 @@ export const useFeedItems = (
           commonMember,
           limit: ITEMS_LIMIT,
           withoutPinnedItems: false,
-          source: FirestoreDataSource.Cache,
         },
       );
       const convertedData: FeedItemFollowLayoutItem[] = data.map((item) => ({
