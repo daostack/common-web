@@ -32,7 +32,7 @@ export const Reactions: FC<ReactionsProps> = (props) => {
         const usersReactions = await getUserReaction(discussionMessageId);
 
         if (isMounted) {
-          setUsersReactions(usersReactions as UserReaction[]);
+          setUsersReactions(usersReactions);
         }
       } else if (chatMessageId && chatChannelId) {
         const userReaction = await getDMUserReaction(
@@ -41,7 +41,7 @@ export const Reactions: FC<ReactionsProps> = (props) => {
         );
 
         if (isMounted) {
-          setUsersReactions(userReaction as UserReaction[]);
+          setUsersReactions(userReaction);
         }
       }
     })();
