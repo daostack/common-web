@@ -1,9 +1,9 @@
 import { useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { CommonFeedService, Logger } from "@/services";
-import { InboxItemType } from "@/shared/constants";
+import { FirestoreDataSource, InboxItemType } from "@/shared/constants";
 import { FeedItemFollowLayoutItem, LoadingState } from "@/shared/interfaces";
-import { CommonFeed } from "@/shared/models";
+import { CirclesPermissions, CommonFeed, CommonMember } from "@/shared/models";
 import { sortFeedItemFollowLayoutItems } from "@/shared/utils";
 
 type State = LoadingState<FeedItemFollowLayoutItem[]>;
@@ -13,7 +13,16 @@ interface Return extends State {
   onFeedItemUpdate: (item: CommonFeed, isRemoved: boolean) => void;
 }
 
-export const useFeedItems = (commonId: string, userId?: string): Return => {
+interface Options {
+  commonMember?: (CommonMember & CirclesPermissions) | null;
+}
+
+export const useFeedItems = (
+  commonId: string,
+  userId?: string,
+  options: Options = {},
+): Return => {
+  const { commonMember } = options;
   const currentLoadingIdRef = useRef("");
   const [state, setState] = useState<State>({
     loading: false,
@@ -34,8 +43,10 @@ export const useFeedItems = (commonId: string, userId?: string): Return => {
         commonId,
         userId,
         {
+          commonMember,
           limit: 5,
           withoutPinnedItems: false,
+          source: FirestoreDataSource.Cache,
         },
       );
       const convertedData: FeedItemFollowLayoutItem[] = data.map((item) => ({

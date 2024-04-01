@@ -1,5 +1,6 @@
 import {
   ApiEndpoint,
+  FirestoreDataSource,
   GovernanceActions,
   PinOrUnpinEndpointAction,
 } from "@/shared/constants";
@@ -12,10 +13,12 @@ import {
 } from "@/shared/interfaces";
 import { UnlinkStreamPayload } from "@/shared/interfaces/UnlinkStreamPayload";
 import {
+  CirclesPermissions,
   Collection,
   CommonFeed,
   CommonFeedObjectUserUnique,
   CommonFeedType,
+  CommonMember,
   SubCollections,
   Timestamp,
 } from "@/shared/models";
@@ -92,6 +95,8 @@ class CommonFeedService {
       feedItemId?: string;
       limit?: number;
       withoutPinnedItems?: boolean;
+      source?: FirestoreDataSource;
+      commonMember?: (CommonMember & CirclesPermissions) | null;
     } = {},
   ): Promise<{
     data: CommonFeed[];
@@ -104,11 +109,18 @@ class CommonFeedService {
       feedItemId,
       limit = 10,
       withoutPinnedItems = true,
+      source = FirestoreDataSource.Default,
     } = options;
+    const cached = source === FirestoreDataSource.Cache;
     const [desiredFeedItem, common, commonMember] = await Promise.all([
-      feedItemId ? this.getCommonFeedItemById(commonId, feedItemId) : null,
-      withoutPinnedItems ? CommonService.getCommonById(commonId) : null,
-      userId ? CommonService.getCommonMemberByUserId(commonId, userId) : null,
+      feedItemId
+        ? this.getCommonFeedItemById(commonId, feedItemId, cached)
+        : null,
+      withoutPinnedItems ? CommonService.getCommonById(commonId, cached) : null,
+      options.commonMember ||
+        (userId &&
+          CommonService.getCommonMemberByUserId(commonId, userId, source)) ||
+        null,
     ]);
     const pinnedFeedItems =
       (withoutPinnedItems && common?.pinnedFeedItems) || [];
@@ -126,8 +138,16 @@ class CommonFeedService {
       query = query.limit(limit);
     }
 
-    const snapshot = await query.get();
+    const snapshot = await query.get({ source });
     const feedItems = snapshot.docs.map((doc) => ({ ...doc.data(), commonId }));
+
+    if (source === FirestoreDataSource.Cache && feedItems.length === 0) {
+      return this.getCommonFeedItemsByUpdatedAt(commonId, userId, {
+        ...options,
+        source: FirestoreDataSource.Server,
+      });
+    }
+
     const filteredFeedItems = feedItems
       .map((item) => {
         if (
