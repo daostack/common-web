@@ -116,7 +116,7 @@ const InboxPage: FC<InboxPageProps> = (props) => {
     }
 
     return isActiveUnreadInboxItemsQueryParam
-      ? "Hurry! No unread items in your inbox :-)"
+      ? "Well done! No unread streams in your inbox :)"
       : "Your inbox is empty";
   };
 
