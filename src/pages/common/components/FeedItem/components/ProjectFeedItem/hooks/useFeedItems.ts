@@ -1,10 +1,14 @@
 import { useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import { CommonFeedService, Logger } from "@/services";
 import { FirestoreDataSource, InboxItemType } from "@/shared/constants";
 import { FeedItemFollowLayoutItem, LoadingState } from "@/shared/interfaces";
 import { CirclesPermissions, CommonFeed, CommonMember } from "@/shared/models";
 import { sortFeedItemFollowLayoutItems } from "@/shared/utils";
+import { selectFeedStateByCommonId } from "@/store/states";
+
+const ITEMS_LIMIT = 5;
 
 type State = LoadingState<FeedItemFollowLayoutItem[]>;
 
@@ -29,10 +33,31 @@ export const useFeedItems = (
     fetched: false,
     data: [],
   });
+  const feedState = useSelector(selectFeedStateByCommonId(commonId));
 
   const fetchFeedItems = async () => {
     if (state.loading || state.fetched) {
       return;
+    }
+
+    const cachedFeedItems = [
+      ...(feedState?.feedItems.data || []),
+      ...(feedState?.pinnedFeedItems.data || []),
+    ];
+
+    if (cachedFeedItems.length > 0) {
+      sortFeedItemFollowLayoutItems(cachedFeedItems);
+      setState({
+        loading: false,
+        fetched: true,
+        data: cachedFeedItems.slice(0, ITEMS_LIMIT),
+      });
+    } else {
+      setState({
+        loading: true,
+        fetched: false,
+        data: [],
+      });
     }
 
     const loadingId = uuidv4();
@@ -44,7 +69,7 @@ export const useFeedItems = (
         userId,
         {
           commonMember,
-          limit: 5,
+          limit: ITEMS_LIMIT,
           withoutPinnedItems: false,
           source: FirestoreDataSource.Cache,
         },
