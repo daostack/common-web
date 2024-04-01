@@ -1,8 +1,8 @@
-import React, { ComponentType, FC, useEffect, useState } from "react";
+import React, { ComponentType, FC } from "react";
 import { ShareModal } from "@/shared/components";
-import { DynamicLinkType } from "@/shared/constants";
-import { useBuildShareLink, useModal } from "@/shared/hooks";
+import { useModal } from "@/shared/hooks";
 import { Common } from "@/shared/models";
+import { StaticLinkType, generateStaticShareLink } from "@/shared/utils";
 import { Trigger, TriggerProps } from "./components";
 
 interface InviteFriendsButtonProps {
@@ -14,27 +14,15 @@ interface InviteFriendsButtonProps {
 const InviteFriendsButton: FC<InviteFriendsButtonProps> = (props) => {
   const { isMobileVersion = false, common } = props;
   const { isShowing, onClose, onOpen } = useModal(false);
-  const [linkURL, setLinkURL] = useState<string | null>(null);
-  const { handleOpen } = useBuildShareLink(
-    DynamicLinkType.Common,
-    common,
-    setLinkURL,
-  );
   const TriggerComponent = props.TriggerComponent || Trigger;
-
-  useEffect(() => {
-    if (isShowing) {
-      handleOpen();
-    }
-  }, [isShowing]);
+  const shareLink = generateStaticShareLink(StaticLinkType.Common, common);
 
   return (
     <>
       <TriggerComponent onClick={onOpen} isMobileVersion={isMobileVersion} />
       <ShareModal
         isShowing={isShowing}
-        isLoading={!linkURL}
-        sourceUrl={linkURL || ""}
+        sourceUrl={shareLink}
         onClose={onClose}
       />
     </>
