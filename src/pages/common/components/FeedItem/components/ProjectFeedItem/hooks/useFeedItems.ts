@@ -4,12 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import { CommonFeedService, Logger } from "@/services";
 import { InboxItemType } from "@/shared/constants";
 import { FeedItemFollowLayoutItem, LoadingState } from "@/shared/interfaces";
-import {
-  CirclesPermissions,
-  Common,
-  CommonFeed,
-  CommonMember,
-} from "@/shared/models";
+import { CirclesPermissions, CommonFeed, CommonMember } from "@/shared/models";
 import { sortFeedItemFollowLayoutItems } from "@/shared/utils";
 import { FeedItems, selectFeedStateByCommonId } from "@/store/states";
 import * as actions from "@/store/states/cache/actions";
@@ -45,21 +40,10 @@ export const useFeedItems = (
 
   const updateCachedFeedState = (
     feedItemsForUpdate: FeedItemFollowLayoutItem[],
-    pinnedFeedItems: Common["pinnedFeedItems"],
+    pinnedFeedItemsForUpdate: FeedItemFollowLayoutItem[],
   ) => {
-    const feedItemsData = feedItemsForUpdate.filter(
-      (item) =>
-        !pinnedFeedItems.some(
-          (pinnedItem) => pinnedItem.feedObjectId === item.feedItem.id,
-        ),
-    );
-    const pinnedFeedItemsData = feedItemsForUpdate.filter((item) =>
-      pinnedFeedItems.some(
-        (pinnedItem) => pinnedItem.feedObjectId === item.feedItem.id,
-      ),
-    );
     const feedItems: FeedItems = {
-      data: feedItemsData,
+      data: feedItemsForUpdate,
       loading: false,
       hasMore: true,
       firstDocTimestamp: feedItemsForUpdate?.[0]
@@ -79,7 +63,7 @@ export const useFeedItems = (
         state: {
           feedItems,
           pinnedFeedItems: {
-            data: pinnedFeedItemsData,
+            data: pinnedFeedItemsForUpdate,
             loading: false,
           },
           sharedFeedItem: null,
@@ -94,12 +78,11 @@ export const useFeedItems = (
     }
 
     const cachedFeedItems = [
-      ...(feedState?.feedItems.data || []),
       ...(feedState?.pinnedFeedItems.data || []),
+      ...(feedState?.feedItems.data || []),
     ];
 
     if (cachedFeedItems.length > 0) {
-      sortFeedItemFollowLayoutItems(cachedFeedItems);
       setState({
         loading: false,
         fetched: true,
@@ -117,31 +100,43 @@ export const useFeedItems = (
     currentLoadingIdRef.current = loadingId;
 
     try {
-      const { data, pinnedFeedItems } =
-        await CommonFeedService.getCommonFeedItemsByUpdatedAt(
-          commonId,
-          userId,
-          {
+      const [{ data: feedItems }, { data: pinnedFeedItems }] =
+        await Promise.all([
+          CommonFeedService.getCommonFeedItemsByUpdatedAt(commonId, userId, {
             commonMember,
             limit: ITEMS_LIMIT,
-            withoutPinnedItems: false,
-          },
-        );
-      const convertedData: FeedItemFollowLayoutItem[] = data.map((item) => ({
-        type: InboxItemType.FeedItemFollow,
-        itemId: item.id,
-        feedItem: item,
-      }));
+          }),
+          CommonFeedService.getCommonPinnedFeedItems(commonId),
+        ]);
+      const convertedFeedItems: FeedItemFollowLayoutItem[] = feedItems.map(
+        (item) => ({
+          type: InboxItemType.FeedItemFollow,
+          itemId: item.id,
+          feedItem: item,
+        }),
+      );
+      const convertedPinnedFeedItems: FeedItemFollowLayoutItem[] =
+        pinnedFeedItems.map((item) => ({
+          type: InboxItemType.FeedItemFollow,
+          itemId: item.id,
+          feedItem: item,
+        }));
 
       if (currentLoadingIdRef.current === loadingId) {
         setState({
           loading: false,
           fetched: true,
-          data: convertedData,
+          data: [...convertedPinnedFeedItems, ...convertedFeedItems].slice(
+            0,
+            ITEMS_LIMIT,
+          ),
         });
 
-        if (cachedFeedItems.length < convertedData.length) {
-          updateCachedFeedState(convertedData, pinnedFeedItems);
+        if (
+          cachedFeedItems.length <
+          convertedFeedItems.length + convertedPinnedFeedItems.length
+        ) {
+          updateCachedFeedState(convertedFeedItems, convertedPinnedFeedItems);
         }
       }
     } catch (err) {
