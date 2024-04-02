@@ -67,7 +67,7 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
     fetched,
     fetchFeedItems,
     onFeedItemUpdate,
-  } = useFeedItems(commonId, userId);
+  } = useFeedItems(commonId, userId, { common, commonMember });
   const [isExpanded, setIsExpanded] = useState(false);
   const { getCollapseProps, getToggleProps } = useCollapse({
     isExpanded,

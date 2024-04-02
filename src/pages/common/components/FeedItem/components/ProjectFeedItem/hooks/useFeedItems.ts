@@ -4,7 +4,12 @@ import { v4 as uuidv4 } from "uuid";
 import { CommonFeedService, Logger } from "@/services";
 import { InboxItemType } from "@/shared/constants";
 import { FeedItemFollowLayoutItem, LoadingState } from "@/shared/interfaces";
-import { CirclesPermissions, CommonFeed, CommonMember } from "@/shared/models";
+import {
+  CirclesPermissions,
+  Common,
+  CommonFeed,
+  CommonMember,
+} from "@/shared/models";
 import { sortFeedItemFollowLayoutItems } from "@/shared/utils";
 import { FeedItems, selectFeedStateByCommonId } from "@/store/states";
 import * as actions from "@/store/states/cache/actions";
@@ -20,6 +25,7 @@ interface Return extends State {
 }
 
 interface Options {
+  common?: Common | null;
   commonMember?: (CommonMember & CirclesPermissions) | null;
 }
 
@@ -28,7 +34,7 @@ export const useFeedItems = (
   userId?: string,
   options: Options = {},
 ): Return => {
-  const { commonMember } = options;
+  const { common, commonMember } = options;
   const dispatch = useDispatch();
   const currentLoadingIdRef = useRef("");
   const [state, setState] = useState<State>({
@@ -172,20 +178,37 @@ export const useFeedItems = (
 
     if (isRemoved) {
       nextData.splice(feedItemIndex, 1);
-    } else {
-      nextData[feedItemIndex] = {
-        ...nextData[feedItemIndex],
-        feedItem: {
-          ...nextData[feedItemIndex].feedItem,
-          ...updatedItem,
-        },
-      };
-      sortFeedItemFollowLayoutItems(nextData);
+      setState((prevState) => ({
+        ...prevState,
+        data: nextData,
+      }));
+      return;
     }
+
+    nextData[feedItemIndex] = {
+      ...nextData[feedItemIndex],
+      feedItem: {
+        ...nextData[feedItemIndex].feedItem,
+        ...updatedItem,
+      },
+    };
+    const pinnedCommonFeedItems = common?.pinnedFeedItems || [];
+    const feedItems = nextData.filter(
+      (item) =>
+        !pinnedCommonFeedItems.some(
+          (pinnedFeedItem) => pinnedFeedItem.feedObjectId === item.feedItem.id,
+        ),
+    );
+    const pinnedFeedItems = nextData.filter((item) =>
+      pinnedCommonFeedItems.some(
+        (pinnedFeedItem) => pinnedFeedItem.feedObjectId === item.feedItem.id,
+      ),
+    );
+    sortFeedItemFollowLayoutItems(feedItems);
 
     setState((prevState) => ({
       ...prevState,
-      data: nextData,
+      data: [...pinnedFeedItems, ...feedItems],
     }));
   };
 
