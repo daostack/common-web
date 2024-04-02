@@ -744,89 +744,98 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
             })}
           >
             {topContent}
-            {isContentEmpty && <p className={styles.emptyText}>{emptyText}</p>}
-            <PullToRefresh
-              isPullable={isTabletView && Boolean(onPullToRefresh)}
-              className={styles.pullToRefresh}
-              onRefresh={handleRefresh}
-              refreshingContent={<Loader />}
-            >
-              <InfiniteScroll
-                markerClassName={
-                  allFeedItems && allFeedItems.length > 7
-                    ? styles.infiniteScrollMarker
-                    : ""
-                }
-                onFetchNext={onFetchNext}
-                isLoading={loading}
-                loaderDelay={isLoaderAfterRefresh ? 0 : LOADER_APPEARANCE_DELAY}
+            {isContentEmpty ? (
+              <p className={styles.emptyText}>{emptyText}</p>
+            ) : (
+              <PullToRefresh
+                isPullable={isTabletView && Boolean(onPullToRefresh)}
+                className={styles.pullToRefresh}
+                onRefresh={handleRefresh}
+                refreshingContent={<Loader />}
               >
-                {allFeedItems?.map((item, index) => {
-                  const isActive = item.itemId === activeFeedItemId;
-                  const shouldPreLoadMessages =
-                    index < ITEMS_AMOUNT_TO_PRE_LOAD_MESSAGES;
-
-                  if (checkIsFeedItemFollowLayoutItem(item)) {
-                    const commonData = getItemCommonData(
-                      item.feedItemFollowWithMetadata,
-                      outerCommon,
-                    );
-                    const isPinned = (outerCommon?.pinnedFeedItems || []).some(
-                      (pinnedItem) =>
-                        pinnedItem.feedObjectId === item.feedItem.id,
-                    );
-
-                    return (
-                      <FeedItem
-                        ref={handleRefSet}
-                        key={item.feedItem.id}
-                        commonMember={commonMember}
-                        commonId={commonData?.id}
-                        commonName={commonData?.name || ""}
-                        commonImage={commonData?.image || ""}
-                        commonNotion={outerCommon?.notion}
-                        pinnedFeedItems={outerCommon?.pinnedFeedItems}
-                        isProject={commonData?.isProject}
-                        isPinned={isPinned}
-                        item={item.feedItem}
-                        governanceCircles={governance?.circles}
-                        isMobileVersion={isTabletView}
-                        userCircleIds={userCircleIds}
-                        isActive={isActive}
-                        isExpanded={item.feedItem.id === expandedFeedItemId}
-                        sizeKey={isActive ? sizeKey : undefined}
-                        currentUserId={userId}
-                        shouldCheckItemVisibility={
-                          !item.feedItemFollowWithMetadata ||
-                          item.feedItemFollowWithMetadata.userId !== userId
-                        }
-                        onActiveItemDataChange={handleActiveFeedItemDataChange}
-                        directParent={outerCommon?.directParent}
-                        rootCommonId={outerCommon?.rootCommonId}
-                        shouldPreLoadMessages={shouldPreLoadMessages}
-                        onFeedItemClick={handleFeedItemClickMemoized}
-                        onInternalLinkClick={handleInternalLinkClickMemoized}
-                      />
-                    );
+                <InfiniteScroll
+                  markerClassName={
+                    allFeedItems && allFeedItems.length > 7
+                      ? styles.infiniteScrollMarker
+                      : ""
                   }
-                  if (
-                    renderChatChannelItem &&
-                    checkIsChatChannelLayoutItem(item)
-                  ) {
-                    return (
-                      <React.Fragment key={item.itemId}>
-                        {renderChatChannelItem({
-                          chatChannel: item.chatChannel,
-                          isActive,
-                          onActiveItemDataChange:
-                            handleActiveChatChannelItemDataChange,
-                        })}
-                      </React.Fragment>
-                    );
+                  onFetchNext={onFetchNext}
+                  isLoading={loading}
+                  loaderDelay={
+                    isLoaderAfterRefresh ? 0 : LOADER_APPEARANCE_DELAY
                   }
-                })}
-              </InfiniteScroll>
-            </PullToRefresh>
+                >
+                  {allFeedItems?.map((item, index) => {
+                    const isActive = item.itemId === activeFeedItemId;
+                    const shouldPreLoadMessages =
+                      index < ITEMS_AMOUNT_TO_PRE_LOAD_MESSAGES;
+
+                    if (checkIsFeedItemFollowLayoutItem(item)) {
+                      const commonData = getItemCommonData(
+                        item.feedItemFollowWithMetadata,
+                        outerCommon,
+                      );
+                      const isPinned = (
+                        outerCommon?.pinnedFeedItems || []
+                      ).some(
+                        (pinnedItem) =>
+                          pinnedItem.feedObjectId === item.feedItem.id,
+                      );
+
+                      return (
+                        <FeedItem
+                          ref={handleRefSet}
+                          key={item.feedItem.id}
+                          commonMember={commonMember}
+                          commonId={commonData?.id}
+                          commonName={commonData?.name || ""}
+                          commonImage={commonData?.image || ""}
+                          commonNotion={outerCommon?.notion}
+                          pinnedFeedItems={outerCommon?.pinnedFeedItems}
+                          isProject={commonData?.isProject}
+                          isPinned={isPinned}
+                          item={item.feedItem}
+                          governanceCircles={governance?.circles}
+                          isMobileVersion={isTabletView}
+                          userCircleIds={userCircleIds}
+                          isActive={isActive}
+                          isExpanded={item.feedItem.id === expandedFeedItemId}
+                          sizeKey={isActive ? sizeKey : undefined}
+                          currentUserId={userId}
+                          shouldCheckItemVisibility={
+                            !item.feedItemFollowWithMetadata ||
+                            item.feedItemFollowWithMetadata.userId !== userId
+                          }
+                          onActiveItemDataChange={
+                            handleActiveFeedItemDataChange
+                          }
+                          directParent={outerCommon?.directParent}
+                          rootCommonId={outerCommon?.rootCommonId}
+                          shouldPreLoadMessages={shouldPreLoadMessages}
+                          onFeedItemClick={handleFeedItemClickMemoized}
+                          onInternalLinkClick={handleInternalLinkClickMemoized}
+                        />
+                      );
+                    }
+                    if (
+                      renderChatChannelItem &&
+                      checkIsChatChannelLayoutItem(item)
+                    ) {
+                      return (
+                        <React.Fragment key={item.itemId}>
+                          {renderChatChannelItem({
+                            chatChannel: item.chatChannel,
+                            isActive,
+                            onActiveItemDataChange:
+                              handleActiveChatChannelItemDataChange,
+                          })}
+                        </React.Fragment>
+                      );
+                    }
+                  })}
+                </InfiniteScroll>
+              </PullToRefresh>
+            )}
             {!isTabletView &&
               (chatItem?.discussion ? (
                 <DesktopChat
