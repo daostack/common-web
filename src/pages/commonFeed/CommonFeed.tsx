@@ -387,7 +387,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
 
   useEffect(() => {
     fetchUserRelatedData();
-  }, [userId]);
+  }, [userId, parentCommonId]);
 
   useEffect(() => {
     if (!commonFeedItems && !areCommonFeedItemsLoading) {
