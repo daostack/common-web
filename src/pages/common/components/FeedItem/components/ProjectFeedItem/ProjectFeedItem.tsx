@@ -4,7 +4,6 @@ import React, {
   MouseEventHandler,
   ReactNode,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from "react";
@@ -81,10 +80,6 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
     }`,
   );
   const isProject = checkIsProject(common);
-  const userCircleIds = useMemo(
-    () => Object.values(commonMember?.circles.map ?? {}),
-    [commonMember?.circles.map],
-  );
   const titleEl = (
     <>
       <span className={styles.title}>{common?.name}</span>
