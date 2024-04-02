@@ -25,6 +25,7 @@ interface Return extends State {
 }
 
 interface Options {
+  common?: Common | null;
   commonMember?: (CommonMember & CirclesPermissions) | null;
 }
 
@@ -33,7 +34,7 @@ export const useFeedItems = (
   userId?: string,
   options: Options = {},
 ): Return => {
-  const { commonMember } = options;
+  const { common, commonMember } = options;
   const dispatch = useDispatch();
   const currentLoadingIdRef = useRef("");
   const [state, setState] = useState<State>({
@@ -45,21 +46,10 @@ export const useFeedItems = (
 
   const updateCachedFeedState = (
     feedItemsForUpdate: FeedItemFollowLayoutItem[],
-    pinnedFeedItems: Common["pinnedFeedItems"],
+    pinnedFeedItemsForUpdate: FeedItemFollowLayoutItem[],
   ) => {
-    const feedItemsData = feedItemsForUpdate.filter(
-      (item) =>
-        !pinnedFeedItems.some(
-          (pinnedItem) => pinnedItem.feedObjectId === item.feedItem.id,
-        ),
-    );
-    const pinnedFeedItemsData = feedItemsForUpdate.filter((item) =>
-      pinnedFeedItems.some(
-        (pinnedItem) => pinnedItem.feedObjectId === item.feedItem.id,
-      ),
-    );
     const feedItems: FeedItems = {
-      data: feedItemsData,
+      data: feedItemsForUpdate,
       loading: false,
       hasMore: true,
       firstDocTimestamp: feedItemsForUpdate?.[0]
@@ -79,7 +69,7 @@ export const useFeedItems = (
         state: {
           feedItems,
           pinnedFeedItems: {
-            data: pinnedFeedItemsData,
+            data: pinnedFeedItemsForUpdate,
             loading: false,
           },
           sharedFeedItem: null,
@@ -94,12 +84,11 @@ export const useFeedItems = (
     }
 
     const cachedFeedItems = [
-      ...(feedState?.feedItems.data || []),
       ...(feedState?.pinnedFeedItems.data || []),
+      ...(feedState?.feedItems.data || []),
     ];
 
     if (cachedFeedItems.length > 0) {
-      sortFeedItemFollowLayoutItems(cachedFeedItems);
       setState({
         loading: false,
         fetched: true,
@@ -117,31 +106,43 @@ export const useFeedItems = (
     currentLoadingIdRef.current = loadingId;
 
     try {
-      const { data, pinnedFeedItems } =
-        await CommonFeedService.getCommonFeedItemsByUpdatedAt(
-          commonId,
-          userId,
-          {
+      const [{ data: feedItems }, { data: pinnedFeedItems }] =
+        await Promise.all([
+          CommonFeedService.getCommonFeedItemsByUpdatedAt(commonId, userId, {
             commonMember,
             limit: ITEMS_LIMIT,
-            withoutPinnedItems: false,
-          },
-        );
-      const convertedData: FeedItemFollowLayoutItem[] = data.map((item) => ({
-        type: InboxItemType.FeedItemFollow,
-        itemId: item.id,
-        feedItem: item,
-      }));
+          }),
+          CommonFeedService.getCommonPinnedFeedItems(commonId),
+        ]);
+      const convertedFeedItems: FeedItemFollowLayoutItem[] = feedItems.map(
+        (item) => ({
+          type: InboxItemType.FeedItemFollow,
+          itemId: item.id,
+          feedItem: item,
+        }),
+      );
+      const convertedPinnedFeedItems: FeedItemFollowLayoutItem[] =
+        pinnedFeedItems.map((item) => ({
+          type: InboxItemType.FeedItemFollow,
+          itemId: item.id,
+          feedItem: item,
+        }));
 
       if (currentLoadingIdRef.current === loadingId) {
         setState({
           loading: false,
           fetched: true,
-          data: convertedData,
+          data: [...convertedPinnedFeedItems, ...convertedFeedItems].slice(
+            0,
+            ITEMS_LIMIT,
+          ),
         });
 
-        if (cachedFeedItems.length < convertedData.length) {
-          updateCachedFeedState(convertedData, pinnedFeedItems);
+        if (
+          cachedFeedItems.length <
+          convertedFeedItems.length + convertedPinnedFeedItems.length
+        ) {
+          updateCachedFeedState(convertedFeedItems, convertedPinnedFeedItems);
         }
       }
     } catch (err) {
@@ -177,20 +178,37 @@ export const useFeedItems = (
 
     if (isRemoved) {
       nextData.splice(feedItemIndex, 1);
-    } else {
-      nextData[feedItemIndex] = {
-        ...nextData[feedItemIndex],
-        feedItem: {
-          ...nextData[feedItemIndex].feedItem,
-          ...updatedItem,
-        },
-      };
-      sortFeedItemFollowLayoutItems(nextData);
+      setState((prevState) => ({
+        ...prevState,
+        data: nextData,
+      }));
+      return;
     }
+
+    nextData[feedItemIndex] = {
+      ...nextData[feedItemIndex],
+      feedItem: {
+        ...nextData[feedItemIndex].feedItem,
+        ...updatedItem,
+      },
+    };
+    const pinnedCommonFeedItems = common?.pinnedFeedItems || [];
+    const feedItems = nextData.filter(
+      (item) =>
+        !pinnedCommonFeedItems.some(
+          (pinnedFeedItem) => pinnedFeedItem.feedObjectId === item.feedItem.id,
+        ),
+    );
+    const pinnedFeedItems = nextData.filter((item) =>
+      pinnedCommonFeedItems.some(
+        (pinnedFeedItem) => pinnedFeedItem.feedObjectId === item.feedItem.id,
+      ),
+    );
+    sortFeedItemFollowLayoutItems(feedItems);
 
     setState((prevState) => ({
       ...prevState,
-      data: nextData,
+      data: [...pinnedFeedItems, ...feedItems],
     }));
   };
 
