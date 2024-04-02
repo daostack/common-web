@@ -559,6 +559,7 @@ export default function ChatMessage({
                   <Reactions
                     reactions={discussionMessage.reactionCounts}
                     discussionMessageId={discussionMessage.id}
+                    users={users}
                   />
                 )}
               </div>

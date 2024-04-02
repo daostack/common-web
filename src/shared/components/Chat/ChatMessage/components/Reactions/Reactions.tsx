@@ -1,8 +1,10 @@
 import React, { FC, useEffect, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 import { isEmpty } from "lodash";
+import { selectUser } from "@/pages/Auth/store/selectors";
 import { UserAvatar } from "@/shared/components/UserAvatar";
-import { useUserReaction, useUsersByIds } from "@/shared/hooks/useCases";
-import { ReactionCounts, UserReaction } from "@/shared/models";
+import { useUserReaction } from "@/shared/hooks/useCases";
+import { ReactionCounts, User, UserReaction } from "@/shared/models";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui-kit";
 import styles from "./Reactions.module.scss";
 
@@ -11,15 +13,22 @@ interface ReactionsProps {
   discussionMessageId?: string;
   chatMessageId?: string;
   chatChannelId?: string;
+  users?: User[];
 }
 
 export const Reactions: FC<ReactionsProps> = (props) => {
-  const { reactions, discussionMessageId, chatMessageId, chatChannelId } =
-    props;
+  const {
+    reactions,
+    discussionMessageId,
+    chatMessageId,
+    chatChannelId,
+    users,
+  } = props;
+  const currentUser = useSelector(selectUser());
+
   const { getUserReaction, getDMUserReaction } = useUserReaction({
     fetchAll: true,
   });
-  const { fetchUsers, data: users, fetched } = useUsersByIds();
   const [usersReactions, setUsersReactions] = useState<
     UserReaction[] | null | undefined
   >(null);
@@ -51,12 +60,6 @@ export const Reactions: FC<ReactionsProps> = (props) => {
     };
   }, [discussionMessageId, chatMessageId, chatChannelId, reactions]);
 
-  useEffect(() => {
-    if (usersReactions) {
-      fetchUsers(usersReactions.map((user) => user.userId));
-    }
-  }, [usersReactions]);
-
   if (!reactions || isEmpty(reactions)) {
     return null;
   }
@@ -71,22 +74,25 @@ export const Reactions: FC<ReactionsProps> = (props) => {
     .filter((key) => reactions[key] > 0)
     .map((emoji, index) => <span key={index}>{emoji}</span>);
 
-  const list = useMemo(() => {
-    if (users) {
-      return users.map((user) => {
-        const userReaction = usersReactions?.find(
+  const usersList = useMemo(() => {
+    if (users && usersReactions && currentUser) {
+      return [...users, currentUser].map((user, index) => {
+        const userReaction = usersReactions.find(
           (elem) => elem.userId === user.uid,
         )?.emoji;
-        return (
-          <div className={styles.listItem}>
-            <UserAvatar
-              photoURL={user.photoURL}
-              className={styles.userAvatar}
-            />
-            <span className={styles.listUsername}>{user.displayName}</span>
-            <span className={styles.listItemEmoji}>{userReaction}</span>
-          </div>
-        );
+
+        if (userReaction) {
+          return (
+            <div key={index} className={styles.listItem}>
+              <UserAvatar
+                photoURL={user.photoURL}
+                className={styles.userAvatar}
+              />
+              <span className={styles.listUsername}>{user.displayName}</span>
+              <span className={styles.listItemEmoji}>{userReaction}</span>
+            </div>
+          );
+        }
       });
     }
   }, [users, usersReactions]);
@@ -101,8 +107,7 @@ export const Reactions: FC<ReactionsProps> = (props) => {
           {emojis}
         </TooltipTrigger>
         <TooltipContent className={styles.reactionsTooltipContent}>
-          {!fetched && !users && "Loading..."}
-          {fetched && list}
+          {usersList ? usersList : "Loading..."}
         </TooltipContent>
       </Tooltip>
     </div>

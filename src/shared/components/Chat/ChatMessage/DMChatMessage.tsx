@@ -602,6 +602,7 @@ export default function DMChatMessage({
                     reactions={finalReactionCounts}
                     chatMessageId={discussionMessage.id}
                     chatChannelId={chatChannelId}
+                    users={users}
                   />
                 )}
               </div>
