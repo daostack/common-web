@@ -33,6 +33,7 @@ export * from "./notEmpty";
 export * from "./getFirebaseAuthProvider";
 export * from "./getFirebaseToken";
 export * from "./sidenav";
+export * from "./sortFeedItemFollowLayoutItems";
 export * from "./text";
 export * from "./hasPermission";
 export * from "./getProjectCircleDefinition";

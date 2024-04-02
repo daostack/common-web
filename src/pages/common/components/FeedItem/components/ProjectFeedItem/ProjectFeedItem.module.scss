@@ -1,7 +1,19 @@
 @import "../../../../../../constants";
 @import "../../../../../../styles/sizes";
 
+$extra-pl: 1rem;
+
+.collapseContainer {
+  --base-content-container-extra-pl: calc(
+    #{$extra-pl} * var(--project-feed-item-level, 1)
+  );
+}
+
 .container {
+  padding-left: calc(
+    #{$extra-pl} * calc(var(--project-feed-item-level, 1) - 1)
+  );
+
   &:hover {
     --title-color: var(--primary-fill);
 
@@ -30,6 +42,28 @@
   margin-left: 0.625rem;
 }
 
+.leftContent {
+  display: flex;
+  align-items: center;
+}
+
+.arrowIconButton {
+  padding: 0.75rem 0.5rem;
+}
+.arrowIconButtonHidden {
+  visibility: hidden;
+}
+
+.arrowIcon {
+  width: 0.5rem;
+  height: 0.625rem;
+  color: $c-neutrals-600;
+  transition: transform 0.2s;
+}
+.arrowIconOpen {
+  transform: rotate(90deg);
+}
+
 .image {
   align-self: center;
   flex-shrink: 0;
@@ -48,4 +82,20 @@
 }
 .imageRounded {
   border-radius: 50%;
+}
+
+.commonCard {
+  --feed-card-ph: 1.5rem;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  color: $c-neutrals-600;
+}
+.commonCardActive {
+  border-bottom: 0.0625rem solid var(--gentle-stroke);
+}
+
+.loader {
+  align-self: center;
 }

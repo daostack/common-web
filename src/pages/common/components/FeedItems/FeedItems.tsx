@@ -33,6 +33,8 @@ const FeedItems: FC<FeedItemsProps> = (props) => {
         withHovering: true,
       },
       getLastMessage,
+      onFeedItemClick: emptyFunction,
+      onInternalLinkClick: emptyFunction,
     }),
     [],
   );
@@ -84,8 +86,6 @@ const FeedItems: FC<FeedItemsProps> = (props) => {
                 userCircleIds={userCircleIds}
                 isPreviewMode
                 directParent={common.directParent}
-                onFeedItemClick={emptyFunction}
-                onInternalLinkClick={emptyFunction}
               />
             );
           })}

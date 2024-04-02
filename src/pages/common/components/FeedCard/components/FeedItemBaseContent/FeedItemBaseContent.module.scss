@@ -6,7 +6,8 @@
 
   min-height: 3.0625rem;
   max-height: 5rem;
-  padding: 0.875rem 0.875rem 1.0625rem 1.5rem;
+  padding: 0.875rem 0.875rem 1.0625rem
+    calc(var(--base-content-container-extra-pl, 0rem) + 1.5rem);
   display: flex;
   border-bottom: 0.0625rem solid var(--gentle-stroke);
   cursor: pointer;

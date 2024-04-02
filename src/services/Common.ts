@@ -8,6 +8,7 @@ import { store } from "@/shared/appConfig";
 import {
   ApiEndpoint,
   DocChange,
+  FirestoreDataSource,
   GovernanceActions,
   ProposalsTypes,
 } from "@/shared/constants";
@@ -384,11 +385,21 @@ class CommonService {
   public getCommonMemberByUserId = async (
     commonId: string,
     userId: string,
+    source = FirestoreDataSource.Default,
   ): Promise<CommonMember | null> => {
-    const result = await commonMembersSubCollection(commonId)
+    const snapshot = await commonMembersSubCollection(commonId)
       .where("userId", "==", userId)
-      .get();
-    const members = transformFirebaseDataList<CommonMember>(result);
+      .get({ source });
+    const members = snapshot.docs.map((doc) => doc.data());
+    const member = members[0] || null;
+
+    if (source === FirestoreDataSource.Cache && !member) {
+      return this.getCommonMemberByUserId(
+        commonId,
+        userId,
+        FirestoreDataSource.Server,
+      );
+    }
 
     return members[0] || null;
   };

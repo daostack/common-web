@@ -29,8 +29,12 @@ import {
 import {
   ChatContextValue,
   ChatItem,
+  ChatContext,
 } from "@/pages/common/components/ChatComponent";
-import { ChatContext } from "@/pages/common/components/ChatComponent/context";
+import {
+  FeedLayoutEvent,
+  FeedLayoutEventEmitter,
+} from "@/pages/commonFeed/components/FeedLayout/events";
 import {
   InboxItemType,
   LOADER_APPEARANCE_DELAY,
@@ -209,9 +213,14 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   } = useCommonMember({
     shouldAutoReset: false,
   });
-  const commonMember = outerCommonMember || fetchedCommonMember;
+  const commonMember =
+    chatItem?.nestedItemData?.commonMember ||
+    outerCommonMember ||
+    fetchedCommonMember;
   const userForProfile = useUserForProfile();
-  const governance = outerGovernance || fetchedGovernance;
+  const governance = chatItem?.nestedItemData
+    ? fetchedGovernance
+    : outerGovernance || fetchedGovernance;
   const [splitPaneRef, setSplitPaneRef] = useState<Element | null>(null);
   const maxContentSize =
     settings?.getSplitViewMaxSize?.(windowWidth) ??
@@ -306,15 +315,17 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   );
 
   const selectedFeedItem = useMemo(
-    () => allFeedItems?.find((item) => item.itemId === activeFeedItemId),
-    [allFeedItems, activeFeedItemId],
+    () =>
+      chatItem?.nestedItemData?.feedItem ||
+      allFeedItems?.find((item) => item.itemId === activeFeedItemId),
+    [chatItem?.nestedItemData?.feedItem, allFeedItems, activeFeedItemId],
   );
   const selectedItemCommonData = checkIsFeedItemFollowLayoutItem(
     selectedFeedItem,
   )
     ? getItemCommonData(
         selectedFeedItem?.feedItemFollowWithMetadata,
-        outerCommon,
+        chatItem?.nestedItemData?.common || outerCommon,
       )
     : null;
 
@@ -333,28 +344,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       handleUserWithCommonClick(userId, selectedItemCommonData?.id);
     },
     [handleUserWithCommonClick, selectedItemCommonData?.id],
-  );
-
-  // We should try to set here only the data which rarely can be changed,
-  // so we will not have extra re-renders of ALL rendered items
-  const feedItemContextValue = useMemo<FeedItemContextValue>(
-    () => ({
-      setExpandedFeedItemId,
-      renderFeedItemBaseContent,
-      onFeedItemUpdate,
-      onFeedItemUnfollowed,
-      getLastMessage,
-      getNonAllowedItems,
-      onUserSelect: handleUserWithCommonClick,
-    }),
-    [
-      renderFeedItemBaseContent,
-      onFeedItemUpdate,
-      onFeedItemUnfollowed,
-      getLastMessage,
-      getNonAllowedItems,
-      handleUserWithCommonClick,
-    ],
   );
 
   const setActiveChatItem = useCallback((nextChatItem: ChatItem | null) => {
@@ -496,12 +485,21 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       return;
     }
 
+    const queryParamsForPath = {
+      item: feedItemId,
+      message: messageId,
+    };
+
     if (commonId && commonId !== outerCommon?.id) {
+      history.push(getCommonPagePath(commonId, queryParamsForPath));
+      return;
+    }
+    if (chatItem?.nestedItemData) {
       history.push(
-        getCommonPagePath(commonId, {
-          item: feedItemId,
-          message: messageId,
-        }),
+        getCommonPagePath(
+          chatItem?.nestedItemData.common.id,
+          queryParamsForPath,
+        ),
       );
       return;
     }
@@ -606,6 +604,34 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     [refsByItemId],
   );
 
+  // We should try to set here only the data which rarely can be changed,
+  // so we will not have extra re-renders of ALL rendered items
+  const feedItemContextValue = useMemo<FeedItemContextValue>(
+    () => ({
+      setExpandedFeedItemId,
+      renderFeedItemBaseContent,
+      onFeedItemUpdate,
+      onFeedItemUnfollowed,
+      getLastMessage,
+      getNonAllowedItems,
+      onUserSelect: handleUserWithCommonClick,
+      onFeedItemClick: handleFeedItemClickMemoized,
+      onInternalLinkClick: handleInternalLinkClickMemoized,
+      onActiveItemDataChange: handleActiveFeedItemDataChange,
+    }),
+    [
+      renderFeedItemBaseContent,
+      onFeedItemUpdate,
+      onFeedItemUnfollowed,
+      getLastMessage,
+      getNonAllowedItems,
+      handleUserWithCommonClick,
+      handleFeedItemClickMemoized,
+      handleInternalLinkClickMemoized,
+      handleActiveFeedItemDataChange,
+    ],
+  );
+
   useEffect(() => {
     if (!outerGovernance && selectedItemCommonData?.id) {
       fetchGovernance(selectedItemCommonData.id);
@@ -630,7 +656,19 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     if (activeFeedItemId) {
       userForProfile.resetUserForProfileData(true);
     }
+
+    FeedLayoutEventEmitter.emit(
+      FeedLayoutEvent.ActiveFeedItemUpdated,
+      activeFeedItemId || null,
+    );
   }, [activeFeedItemId]);
+
+  useEffect(() => {
+    FeedLayoutEventEmitter.emit(
+      FeedLayoutEvent.ExpandedFeedItemUpdated,
+      expandedFeedItemId || null,
+    );
+  }, [expandedFeedItemId]);
 
   useEffect(() => {
     if (selectedFeedItem?.itemId && !isTabletView) {
@@ -806,14 +844,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                             !item.feedItemFollowWithMetadata ||
                             item.feedItemFollowWithMetadata.userId !== userId
                           }
-                          onActiveItemDataChange={
-                            handleActiveFeedItemDataChange
-                          }
                           directParent={outerCommon?.directParent}
                           rootCommonId={outerCommon?.rootCommonId}
                           shouldPreLoadMessages={shouldPreLoadMessages}
-                          onFeedItemClick={handleFeedItemClickMemoized}
-                          onInternalLinkClick={handleInternalLinkClickMemoized}
                         />
                       );
                     }

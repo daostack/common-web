@@ -1,5 +1,5 @@
 import React, { MouseEventHandler, ReactNode, useContext } from "react";
-import { ContextMenuItem } from "@/shared/interfaces";
+import { ContextMenuItem, FeedLayoutItemChangeData } from "@/shared/interfaces";
 import {
   CommonFeed,
   CommonFeedType,
@@ -8,6 +8,7 @@ import {
   PredefinedTypes,
 } from "@/shared/models";
 import { parseStringToTextEditorValue, TextEditorValue } from "@/shared/ui-kit";
+import { emptyFunction, InternalLinkData } from "@/shared/utils";
 import { FeedCardSettings } from "../FeedCard";
 import { GetNonAllowedItemsOptions } from "./types";
 
@@ -78,10 +79,18 @@ export interface FeedItemContextValue {
   getLastMessage: (options: GetLastMessageOptions) => TextEditorValue;
   getNonAllowedItems?: GetNonAllowedItemsOptions;
   onUserSelect?: (userId: string, commonId?: string) => void;
+  onFeedItemClick: (feedItemId: string) => void;
+  onInternalLinkClick: (data: InternalLinkData) => void;
+  onActiveItemDataChange?: (
+    data: FeedLayoutItemChangeData,
+    commonId?: string,
+  ) => void;
 }
 
 export const FeedItemContext = React.createContext<FeedItemContextValue>({
   getLastMessage: () => parseStringToTextEditorValue(),
+  onFeedItemClick: emptyFunction,
+  onInternalLinkClick: emptyFunction,
 });
 
 export const useFeedItemContext = (): FeedItemContextValue =>

@@ -1,28 +1,51 @@
-import React, { FC, ReactNode, useEffect } from "react";
+import React, {
+  CSSProperties,
+  FC,
+  MouseEventHandler,
+  ReactNode,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { useCollapse } from "react-collapsed";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import classNames from "classnames";
+import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { useFeedItemContext } from "@/pages/common";
+import { ButtonIcon } from "@/shared/components";
 import { useRoutesContext } from "@/shared/contexts";
 import { useCommon, useFeedItemFollow } from "@/shared/hooks/useCases";
-import { OpenIcon } from "@/shared/icons";
+import { OpenIcon, SmallArrowIcon } from "@/shared/icons";
 import { SpaceListVisibility } from "@/shared/interfaces";
 import { CommonFeed } from "@/shared/models";
-import { CommonAvatar, parseStringToTextEditorValue } from "@/shared/ui-kit";
+import {
+  CommonAvatar,
+  Loader,
+  parseStringToTextEditorValue,
+} from "@/shared/ui-kit";
 import { checkIsProject } from "@/shared/utils";
+import { CommonCard } from "../../../CommonCard";
+import { COLLAPSE_DURATION } from "../../../FeedCard/constants";
 import { useFeedItemCounters } from "../../hooks";
+import { FeedItems } from "./components";
+import { useFeedItems } from "./hooks";
 import styles from "./ProjectFeedItem.module.scss";
 
 interface ProjectFeedItemProps {
   item: CommonFeed;
   isMobileVersion: boolean;
+  level?: number;
 }
 
 export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
-  const { item, isMobileVersion } = props;
+  const { item, isMobileVersion, level = 1 } = props;
+  const containerRef = useRef<HTMLDivElement>(null);
   const history = useHistory();
   const { getCommonPagePath } = useRoutesContext();
-  const { renderFeedItemBaseContent } = useFeedItemContext();
+  const { renderFeedItemBaseContent, feedCardSettings } = useFeedItemContext();
   const { data: common, fetched: isCommonFetched, fetchCommon } = useCommon();
   const {
     fetched: isCommonMemberFetched,
@@ -37,13 +60,31 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
     projectUnreadStreamsCount: unreadStreamsCount,
     projectUnreadMessages: unreadMessages,
   } = useFeedItemCounters(item.id, common?.directParent?.commonId);
+  const user = useSelector(selectUser());
+  const userId = user?.uid;
   const commonId = item.data.id;
+  const {
+    data: feedItems,
+    fetched,
+    fetchFeedItems,
+    onFeedItemUpdate,
+  } = useFeedItems(commonId, userId);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const { getCollapseProps, getToggleProps } = useCollapse({
+    isExpanded,
+    duration: COLLAPSE_DURATION,
+  });
+  const isLoading = !fetched;
   const lastMessage = parseStringToTextEditorValue(
     `${unreadStreamsCount ?? 0} unread stream${
       unreadStreamsCount === 1 ? "" : "s"
     }`,
   );
   const isProject = checkIsProject(common);
+  const userCircleIds = useMemo(
+    () => Object.values(commonMember?.circles.map ?? {}),
+    [commonMember?.circles.map],
+  );
   const titleEl = (
     <>
       <span className={styles.title}>{common?.name}</span>
@@ -55,22 +96,46 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
     history.push(getCommonPagePath(commonId));
   };
 
+  const handleExpand: MouseEventHandler = (event) => {
+    event.stopPropagation();
+    setIsExpanded((v) => !v);
+  };
+
   const renderLeftContent = (): ReactNode => (
-    <CommonAvatar
-      className={classNames(styles.image, {
-        [styles.imageNonRounded]: !isProject,
-        [styles.imageRounded]: isProject,
-      })}
-      src={common?.image}
-      alt={`${common?.name}'s image`}
-      name={common?.name}
-    />
+    <div className={styles.leftContent}>
+      <ButtonIcon
+        className={styles.arrowIconButton}
+        onClick={handleExpand}
+        aria-label={`${isExpanded ? "Hide" : "Show"} ${common?.name}'s spaces`}
+      >
+        <SmallArrowIcon
+          className={classNames(styles.arrowIcon, {
+            [styles.arrowIconOpen]: isExpanded,
+          })}
+        />
+      </ButtonIcon>
+      <CommonAvatar
+        className={classNames(styles.image, {
+          [styles.imageNonRounded]: !isProject,
+          [styles.imageRounded]: isProject,
+        })}
+        src={common?.image}
+        alt={`${common?.name}'s image`}
+        name={common?.name}
+      />
+    </div>
   );
 
   useEffect(() => {
     fetchCommonMember(commonId);
     fetchCommon(commonId);
   }, [commonId]);
+
+  useEffect(() => {
+    if (isExpanded) {
+      fetchFeedItems();
+    }
+  }, [isExpanded]);
 
   if (
     !isCommonMemberFetched ||
@@ -79,9 +144,17 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
     return null;
   }
 
+  const itemStyles = {
+    "--project-feed-item-level": level,
+  } as CSSProperties;
+
   return (
-    (
-      <>
+    <div
+      ref={containerRef}
+      className={styles.collapseContainer}
+      style={itemStyles}
+    >
+      <div {...getToggleProps()}>
         {renderFeedItemBaseContent?.({
           className: styles.container,
           titleWrapperClassName: styles.titleWrapper,
@@ -89,6 +162,7 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
           isMobileView: isMobileVersion,
           title: titleEl,
           onClick: handleClick,
+          onExpand: handleExpand,
           seenOnce: true,
           isLoading: !isCommonFetched,
           unreadMessages,
@@ -103,7 +177,30 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
           isFollowing: feedItemFollow.isFollowing,
           notion: common?.notion,
         })}
-      </>
-    ) || null
+      </div>
+      <div {...getCollapseProps()}>
+        <CommonCard
+          className={classNames(
+            styles.commonCard,
+            {
+              [styles.commonCardActive]: isExpanded,
+            },
+            feedCardSettings?.commonCardClassName,
+          )}
+          hideCardStyles={feedCardSettings?.shouldHideCardStyles ?? true}
+        >
+          {isLoading && <Loader className={styles.loader} />}
+          {!isLoading && common && (
+            <FeedItems
+              common={common}
+              commonMember={commonMember}
+              feedItems={feedItems}
+              level={level}
+              onFeedItemUpdate={onFeedItemUpdate}
+            />
+          )}
+        </CommonCard>
+      </div>
+    </div>
   );
 };

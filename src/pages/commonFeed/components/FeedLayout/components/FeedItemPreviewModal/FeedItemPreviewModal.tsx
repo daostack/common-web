@@ -10,7 +10,6 @@ import {
 } from "@/shared/interfaces";
 import { Breadcrumbs } from "@/shared/layouts/MultipleSpacesLayout/components/Header/components";
 import { Circles, CommonFeed } from "@/shared/models";
-import { emptyFunction } from "@/shared/utils";
 import styles from "./FeedItemPreviewModal.module.scss";
 
 interface FeedItemPreviewModalProps {
@@ -94,8 +93,6 @@ const FeedItemPreviewModal: FC<FeedItemPreviewModalProps> = (props) => {
             isActive
             sizeKey={sizeKey}
             onActiveItemDataChange={handleActiveItemDataChange}
-            onFeedItemClick={emptyFunction}
-            onInternalLinkClick={emptyFunction}
           />
         </>
       )}

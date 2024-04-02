@@ -1,7 +1,11 @@
 import React, { useContext } from "react";
+import { FeedLayoutItem } from "@/shared/interfaces";
 import {
   ChatChannel,
+  CirclesPermissions,
+  Common,
   CommonFeedObjectUserUnique,
+  CommonMember,
   Discussion,
   Proposal,
 } from "@/shared/models";
@@ -18,6 +22,11 @@ export interface ChatItem {
   seenOnce?: boolean;
   seen?: boolean;
   hasUnseenMention?: CommonFeedObjectUserUnique["hasUnseenMention"];
+  nestedItemData?: {
+    feedItem: FeedLayoutItem;
+    common: Common;
+    commonMember?: (CommonMember & CirclesPermissions) | null;
+  };
 }
 
 export interface ChatContextValue {
@@ -26,6 +35,10 @@ export interface ChatContextValue {
   shouldAllowChatAutoOpen?: boolean | null;
   setIsShowFeedItemDetailsModal?: (isShowing: boolean) => void;
   setShouldShowSeeMore?: (shouldShow: boolean) => void;
+  nestedItemData?: {
+    common: Common;
+    commonMember?: (CommonMember & CirclesPermissions) | null;
+  };
 }
 
 export const ChatContext = React.createContext<ChatContextValue>({

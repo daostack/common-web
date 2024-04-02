@@ -48,6 +48,11 @@ export const useMenuItems = (
   actions: Actions,
 ): Item[] => {
   const dispatch = useDispatch();
+
+  if (options.withoutMenu) {
+    return [];
+  }
+
   const {
     discussion,
     commonId,
