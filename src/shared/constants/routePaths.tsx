@@ -44,4 +44,5 @@ export enum ROUTE_PATHS {
   SAVE_SAADIA = "/save-saadia",
   V04_INBOX = "/inbox-v04",
   INBOX = "/inbox",
+  PRIVACY_POLICY = "/privacy-policy",
 }
