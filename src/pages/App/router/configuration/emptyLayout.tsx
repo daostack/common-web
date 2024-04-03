@@ -1,3 +1,4 @@
+import { PrivacyPolicy } from "@/pages/PrivacyPolicy";
 import { EmptyPage } from "@/pages/empty";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { EmptyLayout } from "@/shared/layouts";
@@ -10,6 +11,11 @@ export const EMPTY_LAYOUT_CONFIGURATION: LayoutConfiguration = {
       path: ROUTE_PATHS.MOBILE_LOADER,
       exact: true,
       component: EmptyPage,
+    },
+    {
+      path: ROUTE_PATHS.PRIVACY_POLICY,
+      exact: true,
+      component: PrivacyPolicy,
     },
   ],
 };
