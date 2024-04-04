@@ -1,6 +1,6 @@
 @import "../../../../../../constants";
 
-$extra-pl: 1rem;
+$extra-pl: 3.75rem;
 
 .collapseContainer {
   --base-content-container-extra-pl: calc(
@@ -47,7 +47,7 @@ $extra-pl: 1rem;
 }
 
 .arrowIconButton {
-  padding: 0.75rem 0.5rem;
+  padding: 0.75rem 0.75rem;
 }
 .arrowIconButtonHidden {
   visibility: hidden;
