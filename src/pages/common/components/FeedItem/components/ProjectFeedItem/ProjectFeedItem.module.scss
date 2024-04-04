@@ -1,5 +1,4 @@
 @import "../../../../../../constants";
-@import "../../../../../../styles/sizes";
 
 $extra-pl: 1rem;
 
@@ -69,13 +68,9 @@ $extra-pl: 1rem;
   flex-shrink: 0;
   width: 1.5rem;
   height: 1.5rem;
-  margin-right: 0.75rem;
+  margin-right: 0.5rem;
   object-fit: cover;
   box-sizing: border-box;
-
-  @include tablet {
-    margin-right: 0.625rem;
-  }
 }
 .imageNonRounded {
   border-radius: 0.375rem;

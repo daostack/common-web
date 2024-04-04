@@ -121,7 +121,11 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
       onContextMenu={handleContextMenu}
       {...getLongPressProps()}
     >
-      {renderLeftContent?.()}
+      {renderLeftContent?.() || (
+        <div className={styles.leftContentContainer}>
+          <div className={styles.leftContentCircle} />
+        </div>
+      )}
       <div className={styles.content}>
         <div className={styles.topContent}>
           <div
