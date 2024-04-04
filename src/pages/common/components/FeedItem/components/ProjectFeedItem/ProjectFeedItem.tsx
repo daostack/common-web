@@ -10,6 +10,7 @@ import React, {
 import { useCollapse } from "react-collapsed";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import classNames from "classnames";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
@@ -79,6 +80,7 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
       unreadStreamsCount === 1 ? "" : "s"
     }`,
   );
+  const commonPath = getCommonPagePath(commonId);
   const isProject = checkIsProject(common);
   const titleEl = (
     <>
@@ -88,7 +90,7 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
   );
 
   const handleClick = () => {
-    history.push(getCommonPagePath(commonId));
+    history.push(commonPath);
   };
 
   const handleExpand: MouseEventHandler = (event) => {
@@ -186,13 +188,22 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
         >
           {isLoading && <Loader className={styles.loader} />}
           {!isLoading && common && (
-            <FeedItems
-              common={common}
-              commonMember={commonMember}
-              feedItems={feedItems}
-              level={level}
-              onFeedItemUpdate={onFeedItemUpdate}
-            />
+            <>
+              <FeedItems
+                common={common}
+                commonMember={commonMember}
+                feedItems={feedItems}
+                level={level}
+                onFeedItemUpdate={onFeedItemUpdate}
+              />
+              <NavLink
+                className={styles.moreItemsTextContainer}
+                to={commonPath}
+              >
+                More items in {common.name}
+                <OpenIcon className={styles.moreItemsTextIcon} />
+              </NavLink>
+            </>
           )}
         </CommonCard>
       </div>

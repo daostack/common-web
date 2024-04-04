@@ -94,3 +94,23 @@ $extra-pl: 3.75rem;
 .loader {
   align-self: center;
 }
+
+.moreItemsTextContainer {
+  height: 1.875rem;
+  padding-left: calc(var(--base-content-container-extra-pl) - 1.125rem);
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+  color: var(--highlight);
+  background-color: $c-light-gray-4;
+  text-decoration: none;
+
+  &:hover {
+    font-weight: bold;
+    color: var(--primary-fill);
+  }
+}
+
+.moreItemsTextIcon {
+  margin-left: 0.5rem;
+}
