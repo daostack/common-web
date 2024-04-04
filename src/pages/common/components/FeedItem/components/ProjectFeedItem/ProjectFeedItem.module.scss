@@ -102,12 +102,12 @@ $extra-pl: 3.75rem;
   align-items: center;
   font-size: 0.875rem;
   color: var(--highlight);
-  background-color: $c-light-gray-4;
+  background-color: var(--gentle-stroke);
   text-decoration: none;
 
   &:hover {
-    font-weight: bold;
     color: var(--primary-fill);
+    background-color: var(--secondary-background);
   }
 }
 

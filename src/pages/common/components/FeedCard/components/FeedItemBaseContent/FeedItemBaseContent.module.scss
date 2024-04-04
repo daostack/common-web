@@ -61,7 +61,7 @@
 .leftContentCircle {
   width: 0.75rem;
   height: 0.75rem;
-  background-color: $c-light-gray-3;
+  background-color: var(--secondary-fill);
   border-radius: 50%;
 }
 
