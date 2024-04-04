@@ -14,12 +14,12 @@
   user-select: none;
 
   &:hover {
-    background-color: var(--hover-fill);
+    background-color: var(--secondary-background);
     .lastMessage {
-      background-color: var(--hover-fill);
+      background-color: var(--secondary-background);
     }
     .lastMessageActive {
-      background-color: var(--quinary-fill);
+      background-color: var(--hover-fill);
     }
   }
 
@@ -33,10 +33,10 @@
 }
 
 .containerActive {
-  background-color: var(--quinary-fill);
+  background-color: var(--hover-fill);
 
   &:hover {
-    background-color: var(--quinary-fill);
+    background-color: var(--hover-fill);
   }
 }
 
@@ -150,7 +150,7 @@
 
 .lastMessageActive {
   color: var(--primary-text);
-  background-color: var(--quinary-fill);
+  background-color: var(--hover-fill);
 }
 
 .mentionText {
