@@ -65,6 +65,7 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
   const commonId = item.data.id;
   const {
     data: feedItems,
+    hasMoreItems,
     fetched,
     fetchFeedItems,
     onFeedItemUpdate,
@@ -196,13 +197,15 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
                 level={level}
                 onFeedItemUpdate={onFeedItemUpdate}
               />
-              <NavLink
-                className={styles.moreItemsTextContainer}
-                to={commonPath}
-              >
-                More items in {common.name}
-                <OpenIcon className={styles.moreItemsTextIcon} />
-              </NavLink>
+              {hasMoreItems && (
+                <NavLink
+                  className={styles.moreItemsTextContainer}
+                  to={commonPath}
+                >
+                  More items in {common.name}
+                  <OpenIcon className={styles.moreItemsTextIcon} />
+                </NavLink>
+              )}
             </>
           )}
         </CommonCard>

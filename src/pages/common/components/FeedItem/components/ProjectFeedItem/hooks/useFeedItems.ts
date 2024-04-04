@@ -20,6 +20,7 @@ const ITEMS_LIMIT = 5;
 type State = LoadingState<FeedItemFollowLayoutItem[]>;
 
 interface Return extends State {
+  hasMoreItems: boolean;
   fetchFeedItems: () => void;
   onFeedItemUpdate: (item: CommonFeed, isRemoved: boolean) => void;
 }
@@ -42,6 +43,7 @@ export const useFeedItems = (
     fetched: false,
     data: [],
   });
+  const [hasMoreItems, setHasMoreItems] = useState(false);
   const feedState = useSelector(selectFeedStateByCommonId(commonId));
 
   const updateCachedFeedState = (
@@ -94,6 +96,7 @@ export const useFeedItems = (
         fetched: true,
         data: cachedFeedItems.slice(0, ITEMS_LIMIT),
       });
+      setHasMoreItems(cachedFeedItems.length > ITEMS_LIMIT);
     } else {
       setState({
         loading: true,
@@ -110,7 +113,7 @@ export const useFeedItems = (
         await Promise.all([
           CommonFeedService.getCommonFeedItemsByUpdatedAt(commonId, userId, {
             commonMember,
-            limit: ITEMS_LIMIT,
+            limit: ITEMS_LIMIT + 2,
           }),
           CommonFeedService.getCommonPinnedFeedItems(commonId),
         ]);
@@ -129,19 +132,16 @@ export const useFeedItems = (
         }));
 
       if (currentLoadingIdRef.current === loadingId) {
+        const finalItems = [...convertedPinnedFeedItems, ...convertedFeedItems];
+
         setState({
           loading: false,
           fetched: true,
-          data: [...convertedPinnedFeedItems, ...convertedFeedItems].slice(
-            0,
-            ITEMS_LIMIT,
-          ),
+          data: finalItems.slice(0, ITEMS_LIMIT),
         });
+        setHasMoreItems(finalItems.length > ITEMS_LIMIT);
 
-        if (
-          cachedFeedItems.length <
-          convertedFeedItems.length + convertedPinnedFeedItems.length
-        ) {
+        if (cachedFeedItems.length < finalItems.length) {
           updateCachedFeedState(convertedFeedItems, convertedPinnedFeedItems);
         }
       }
@@ -220,6 +220,7 @@ export const useFeedItems = (
 
   return {
     ...state,
+    hasMoreItems,
     fetchFeedItems,
     onFeedItemUpdate: handleFeedItemUpdate,
   };
