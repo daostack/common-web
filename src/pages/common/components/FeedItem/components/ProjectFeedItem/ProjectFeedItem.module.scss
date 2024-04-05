@@ -1,7 +1,18 @@
 @import "../../../../../../constants";
-@import "../../../../../../styles/sizes";
+
+$extra-pl: 3.75rem;
+
+.collapseContainer {
+  --base-content-container-extra-pl: calc(
+    #{$extra-pl} * var(--project-feed-item-level, 1)
+  );
+}
 
 .container {
+  padding-left: calc(
+    #{$extra-pl} * calc(var(--project-feed-item-level, 1) - 1)
+  );
+
   &:hover {
     --title-color: var(--primary-fill);
 
@@ -30,22 +41,76 @@
   margin-left: 0.625rem;
 }
 
+.leftContent {
+  display: flex;
+  align-items: center;
+}
+
+.arrowIconButton {
+  padding: 0.75rem 0.75rem;
+}
+.arrowIconButtonHidden {
+  visibility: hidden;
+}
+
+.arrowIcon {
+  width: 0.5rem;
+  height: 0.625rem;
+  color: $c-neutrals-600;
+  transition: transform 0.2s;
+}
+.arrowIconOpen {
+  transform: rotate(90deg);
+}
+
 .image {
   align-self: center;
   flex-shrink: 0;
   width: 1.5rem;
   height: 1.5rem;
-  margin-right: 0.75rem;
+  margin-right: 0.5rem;
   object-fit: cover;
   box-sizing: border-box;
-
-  @include tablet {
-    margin-right: 0.625rem;
-  }
 }
 .imageNonRounded {
   border-radius: 0.375rem;
 }
 .imageRounded {
   border-radius: 50%;
+}
+
+.commonCard {
+  --feed-card-ph: 1.5rem;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  color: $c-neutrals-600;
+}
+.commonCardActive {
+  border-bottom: 0.0625rem solid var(--gentle-stroke);
+}
+
+.loader {
+  align-self: center;
+}
+
+.moreItemsTextContainer {
+  height: 1.875rem;
+  padding-left: calc(var(--base-content-container-extra-pl) - 1.125rem);
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+  color: var(--highlight);
+  background-color: var(--gentle-stroke);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--primary-fill);
+    background-color: var(--secondary-background);
+  }
+}
+
+.moreItemsTextIcon {
+  margin-left: 0.5rem;
 }

@@ -405,7 +405,6 @@ const getStreamLinkedTargetSystemMessageText = async (
   systemMessageData: StreamLinkedTargetSystemMessage["systemMessageData"],
   data: TextData,
 ): Promise<Text[]> => {
-  // $streamName was linked here by $userName.
   const [user, feedItemDisplayingData] = await Promise.all([
     getUser(data.users, systemMessageData.userId),
     getFeedItemDisplayingData(

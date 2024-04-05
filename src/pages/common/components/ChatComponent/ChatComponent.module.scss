@@ -135,3 +135,22 @@ $phone-breakpoint: 415px;
 .multipleEmojiText {
   font-size: $large;
 }
+
+.scrollToBottomContainer {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: 0;
+  bottom: calc(var(--chat-input-wrapper-height) + 2rem);
+  height: 2.5rem;
+  width: 3rem;
+  padding-left: 0.5rem;
+  background-color: var(--primary-background);
+  border-radius: 8px 0 0 8px;
+  box-shadow: 0px 4px 15px 0px $shadow;
+  cursor: pointer;
+}
+
+.scrollToBottomIcon {
+  color: var(--primary-fill);
+}

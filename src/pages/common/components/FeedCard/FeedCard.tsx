@@ -14,6 +14,14 @@ import { ContextMenuItem } from "@/shared/interfaces";
 import { CommonFeedType, CommonNotion, PredefinedTypes } from "@/shared/models";
 import { Loader, TextEditorValue } from "@/shared/ui-kit";
 import { CommonCard } from "../CommonCard";
+import {
+  MOBILE_HEADER_HEIGHT,
+  DESKTOP_HEADER_HEIGHT,
+  MOBILE_TAB_NAVIGATION_HEIGHT,
+  COLLAPSE_DURATION,
+  OFFSET_FROM_BOTTOM_FOR_SCROLLING,
+  EXTRA_WAITING_TIME_FOR_TIMEOUT,
+} from "./constants";
 import { FeedCardRef } from "./types";
 import styles from "./FeedCard.module.scss";
 
@@ -51,13 +59,6 @@ type FeedCardProps = PropsWithChildren<{
   originalCommonIdForLinking?: string;
   linkedCommonIds?: string[];
 }>;
-
-const MOBILE_HEADER_HEIGHT = 52;
-const DESKTOP_HEADER_HEIGHT = 56 + 79;
-const MOBILE_TAB_NAVIGATION_HEIGHT = 65;
-const COLLAPSE_DURATION = 300;
-const OFFSET_FROM_BOTTOM_FOR_SCROLLING = 10;
-const EXTRA_WAITING_TIME_FOR_TIMEOUT = 10;
 
 export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
   const {

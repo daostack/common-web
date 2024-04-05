@@ -25,6 +25,7 @@ export interface GetAllowedItemsOptions {
   feedItemFollow: FeedItemFollowState;
   getNonAllowedItems?: GetNonAllowedItemsOptions;
   feedItemUserMetadata: CommonFeedObjectUserUnique | null;
+  withoutMenu?: boolean;
 }
 
 export type MenuItemOptions = Omit<GetAllowedItemsOptions, "feedItemFollow">;
