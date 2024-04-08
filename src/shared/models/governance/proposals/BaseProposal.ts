@@ -1,4 +1,4 @@
-import { ProposalsTypes } from "@/shared/constants";
+import { ProposalOutcomeUnit, ProposalsTypes } from "@/shared/constants";
 import {
   BaseEntity,
   CirclesMap,
@@ -50,6 +50,7 @@ export interface GlobalDefinition {
   weights: Weight[]; // sum of values is 100%, ordered array by value (descending)
   minApprove: number; // weight based percentage
   maxReject: number; // weight based percentage
+  minApproveUnit: ProposalOutcomeUnit;
 }
 
 export interface BaseProposal extends BaseEntity, SoftDeleteEntity {

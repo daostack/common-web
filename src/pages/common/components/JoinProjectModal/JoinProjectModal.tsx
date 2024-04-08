@@ -8,12 +8,14 @@ import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Common, Governance } from "@/shared/models";
 import { emptyFunction, getUserName } from "@/shared/utils";
 import { JoinProjectCreation, JoinProjectForm } from "./components";
+import { useIsJoinMemberAdmittanceRequest } from "./hooks/useIsJoinMemberAdmittanceRequest";
 import styles from "./JoinProjectModal.module.scss";
 
 interface JoinProjectModalProps {
   isShowing: boolean;
   onClose: () => void;
   common: Common;
+  parentCommon?: Common;
   governance: Governance;
   shouldKeepLoadingIfPossible?: boolean;
   onRequestCreated: () => void;
@@ -38,6 +40,7 @@ const JoinProjectModal: FC<PropsWithChildren<JoinProjectModalProps>> = (
     onClose,
     governance,
     common,
+    parentCommon,
     shouldKeepLoadingIfPossible = false,
     onRequestCreated,
   } = props;
@@ -46,8 +49,10 @@ const JoinProjectModal: FC<PropsWithChildren<JoinProjectModalProps>> = (
   const user = useSelector(selectUser());
   const userName = getUserName(user);
   const userId = user?.uid;
-  const isJoinMemberAdmittanceRequest = Boolean(
-    governance.proposals[ProposalsTypes.MEMBER_ADMITTANCE],
+  const isJoinMemberAdmittanceRequest = useIsJoinMemberAdmittanceRequest(
+    governance,
+    common,
+    parentCommon,
   );
   const shouldKeepLoading =
     shouldKeepLoadingIfPossible &&
@@ -160,7 +165,13 @@ const JoinProjectModal: FC<PropsWithChildren<JoinProjectModalProps>> = (
         });
       }
     },
-    [governance, common.id, common.directParent?.commonId, userId],
+    [
+      governance,
+      common.id,
+      common.directParent?.commonId,
+      userId,
+      isJoinMemberAdmittanceRequest,
+    ],
   );
 
   return (

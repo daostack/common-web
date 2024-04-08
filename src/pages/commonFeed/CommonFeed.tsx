@@ -610,6 +610,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
             onClose={onProjectJoinModalClose}
             common={commonData.common}
             governance={commonData.governance}
+            parentCommon={commonData.parentCommon}
             onRequestCreated={() => null}
           />
         </>
