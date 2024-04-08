@@ -412,7 +412,7 @@ export default function DMChatMessage({
 
   const emojiButton = (
     <ReactWithEmoji
-      showEmojiButton={showReactWithEmoji}
+      emojiButtonClassName={styles.emojiButton}
       chatMessageId={discussionMessage.id}
       chatChannelId={chatChannelId}
       className={
