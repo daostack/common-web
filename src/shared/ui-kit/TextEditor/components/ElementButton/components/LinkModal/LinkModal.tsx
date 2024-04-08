@@ -8,7 +8,7 @@ import React, {
 import { Editor } from "slate";
 import { Input } from "@/shared/components/Form/Input";
 import { Modal } from "@/shared/components/Modal";
-import { Button, ButtonVariant } from "@/shared/ui-kit/Button";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { checkIsURL } from "@/shared/utils";
 import { ElementType } from "../../../../constants";
 import { LinkElement } from "../../../../types";
@@ -96,12 +96,12 @@ const LinkModal: FC<LinkModalProps> = (props) => {
         />
         <div className={styles.buttonsContainer}>
           <div className={styles.buttonsWrapper}>
-            <Button variant={ButtonVariant.PrimaryGray} onClick={onClose}>
+            <Button variant={ButtonVariant.OutlineDarkPink} onClick={onClose}>
               Cancel
             </Button>
             {isLinkActive && (
               <Button
-                variant={ButtonVariant.OutlineBlue}
+                variant={ButtonVariant.Warning}
                 onClick={handleLinkRemove}
               >
                 Remove
@@ -109,7 +109,7 @@ const LinkModal: FC<LinkModalProps> = (props) => {
             )}
             <Button
               type="submit"
-              variant={ButtonVariant.PrimaryPurple}
+              variant={ButtonVariant.PrimaryPink}
               disabled={isSaveDisabled}
             >
               Save
