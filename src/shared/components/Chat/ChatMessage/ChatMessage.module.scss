@@ -2,6 +2,14 @@
 @import "../../../../styles/mixins";
 @import "../../../../styles/sizes";
 
+.container {
+  &:hover {
+    .emojiButton {
+      opacity: 1;
+    }
+  }
+}
+
 .message {
   display: flex;
   position: relative;
