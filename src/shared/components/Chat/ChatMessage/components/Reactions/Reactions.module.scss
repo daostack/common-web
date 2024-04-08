@@ -13,3 +13,39 @@
 .totalCount {
   margin-right: 0.25rem;
 }
+
+.reactionsTooltipTrigger {
+  border: none;
+  background-color: var(--secondary-background);
+  cursor: pointer;
+}
+
+.reactionsTooltipContent {
+  z-index: 999;
+  min-width: 1rem;
+  min-height: 1rem;
+  background-color: var(--primary-background);
+  box-shadow: 0 0.25rem 0.9375rem var(--drop-shadow);
+  padding: 0;
+}
+
+.listItem {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 0.0625rem solid var(--gentle-stroke);
+}
+
+.userAvatar {
+  margin-right: 0.5rem;
+  width: 2rem;
+  height: 2rem;
+}
+
+.listUsername {
+  margin-right: 0.5rem;
+}
+
+.listItemEmoji {
+  margin-left: auto;
+}

@@ -7,28 +7,31 @@ import { UserReaction } from "@/shared/models";
 interface Return {
   getUserReaction: (
     discussionMessageId: string,
-  ) => Promise<UserReaction | null | undefined>;
+  ) => Promise<UserReaction[] | null | undefined>;
   getDMUserReaction: (
     chatMessageId: string,
     chatChannelId: string,
-  ) => Promise<UserReaction | null | undefined>;
+  ) => Promise<UserReaction[] | null | undefined>;
 }
 
-export const useUserReaction = (): Return => {
+interface Options {
+  fetchAll?: boolean;
+}
+
+export const useUserReaction = ({ fetchAll }: Options): Return => {
   const user = useSelector(selectUser());
   const userId = user?.uid;
 
   const getUserReaction = useCallback(
     async (discussionMessageId: string) => {
-      if (userId) {
-        try {
-          return await DiscussionMessageService.getUserReaction(
-            discussionMessageId,
-            userId,
-          );
-        } catch (error) {
-          Logger.error(error);
-        }
+      try {
+        return await DiscussionMessageService.getUsersReactions(
+          discussionMessageId,
+          userId,
+          fetchAll,
+        );
+      } catch (error) {
+        Logger.error(error);
       }
     },
     [userId],
@@ -42,6 +45,7 @@ export const useUserReaction = (): Return => {
             chatMessageId,
             chatChannelId,
             userId,
+            fetchAll,
           );
         } catch (error) {
           Logger.error(error);

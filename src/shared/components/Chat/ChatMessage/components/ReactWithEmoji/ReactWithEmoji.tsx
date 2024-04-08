@@ -58,7 +58,7 @@ export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
   const { isOutside, setOutsideValue } = useOutsideClick(wrapperRef);
   const { reactToDiscussionMessage } = useDiscussionMessageReaction();
   const { reactToChatMessage } = useChatMessageReaction();
-  const { getUserReaction, getDMUserReaction } = useUserReaction();
+  const { getUserReaction, getDMUserReaction } = useUserReaction({});
 
   useEffect(() => {
     if (isOutside) {
@@ -76,7 +76,7 @@ export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
         const userReaction = await getUserReaction(discussionMessageId);
 
         if (isMounted) {
-          setUserReaction(userReaction);
+          setUserReaction(userReaction?.[0]);
         }
       } else if (chatMessageId && chatChannelId) {
         const userReaction = await getDMUserReaction(
@@ -85,7 +85,7 @@ export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
         );
 
         if (isMounted) {
-          setUserReaction(userReaction);
+          setUserReaction(userReaction?.[0]);
         }
       }
     })();
