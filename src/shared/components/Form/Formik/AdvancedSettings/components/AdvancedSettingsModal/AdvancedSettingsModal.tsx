@@ -19,6 +19,7 @@ import styles from "./AdvancedSettingsModal.module.scss";
 interface AdvancedSettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSubmit: () => void;
   parentCommonName?: string;
 }
 
@@ -31,7 +32,7 @@ interface AdvancedSettingsOption extends Option {
 const TIER_GAP = 10;
 
 const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
-  const { isOpen, onClose, parentCommonName } = props;
+  const { isOpen, onClose, onSubmit, parentCommonName } = props;
   const { values, setFieldValue } =
     useFormikContext<IntermediateCreateProjectPayload>();
   const advancedSettings = values.advancedSettings;
@@ -78,7 +79,7 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
 
   const apply = () => {
     prevFormDataRef.current = values.advancedSettings;
-    onClose();
+    onSubmit();
   };
 
   const onChangeInheritCircle = (index: number) => (value: unknown) => {
@@ -186,20 +187,19 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
                 !Number.isNaN(previousCirclesTierMax) &&
                 !Number.isNaN(nextCirclesTierMin);
 
-              const isPreviousCircleTierEqualToMaxTier = previousCirclesTierMax === maxTier;
-              const isNextCircleTierEqualToMinTier = nextCirclesTierMin === minTier;
-              const hasNoGapBetweenTiers = previousCirclesTierMax + TIER_GAP === nextCirclesTierMin;
+              const isPreviousCircleTierEqualToMaxTier =
+                previousCirclesTierMax === maxTier;
+              const isNextCircleTierEqualToMinTier =
+                nextCirclesTierMin === minTier;
+              const hasNoGapBetweenTiers =
+                previousCirclesTierMax + TIER_GAP === nextCirclesTierMin;
 
               const isSyncOptionDisabled =
                 isPreviousCircleTierEqualToMaxTier ||
                 isNextCircleTierEqualToMinTier ||
                 hasNoGapBetweenTiers ||
-                (currentCircleTier === previousCirclesTierMax &&
-                  hasLimits) ||
-                (currentCircleTier === nextCirclesTierMin &&
-                  hasLimits)
-                ;
-
+                (currentCircleTier === previousCirclesTierMax && hasLimits) ||
+                (currentCircleTier === nextCirclesTierMin && hasLimits);
               return (
                 <div key={index} className={styles.rootCircleWrapper}>
                   <div className={styles.rowContentWrapper}>

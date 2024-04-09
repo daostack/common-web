@@ -206,6 +206,7 @@ export const getConfiguration = (options: Options): CreationFormItem[] => {
         props: {
           name: "advancedSettings",
           parentCommonName,
+          shouldSaveChangesImmediately: isEditing,
         },
       });
     }

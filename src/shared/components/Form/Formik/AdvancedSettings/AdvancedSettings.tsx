@@ -1,21 +1,34 @@
 import React, { FC } from "react";
 import { ButtonLink } from "@/shared/components/ButtonLink";
 import { useModal } from "@/shared/hooks";
-import { AdvancedSettingsModal } from "./components";
+import { AdvancedSettingsModal, ConfirmationModal } from "./components";
 
 export interface AdvancedSettingsProps {
   name: string;
   parentCommonName?: string;
+  shouldSaveChangesImmediately?: boolean;
 }
 
 const AdvancedSettings: FC<AdvancedSettingsProps> = (props) => {
-  const { parentCommonName } = props;
-
+  const { parentCommonName, shouldSaveChangesImmediately = false } = props;
   const {
     isShowing: isAdvancedSettingsModalOpen,
     onOpen: onAdvancedSettingsModalOpen,
     onClose: onAdvancedSettingsModalClose,
   } = useModal(false);
+  const {
+    isShowing: isConfirmationModalOpen,
+    onOpen: onConfirmationModalOpen,
+    onClose: onConfirmationModalClose,
+  } = useModal(false);
+
+  const handleAdvancedSettingsSubmit = () => {
+    onAdvancedSettingsModalClose();
+
+    if (shouldSaveChangesImmediately) {
+      onConfirmationModalOpen();
+    }
+  };
 
   return (
     <>
@@ -25,7 +38,12 @@ const AdvancedSettings: FC<AdvancedSettingsProps> = (props) => {
       <AdvancedSettingsModal
         isOpen={isAdvancedSettingsModalOpen}
         onClose={onAdvancedSettingsModalClose}
+        onSubmit={handleAdvancedSettingsSubmit}
         parentCommonName={parentCommonName}
+      />
+      <ConfirmationModal
+        isOpen={isConfirmationModalOpen}
+        onClose={onConfirmationModalClose}
       />
     </>
   );
