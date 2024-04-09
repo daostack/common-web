@@ -57,7 +57,7 @@ const TreeItemTrigger: FC<TreeItemTriggerProps> = (props) => {
           [styles.arrowIconButtonHidden]: !onToggle,
         })}
         onClick={handleToggle}
-        aria-label={`${isOpen ? "Hide" : "Show"} ${item.name}'s projects`}
+        aria-label={`${isOpen ? "Hide" : "Show"} ${item.name}'s spaces`}
         aria-hidden={!onToggle}
       >
         <SmallArrowIcon

@@ -402,6 +402,10 @@ export default function ChatMessage({
     [isMessageEditLoading, handleCheckboxChange, isMessageEditAllowed],
   );
 
+  if (isSystemMessage && discussionMessage.parsedText.length === 0) {
+    return null;
+  }
+
   const emojiButton = (
     <ReactWithEmoji
       showEmojiButton={showReactWithEmoji}

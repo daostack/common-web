@@ -69,7 +69,6 @@ export interface TextEditorProps {
   onClearFinished: () => void;
   scrollSelectionIntoView?: (editor: ReactEditor, domRange: DOMRange) => void;
   elementStyles?: EditorElementStyles;
-  groupChat?: boolean;
 }
 
 const INITIAL_SEARCH_VALUE = {
@@ -104,7 +103,6 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     onClearFinished,
     scrollSelectionIntoView,
     elementStyles,
-    groupChat,
   } = props;
   const editor = useMemo(
     () =>
@@ -289,10 +287,27 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     }
   };
 
+  const handleMentionSelectionChange = useCallback(() => {
+    if (!editor.selection || editor.selection.anchor.path.length <= 2) {
+      return;
+    }
+
+    const { anchor } = editor.selection;
+    const point: BaseRange["anchor"] = {
+      ...anchor,
+      path: [anchor.path[0], anchor.path[1] + 1],
+    };
+    Transforms.select(editor, {
+      anchor: point,
+      focus: point,
+    });
+  }, []);
+
   const handleOnChange = useCallback(
     (updatedContent) => {
       // Prevent update for cursor clicks
       if (isEqual(updatedContent, value)) {
+        handleMentionSelectionChange();
         return;
       }
       onChange && onChange(updatedContent);
@@ -300,7 +315,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
 
       handleOnChangeSelection(selection);
     },
-    [onChange, value],
+    [onChange, value, handleMentionSelectionChange],
   );
 
   return (
@@ -335,9 +350,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
           }}
         />
 
-        {/* For now, we don't support the ability to mention in a group chat.
-          See https://github.com/daostack/common-web/issues/2380 */}
-        {!groupChat && target && (
+        {target && (
           <MentionDropdown
             shouldFocusTarget={shouldFocusTarget}
             onClick={(user: User) => {

@@ -1,6 +1,8 @@
 import React from "react";
-import { UserService } from "@/services";
+import { CommonService, UserService } from "@/services";
+import { store } from "@/shared/appConfig";
 import { SystemDiscussionMessageType } from "@/shared/constants";
+import { SpaceListVisibility } from "@/shared/interfaces";
 import {
   Common,
   CommonCreatedSystemMessage,
@@ -25,6 +27,7 @@ import {
   getCommonPagePath,
   getUserName,
 } from "@/shared/utils";
+import { selectCommonLayoutProjectsState } from "@/store/states";
 import { UserMention } from "../components";
 import { Text, TextData } from "../types";
 import { getCommon } from "./getCommon";
@@ -111,6 +114,28 @@ const getCommonLink = (common?: Common | null, path?: string): Text =>
     path,
   });
 
+const checkHasMembership = async (
+  commonId: string,
+  userId?: string,
+): Promise<boolean> => {
+  const { projects } = selectCommonLayoutProjectsState(store.getState());
+  const item = projects.find((project) => project.commonId === commonId);
+
+  if (typeof item?.hasMembership !== "undefined") {
+    return item.hasMembership;
+  }
+  if (!userId) {
+    return false;
+  }
+
+  const commonMember = await CommonService.getCommonMemberByUserId(
+    commonId,
+    userId,
+  );
+
+  return Boolean(commonMember);
+};
+
 const getCommonCreatedSystemMessageText = async (
   systemMessageData: CommonCreatedSystemMessage["systemMessageData"],
   data: TextData,
@@ -127,6 +152,18 @@ const getCommonCreatedSystemMessageText = async (
   }
 
   const common = await getCommon(systemMessageData.commonId);
+
+  if (common && common.listVisibility !== SpaceListVisibility.Public) {
+    const hasMembership = await checkHasMembership(
+      systemMessageData.commonId,
+      data.userId,
+    );
+
+    if (!hasMembership) {
+      return [];
+    }
+  }
+
   const commonEl = common ? (
     <>
       {" "}
@@ -368,7 +405,6 @@ const getStreamLinkedTargetSystemMessageText = async (
   systemMessageData: StreamLinkedTargetSystemMessage["systemMessageData"],
   data: TextData,
 ): Promise<Text[]> => {
-  // $streamName was linked here by $userName.
   const [user, feedItemDisplayingData] = await Promise.all([
     getUser(data.users, systemMessageData.userId),
     getFeedItemDisplayingData(

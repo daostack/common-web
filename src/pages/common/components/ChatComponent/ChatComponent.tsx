@@ -25,7 +25,7 @@ import { FILES_ACCEPTED_EXTENSIONS } from "@/shared/constants";
 import { HotKeys } from "@/shared/constants/keyboardKeys";
 import { ChatMessageToUserDiscussionMessageConverter } from "@/shared/converters";
 import { useZoomDisabling, useImageSizeCheck } from "@/shared/hooks";
-import { PlusIcon, SendIcon } from "@/shared/icons";
+import { ArrowInCircleIcon, PlusIcon, SendIcon } from "@/shared/icons";
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 import {
   ChatChannel,
@@ -564,10 +564,14 @@ export default function ChatComponent({
     setShouldReinitializeEditor(false);
   };
 
+  const scrollToContainerBottom = () => {
+    chatContentRef.current?.scrollToContainerBottom();
+  };
+
   const sendChatMessage = (): void => {
     if (canSendMessage) {
       sendMessage && sendMessage(message);
-      chatContentRef.current?.scrollToContainerBottom();
+      scrollToContainerBottom();
       onClear();
     }
   };
@@ -746,7 +750,6 @@ export default function ChatComponent({
           shouldReinitializeEditor={shouldReinitializeEditor}
           onClearFinished={onClearFinished}
           scrollSelectionIntoView={emptyFunction}
-          groupChat={chatChannel && chatChannel?.participants.length > 2}
         />
         <button
           className={styles.sendIcon}
@@ -760,6 +763,7 @@ export default function ChatComponent({
   };
 
   const { y } = useScroll(chatContainerRef);
+  const isScrolledToTop = Boolean(chatContainerRef.current && Math.abs(y) > 20);
 
   const isTopReached = useMemo(() => {
     const currentScrollPosition = Math.abs(y); // Since y can be negative
@@ -834,6 +838,14 @@ export default function ChatComponent({
           />
         </ChatContentContext.Provider>
       </div>
+      {isScrolledToTop && (
+        <div
+          className={styles.scrollToBottomContainer}
+          onClick={scrollToContainerBottom}
+        >
+          <ArrowInCircleIcon className={styles.scrollToBottomIcon} />
+        </div>
+      )}
       <MessageReply users={users} />
       <ChatFilePreview />
       <div

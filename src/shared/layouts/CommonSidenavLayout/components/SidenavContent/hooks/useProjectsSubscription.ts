@@ -44,6 +44,9 @@ const getProjectItemFromCommon = async (
       ...baseItem,
       hasMembership: false,
       hasPermissionToAddProject: false,
+      hasAccessToSpace:
+        !common.listVisibility ||
+        common.listVisibility === SpaceListVisibility.Public,
     };
   }
 
@@ -58,7 +61,9 @@ const getProjectItemFromCommon = async (
     ...baseItem,
     hasMembership,
     hasAccessToSpace:
-      hasMembership || common.listVisibility === SpaceListVisibility.Public,
+      hasMembership ||
+      !common.listVisibility ||
+      common.listVisibility === SpaceListVisibility.Public,
     hasPermissionToAddProject: Boolean(
       governance &&
         commonMember &&

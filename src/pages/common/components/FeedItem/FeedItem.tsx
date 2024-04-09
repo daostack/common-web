@@ -26,7 +26,7 @@ import { DiscussionFeedCard } from "../DiscussionFeedCard";
 import { ProposalFeedCard } from "../ProposalFeedCard";
 import { ProjectFeedItem } from "./components";
 import { useFeedItemContext } from "./context";
-import { FeedItemRef } from "./types";
+import { FeedItemRef, GetNonAllowedItemsOptions } from "./types";
 
 interface FeedItemProps {
   commonId?: string;
@@ -54,8 +54,10 @@ interface FeedItemProps {
   directParent?: DirectParent | null;
   rootCommonId?: string;
   shouldPreLoadMessages?: boolean;
-  onFeedItemClick: (feedItemId: string) => void;
-  onInternalLinkClick: (data: InternalLinkData) => void;
+  level?: number;
+  withoutMenu?: boolean;
+  onFeedItemUpdate?: (item: CommonFeed, isRemoved: boolean) => void;
+  getNonAllowedItems?: GetNonAllowedItemsOptions;
 }
 
 const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
@@ -78,25 +80,38 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     sizeKey,
     currentUserId,
     shouldCheckItemVisibility = true,
-    onActiveItemDataChange,
+    onActiveItemDataChange: outerOnActiveItemDataChange,
     directParent,
     rootCommonId,
     shouldPreLoadMessages = false,
-    onFeedItemClick,
-    onInternalLinkClick,
+    withoutMenu,
+    level,
+    onFeedItemUpdate: outerOnFeedItemUpdate,
+    getNonAllowedItems: outerGetNonAllowedItems,
   } = props;
   const {
     onFeedItemUpdate,
     onFeedItemUnfollowed,
     getLastMessage,
-    getNonAllowedItems,
+    getNonAllowedItems: contextGetNonAllowedItems,
     onUserSelect,
+    onFeedItemClick,
+    onInternalLinkClick,
+    onActiveItemDataChange: contextOnActiveItemDataChange,
   } = useFeedItemContext();
   const feedItemFollow = useFeedItemFollow(
     { feedItemId: item.id, commonId },
     { withSubscription: true },
   );
-  useFeedItemSubscription(item.id, commonId, onFeedItemUpdate);
+  useFeedItemSubscription(
+    item.id,
+    commonId,
+    outerOnFeedItemUpdate || onFeedItemUpdate,
+  );
+  const onActiveItemDataChange =
+    outerOnActiveItemDataChange || contextOnActiveItemDataChange;
+  const getNonAllowedItems =
+    outerGetNonAllowedItems || contextGetNonAllowedItems;
 
   const handleUserClick = useMemo(
     () => onUserSelect && ((userId: string) => onUserSelect(userId, commonId)),
@@ -158,6 +173,7 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     feedItemFollow,
     onUserSelect,
     shouldPreLoadMessages,
+    withoutMenu,
     onUserClick: handleUserClick,
     onFeedItemClick,
     onInternalLinkClick,
@@ -172,7 +188,13 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
   }
 
   if (item.data.type === CommonFeedType.Project) {
-    return <ProjectFeedItem item={item} isMobileVersion={isMobileVersion} />;
+    return (
+      <ProjectFeedItem
+        item={item}
+        isMobileVersion={isMobileVersion}
+        level={level}
+      />
+    );
   }
 
   return null;

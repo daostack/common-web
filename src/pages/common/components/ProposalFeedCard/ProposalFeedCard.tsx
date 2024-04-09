@@ -13,6 +13,7 @@ import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember, useProposalUserVote } from "@/pages/OldCommon/hooks";
 import { ProposalService } from "@/services";
 import { DeletePrompt, GlobalOverlay } from "@/shared/components";
+import { InboxItemType } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
 import { useForceUpdate, useModal, useNotification } from "@/shared/hooks";
 import {
@@ -92,6 +93,7 @@ interface ProposalFeedCardProps {
   feedItemFollow: FeedItemFollowState;
   onActiveItemDataChange?: (data: FeedLayoutItemChangeData) => void;
   shouldPreLoadMessages: boolean;
+  withoutMenu?: boolean;
   onUserClick?: (userId: string) => void;
   onFeedItemClick: (feedItemId: string) => void;
   onInternalLinkClick: (data: InternalLinkData) => void;
@@ -118,14 +120,19 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       feedItemFollow,
       onActiveItemDataChange,
       shouldPreLoadMessages,
+      withoutMenu,
       onUserClick,
       onFeedItemClick,
       onInternalLinkClick,
     } = props;
     const user = useSelector(selectUser());
     const userId = user?.uid;
-    const { setChatItem, feedItemIdForAutoChatOpen, shouldAllowChatAutoOpen } =
-      useChatContext();
+    const {
+      setChatItem,
+      feedItemIdForAutoChatOpen,
+      shouldAllowChatAutoOpen,
+      nestedItemData,
+    } = useChatContext();
     const { notify } = useNotification();
     const forceUpdate = useForceUpdate();
     const { getCommonPagePath } = useRoutesContext();
@@ -218,6 +225,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
         feedItemFollow,
         getNonAllowedItems,
         feedItemUserMetadata,
+        withoutMenu,
       },
       {
         report: () => {},
@@ -315,6 +323,14 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
           seenOnce: feedItemUserMetadata?.seenOnce,
           seen: feedItemUserMetadata?.seen,
           hasUnseenMention: feedItemUserMetadata?.hasUnseenMention,
+          nestedItemData: nestedItemData && {
+            ...nestedItemData,
+            feedItem: {
+              type: InboxItemType.FeedItemFollow,
+              itemId: item.id,
+              feedItem: item,
+            },
+          },
         });
       }
     }, [
@@ -328,6 +344,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       feedItemUserMetadata?.seenOnce,
       feedItemUserMetadata?.seen,
       feedItemUserMetadata?.hasUnseenMention,
+      nestedItemData,
     ]);
 
     useEffect(() => {

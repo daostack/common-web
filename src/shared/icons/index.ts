@@ -1,4 +1,5 @@
 export * from "./socials";
+export { default as ArrowInCircleIcon } from "./arrowInCircle.icon";
 export { default as AttachIcon } from "./attach.icon";
 export { default as Avatar2Icon } from "./avatar2.icon";
 export { default as Avatar3Icon } from "./avatar3.icon";
