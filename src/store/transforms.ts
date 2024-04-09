@@ -94,6 +94,7 @@ export const cacheTransform = createTransform(
     ),
     discussionStates: clearNonFinishedStates(inboundState.discussionStates),
     proposalStates: clearNonFinishedStates(inboundState.proposalStates),
+    commonMembersState: clearNonFinishedStates(inboundState.commonMembersState),
     feedByCommonIdStates: inboundState.feedByCommonIdStates,
     feedItemUserMetadataStates: clearNonFinishedStates(
       inboundState.feedItemUserMetadataStates,

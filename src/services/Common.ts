@@ -404,6 +404,22 @@ class CommonService {
     return members[0] || null;
   };
 
+  public getCommonMembers = async (
+    commonId: string,
+    circleVisibility: string[],
+  ): Promise<CommonMember[]> => {
+    let query: firebase.firestore.Query<CommonMember> =
+      commonMembersSubCollection(commonId);
+
+    if (circleVisibility.length > 0) {
+      query = query.where("circleIds", "array-contains-any", circleVisibility);
+    }
+
+    const snapshot = await query.get();
+
+    return snapshot.docs.map((doc) => doc.data());
+  };
+
   public subscribeToCircleMemberCountByCircleIds = (
     commonId: string,
     circleIds: string[],
