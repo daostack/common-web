@@ -22,7 +22,7 @@ import { CompactPicker } from "./components /CompactPicker";
 import styles from "./ReactWithEmoji.module.scss";
 
 interface ReactWithEmojiProps {
-  showEmojiButton: boolean;
+  emojiButtonClassName?: string;
   discussionId?: string;
   discussionMessageId?: string;
   className?: string;
@@ -35,7 +35,7 @@ interface ReactWithEmojiProps {
 
 export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
   const {
-    showEmojiButton,
+    emojiButtonClassName,
     discussionId,
     discussionMessageId,
     className,
@@ -136,8 +136,8 @@ export const ReactWithEmoji: FC<ReactWithEmojiProps> = (props) => {
     <div ref={wrapperRef} className={classNames(className)}>
       <ButtonIcon
         onClick={handleEmojiButtonClick}
-        className={classNames(styles.emojiButton, {
-          [styles.show]: showEmojiButton || showPicker,
+        className={classNames(styles.emojiButton, emojiButtonClassName, {
+          [styles.show]: showPicker,
         })}
       >
         <EmojiIcon />
