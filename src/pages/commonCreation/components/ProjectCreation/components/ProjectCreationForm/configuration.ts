@@ -1,3 +1,5 @@
+import { FeatureFlags } from "@/shared/constants";
+import { useFeatureFlag } from "@/shared/hooks";
 import {
   NotionIntegration,
   Roles,
@@ -36,6 +38,10 @@ export const getConfiguration = (options: Options): CreationFormItem[] => {
     isImageRequired = false,
     isEditing,
   } = options;
+  const featureFlags = useFeatureFlag();
+  const isAdvancedSettingsEnabled = featureFlags?.get(
+    isEditing ? FeatureFlags.UpdateRoles : FeatureFlags.AdvancedSettings,
+  );
   const type = isProject ? "Space" : "Common";
 
   const items: CreationFormItem[] = [
@@ -194,7 +200,7 @@ export const getConfiguration = (options: Options): CreationFormItem[] => {
       },
     });
 
-    if (advancedSettings) {
+    if (isAdvancedSettingsEnabled && advancedSettings) {
       items.push({
         type: CreationFormItemType.AdvancedSettings,
         props: {
