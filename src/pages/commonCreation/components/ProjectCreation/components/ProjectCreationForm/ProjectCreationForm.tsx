@@ -192,7 +192,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
           circleId: role.circleId,
           circleName: `${role.circleName}s`,
           selected: true,
-          synced: index === 0 ? true : false,
+          synced: index === 0,
           ...(roles[index]?.circleId && {
             inheritFrom: {
               governanceId: parentGovernanceId,

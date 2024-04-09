@@ -141,7 +141,7 @@ export const getConfiguration = (options: Options): CreationFormItem[] => {
 
   /**
    * For now, if we have advancedSettings we don't show the roles editing section.
-   * It's showen only for root commons since advancedSettings is enabled only for spaces.
+   * It's shown only for root commons since advancedSettings is enabled only for spaces.
    */
   if (!advancedSettings && roles) {
     items.push({
@@ -194,10 +194,7 @@ export const getConfiguration = (options: Options): CreationFormItem[] => {
       },
     });
 
-    /**
-     * We don't support editing roles inheritance in the BE yet.
-     */
-    if (!isEditing && advancedSettings) {
+    if (advancedSettings) {
       items.push({
         type: CreationFormItemType.AdvancedSettings,
         props: {
