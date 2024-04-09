@@ -247,7 +247,7 @@ export const updateCommonMembersByCommonId = createStandardAction(
   CacheActionType.UPDATE_COMMON_MEMBERS_BY_COMMON_ID,
 )<{
   commonId?: string;
-  commonMembers: CommonMemberWithUserInfo[];
+  commonMembers: CommonMember[];
 }>();
 
 export const addUserToExternalCommonUsers = createStandardAction(

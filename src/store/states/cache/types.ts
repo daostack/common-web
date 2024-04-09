@@ -27,10 +27,7 @@ export interface CacheState {
     string,
     LoadingState<DiscussionMessage[] | null>
   >;
-  commonMembersState: Record<
-    string,
-    LoadingState<CommonMemberWithUserInfo[] | null>
-  >;
+  commonMembersState: Record<string, LoadingState<CommonMember[] | null>>;
   feedByCommonIdStates: Record<string, FeedState>;
   // key: {commonId}_{userId}_{feedObjectId}
   feedItemUserMetadataStates: Record<
