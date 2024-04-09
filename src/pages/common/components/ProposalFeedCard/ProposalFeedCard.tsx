@@ -312,7 +312,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
     }, [isActive, cardTitle]);
 
     const handleOpenChat = useCallback(() => {
-      if (discussion && proposal) {
+      if (discussion && proposal && !isPreviewMode) {
         setChatItem({
           feedItemId: item.id,
           discussion,
@@ -345,6 +345,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       feedItemUserMetadata?.seen,
       feedItemUserMetadata?.hasUnseenMention,
       nestedItemData,
+      isPreviewMode,
     ]);
 
     useEffect(() => {
