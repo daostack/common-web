@@ -5,10 +5,7 @@ import "./PrivacyPolicy.scss";
 export function PrivacyPolicy() {
   return (
     <div className="container-pdf">
-      <Document
-        className="preview-pdf"
-        file="http://localhost:3000/privacy_policy.pdf"
-      >
+      <Document className="preview-pdf" file="/privacy_policy.pdf">
         <Page pageNumber={1} />
         <Page pageNumber={2} />
         <Page pageNumber={3} />
