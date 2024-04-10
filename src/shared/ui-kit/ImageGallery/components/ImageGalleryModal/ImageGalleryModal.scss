@@ -8,6 +8,10 @@
   height: 100%;
   margin-top: 1.625rem;
 
+  @include big-phone {
+    margin-top: unset;
+  }
+
   & .swiper-container {
     padding-bottom: 2rem;
     max-height: 35rem;
