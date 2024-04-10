@@ -7,8 +7,9 @@ import React, {
   useRef,
 } from "react";
 import { useDispatch } from "react-redux";
+import { usePrevious } from "react-use";
 import classNames from "classnames";
-import { isEmpty } from "lodash";
+import { isEmpty, isEqual } from "lodash";
 import { Element } from "slate";
 import { useLongPress } from "use-long-press";
 import { ChatService, Logger } from "@/services";
@@ -129,6 +130,9 @@ export default function DMChatMessage({
   const isTabletView = useIsTabletView();
   const isUserDiscussionMessage =
     checkIsUserDiscussionMessage(discussionMessage);
+  const prevReactionCounts = usePrevious(
+    isUserDiscussionMessage ? discussionMessage.reactionCounts : null,
+  );
   const isSystemMessage = checkIsSystemDiscussionMessage(discussionMessage);
   const userId = user?.uid;
   const discussionMessageUserId = isUserDiscussionMessage
@@ -434,9 +438,12 @@ export default function DMChatMessage({
     const reactions = discussionMessage.reactionCounts;
 
     if (!reactions) {
-      return {
-        [dmEmoji.emoji]: 1,
-      };
+      return { [dmEmoji.emoji]: 1 };
+    }
+
+    if (!isEqual(prevReactionCounts, reactions)) {
+      setDMEmoji(null);
+      return discussionMessage.reactionCounts;
     }
 
     if (dmEmoji.prevUserEmoji === dmEmoji.emoji) {
