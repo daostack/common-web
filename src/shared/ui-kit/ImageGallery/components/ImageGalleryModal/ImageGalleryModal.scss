@@ -20,6 +20,10 @@
     max-height: 35rem;
   }
 
+  & .swiper-pagination-bullet {
+    background-color: var(--primary-text);
+  }
+
   & .swiper-pagination-bullet-active {
     background-color: $c-neutrals-300;
   }

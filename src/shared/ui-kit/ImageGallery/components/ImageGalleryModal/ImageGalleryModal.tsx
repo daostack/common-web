@@ -2,6 +2,7 @@ import React, { FC, ReactNode, useCallback, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperClass from "swiper/types/swiper-class";
 import { ButtonIcon, Image, Modal } from "@/shared/components";
+import { useIsTabletView } from "@/shared/hooks/viewport";
 import LeftArrowIcon from "@/shared/icons/leftArrow.icon";
 import RightArrowIcon from "@/shared/icons/rightArrow.icon";
 import { VideoEmbed } from "@/shared/ui-kit/VideoEmbed";
@@ -21,6 +22,7 @@ interface ImageGalleryProps {
 const ImageGalleryModal: FC<ImageGalleryProps> = (props) => {
   const { images, isShowing, onClose, videoSrc, initialSlide = 0 } = props;
   const [swiperRef, setSwiperRef] = useState<SwiperClass | null>(null);
+  const isTabletView = useIsTabletView();
 
   const handleLeftClick = useCallback(() => {
     if (swiperRef) {
@@ -43,14 +45,18 @@ const ImageGalleryModal: FC<ImageGalleryProps> = (props) => {
   }, [swiperRef]);
 
   return (
-    <Modal isShowing={isShowing} onClose={onClose}>
+    <Modal
+      isShowing={isShowing}
+      onClose={onClose}
+      mobileFullScreen={isTabletView}
+    >
       <div className="container">
         <Swiper
           onSwiper={setSwiperRef}
           loop={true}
           pagination
           initialSlide={initialSlide}
-          allowTouchMove={false}
+          allowTouchMove={isTabletView}
         >
           {videoSrc && (
             <SwiperSlide key={videoSrc} className="slider-wrapper">
@@ -76,7 +82,7 @@ const ImageGalleryModal: FC<ImageGalleryProps> = (props) => {
             </SwiperSlide>
           ))}
         </Swiper>
-        {images.length > 1 && (
+        {!isTabletView && images.length > 1 && (
           <>
             <ButtonIcon
               className="arrow-wrapper-left"
