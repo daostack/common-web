@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import { useFormikContext } from "formik";
 import { GovernanceService, Logger } from "@/services";
+import { Checkbox } from "@/shared/components/Form";
 import { Modal } from "@/shared/components/Modal";
 import { useNotification } from "@/shared/hooks";
 import { IntermediateCreateProjectPayload } from "@/shared/interfaces";
@@ -23,7 +24,9 @@ const ConfirmationModal: FC<ConfirmationModalProps> = (props) => {
     values: { advancedSettings },
   } = useFormikContext<IntermediateCreateProjectPayload>();
   const [isUpdatePreviewLoading, setIsUpdatePreviewLoading] = useState(true);
-  const [isCirclesUpdateLoading, setIsCirclesUpdateLoading] = useState(true);
+  const [isCirclesUpdateLoading, setIsCirclesUpdateLoading] = useState(false);
+  const [isMovingForwardConfirmed, setIsMovingForwardConfirmed] =
+    useState(false);
   const [circleChanges, setCircleChanges] = useState<CircleChange[]>([]);
   const isLoading = isUpdatePreviewLoading || isCirclesUpdateLoading;
 
@@ -45,6 +48,10 @@ const ConfirmationModal: FC<ConfirmationModalProps> = (props) => {
     } finally {
       setIsCirclesUpdateLoading(false);
     }
+  };
+
+  const handleMovingForwardConfirm = () => {
+    setIsMovingForwardConfirmed((v) => !v);
   };
 
   useEffect(() => {
@@ -98,6 +105,13 @@ const ConfirmationModal: FC<ConfirmationModalProps> = (props) => {
               </li>
             ))}
           </ul>
+          <Checkbox
+            className={styles.confirmationCheckbox}
+            name="confirmationMovingForward"
+            label="Confirm moving forward with this roles change"
+            checked={isMovingForwardConfirmed}
+            onChange={handleMovingForwardConfirm}
+          />
           <div className={styles.buttonsWrapper}>
             <Button variant={ButtonVariant.PrimaryGray} onClick={onClose}>
               Cancel
@@ -105,6 +119,7 @@ const ConfirmationModal: FC<ConfirmationModalProps> = (props) => {
             <Button
               variant={ButtonVariant.PrimaryPink}
               onClick={confirmChanges}
+              disabled={!isMovingForwardConfirmed}
             >
               Apply
             </Button>

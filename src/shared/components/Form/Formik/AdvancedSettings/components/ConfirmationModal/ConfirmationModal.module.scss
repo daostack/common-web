@@ -36,6 +36,10 @@
   }
 }
 
+.confirmationCheckbox {
+  margin-bottom: 3.125rem;
+}
+
 .buttonsWrapper {
   @include flex-list-with-gap(1.5rem);
 
