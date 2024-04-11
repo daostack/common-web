@@ -2,25 +2,17 @@ import React, { FC, useEffect, useState } from "react";
 import { useFormikContext } from "formik";
 import { GovernanceService, Logger } from "@/services";
 import { Modal } from "@/shared/components/Modal";
-import {
-  IntermediateCreateProjectPayload,
-  PreviewCirclesUpdateCircles,
-  PreviewCirclesUpdatePayload,
-} from "@/shared/interfaces";
+import { IntermediateCreateProjectPayload } from "@/shared/interfaces";
 import { Button, ButtonVariant, Loader } from "@/shared/ui-kit";
 import { emptyFunction } from "@/shared/utils";
+import { CircleChange } from "./types";
+import { generateCircleChanges, generatePreviewPayload } from "./utils";
 import styles from "./ConfirmationModal.module.scss";
 
 interface ConfirmationModalProps {
   isOpen: boolean;
   onClose: () => void;
   governanceId?: string | null;
-}
-
-interface CircleChange {
-  userName: string;
-  circleName: string;
-  added: boolean;
 }
 
 const ConfirmationModal: FC<ConfirmationModalProps> = (props) => {
@@ -43,37 +35,11 @@ const ConfirmationModal: FC<ConfirmationModalProps> = (props) => {
 
     (async () => {
       try {
-        const circlesForPayload: PreviewCirclesUpdateCircles[] = circles
-          .filter((circle) => circle.selected)
-          .map((circle) => {
-            if (!circle.circleId) {
-              return null;
-            }
-
-            const { inheritFrom } = circle;
-
-            return {
-              type: "existing",
-              circleId: circle.circleId,
-              ...(circle.synced &&
-                inheritFrom?.governanceId &&
-                inheritFrom?.circleId && {
-                  inheritFrom: {
-                    governanceId: inheritFrom?.governanceId,
-                    circleId: inheritFrom?.circleId,
-                  },
-                }),
-            };
-          })
-          .filter((circle): circle is PreviewCirclesUpdateCircles =>
-            Boolean(circle),
-          );
-        const payload: PreviewCirclesUpdatePayload = {
-          governanceId,
-          permissionGovernanceId,
-          circles: circlesForPayload,
-        };
-        const data = await GovernanceService.previewCirclesUpdate(payload);
+        const data = await GovernanceService.previewCirclesUpdate(
+          generatePreviewPayload(governanceId, permissionGovernanceId, circles),
+        );
+        const circleChanges = await generateCircleChanges(data);
+        setCircleChanges(circleChanges);
         setIsUpdatePreviewLoading(false);
       } catch (err) {
         Logger.error(err);
