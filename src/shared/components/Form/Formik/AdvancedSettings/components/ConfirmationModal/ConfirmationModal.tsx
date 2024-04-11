@@ -17,20 +17,27 @@ interface ConfirmationModalProps {
   governanceId?: string | null;
 }
 
+interface CircleChange {
+  userName: string;
+  circleName: string;
+  added: boolean;
+}
+
 const ConfirmationModal: FC<ConfirmationModalProps> = (props) => {
   const { isOpen, onClose, governanceId } = props;
   const {
     values: { advancedSettings },
   } = useFormikContext<IntermediateCreateProjectPayload>();
   const [isUpdatePreviewLoading, setIsUpdatePreviewLoading] = useState(true);
+  const [circleChanges, setCircleChanges] = useState<CircleChange[]>([]);
   const isLoading = isUpdatePreviewLoading;
 
   useEffect(() => {
     const { permissionGovernanceId, circles } = advancedSettings || {};
 
     if (!isOpen || !governanceId || !permissionGovernanceId || !circles) {
-      // TODO: Clear state
       setIsUpdatePreviewLoading(true);
+      setCircleChanges([]);
       return;
     }
 
@@ -92,6 +99,15 @@ const ConfirmationModal: FC<ConfirmationModalProps> = (props) => {
           <span>
             Notice that this action will change the roles for some users:
           </span>
+          <ul className={styles.changesList}>
+            {circleChanges.map((circleChange) => (
+              <li>
+                {circleChange.userName} will be{" "}
+                {circleChange.added ? "added to" : "removed from"}{" "}
+                {circleChange.circleName}
+              </li>
+            ))}
+          </ul>
           <div className={styles.buttonsWrapper}>
             <Button variant={ButtonVariant.PrimaryGray} onClick={onClose}>
               Cancel
