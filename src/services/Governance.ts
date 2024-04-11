@@ -1,6 +1,15 @@
 import { governanceCollection } from "@/pages/OldCommon/store/api";
-import { DocChange, FirestoreDataSource } from "@/shared/constants";
-import { UnsubscribeFunction } from "@/shared/interfaces";
+import Api from "@/services/Api";
+import {
+  ApiEndpoint,
+  DocChange,
+  FirestoreDataSource,
+} from "@/shared/constants";
+import {
+  PreviewCirclesUpdate,
+  PreviewCirclesUpdateResponse,
+  UnsubscribeFunction,
+} from "@/shared/interfaces";
 import { Collection, Governance } from "@/shared/models";
 import {
   firestoreDataConverter,
@@ -53,6 +62,17 @@ class GovernanceService {
     return results
       .map((result) => transformFirebaseDataList<Governance>(result))
       .reduce((acc, items) => [...acc, ...items], []);
+  };
+
+  public previewCirclesUpdate = async (
+    payload: PreviewCirclesUpdate,
+  ): Promise<PreviewCirclesUpdateResponse> => {
+    const { data } = await Api.post<PreviewCirclesUpdateResponse>(
+      ApiEndpoint.GovernancePreviewCirclesUpdate,
+      payload,
+    );
+
+    return data;
   };
 
   public subscribeToGovernance = (
