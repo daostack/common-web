@@ -21,7 +21,7 @@ const ConfirmationModal: FC<ConfirmationModalProps> = (props) => {
   const { isOpen, onClose, governanceId } = props;
   const { notify } = useNotification();
   const {
-    values: { advancedSettings },
+    values: { advancedSettings, initialAdvancedSettings },
   } = useFormikContext<IntermediateCreateProjectPayload>();
   const [isUpdatePreviewLoading, setIsUpdatePreviewLoading] = useState(true);
   const [isCirclesUpdateLoading, setIsCirclesUpdateLoading] = useState(false);
@@ -40,7 +40,12 @@ const ConfirmationModal: FC<ConfirmationModalProps> = (props) => {
     try {
       setIsCirclesUpdateLoading(true);
       await GovernanceService.updateCircles(
-        generatePreviewPayload(governanceId, permissionGovernanceId, circles),
+        generatePreviewPayload(
+          governanceId,
+          permissionGovernanceId,
+          circles,
+          initialAdvancedSettings?.circles,
+        ),
       );
       notify("Changes are successfully applied");
     } catch (err) {

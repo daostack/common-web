@@ -8,6 +8,7 @@ export const generatePreviewPayload = (
   governanceId: string,
   permissionGovernanceId: string,
   circles: InheritedCircleIntermediate[],
+  initialCircles: InheritedCircleIntermediate[] = [],
 ): PreviewCirclesUpdatePayload => {
   const circlesForPayload: PreviewCirclesUpdateCircles[] = circles
     .filter((circle) => circle.selected)
@@ -17,9 +18,12 @@ export const generatePreviewPayload = (
       }
 
       const { inheritFrom } = circle;
+      const isExistingCircle = initialCircles.some(
+        (initialCircle) => initialCircle.circleId === circle.circleId,
+      );
 
       return {
-        type: "existing",
+        type: isExistingCircle ? "existing" : "new",
         circleId: circle.circleId,
         ...(circle.synced &&
           inheritFrom?.governanceId &&
