@@ -74,8 +74,9 @@ const ImageGalleryModal: FC<ImageGalleryProps> = (props) => {
               }
             >
               <Image
-                hasZoom
+                hasZoom={!isTabletView}
                 className="slide-img"
+                imageContainerClassName="image-container"
                 src={imageURL}
                 alt={`Common gallery image #${index + 1}`}
               />
