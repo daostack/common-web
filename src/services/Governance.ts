@@ -64,6 +64,12 @@ class GovernanceService {
       .reduce((acc, items) => [...acc, ...items], []);
   };
 
+  public updateCircles = async (
+    payload: PreviewCirclesUpdatePayload,
+  ): Promise<void> => {
+    await Api.post(ApiEndpoint.GovernanceUpdateCircles, payload);
+  };
+
   public previewCirclesUpdate = async (
     payload: PreviewCirclesUpdatePayload,
   ): Promise<PreviewCirclesUpdateResponse> => {
