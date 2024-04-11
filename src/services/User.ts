@@ -83,6 +83,10 @@ class UserService {
   };
 
   public getUsersByIds = async (ids: string[]): Promise<Array<User | null>> => {
+    if (ids.length === 0) {
+      return [];
+    }
+
     const queries: firebase.firestore.Query[] = [];
 
     // Firebase allows to use at most 10 items per query for `in` option
