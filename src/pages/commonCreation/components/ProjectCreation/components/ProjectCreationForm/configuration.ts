@@ -18,6 +18,7 @@ import styles from "./ProjectCreationForm.module.scss";
 
 interface Options {
   isProject: boolean;
+  governanceId?: string | null;
   roles?: Roles;
   shouldBeUnique?: { existingNames: string[] };
   isImageRequired?: boolean;
@@ -30,6 +31,7 @@ interface Options {
 export const getConfiguration = (options: Options): CreationFormItem[] => {
   const {
     isProject = true,
+    governanceId,
     roles,
     shouldBeUnique,
     notionIntegration,
@@ -205,6 +207,7 @@ export const getConfiguration = (options: Options): CreationFormItem[] => {
         type: CreationFormItemType.AdvancedSettings,
         props: {
           name: "advancedSettings",
+          governanceId,
           parentCommonName,
           shouldSaveChangesImmediately: isEditing,
         },

@@ -6,7 +6,7 @@ import {
   FirestoreDataSource,
 } from "@/shared/constants";
 import {
-  PreviewCirclesUpdate,
+  PreviewCirclesUpdatePayload,
   PreviewCirclesUpdateResponse,
   UnsubscribeFunction,
 } from "@/shared/interfaces";
@@ -65,7 +65,7 @@ class GovernanceService {
   };
 
   public previewCirclesUpdate = async (
-    payload: PreviewCirclesUpdate,
+    payload: PreviewCirclesUpdatePayload,
   ): Promise<PreviewCirclesUpdateResponse> => {
     const { data } = await Api.post<PreviewCirclesUpdateResponse>(
       ApiEndpoint.GovernancePreviewCirclesUpdate,

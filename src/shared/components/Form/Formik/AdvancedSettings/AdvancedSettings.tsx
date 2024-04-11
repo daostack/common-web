@@ -5,12 +5,17 @@ import { AdvancedSettingsModal, ConfirmationModal } from "./components";
 
 export interface AdvancedSettingsProps {
   name: string;
+  governanceId?: string | null;
   parentCommonName?: string;
   shouldSaveChangesImmediately?: boolean;
 }
 
 const AdvancedSettings: FC<AdvancedSettingsProps> = (props) => {
-  const { parentCommonName, shouldSaveChangesImmediately = false } = props;
+  const {
+    governanceId,
+    parentCommonName,
+    shouldSaveChangesImmediately = false,
+  } = props;
   const {
     isShowing: isAdvancedSettingsModalOpen,
     onOpen: onAdvancedSettingsModalOpen,
@@ -30,6 +35,11 @@ const AdvancedSettings: FC<AdvancedSettingsProps> = (props) => {
     }
   };
 
+  const handleConfirmationModalClose = () => {
+    onConfirmationModalClose();
+    onAdvancedSettingsModalOpen();
+  };
+
   return (
     <>
       <ButtonLink onClick={onAdvancedSettingsModalOpen}>
@@ -43,7 +53,8 @@ const AdvancedSettings: FC<AdvancedSettingsProps> = (props) => {
       />
       <ConfirmationModal
         isOpen={isConfirmationModalOpen}
-        onClose={onConfirmationModalClose}
+        onClose={handleConfirmationModalClose}
+        governanceId={governanceId}
       />
     </>
   );

@@ -7,7 +7,7 @@ export interface PreviewCirclesUpdateCircles {
   };
 }
 
-export interface PreviewCirclesUpdate {
+export interface PreviewCirclesUpdatePayload {
   governanceId: string;
   permissionGovernanceId: string;
   circles: PreviewCirclesUpdateCircles[];

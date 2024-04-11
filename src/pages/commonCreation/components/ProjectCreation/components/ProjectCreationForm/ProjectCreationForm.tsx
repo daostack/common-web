@@ -306,6 +306,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
         onSubmit={isEditing ? handleProjectUpdate : handleProjectCreate}
         items={getConfiguration({
           isProject: true,
+          governanceId: initialCommon?.governanceId,
           roles,
           notionIntegration,
           advancedSettings,
