@@ -21,6 +21,7 @@ export * from "./Header/LanguageDropdown";
 export * from "./InvoiceTile";
 export * from "./Image";
 export * from "./Linkify";
+export * from "./LinkPreview";
 export * from "./Loader";
 export * from "./Share";
 export * from "./Modal";

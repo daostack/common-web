@@ -69,6 +69,7 @@ import { ChatContentContext, ChatContentData } from "../CommonContent/context";
 import {
   ChatContent,
   ChatContentRef,
+  MessageLinkPreview,
   MessageReply,
   ChatFilePreview,
 } from "./components";
@@ -847,6 +848,7 @@ export default function ChatComponent({
         </div>
       )}
       <MessageReply users={users} />
+      <MessageLinkPreview message={message} />
       <ChatFilePreview />
       <div
         ref={chatInputWrapperRef}
