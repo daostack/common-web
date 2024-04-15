@@ -74,7 +74,12 @@ const ConfirmationModal: FC<ConfirmationModalProps> = (props) => {
     (async () => {
       try {
         const data = await GovernanceService.previewCirclesUpdate(
-          generatePreviewPayload(governanceId, permissionGovernanceId, circles),
+          generatePreviewPayload(
+            governanceId,
+            permissionGovernanceId,
+            circles,
+            initialAdvancedSettings?.circles,
+          ),
         );
         const circleChanges = await generateCircleChanges(data);
         setCommonCircleChanges(circleChanges);
