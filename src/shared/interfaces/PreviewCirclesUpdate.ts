@@ -24,9 +24,11 @@ interface ChangedCircle {
 export interface PreviewCirclesUpdateResponse {
   changes: {
     commonId: string;
+    commonName: string;
     governanceId: string;
     members: {
       id: string;
+      userId: string;
       circlesAdded: ChangedCircle[];
       circlesRemoved: ChangedCircle[];
       circleIds: string[];

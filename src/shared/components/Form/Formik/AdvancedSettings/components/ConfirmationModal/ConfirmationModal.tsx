@@ -7,7 +7,8 @@ import { useNotification } from "@/shared/hooks";
 import { IntermediateCreateProjectPayload } from "@/shared/interfaces";
 import { Button, ButtonVariant, Loader } from "@/shared/ui-kit";
 import { emptyFunction } from "@/shared/utils";
-import { CircleChange } from "./types";
+import { ChangeItem } from "./components";
+import { CommonCircleChange } from "./types";
 import { generateCircleChanges, generatePreviewPayload } from "./utils";
 import styles from "./ConfirmationModal.module.scss";
 
@@ -27,7 +28,9 @@ const ConfirmationModal: FC<ConfirmationModalProps> = (props) => {
   const [isCirclesUpdateLoading, setIsCirclesUpdateLoading] = useState(false);
   const [isMovingForwardConfirmed, setIsMovingForwardConfirmed] =
     useState(false);
-  const [circleChanges, setCircleChanges] = useState<CircleChange[]>([]);
+  const [commonCircleChanges, setCommonCircleChanges] = useState<
+    CommonCircleChange[]
+  >([]);
   const isLoading = isUpdatePreviewLoading || isCirclesUpdateLoading;
 
   const confirmChanges = async () => {
@@ -64,7 +67,7 @@ const ConfirmationModal: FC<ConfirmationModalProps> = (props) => {
 
     if (!isOpen || !governanceId || !permissionGovernanceId || !circles) {
       setIsUpdatePreviewLoading(true);
-      setCircleChanges([]);
+      setCommonCircleChanges([]);
       return;
     }
 
@@ -74,7 +77,7 @@ const ConfirmationModal: FC<ConfirmationModalProps> = (props) => {
           generatePreviewPayload(governanceId, permissionGovernanceId, circles),
         );
         const circleChanges = await generateCircleChanges(data);
-        setCircleChanges(circleChanges);
+        setCommonCircleChanges(circleChanges);
       } catch (err) {
         Logger.error(err);
       } finally {
@@ -102,12 +105,11 @@ const ConfirmationModal: FC<ConfirmationModalProps> = (props) => {
             Notice that this action will change the roles for some users:
           </span>
           <ul className={styles.changesList}>
-            {circleChanges.map((circleChange) => (
-              <li>
-                {circleChange.userName} will be{" "}
-                {circleChange.added ? "added to" : "removed from"}{" "}
-                {circleChange.circleName}
-              </li>
+            {commonCircleChanges.map((commonCircleChange) => (
+              <ChangeItem
+                key={commonCircleChange.commonId}
+                change={commonCircleChange}
+              />
             ))}
           </ul>
           <Checkbox
