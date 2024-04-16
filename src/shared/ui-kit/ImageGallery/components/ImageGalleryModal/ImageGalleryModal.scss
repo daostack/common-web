@@ -116,3 +116,11 @@
   height: 100%;
   width: 100%;
 }
+
+.image-gallery-modal {
+  .modal__content {
+    padding: 0;
+  }
+  .modal__header--default-padding {
+  }
+}

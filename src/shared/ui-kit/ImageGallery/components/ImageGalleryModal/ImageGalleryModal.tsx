@@ -49,6 +49,7 @@ const ImageGalleryModal: FC<ImageGalleryProps> = (props) => {
       isShowing={isShowing}
       onClose={onClose}
       mobileFullScreen={isTabletView}
+      className="image-gallery-modal"
     >
       <div className="container">
         <Swiper
