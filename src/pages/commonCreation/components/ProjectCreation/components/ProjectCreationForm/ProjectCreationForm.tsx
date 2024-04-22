@@ -163,6 +163,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
         circleId: circle.id,
         circleName: circle.name,
         tier: circle.hierarchy?.tier,
+        derivedFrom: circle.derivedFrom,
       })),
     [parentGovernanceCircles],
   );
@@ -174,6 +175,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
             circleId: circle.id,
             circleName: circle.name,
             tier: circle.hierarchy?.tier,
+            derivedFrom: circle.derivedFrom,
           })),
     [isParentIsRoot, parentCommonRoles, rootGovernance?.circles],
   );
@@ -190,7 +192,11 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
           (circle) => circle.derivedFrom?.circleId === rootCommonRole.circleId,
         );
         const isSelected = Boolean(!isEditing || initialCircle);
-        const roleForInheritance = parentCommonRoles[index];
+        const roleForInheritance =
+          parentCommonRoles.find(
+            (parentRole) =>
+              parentRole.circleId === initialCircle?.inheritCircleId,
+          ) || parentCommonRoles[index];
 
         return {
           circleId: rootCommonRole.circleId,

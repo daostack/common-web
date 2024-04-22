@@ -42,6 +42,7 @@ const EditingForm: FC<EditingFormProps> = (props) => {
   const roles: Roles = governanceCircles.map((circle) => ({
     circleId: circle.id,
     circleName: circle.name,
+    derivedFrom: circle.derivedFrom,
   }));
   const { initialValues, formItems, onSubmit } = useCommonForm(
     updateCommon,
