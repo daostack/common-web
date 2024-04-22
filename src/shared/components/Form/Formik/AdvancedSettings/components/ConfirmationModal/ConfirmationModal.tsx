@@ -84,6 +84,11 @@ const ConfirmationModal: FC<ConfirmationModalProps> = (props) => {
           ),
         );
         const circleChanges = await generateCircleChanges(data);
+
+        if (circleChanges.length === 0) {
+          setIsMovingForwardConfirmed(true);
+        }
+
         setCommonCircleChanges(circleChanges);
       } catch (err) {
         Logger.error(err);
@@ -108,24 +113,32 @@ const ConfirmationModal: FC<ConfirmationModalProps> = (props) => {
       {isLoading && <Loader className={styles.loader} />}
       {!isLoading && (
         <>
-          <span>
-            Notice that this action will change the roles for some users:
-          </span>
-          <ul className={styles.changesList}>
-            {commonCircleChanges.map((commonCircleChange) => (
-              <ChangeItem
-                key={commonCircleChange.commonId}
-                change={commonCircleChange}
+          {commonCircleChanges.length > 0 ? (
+            <>
+              <span>
+                Notice that this action will change the roles for some users:
+              </span>
+              <ul className={styles.changesList}>
+                {commonCircleChanges.map((commonCircleChange) => (
+                  <ChangeItem
+                    key={commonCircleChange.commonId}
+                    change={commonCircleChange}
+                  />
+                ))}
+              </ul>
+              <Checkbox
+                className={styles.confirmationCheckbox}
+                name="confirmationMovingForward"
+                label="Confirm moving forward with this roles change"
+                checked={isMovingForwardConfirmed}
+                onChange={handleMovingForwardConfirm}
               />
-            ))}
-          </ul>
-          <Checkbox
-            className={styles.confirmationCheckbox}
-            name="confirmationMovingForward"
-            label="Confirm moving forward with this roles change"
-            checked={isMovingForwardConfirmed}
-            onChange={handleMovingForwardConfirm}
-          />
+            </>
+          ) : (
+            <span className={styles.noChangesText}>
+              This action will not change the roles for any users.
+            </span>
+          )}
           <div className={styles.buttonsWrapper}>
             <Button variant={ButtonVariant.PrimaryGray} onClick={onClose}>
               Cancel
