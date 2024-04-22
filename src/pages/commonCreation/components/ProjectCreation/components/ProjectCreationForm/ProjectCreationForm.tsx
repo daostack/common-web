@@ -178,25 +178,27 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
         tier: circle.hierarchy?.tier,
       }));
 
-  const advancedSettings: SpaceAdvancedSettingsIntermediate = useMemo(
-    () => ({
+  const advancedSettings: SpaceAdvancedSettingsIntermediate = useMemo(() => {
+    const initialCircles = Object.values(governance?.circles || {});
+
+    return {
       permissionGovernanceId: isParentIsRoot
         ? parentGovernanceId
         : rootGovernance?.id,
       circles: rootCommonRoles.map((rootCommonRole, index) => {
-        const isSelected =
-          !governance?.circles ||
-          Object.values(governance.circles).some(
-            (circle) =>
-              circle.derivedFrom?.circleId === rootCommonRole.circleId,
-          );
+        const initialCircle = initialCircles.find(
+          (circle) => circle.derivedFrom?.circleId === rootCommonRole.circleId,
+        );
+        const isSelected = Boolean(!isEditing || initialCircle);
         const roleForInheritance = roles[index];
 
         return {
           circleId: rootCommonRole.circleId,
           circleName: `${rootCommonRole.circleName}s`,
           selected: isSelected,
-          synced: index === 0,
+          synced: Boolean(
+            isEditing ? initialCircle?.inheritGovernanceId : index === 0,
+          ),
           ...(parentGovernanceId &&
             roleForInheritance && {
               inheritFrom: {
@@ -208,16 +210,16 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
             }),
         };
       }),
-    }),
-    [
-      rootGovernance?.id,
-      parentGovernanceId,
-      rootCommonRoles,
-      isParentIsRoot,
-      roles,
-      governance?.circles,
-    ],
-  );
+    };
+  }, [
+    rootGovernance?.id,
+    parentGovernanceId,
+    rootCommonRoles,
+    isParentIsRoot,
+    roles,
+    governance?.circles,
+    isEditing,
+  ]);
 
   const initialValues = useMemo(
     () =>
