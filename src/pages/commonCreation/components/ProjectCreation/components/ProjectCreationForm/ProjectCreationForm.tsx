@@ -178,16 +178,23 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
         tier: circle.hierarchy?.tier,
       }));
 
-  const advancedSettings: SpaceAdvancedSettingsIntermediate = useMemo(() => {
-    return {
+  const advancedSettings: SpaceAdvancedSettingsIntermediate = useMemo(
+    () => ({
       permissionGovernanceId: isParentIsRoot
         ? parentGovernanceId
         : rootGovernance?.id,
-      circles: rootCommonRoles.map((role, index) => {
+      circles: rootCommonRoles.map((rootCommonRole, index) => {
+        const isSelected =
+          !governance?.circles ||
+          Object.values(governance.circles).some(
+            (circle) =>
+              circle.derivedFrom?.circleId === rootCommonRole.circleId,
+          );
+
         return {
-          circleId: role.circleId,
-          circleName: `${role.circleName}s`,
-          selected: true,
+          circleId: rootCommonRole.circleId,
+          circleName: `${rootCommonRole.circleName}s`,
+          selected: isSelected,
           synced: index === 0,
           ...(roles[index]?.circleId && {
             inheritFrom: {
@@ -199,14 +206,16 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
           }),
         };
       }),
-    };
-  }, [
-    rootGovernance?.id,
-    parentGovernanceId,
-    rootCommonRoles,
-    isParentIsRoot,
-    roles,
-  ]);
+    }),
+    [
+      rootGovernance?.id,
+      parentGovernanceId,
+      rootCommonRoles,
+      isParentIsRoot,
+      roles,
+      governance?.circles,
+    ],
+  );
 
   const initialValues = useMemo(
     () =>
