@@ -24,8 +24,12 @@ const ActiveFeedBreadcrumbsItem: FC<ActiveFeedBreadcrumbsItemProps> = (
   const { commons, areCommonsFetched } = useSelector(
     selectCommonLayoutCommonsState,
   );
-  const { projects, areProjectsFetched } = useSelector(
+  const { projects: allProjects, areProjectsFetched } = useSelector(
     selectCommonLayoutProjectsState,
+  );
+  const projects = useMemo(
+    () => allProjects.filter((project) => project.hasAccessToSpace),
+    [allProjects],
   );
   const baseItems = useMemo(
     () =>
