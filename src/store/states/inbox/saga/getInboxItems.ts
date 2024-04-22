@@ -9,7 +9,7 @@ import {
 import { User } from "@/shared/models";
 import { isError } from "@/shared/utils";
 import * as actions from "../actions";
-import { selectInboxItems } from "../selectors";
+import { selectInboxItems, selectInboxSearchValue } from "../selectors";
 import { InboxItems } from "../types";
 import { getFeedLayoutItemDateForSorting } from "../utils";
 import { searchFetchedInboxItems } from "./searchFetchedInboxItems";
@@ -40,6 +40,7 @@ export function* getInboxItems(
       throw new Error("There is no user for inbox items fetch");
     }
 
+    const searchValue: string = yield select(selectInboxSearchValue);
     const currentItems = (yield select(selectInboxItems)) as InboxItems;
     const isFirstRequest = !currentItems.lastDocTimestamp;
 
@@ -52,7 +53,7 @@ export function* getInboxItems(
       {
         userId: user.uid,
         startAfter: currentItems.lastDocTimestamp,
-        limit,
+        limit: searchValue ? 500 : limit,
         unread,
       },
     )) as Awaited<ReturnType<typeof UserService.getInboxItemsWithMetadata>>;
