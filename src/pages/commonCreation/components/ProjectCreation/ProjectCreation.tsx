@@ -8,7 +8,11 @@ import { ButtonLink } from "@/shared/components";
 import { GovernanceActions } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
 import { useGoBack } from "@/shared/hooks";
-import { useCommon, useGovernance } from "@/shared/hooks/useCases";
+import {
+  useCommon,
+  useGovernance,
+  useGovernanceByCommonId,
+} from "@/shared/hooks/useCases";
 import { LongLeftArrowIcon } from "@/shared/icons";
 import { Common, Governance, Project } from "@/shared/models";
 import { Container, Loader } from "@/shared/ui-kit";
@@ -39,12 +43,19 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
     fetchGovernance: fetchParentGovernance,
   } = useGovernance();
   const {
+    data: governance,
+    fetched: isGovernanceFetched,
+    fetchGovernance,
+    setGovernance,
+  } = useGovernanceByCommonId();
+  const {
     fetched: isCommonMemberFetched,
     data: commonMember,
     fetchCommonMember,
   } = useCommonMember({
     shouldAutoReset: false,
   });
+  const projectId = initialCommon?.id;
   const isEditing = Boolean(initialCommon);
   const user = useSelector(selectUser());
   const userId = user?.uid;
@@ -109,6 +120,14 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
   }, [parentCommon?.governanceId]);
 
   useEffect(() => {
+    if (projectId) {
+      fetchGovernance(projectId);
+    } else {
+      setGovernance(null);
+    }
+  }, [projectId]);
+
+  useEffect(() => {
     const commonId = isEditing ? initialCommon?.id : parentCommonId;
 
     if (commonId) {
@@ -126,7 +145,11 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
       </CenterWrapper>
     );
   }
-  if (!isParentGovernanceFetched || !isCommonMemberFetched) {
+  if (
+    !isParentGovernanceFetched ||
+    !isCommonMemberFetched ||
+    !isGovernanceFetched
+  ) {
     return loaderEl;
   }
   if (!parentGovernance) {
@@ -178,9 +201,10 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
           rootCommonId={parentCommon.rootCommonId ?? parentCommon.id}
           parentCommonId={parentCommon.id}
           parentCommonName={parentCommon.name}
-          governanceCircles={parentGovernance.circles}
+          parentGovernanceCircles={parentGovernance.circles}
           parentGovernanceId={parentGovernance.id}
           initialCommon={initialCommon}
+          governance={governance}
           isEditing={isEditing}
           onFinish={handleCreatedProject}
           onCancel={handleProjectCreationCancel}
