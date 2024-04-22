@@ -1,6 +1,7 @@
 import { FeatureFlags } from "@/shared/constants";
 import { useFeatureFlag } from "@/shared/hooks";
 import {
+  Circles,
   NotionIntegration,
   Roles,
   SpaceAdvancedSettingsIntermediate,
@@ -19,6 +20,7 @@ import styles from "./ProjectCreationForm.module.scss";
 interface Options {
   isProject: boolean;
   governanceId?: string | null;
+  governanceCircles?: Circles;
   roles?: Roles;
   shouldBeUnique?: { existingNames: string[] };
   isImageRequired?: boolean;
@@ -32,6 +34,7 @@ export const getConfiguration = (options: Options): CreationFormItem[] => {
   const {
     isProject = true,
     governanceId,
+    governanceCircles,
     roles,
     shouldBeUnique,
     notionIntegration,
@@ -208,6 +211,7 @@ export const getConfiguration = (options: Options): CreationFormItem[] => {
         props: {
           name: "advancedSettings",
           governanceId,
+          governanceCircles,
           parentCommonName,
           shouldSaveChangesImmediately: isEditing,
         },

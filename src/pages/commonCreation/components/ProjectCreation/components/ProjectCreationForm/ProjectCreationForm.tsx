@@ -190,20 +190,22 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
             (circle) =>
               circle.derivedFrom?.circleId === rootCommonRole.circleId,
           );
+        const roleForInheritance = roles[index];
 
         return {
           circleId: rootCommonRole.circleId,
           circleName: `${rootCommonRole.circleName}s`,
           selected: isSelected,
           synced: index === 0,
-          ...(roles[index]?.circleId && {
-            inheritFrom: {
-              governanceId: parentGovernanceId,
-              circleId: roles[index]?.circleId,
-              circleName: `${roles[index]?.circleName}s`,
-              tier: roles[index]?.tier,
-            },
-          }),
+          ...(parentGovernanceId &&
+            roleForInheritance && {
+              inheritFrom: {
+                governanceId: parentGovernanceId,
+                circleId: roleForInheritance.circleId,
+                circleName: `${roleForInheritance.circleName}s`,
+                tier: roleForInheritance.tier,
+              },
+            }),
         };
       }),
     }),
@@ -305,6 +307,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
         items={getConfiguration({
           isProject: true,
           governanceId: initialCommon?.governanceId,
+          governanceCircles: governance?.circles,
           roles,
           notionIntegration,
           advancedSettings,

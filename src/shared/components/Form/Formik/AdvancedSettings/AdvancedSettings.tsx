@@ -1,11 +1,13 @@
 import React, { FC } from "react";
 import { ButtonLink } from "@/shared/components/ButtonLink";
 import { useModal } from "@/shared/hooks";
+import { Circles } from "@/shared/models";
 import { AdvancedSettingsModal, ConfirmationModal } from "./components";
 
 export interface AdvancedSettingsProps {
   name: string;
   governanceId?: string | null;
+  governanceCircles?: Circles;
   parentCommonName?: string;
   shouldSaveChangesImmediately?: boolean;
 }
@@ -13,6 +15,7 @@ export interface AdvancedSettingsProps {
 const AdvancedSettings: FC<AdvancedSettingsProps> = (props) => {
   const {
     governanceId,
+    governanceCircles,
     parentCommonName,
     shouldSaveChangesImmediately = false,
   } = props;
@@ -55,6 +58,7 @@ const AdvancedSettings: FC<AdvancedSettingsProps> = (props) => {
         isOpen={isConfirmationModalOpen}
         onClose={handleConfirmationModalClose}
         governanceId={governanceId}
+        governanceCircles={governanceCircles}
       />
     </>
   );

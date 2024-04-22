@@ -5,6 +5,7 @@ import { Checkbox } from "@/shared/components/Form";
 import { Modal } from "@/shared/components/Modal";
 import { useNotification } from "@/shared/hooks";
 import { IntermediateCreateProjectPayload } from "@/shared/interfaces";
+import { Circles } from "@/shared/models";
 import { Button, ButtonVariant, Loader } from "@/shared/ui-kit";
 import { emptyFunction } from "@/shared/utils";
 import { ChangeItem } from "./components";
@@ -16,13 +17,14 @@ interface ConfirmationModalProps {
   isOpen: boolean;
   onClose: () => void;
   governanceId?: string | null;
+  governanceCircles?: Circles;
 }
 
 const ConfirmationModal: FC<ConfirmationModalProps> = (props) => {
-  const { isOpen, onClose, governanceId } = props;
+  const { isOpen, onClose, governanceId, governanceCircles } = props;
   const { notify } = useNotification();
   const {
-    values: { advancedSettings, initialAdvancedSettings },
+    values: { advancedSettings },
   } = useFormikContext<IntermediateCreateProjectPayload>();
   const [isUpdatePreviewLoading, setIsUpdatePreviewLoading] = useState(true);
   const [isCirclesUpdateLoading, setIsCirclesUpdateLoading] = useState(false);
@@ -47,7 +49,7 @@ const ConfirmationModal: FC<ConfirmationModalProps> = (props) => {
           governanceId,
           permissionGovernanceId,
           circles,
-          initialAdvancedSettings?.circles,
+          governanceCircles,
         ),
       );
       notify("Changes are successfully applied");
@@ -78,7 +80,7 @@ const ConfirmationModal: FC<ConfirmationModalProps> = (props) => {
             governanceId,
             permissionGovernanceId,
             circles,
-            initialAdvancedSettings?.circles,
+            governanceCircles,
           ),
         );
         const circleChanges = await generateCircleChanges(data);
