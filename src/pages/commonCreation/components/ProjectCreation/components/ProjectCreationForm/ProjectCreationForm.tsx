@@ -179,10 +179,6 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
       }));
 
   const advancedSettings: SpaceAdvancedSettingsIntermediate = useMemo(() => {
-    if (initialCommon?.advancedSettings) {
-      return initialCommon?.advancedSettings;
-    }
-
     return {
       permissionGovernanceId: isParentIsRoot
         ? parentGovernanceId
@@ -210,7 +206,6 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
     rootCommonRoles,
     isParentIsRoot,
     roles,
-    initialCommon?.advancedSettings,
   ]);
 
   const initialValues = useMemo(
