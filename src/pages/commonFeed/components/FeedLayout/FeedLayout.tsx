@@ -458,6 +458,14 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     setShouldAllowChatAutoOpen(true);
   };
 
+  const getItemsContainerEl = useCallback(() => {
+    const containerEl = isTabletView
+      ? window
+      : document.getElementsByClassName("Pane Pane1")[0];
+
+    return containerEl || null;
+  }, [isTabletView]);
+
   const onDMClick =
     !isTabletView && dmChatChannelItemForProfile ? handleDMClick : undefined;
 
@@ -730,8 +738,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       setExpandedFeedItemId,
       setActiveItem,
       setShouldAllowChatAutoOpen,
+      getItemsContainerEl,
     }),
-    [setActiveItem],
+    [setActiveItem, getItemsContainerEl],
   );
 
   const pageContentStyles = {

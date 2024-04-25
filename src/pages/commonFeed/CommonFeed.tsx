@@ -266,6 +266,15 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     [dispatch],
   );
 
+  const scrollToItemsTop = () => {
+    setTimeout(() => {
+      feedLayoutRef?.getItemsContainerEl()?.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }, 0);
+  };
+
   const onJoinCommon = checkIsProject(commonData?.common)
     ? canJoinProjectAutomatically
       ? onJoinProjectAutomatically
@@ -476,6 +485,17 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     };
   }, [updateLastVisitedCommon, commonId]);
 
+  useEffect(() => {
+    if (
+      commonAction &&
+      [CommonAction.NewDiscussion, CommonAction.NewProposal].includes(
+        commonAction,
+      )
+    ) {
+      scrollToItemsTop();
+    }
+  }, [commonAction]);
+
   if (!isDataFetched) {
     const headerEl = renderLoadingHeader ? (
       renderLoadingHeader()
@@ -559,6 +579,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
                 defaultVisibility={
                   commonData.governance.discussions.defaultVisibility
                 }
+                onDiscussionIdChange={scrollToItemsTop}
               />
             )}
             {commonAction === CommonAction.NewProposal && (
