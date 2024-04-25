@@ -283,45 +283,31 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
         };
       }),
   )
-  .handleAction(actions.updateChatChannelMessage, (state, { payload }) =>
+  .handleAction(actions.updateChatChannelMessages, (state, { payload }) =>
     produce(state, (nextState) => {
-      const { chatChannelId, chatChannelMessage } = payload;
+      const {
+        chatChannelId,
+        updatedChatChannelMessages = [],
+        removedChatChannelMessageIds = [],
+      } = payload;
       const chatChannelMessages =
         nextState.chatChannelMessagesStates[chatChannelId]?.data ?? [];
 
-      if (chatChannelMessages.length === 0) {
-        return;
-      }
-
-      const messageIndex = chatChannelMessages.findIndex(
-        (item) => item.id === chatChannelMessage.id,
+      const finalMessages = unionBy(
+        updatedChatChannelMessages,
+        chatChannelMessages.filter(
+          ({ id }) => !removedChatChannelMessageIds.includes(id),
+        ),
+        "id",
+      ).sort(
+        (a, b) =>
+          a.createdAt.toDate().getTime() - b.createdAt.toDate().getTime(),
       );
 
-      if (messageIndex !== -1) {
-        chatChannelMessages[messageIndex] = { ...chatChannelMessage };
-      }
-
       nextState.chatChannelMessagesStates[chatChannelId] = {
-        ...nextState.chatChannelMessagesStates[chatChannelId],
-        data: chatChannelMessages,
-      };
-    }),
-  )
-  .handleAction(actions.deleteChatChannelMessage, (state, { payload }) =>
-    produce(state, (nextState) => {
-      const { chatChannelId, chatChannelMessageId } = payload;
-      const chatChannelMessages =
-        nextState.chatChannelMessagesStates[chatChannelId]?.data ?? [];
-
-      if (chatChannelMessages.length === 0) {
-        return;
-      }
-
-      nextState.chatChannelMessagesStates[chatChannelId] = {
-        ...nextState.chatChannelMessagesStates[chatChannelId],
-        data: chatChannelMessages.filter(
-          (item) => item.id !== chatChannelMessageId,
-        ),
+        loading: false,
+        fetched: true,
+        data: finalMessages,
       };
     }),
   )

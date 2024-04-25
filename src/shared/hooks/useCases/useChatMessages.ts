@@ -108,9 +108,9 @@ export const useChatMessages = (currentChatChannelId: string): Return => {
 
   const updateChatMessage = useCallback((chatChannelMessage: ChatMessage) => {
     dispatch(
-      cacheActions.updateChatChannelMessage({
+      cacheActions.updateChatChannelMessages({
         chatChannelId: chatChannelMessage.chatChannelId,
-        chatChannelMessage,
+        updatedChatChannelMessages: [chatChannelMessage],
       }),
     );
   }, []);
@@ -118,9 +118,9 @@ export const useChatMessages = (currentChatChannelId: string): Return => {
   const deleteChatMessage = useCallback(
     (chatChannelMessageId: string) => {
       dispatch(
-        cacheActions.deleteChatChannelMessage({
+        cacheActions.updateChatChannelMessages({
           chatChannelId: currentChatChannelId,
-          chatChannelMessageId,
+          removedChatChannelMessageIds: [chatChannelMessageId],
         }),
       );
     },

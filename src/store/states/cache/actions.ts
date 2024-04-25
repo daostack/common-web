@@ -150,18 +150,12 @@ export const addChatChannelMessageByChatChannelId = createStandardAction(
   chatChannelMessage: ChatMessage;
 }>();
 
-export const updateChatChannelMessage = createStandardAction(
-  CacheActionType.UPDATE_CHAT_CHANNEL_MESSAGE,
+export const updateChatChannelMessages = createStandardAction(
+  CacheActionType.UPDATE_CHAT_CHANNEL_MESSAGES,
 )<{
   chatChannelId: string;
-  chatChannelMessage: ChatMessage;
-}>();
-
-export const deleteChatChannelMessage = createStandardAction(
-  CacheActionType.DELETE_CHAT_CHANNEL_MESSAGE,
-)<{
-  chatChannelId: string;
-  chatChannelMessageId: string;
+  updatedChatChannelMessages?: ChatMessage[];
+  removedChatChannelMessageIds?: string[];
 }>();
 
 export const resetChatChannelMessagesStates = createStandardAction(
