@@ -135,46 +135,27 @@ export const useChatMessages = (currentChatChannelId: string): Return => {
     const unsubscribe = ChatService.subscribeToChatChannelMessages(
       currentChatChannelId,
       async (fetchedMessages) => {
-        const messagesWithOwners = await addOwnersToMessages(
-          fetchedMessages.map(({ message }) => message),
+        const updatedMessages = fetchedMessages
+          .filter(({ statuses }) => !statuses.isRemoved)
+          .map(({ message }) => message);
+        const updatedMessagesWithOwners = await addOwnersToMessages(
+          updatedMessages,
         );
-        const messages = messagesWithOwners.map((message, index) => ({
-          ...fetchedMessages[index],
-          message,
-        }));
+        const removedChatChannelMessageIds = fetchedMessages.reduce<string[]>(
+          (acc, { message, statuses }) =>
+            statuses.isRemoved ? [...acc, message.id] : acc,
+          [],
+        );
 
-        setState((currentState) => {
-          if (!currentState.data) {
-            return currentState;
-          }
-
-          const newMessages: ChatMessage[] = [];
-          const nextData = [...currentState.data];
-          messages.forEach(({ message, statuses: { isRemoved } }) => {
-            const messageIndex = nextData.findIndex(
-              (item) => item.id === message.id,
-            );
-
-            if (messageIndex === -1) {
-              if (!isRemoved) {
-                newMessages.push(message);
-              }
-              return;
-            }
-
-            if (isRemoved) {
-              nextData.splice(messageIndex, 1);
-            } else {
-              nextData[messageIndex] = message;
-            }
-          });
-          nextData.push(...newMessages);
-
-          return {
-            ...currentState,
-            data: addParentMessageToMessages(nextData),
-          };
-        });
+        dispatch(
+          cacheActions.updateChatChannelMessages({
+            chatChannelId: currentChatChannelId,
+            updatedChatChannelMessages: addParentMessageToMessages(
+              updatedMessagesWithOwners,
+            ),
+            removedChatChannelMessageIds,
+          }),
+        );
       },
     );
 
