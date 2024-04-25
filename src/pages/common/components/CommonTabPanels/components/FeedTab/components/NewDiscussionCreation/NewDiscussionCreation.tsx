@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useMemo } from "react";
+import React, { FC, useCallback, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import {
@@ -32,6 +32,7 @@ interface NewDiscussionCreationProps {
   isModalVariant?: boolean;
   edit?: boolean;
   defaultVisibility?: string;
+  onDiscussionIdChange?: () => void;
 }
 
 interface InitialValues {
@@ -51,6 +52,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
     isModalVariant = false,
     edit,
     defaultVisibility,
+    onDiscussionIdChange,
   } = props;
   const dispatch = useDispatch();
   const discussionCreationData = useSelector(selectDiscussionCreationData);
@@ -130,6 +132,12 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
     },
     [governanceCircles, userCircleIds, userId, common.id, edit],
   );
+
+  useEffect(() => {
+    if (discussionCreationData?.id) {
+      onDiscussionIdChange?.();
+    }
+  }, [discussionCreationData?.id]);
 
   if (
     isModalVariant &&

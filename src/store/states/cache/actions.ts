@@ -117,6 +117,10 @@ export const updateDiscussionMessagesStateByDiscussionId = createStandardAction(
   removedDiscussionMessages: DiscussionMessage[];
 }>();
 
+export const resetDiscussionMessagesStates = createStandardAction(
+  CacheActionType.RESET_DISCUSSION_MESSAGES_STATES,
+)();
+
 export const addDiscussionMessageByDiscussionId = createStandardAction(
   CacheActionType.ADD_DISCUSSION_MESSAGE_BY_DISCUSSION_ID,
 )<{

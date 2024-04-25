@@ -340,7 +340,6 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
           elementStyles={elementStyles}
         />
         <EmojiPicker
-          isRtl={isRtlLanguage}
           isMessageSent={isMessageSent}
           onToggleIsMessageSent={onToggleIsMessageSent}
           containerClassName={emojiContainerClassName}
