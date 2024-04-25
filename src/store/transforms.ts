@@ -86,26 +86,44 @@ export const inboxTransform = createTransform(
 );
 
 export const cacheTransform = createTransform(
-  (inboundState: CacheState) => ({
-    ...INITIAL_CACHE_STATE,
-    userStates: clearNonFinishedStates(inboundState.userStates),
-    governanceByCommonIdStates: clearNonFinishedStates(
-      inboundState.governanceByCommonIdStates,
-    ),
-    discussionStates: clearNonFinishedStates(inboundState.discussionStates),
-    proposalStates: clearNonFinishedStates(inboundState.proposalStates),
-    commonMembersState: clearNonFinishedStates(inboundState.commonMembersState),
-    feedByCommonIdStates: inboundState.feedByCommonIdStates,
-    feedItemUserMetadataStates: clearNonFinishedStates(
-      inboundState.feedItemUserMetadataStates,
-    ),
-    chatChannelUserStatusStates: clearNonFinishedStates(
-      inboundState.chatChannelUserStatusStates,
-    ),
-    commonMemberByUserAndCommonIdsStates: clearNonFinishedStates(
-      inboundState.commonMemberByUserAndCommonIdsStates,
-    ),
-  }),
+  (inboundState: CacheState) => {
+    const chatChannelMessagesStates = Object.entries(
+      clearNonFinishedStates(inboundState.chatChannelMessagesStates),
+    ).reduce(
+      (acc, [key, value]) => ({
+        ...acc,
+        [key]: {
+          ...value,
+          data: value.data.slice(-20),
+        },
+      }),
+      {},
+    );
+
+    return {
+      ...INITIAL_CACHE_STATE,
+      userStates: clearNonFinishedStates(inboundState.userStates),
+      governanceByCommonIdStates: clearNonFinishedStates(
+        inboundState.governanceByCommonIdStates,
+      ),
+      discussionStates: clearNonFinishedStates(inboundState.discussionStates),
+      proposalStates: clearNonFinishedStates(inboundState.proposalStates),
+      chatChannelMessagesStates,
+      commonMembersState: clearNonFinishedStates(
+        inboundState.commonMembersState,
+      ),
+      feedByCommonIdStates: inboundState.feedByCommonIdStates,
+      feedItemUserMetadataStates: clearNonFinishedStates(
+        inboundState.feedItemUserMetadataStates,
+      ),
+      chatChannelUserStatusStates: clearNonFinishedStates(
+        inboundState.chatChannelUserStatusStates,
+      ),
+      commonMemberByUserAndCommonIdsStates: clearNonFinishedStates(
+        inboundState.commonMemberByUserAndCommonIdsStates,
+      ),
+    };
+  },
   (outboundState: CacheState) => outboundState,
   { whitelist: ["cache"] },
 );
