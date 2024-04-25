@@ -19,7 +19,7 @@ import {
   QueryParamKey,
   LOADER_APPEARANCE_DELAY,
 } from "@/shared/constants";
-import { useQueryParams } from "@/shared/hooks";
+import { useMemoizedFunction, useQueryParams } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ModalTransition } from "@/shared/interfaces";
 import {
@@ -181,21 +181,25 @@ const ChatContent: ForwardRefRenderFunction<
     }
   }, [shouldScrollToElementId, discussionMessages]);
 
-  async function scrollToRepliedMessage(messageId: string, endDate: Date) {
-    await fetchReplied(messageId, endDate);
-    setShouldScrollToElementId(messageId);
-  }
+  const scrollToRepliedMessage = useMemoizedFunction(
+    async (messageId: string, endDate: Date) => {
+      await fetchReplied(messageId, endDate);
+      setShouldScrollToElementId(messageId);
+    },
+  );
 
-  function scrollToRepliedMessageDMChat(messageId: string) {
-    scroller.scrollTo(messageId, {
-      containerId: chatWrapperId,
-      delay: 0,
-      duration: 300,
-      offset: -100,
-      smooth: true,
-    });
-    setHighlightedMessageId(messageId);
-  }
+  const scrollToRepliedMessageDMChat = useMemoizedFunction(
+    (messageId: string) => {
+      scroller.scrollTo(messageId, {
+        containerId: chatWrapperId,
+        delay: 0,
+        duration: 300,
+        offset: -100,
+        smooth: true,
+      });
+      setHighlightedMessageId(messageId);
+    },
+  );
 
   useEffect(() => {
     if (typeof messageIdParam === "string") {

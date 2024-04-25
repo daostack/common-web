@@ -222,7 +222,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
     const commonNotion = outerCommonNotion ?? common?.notion;
 
     const handleOpenChat = useCallback(() => {
-      if (discussion) {
+      if (discussion && !isPreviewMode) {
         setChatItem({
           feedItemId: item.id,
           discussion,
@@ -254,6 +254,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       feedItemUserMetadata?.seen,
       feedItemUserMetadata?.hasUnseenMention,
       nestedItemData,
+      isPreviewMode,
     ]);
 
     const onDiscussionDelete = useCallback(async () => {

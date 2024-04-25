@@ -8,7 +8,7 @@
 }
 
 .wrapper {
-  overflow-x: scroll;
+  overflow-x: auto;
   display: flex;
   width: 100%;
 }
@@ -16,7 +16,6 @@
 .filePreviewWrapper {
   position: relative;
   margin: 1rem 0.5rem 0;
-  height: 6.25rem;
 }
 
 .filePreview {

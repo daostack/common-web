@@ -11,6 +11,7 @@ export interface FeedLayoutRef {
   setExpandedFeedItemId: (feedItemId: string | null) => void;
   setActiveItem: (item: ChatItem) => void;
   setShouldAllowChatAutoOpen: (shouldAllow: boolean | null) => void;
+  getItemsContainerEl: () => Element | typeof window | null;
 }
 
 interface BaseLayoutItem {

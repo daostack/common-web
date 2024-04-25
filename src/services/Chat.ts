@@ -434,19 +434,27 @@ class ChatService {
     chatMessageId: string,
     chatChannelId: string,
     userId: string,
-  ): Promise<UserReaction | null> =>
-    (
-      await firebase
-        .firestore()
-        .collection(Collection.ChatChannel)
-        .doc(chatChannelId)
-        .collection(SubCollections.ChatMessages)
-        .doc(chatMessageId)
-        .collection(Collection.Reactions)
-        .withConverter(getUserReactionConverter)
-        .doc(userId)
-        .get()
-    ).data() || null;
+    fetchAll?: boolean,
+  ): Promise<UserReaction[] | null> => {
+    const reactionsRef = firebase
+      .firestore()
+      .collection(Collection.ChatChannel)
+      .doc(chatChannelId)
+      .collection(SubCollections.ChatMessages)
+      .doc(chatMessageId)
+      .collection(Collection.Reactions)
+      .withConverter(getUserReactionConverter);
+
+    if (fetchAll) {
+      const snapshot = await reactionsRef.get();
+      const reactions = snapshot.docs.map((doc) => doc.data());
+      return reactions;
+    }
+
+    const doc = await reactionsRef.doc(userId).get();
+    const reaction = doc.exists ? doc.data() : null;
+    return reaction ? [reaction] : null;
+  };
 }
 
 export default new ChatService();
