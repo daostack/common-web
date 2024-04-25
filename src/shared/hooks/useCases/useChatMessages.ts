@@ -14,6 +14,7 @@ interface Return extends LoadingState<ChatMessage[]> {
   addChatMessage: (chatMessage: ChatMessage) => void;
   updateChatMessage: (chatMessage: ChatMessage) => void;
   deleteChatMessage: (chatMessageId: string) => void;
+  isBatchLoading: boolean;
 }
 
 const DEFAULT_STATE: LoadingState<ChatMessage[]> = {
@@ -164,9 +165,11 @@ export const useChatMessages = (currentChatChannelId: string): Return => {
 
   return {
     ...state,
+    loading: !state.fetched,
     fetchChatMessages,
     addChatMessage,
     updateChatMessage,
     deleteChatMessage,
+    isBatchLoading: state.loading,
   };
 };

@@ -94,6 +94,7 @@ export const cacheTransform = createTransform(
         ...acc,
         [key]: {
           ...value,
+          loading: true,
           data: value.data.slice(-20),
         },
       }),

@@ -210,7 +210,9 @@ export default function ChatComponent({
   const areInitialMessagesLoading = isChatChannel
     ? chatMessagesData.loading
     : discussionMessagesData.loading;
-  const areMessagesLoading = discussionMessagesData.isBatchLoading;
+  const areMessagesLoading = chatChannel
+    ? chatMessagesData.isBatchLoading
+    : discussionMessagesData.isBatchLoading;
   const currentFilesPreview = useSelector(selectFilesPreview());
   const chatContentRef = useRef<ChatContentRef>(null);
   const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
