@@ -197,7 +197,10 @@ export default function ChatComponent({
     markChatChannelAsSeen,
     chatUsers,
     fetchChatUsers,
-  } = useChatChannelChatAdapter({ participants: chatChannel?.participants });
+  } = useChatChannelChatAdapter({
+    chatChannelId: chatChannel?.id || "",
+    participants: chatChannel?.participants,
+  });
   const users = chatChannel ? chatUsers : discussionUsers;
   const discussionMessages = chatChannel
     ? chatMessagesData.data
