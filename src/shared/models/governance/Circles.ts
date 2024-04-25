@@ -58,7 +58,6 @@ export type Circle = {
   id: string;
   accessLevel?: CircleAccessLevel;
   inheritGovernanceId?: string;
-  inheritCircleId?: string;
   allowedActions: AllowedActions;
   allowedProposals: AllowedProposals;
   hierarchy: {
@@ -66,6 +65,10 @@ export type Circle = {
     exclusions: number[];
   } | null;
   derivedFrom?: {
+    governanceId: string;
+    circleId: string;
+  };
+  inheritFrom?: {
     governanceId: string;
     circleId: string;
   };

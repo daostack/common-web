@@ -195,7 +195,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
         const roleForInheritance =
           parentCommonRoles.find(
             (parentRole) =>
-              parentRole.circleId === initialCircle?.inheritCircleId,
+              parentRole.circleId === initialCircle?.inheritFrom?.circleId,
           ) || parentCommonRoles[index];
 
         return {
