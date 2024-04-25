@@ -17,6 +17,7 @@ export const INITIAL_CACHE_STATE: CacheState = {
   governanceByCommonIdStates: {},
   discussionStates: {},
   discussionMessagesStates: {},
+  chatChannelMessagesStates: {},
   proposalStates: {},
   feedByCommonIdStates: {},
   feedItemUserMetadataStates: {},
@@ -241,6 +242,92 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
   .handleAction(actions.resetDiscussionMessagesStates, (state) =>
     produce(state, (nextState) => {
       nextState.discussionMessagesStates = {};
+    }),
+  )
+  .handleAction(
+    actions.setChatChannelMessagesStateByChatChannelId,
+    (state, { payload }) =>
+      produce(state, (nextState) => {
+        const { chatChannelId, chatChannelMessages } = payload;
+
+        nextState.chatChannelMessagesStates[chatChannelId] = {
+          loading: false,
+          fetched: true,
+          data: chatChannelMessages,
+        };
+      }),
+  )
+  .handleAction(
+    actions.addChatChannelMessageByChatChannelId,
+    (state, { payload }) =>
+      produce(state, (nextState) => {
+        const { chatChannelId, chatChannelMessage } = payload;
+        const chatChannelMessages =
+          nextState.chatChannelMessagesStates[chatChannelId]?.data ?? [];
+        const messageIndex = chatChannelMessages.findIndex(
+          (item) => item.id === chatChannelMessage.id,
+        );
+
+        if (messageIndex === -1) {
+          chatChannelMessages.push(chatChannelMessage);
+        } else {
+          chatChannelMessages[messageIndex] = { ...chatChannelMessage };
+        }
+
+        nextState.chatChannelMessagesStates[chatChannelId] = {
+          ...(nextState.chatChannelMessagesStates[chatChannelId] || {
+            loading: false,
+            fetched: true,
+          }),
+          data: chatChannelMessages,
+        };
+      }),
+  )
+  .handleAction(actions.updateChatChannelMessage, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const { chatChannelId, chatChannelMessage } = payload;
+      const chatChannelMessages =
+        nextState.chatChannelMessagesStates[chatChannelId]?.data ?? [];
+
+      if (chatChannelMessages.length === 0) {
+        return;
+      }
+
+      const messageIndex = chatChannelMessages.findIndex(
+        (item) => item.id === chatChannelMessage.id,
+      );
+
+      if (messageIndex !== -1) {
+        chatChannelMessages[messageIndex] = { ...chatChannelMessage };
+      }
+
+      nextState.chatChannelMessagesStates[chatChannelId] = {
+        ...nextState.chatChannelMessagesStates[chatChannelId],
+        data: chatChannelMessages,
+      };
+    }),
+  )
+  .handleAction(actions.deleteChatChannelMessage, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const { chatChannelId, chatChannelMessageId } = payload;
+      const chatChannelMessages =
+        nextState.chatChannelMessagesStates[chatChannelId]?.data ?? [];
+
+      if (chatChannelMessages.length === 0) {
+        return;
+      }
+
+      nextState.chatChannelMessagesStates[chatChannelId] = {
+        ...nextState.chatChannelMessagesStates[chatChannelId],
+        data: chatChannelMessages.filter(
+          (item) => item.id !== chatChannelMessageId,
+        ),
+      };
+    }),
+  )
+  .handleAction(actions.resetChatChannelMessagesStates, (state) =>
+    produce(state, (nextState) => {
+      nextState.chatChannelMessagesStates = {};
     }),
   )
   .handleAction(

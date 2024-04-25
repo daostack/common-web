@@ -1,10 +1,13 @@
-import { useCallback, useEffect, useRef } from "react";
-import { v4 as uuidv4 } from "uuid";
+import { useCallback, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Logger, ChatService, UserService } from "@/services";
-import { useLoadingState } from "@/shared/hooks";
 import { LoadingState } from "@/shared/interfaces";
 import { ChatMessage } from "@/shared/models";
 import { getUserName } from "@/shared/utils";
+import {
+  cacheActions,
+  selectChatChannelMessagesStateByChatChannelId,
+} from "@/store/states";
 
 interface Return extends LoadingState<ChatMessage[]> {
   fetchChatMessages: (chatChannelId: string) => void;
@@ -12,6 +15,12 @@ interface Return extends LoadingState<ChatMessage[]> {
   updateChatMessage: (chatMessage: ChatMessage) => void;
   deleteChatMessage: (chatMessageId: string) => void;
 }
+
+const DEFAULT_STATE: LoadingState<ChatMessage[]> = {
+  loading: false,
+  fetched: false,
+  data: [],
+};
 
 const addOwnersToMessages = async (
   chatMessages: ChatMessage[],
@@ -51,22 +60,15 @@ const addParentMessageToMessages = (
     };
   });
 
-export const useChatMessages = (): Return => {
-  const currentLoadingIdRef = useRef("");
-  const [state, setState] = useLoadingState<ChatMessage[]>([]);
-  const currentChatChannelId = state.data?.[0]?.chatChannelId;
+export const useChatMessages = (currentChatChannelId: string): Return => {
+  const dispatch = useDispatch();
+  const state =
+    useSelector(
+      selectChatChannelMessagesStateByChatChannelId(currentChatChannelId),
+    ) || DEFAULT_STATE;
 
   const fetchChatMessages = useCallback(async (chatChannelId: string) => {
-    const loadingId = uuidv4();
-    currentLoadingIdRef.current = loadingId;
-
     try {
-      setState({
-        loading: true,
-        fetched: false,
-        data: [],
-      });
-
       const fetchedChatMessages = (
         await ChatService.getChatMessages({
           chatChannelId,
@@ -74,81 +76,56 @@ export const useChatMessages = (): Return => {
           sortingDirection: "asc",
         })
       ).chatMessages;
-      const chatMessages = addParentMessageToMessages(
+      const chatChannelMessages = addParentMessageToMessages(
         await addOwnersToMessages(fetchedChatMessages),
       );
 
-      if (currentLoadingIdRef.current === loadingId) {
-        setState({
-          loading: false,
-          fetched: true,
-          data: chatMessages,
-        });
-      }
+      dispatch(
+        cacheActions.setChatChannelMessagesStateByChatChannelId({
+          chatChannelId,
+          chatChannelMessages,
+        }),
+      );
     } catch (error) {
-      if (currentLoadingIdRef.current === loadingId) {
-        Logger.error(error);
-        setState({
-          loading: false,
-          fetched: false,
-          data: [],
-        });
-      }
+      Logger.error(error);
+      dispatch(
+        cacheActions.setChatChannelMessagesStateByChatChannelId({
+          chatChannelId,
+          chatChannelMessages: [],
+        }),
+      );
     }
   }, []);
 
-  const addChatMessage = useCallback((chatMessage: ChatMessage) => {
-    setState((currentState) => {
-      const nextData = currentState.data ? [...currentState.data] : [];
-      const messageIndex = nextData.findIndex(
-        (item) => item.id === chatMessage.id,
+  const addChatMessage = useCallback((chatChannelMessage: ChatMessage) => {
+    dispatch(
+      cacheActions.addChatChannelMessageByChatChannelId({
+        chatChannelId: chatChannelMessage.chatChannelId,
+        chatChannelMessage,
+      }),
+    );
+  }, []);
+
+  const updateChatMessage = useCallback((chatChannelMessage: ChatMessage) => {
+    dispatch(
+      cacheActions.updateChatChannelMessage({
+        chatChannelId: chatChannelMessage.chatChannelId,
+        chatChannelMessage,
+      }),
+    );
+  }, []);
+
+  const deleteChatMessage = useCallback(
+    (chatChannelMessageId: string) => {
+      dispatch(
+        cacheActions.deleteChatChannelMessage({
+          chatChannelId: currentChatChannelId,
+          chatChannelMessageId,
+        }),
       );
-
-      if (messageIndex === -1) {
-        nextData.push(chatMessage);
-      } else {
-        nextData[messageIndex] = { ...chatMessage };
-      }
-
-      return {
-        ...currentState,
-        data: nextData,
-      };
-    });
-  }, []);
-
-  const updateChatMessage = useCallback((chatMessage: ChatMessage) => {
-    setState((currentState) => {
-      if (!currentState.data) {
-        return currentState;
-      }
-
-      const data = [...currentState.data];
-      const messageIndex = data.findIndex((item) => item.id === chatMessage.id);
-
-      if (messageIndex !== -1) {
-        data[messageIndex] = { ...chatMessage };
-      }
-
-      return {
-        ...currentState,
-        data,
-      };
-    });
-  }, []);
-
-  const deleteChatMessage = useCallback((chatMessageId: string) => {
-    setState((currentState) => {
-      if (!currentState.data) {
-        return currentState;
-      }
-
-      return {
-        ...currentState,
-        data: currentState.data.filter((item) => item.id !== chatMessageId),
-      };
-    });
-  }, []);
+    },
+    [currentChatChannelId],
+  );
 
   useEffect(() => {
     if (!currentChatChannelId) {

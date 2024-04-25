@@ -12,6 +12,7 @@ import {
   Governance,
   Proposal,
   User,
+  ChatMessage,
 } from "@/shared/models";
 import { CacheActionType } from "./constants";
 import { FeedState } from "./types";
@@ -134,6 +135,38 @@ export const deleteDiscussionMessageById = createStandardAction(
   discussionId: string;
   discussionMessageId: string;
 }>();
+
+export const setChatChannelMessagesStateByChatChannelId = createStandardAction(
+  CacheActionType.SET_CHAT_CHANNEL_MESSAGES_STATE_BY_CHAT_CHANNEL_ID,
+)<{
+  chatChannelId: string;
+  chatChannelMessages: ChatMessage[];
+}>();
+
+export const addChatChannelMessageByChatChannelId = createStandardAction(
+  CacheActionType.ADD_CHAT_CHANNEL_MESSAGE_BY_CHAT_CHANNEL_ID,
+)<{
+  chatChannelId: string;
+  chatChannelMessage: ChatMessage;
+}>();
+
+export const updateChatChannelMessage = createStandardAction(
+  CacheActionType.UPDATE_CHAT_CHANNEL_MESSAGE,
+)<{
+  chatChannelId: string;
+  chatChannelMessage: ChatMessage;
+}>();
+
+export const deleteChatChannelMessage = createStandardAction(
+  CacheActionType.DELETE_CHAT_CHANNEL_MESSAGE,
+)<{
+  chatChannelId: string;
+  chatChannelMessageId: string;
+}>();
+
+export const resetChatChannelMessagesStates = createStandardAction(
+  CacheActionType.RESET_CHAT_CHANNEL_MESSAGES_STATES,
+)();
 
 export const getProposalStateById = createAsyncAction(
   CacheActionType.GET_PROPOSAL_STATE_BY_ID,
