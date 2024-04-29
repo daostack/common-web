@@ -9,6 +9,7 @@
 }
 
 .linkContainer {
+  margin-right: 1rem;
   padding: 0.5rem 3.5rem 0.5rem 0.5rem;
   display: flex;
   align-items: center;
@@ -62,8 +63,18 @@
   overflow: hidden;
 }
 
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.loadingText {
+  font-size: 0.875rem;
+  color: var(--primary-text);
+}
+
 .closeIconWrapper {
-  margin: 0 1rem;
+  margin: 0 1rem 0 auto;
   padding: 0.375rem;
   border-radius: 0.25rem;
   transition: background-color 0.3s;
