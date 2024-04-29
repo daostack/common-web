@@ -62,7 +62,7 @@ export const useLinkPreviewData = (options: Options): Return => {
 
   useEffect(() => {
     if (!currentUrl) {
-      if (previewDataState.data) {
+      if (previewDataState.loading || previewDataState.data) {
         handlePreviewDataReset();
       }
 
