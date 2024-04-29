@@ -1,8 +1,10 @@
 import React, { useMemo } from "react";
+import { useSelector } from "react-redux";
 import { ButtonIcon } from "@/shared/components";
 import { Close2Icon } from "@/shared/icons";
-import { TextEditorValue, serializeTextEditorValue } from "@/shared/ui-kit";
+import { TextEditorValue } from "@/shared/ui-kit";
 import { emptyFunction, extractUrls } from "@/shared/utils";
+import { selectFilesPreview } from "@/store/states";
 import styles from "./MessageLinkPreview.module.scss";
 
 interface MessageLinkPreviewProps {
@@ -10,10 +12,8 @@ interface MessageLinkPreviewProps {
 }
 
 const MessageLinkPreview: React.FC<MessageLinkPreviewProps> = ({ message }) => {
-  const urls = useMemo(
-    () => extractUrls(serializeTextEditorValue(message)),
-    [message],
-  );
+  const filesPreview = useSelector(selectFilesPreview());
+  const urls = useMemo(() => extractUrls(JSON.stringify(message)), [message]);
   const data = {
     title: "David Kushner - Mr. Forgettable [Official Music Video]",
     description:
@@ -21,6 +21,10 @@ const MessageLinkPreview: React.FC<MessageLinkPreviewProps> = ({ message }) => {
     image: "https://i.ytimg.com/vi/7TCncxWNcPU/maxresdefault.jpg",
     url: "https://youtu.be/7TCncxWNcPU?list=RD7TCncxWNcPU",
   };
+
+  if (filesPreview && filesPreview.length > 0) {
+    return null;
+  }
 
   return (
     <div className={styles.container}>
