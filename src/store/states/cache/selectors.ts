@@ -33,6 +33,10 @@ export const selectDiscussionMessagesStateByDiscussionId =
   (discussionId: string) => (state: AppState) =>
     state.cache.discussionMessagesStates[discussionId] || null;
 
+export const selectChatChannelMessagesStateByChatChannelId =
+  (chatChannelId: string) => (state: AppState) =>
+    state.cache.chatChannelMessagesStates[chatChannelId] || null;
+
 export const selectCommonMembersStateByCommonId =
   (commonId?: string) => (state: AppState) => {
     if (!commonId) {
