@@ -55,6 +55,7 @@ import {
   ReactWithEmoji,
   Reactions,
   Time,
+  MessageLinkPreview,
 } from "./components";
 import { ChatMessageContext, ChatMessageContextValue } from "./context";
 import { getTextFromTextEditorString } from "./utils";
@@ -496,6 +497,9 @@ export default function ChatMessage({
                     />
                   )}
                   <ChatImageGallery gallery={discussionMessage.images ?? []} />
+                  <MessageLinkPreview
+                    isOtherPersonMessage={isNotCurrentUserMessage}
+                  />
                   <ChatMessageLinkify
                     onInternalLinkClick={handleInternalLinkClick}
                   >
