@@ -1,5 +1,5 @@
 import { ApiEndpoint, FirestoreDataSource } from "@/shared/constants";
-import { DMUser, UnsubscribeFunction } from "@/shared/interfaces";
+import { DMUser, PreviewData, UnsubscribeFunction } from "@/shared/interfaces";
 import {
   CreateChatMessageReaction,
   DeleteChatMessageReaction,
@@ -454,6 +454,22 @@ class ChatService {
     const doc = await reactionsRef.doc(userId).get();
     const reaction = doc.exists ? doc.data() : null;
     return reaction ? [reaction] : null;
+  };
+
+  public getLinkPreviewData = async (
+    url: string,
+    options: { cancelToken?: CancelToken } = {},
+  ): Promise<PreviewData> => {
+    const { cancelToken } = options;
+
+    // return await Api.get<PreviewData>(ApiEndpoint., { cancelToken });
+    return {
+      title: "David Kushner - Mr. Forgettable [Official Music Video]",
+      description:
+        "HEADLINE SHOWSOctober 18th - Brooklyn, NY - https://bit.ly/3SkMxSlOctober 21st - Los Angeles, CA - https://bit.ly/3BPd9UCOctober 26th - Chicago, IL - https:/...",
+      image: "https://i.ytimg.com/vi/7TCncxWNcPU/maxresdefault.jpg",
+      url: "https://youtu.be/7TCncxWNcPU?list=RD7TCncxWNcPU",
+    };
   };
 }
 

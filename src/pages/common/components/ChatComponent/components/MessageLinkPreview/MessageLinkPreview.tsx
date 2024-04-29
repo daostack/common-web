@@ -1,88 +1,22 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { ButtonIcon } from "@/shared/components";
-import { useLoadingState } from "@/shared/hooks";
 import { Close2Icon } from "@/shared/icons";
-import { serializeTextEditorValue, TextEditorValue } from "@/shared/ui-kit";
-import { extractUrls } from "@/shared/utils";
+import { TextEditorValue } from "@/shared/ui-kit";
 import { selectFilesPreview } from "@/store/states";
+import { useLinkPreviewData } from "../../hooks";
 import styles from "./MessageLinkPreview.module.scss";
 
 interface MessageLinkPreviewProps {
   message: TextEditorValue;
 }
 
-interface PreviewData {
-  title: string;
-  description: string;
-  image: string;
-  url: string;
-}
-
 const MessageLinkPreview: React.FC<MessageLinkPreviewProps> = (props) => {
   const { message } = props;
   const filesPreview = useSelector(selectFilesPreview());
-  const [currentUrl, setCurrentUrl] = useState("");
-  const [
-    { loading: isPreviewDataLoading, data: previewData },
-    setPreviewDataState,
-  ] = useLoadingState<PreviewData | null>(null);
-  const urls = useMemo(
-    () => extractUrls(serializeTextEditorValue(message)),
-    [message],
-  );
-
-  const clearPreviewData = () => {
-    // TODO: clear request
-    setPreviewDataState({
-      loading: false,
-      fetched: false,
-      data: null,
-    });
-    // TODO: clear data in ChatComponent
-  };
-
-  useEffect(() => {
-    if (urls.length === 0) {
-      setCurrentUrl("");
-      return;
-    }
-    if (urls.includes(currentUrl)) {
-      return;
-    }
-
-    setCurrentUrl(urls[0]);
-  }, [urls]);
-
-  useEffect(() => {
-    if (!currentUrl) {
-      if (previewData) {
-        clearPreviewData();
-      }
-
-      return;
-    }
-
-    (async () => {
-      setPreviewDataState({
-        loading: true,
-        fetched: false,
-        data: null,
-      });
-      await new Promise((res) => setTimeout(res, 2000));
-      setPreviewDataState({
-        loading: false,
-        fetched: true,
-        data: {
-          title: "David Kushner - Mr. Forgettable [Official Music Video]",
-          description:
-            "HEADLINE SHOWSOctober 18th - Brooklyn, NY - https://bit.ly/3SkMxSlOctober 21st - Los Angeles, CA - https://bit.ly/3BPd9UCOctober 26th - Chicago, IL - https:/...",
-          image: "https://i.ytimg.com/vi/7TCncxWNcPU/maxresdefault.jpg",
-          url: "https://youtu.be/7TCncxWNcPU?list=RD7TCncxWNcPU",
-        },
-      });
-    })();
-  }, [currentUrl]);
+  const { currentUrl, previewDataState, onPreviewDataReset } =
+    useLinkPreviewData(message);
+  const { loading: isPreviewDataLoading, data: previewData } = previewDataState;
 
   if (
     (filesPreview && filesPreview.length > 0) ||
@@ -129,7 +63,7 @@ const MessageLinkPreview: React.FC<MessageLinkPreviewProps> = (props) => {
       </a>
       <ButtonIcon
         className={styles.closeIconWrapper}
-        onClick={clearPreviewData}
+        onClick={onPreviewDataReset}
       >
         <Close2Icon />
       </ButtonIcon>

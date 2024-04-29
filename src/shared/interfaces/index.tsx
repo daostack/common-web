@@ -16,6 +16,7 @@ export * from "./MenuItem";
 export * from "./NewDiscussionCreationFormValues";
 export * from "./NewProposalCreationFormValues";
 export * from "./Notification";
+export * from "./PreviewData";
 export * from "./redux";
 export * from "./SharedState";
 export * from "./ModalProps";
