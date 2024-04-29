@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { ButtonIcon } from "@/shared/components";
 import { Close2Icon } from "@/shared/icons";
+import { LinkPreviewData } from "@/shared/interfaces";
 import { TextEditorValue } from "@/shared/ui-kit";
 import { selectFilesPreview } from "@/store/states";
 import { useLinkPreviewData } from "../../hooks";
@@ -9,13 +10,14 @@ import styles from "./MessageLinkPreview.module.scss";
 
 interface MessageLinkPreviewProps {
   message: TextEditorValue;
+  onLinkPreviewDataChange: (data: LinkPreviewData | null) => void;
 }
 
 const MessageLinkPreview: React.FC<MessageLinkPreviewProps> = (props) => {
-  const { message } = props;
+  const { message, onLinkPreviewDataChange } = props;
   const filesPreview = useSelector(selectFilesPreview());
   const { currentUrl, previewDataState, onPreviewDataReset } =
-    useLinkPreviewData(message);
+    useLinkPreviewData({ message, onLinkPreviewDataChange });
   const { loading: isPreviewDataLoading, data: previewData } = previewDataState;
 
   if (

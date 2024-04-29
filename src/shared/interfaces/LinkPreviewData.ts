@@ -1,4 +1,4 @@
-export interface PreviewData {
+export interface LinkPreviewData {
   title: string;
   description: string;
   image: string;

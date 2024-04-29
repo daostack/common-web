@@ -7,22 +7,28 @@ import {
   Logger,
 } from "@/services";
 import { useLoadingState } from "@/shared/hooks";
-import { LoadingState, PreviewData } from "@/shared/interfaces";
+import { LoadingState, LinkPreviewData } from "@/shared/interfaces";
 import { serializeTextEditorValue, TextEditorValue } from "@/shared/ui-kit";
 import { extractUrls } from "@/shared/utils";
+
+interface Options {
+  message: TextEditorValue;
+  onLinkPreviewDataChange: (data: LinkPreviewData | null) => void;
+}
 
 interface Return {
   currentUrl: string;
   urls: string[];
-  previewDataState: LoadingState<PreviewData | null>;
+  previewDataState: LoadingState<LinkPreviewData | null>;
   onPreviewDataReset: () => void;
 }
 
-export const useLinkPreviewData = (message: TextEditorValue): Return => {
+export const useLinkPreviewData = (options: Options): Return => {
+  const { message, onLinkPreviewDataChange } = options;
   const [currentUrl, setCurrentUrl] = useState("");
   const cancelTokenRef = useRef<CancelTokenSource | null>(null);
   const [previewDataState, setPreviewDataState] =
-    useLoadingState<PreviewData | null>(null);
+    useLoadingState<LinkPreviewData | null>(null);
   const urls = useMemo(
     () => extractUrls(serializeTextEditorValue(message)),
     [message],
@@ -39,7 +45,7 @@ export const useLinkPreviewData = (message: TextEditorValue): Return => {
       fetched: false,
       data: null,
     });
-    // TODO: clear data in ChatComponent
+    onLinkPreviewDataChange(null);
   }, []);
 
   useEffect(() => {
@@ -85,6 +91,7 @@ export const useLinkPreviewData = (message: TextEditorValue): Return => {
           fetched: true,
           data,
         });
+        onLinkPreviewDataChange(data);
       } catch (err) {
         if (!isRequestCancelled(err)) {
           Logger.error(err);
@@ -94,6 +101,7 @@ export const useLinkPreviewData = (message: TextEditorValue): Return => {
             fetched: true,
             data: null,
           });
+          onLinkPreviewDataChange(null);
         }
       }
     })();

@@ -1,5 +1,9 @@
 import { ApiEndpoint, FirestoreDataSource } from "@/shared/constants";
-import { DMUser, PreviewData, UnsubscribeFunction } from "@/shared/interfaces";
+import {
+  DMUser,
+  LinkPreviewData,
+  UnsubscribeFunction,
+} from "@/shared/interfaces";
 import {
   CreateChatMessageReaction,
   DeleteChatMessageReaction,
@@ -459,10 +463,11 @@ class ChatService {
   public getLinkPreviewData = async (
     url: string,
     options: { cancelToken?: CancelToken } = {},
-  ): Promise<PreviewData> => {
+  ): Promise<LinkPreviewData> => {
     const { cancelToken } = options;
 
-    // return await Api.get<PreviewData>(ApiEndpoint., { cancelToken });
+    // return await Api.get<LinkPreviewData>(ApiEndpoint., { cancelToken });
+    await new Promise((res) => setTimeout(res, 2000));
     return {
       title: "David Kushner - Mr. Forgettable [Official Music Video]",
       description:

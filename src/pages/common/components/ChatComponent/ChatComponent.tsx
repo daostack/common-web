@@ -26,6 +26,7 @@ import { HotKeys } from "@/shared/constants/keyboardKeys";
 import { ChatMessageToUserDiscussionMessageConverter } from "@/shared/converters";
 import { useZoomDisabling, useImageSizeCheck } from "@/shared/hooks";
 import { ArrowInCircleIcon, PlusIcon, SendIcon } from "@/shared/icons";
+import { LinkPreviewData } from "@/shared/interfaces";
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 import {
   ChatChannel,
@@ -215,6 +216,8 @@ export default function ChatComponent({
   const chatInputWrapperRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [isScrolling, setIsScrolling] = useState(false);
+  const [linkPreviewData, setLinkPreviewData] =
+    useState<LinkPreviewData | null>(null);
   const chatContentContextValue: ChatContentData = useMemo(
     () => ({
       isScrolling,
@@ -848,7 +851,10 @@ export default function ChatComponent({
         </div>
       )}
       <MessageReply users={users} />
-      <MessageLinkPreview message={message} />
+      <MessageLinkPreview
+        message={message}
+        onLinkPreviewDataChange={setLinkPreviewData}
+      />
       <ChatFilePreview />
       <div
         ref={chatInputWrapperRef}
