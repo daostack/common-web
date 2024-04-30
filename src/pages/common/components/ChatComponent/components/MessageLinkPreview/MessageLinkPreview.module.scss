@@ -9,11 +9,12 @@
 }
 
 .linkContainer {
+  flex: 1;
   margin-right: 1rem;
   padding: 0.5rem 3.5rem 0.5rem 0.5rem;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   background-color: var(--hover-fill);
   border-radius: 0.9375rem;
   text-decoration: none;
