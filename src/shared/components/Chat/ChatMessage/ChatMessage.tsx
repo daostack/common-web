@@ -13,6 +13,7 @@ import { Element } from "slate";
 import { useLongPress } from "use-long-press";
 import * as oldCommonActions from "@/pages/OldCommon/store/actions";
 import { ChatService, DiscussionMessageService } from "@/services";
+import botAvatarSrc from "@/shared/assets/images/bot-avatar.svg";
 import { ElementDropdown, UserAvatar } from "@/shared/components";
 import {
   Orientation,
@@ -32,6 +33,7 @@ import {
   Circles,
   DiscussionMessageWithParsedText,
   ParentDiscussionMessage,
+  checkIsBotDiscussionMessage,
 } from "@/shared/models";
 import {
   FilePreview,
@@ -123,6 +125,7 @@ export default function ChatMessage({
   const isUserDiscussionMessage =
     checkIsUserDiscussionMessage(discussionMessage);
   const isSystemMessage = checkIsSystemDiscussionMessage(discussionMessage);
+  const isBotMessage = checkIsBotDiscussionMessage(discussionMessage);
   const userId = user?.uid;
   const discussionMessageUserId = isUserDiscussionMessage
     ? discussionMessage.ownerId
@@ -178,7 +181,7 @@ export default function ChatMessage({
   );
 
   const handleUserClick = () => {
-    if (onUserClick && discussionMessageUserId) {
+    if (onUserClick && discussionMessageUserId && !isBotMessage) {
       onUserClick(discussionMessageUserId);
     }
   };
@@ -432,16 +435,21 @@ export default function ChatMessage({
           })}
         >
           {!isSystemMessage && !isNotCurrentUserMessage && emojiButton}
-          {isNotCurrentUserMessage && isUserDiscussionMessage && (
-            <div className={styles.iconWrapper} onClick={handleUserClick}>
-              <UserAvatar
-                imageContainerClassName={styles.userAvatarContainer}
-                photoURL={discussionMessage.owner?.photoURL}
-                nameForRandomAvatar={discussionMessage.owner?.email}
-                userName={getUserName(discussionMessage.owner)}
-              />
-            </div>
-          )}
+          {isNotCurrentUserMessage &&
+            (isUserDiscussionMessage || isBotMessage) && (
+              <div className={styles.iconWrapper} onClick={handleUserClick}>
+                <UserAvatar
+                  imageContainerClassName={styles.userAvatarContainer}
+                  photoURL={
+                    isBotMessage
+                      ? botAvatarSrc
+                      : discussionMessage.owner?.photoURL
+                  }
+                  nameForRandomAvatar={discussionMessage.owner?.email}
+                  userName={getUserName(discussionMessage.owner)}
+                />
+              </div>
+            )}
           {isEditMode ? (
             <EditMessageInput
               discussionMessage={discussionMessage}
@@ -472,7 +480,7 @@ export default function ChatMessage({
               >
                 {isNotCurrentUserMessage && !isSystemMessage && (
                   <div className={styles.messageName} onClick={handleUserClick}>
-                    {getUserName(discussionMessage.owner)}
+                    {isBotMessage ? "AI" : getUserName(discussionMessage.owner)}
                   </div>
                 )}
                 <ReplyMessage />
