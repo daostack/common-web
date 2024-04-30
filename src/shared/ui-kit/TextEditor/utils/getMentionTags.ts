@@ -1,4 +1,5 @@
 import { Descendant, Element } from "slate";
+import { AI_PRO_USER, AI_USER } from "@/shared/constants";
 import { ElementType } from "../constants";
 import { MentionElement, TextEditorValue } from "../types";
 
@@ -41,6 +42,8 @@ export const getMentionTags = (
       }),
       {},
     );
+  delete userIdToMentionTagMap[AI_USER.uid];
+  delete userIdToMentionTagMap[AI_PRO_USER.uid];
 
   return Object.values(userIdToMentionTagMap);
 };
