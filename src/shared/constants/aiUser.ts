@@ -1,3 +1,4 @@
+import botAvatarSrc from "@/shared/assets/images/bot-avatar.svg";
 import { Timestamp, User } from "@/shared/models";
 
 export const AI_USER: User = {
@@ -5,6 +6,7 @@ export const AI_USER: User = {
   firstName: "ai",
   lastName: "",
   country: "",
+  photoURL: botAvatarSrc,
   createdAt: Timestamp.now(),
   updatedAt: Timestamp.now(),
 };
