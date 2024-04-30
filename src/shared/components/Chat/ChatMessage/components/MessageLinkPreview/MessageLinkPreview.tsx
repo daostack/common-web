@@ -26,10 +26,13 @@ const MessageLinkPreview: FC<MessageLinkPreviewProps> = (props) => {
   const urlOrigin = useMemo(() => getUrlOrigin(data.url), [data.url]);
 
   return (
-    <div
+    <a
       className={classNames(styles.container, {
         [styles.containerOtherPerson]: isOtherPersonMessage,
       })}
+      href={data.url}
+      target="_blank"
+      rel="noopener noreferrer"
     >
       <img className={styles.image} src={data.image} alt={data.title} />
       <div className={styles.contentWrapper}>
@@ -41,7 +44,7 @@ const MessageLinkPreview: FC<MessageLinkPreviewProps> = (props) => {
         </span>
         <span className={styles.url}>{urlOrigin}</span>
       </div>
-    </div>
+    </a>
   );
 };
 

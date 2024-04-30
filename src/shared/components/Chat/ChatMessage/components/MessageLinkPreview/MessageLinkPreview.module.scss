@@ -15,6 +15,7 @@ $border-radius: 0.625rem;
   background-color: var(--container-bg);
   border-radius: $border-radius;
   text-align: left;
+  text-decoration: none;
 }
 .containerOtherPerson {
   --container-bg: var(--secondary-background);
