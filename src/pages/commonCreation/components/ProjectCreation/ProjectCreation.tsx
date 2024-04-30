@@ -65,7 +65,11 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
     </CenterWrapper>
   );
 
-  const handleCreatedProject = (data: {
+  const handleCreatedProject = (project: Common) => {
+    fetchGovernance(project.id);
+  };
+
+  const handleProjectCreationFinish = (data: {
     project: Common;
     governance: Governance;
   }) => {
@@ -148,7 +152,7 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
   if (
     !isParentGovernanceFetched ||
     !isCommonMemberFetched ||
-    !isGovernanceFetched
+    (!isGovernanceFetched && isEditing)
   ) {
     return loaderEl;
   }
@@ -206,7 +210,8 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
           initialCommon={initialCommon}
           governance={governance}
           isEditing={isEditing}
-          onFinish={handleCreatedProject}
+          onProjectCreated={handleCreatedProject}
+          onFinish={handleProjectCreationFinish}
           onCancel={handleProjectCreationCancel}
         />
       </div>

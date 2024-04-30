@@ -47,6 +47,7 @@ interface ProjectCreationFormProps {
   initialCommon?: Project;
   governance?: Governance | null;
   isEditing: boolean;
+  onProjectCreated: (project: Common) => void;
   onFinish: (data: { project: Common; governance: Governance }) => void;
   onCancel: () => void;
 }
@@ -106,6 +107,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
     initialCommon,
     governance,
     isEditing,
+    onProjectCreated,
     onFinish,
     onCancel,
   } = props;
@@ -147,6 +149,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   );
   const isLoading =
     isProjectCreationLoading ||
+    (project && !governance) ||
     isCommonUpdateLoading ||
     isNotionIntegrationLoading;
   const error = createProjectError || updateProjectError;
@@ -287,6 +290,12 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
       fetchRootGovernance(rootCommonId);
     }
   }, [rootCommonId]);
+
+  useEffect(() => {
+    if (project) {
+      onProjectCreated(project);
+    }
+  }, [project?.id]);
 
   useEffect(() => {
     const finalProject = project || updatedProject;
