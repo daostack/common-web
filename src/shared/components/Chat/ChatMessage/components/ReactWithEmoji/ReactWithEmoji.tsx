@@ -18,7 +18,7 @@ import { selectTheme } from "@/shared/store/selectors";
 import { ButtonIcon } from "@/shared/ui-kit";
 import { cacheActions } from "@/store/states";
 import { DMChatMessageReaction } from "../../DMChatMessage";
-import { CompactPicker } from "./components /CompactPicker";
+import { CompactPicker } from "./components/CompactPicker";
 import styles from "./ReactWithEmoji.module.scss";
 
 interface ReactWithEmojiProps {
