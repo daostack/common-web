@@ -1,5 +1,7 @@
 export enum FeatureFlags {
   AdvancedSettings = "AdvancedSettings",
+  AiBot = "AiBot",
+  AiBotPro = "AiBotPro",
   UpdateRoles = "UpdateRoles",
 }
 
