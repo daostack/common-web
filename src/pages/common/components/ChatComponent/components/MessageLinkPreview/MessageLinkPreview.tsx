@@ -40,7 +40,7 @@ const MessageLinkPreview: React.FC<MessageLinkPreviewProps> = (props) => {
             {previewData.image && (
               <Image
                 className={styles.image}
-                src={previewData.image}
+                src={previewData.image?.url}
                 alt={previewData.title || ""}
                 placeholderElement={null}
               />

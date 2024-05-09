@@ -3,7 +3,6 @@ import { ApiEndpoint, FirestoreDataSource } from "@/shared/constants";
 import {
   DMUser,
   LinkPreviewData,
-  LinkPreviewDataResponse,
   UnsubscribeFunction,
 } from "@/shared/interfaces";
 import {
@@ -467,15 +466,12 @@ class ChatService {
     options: { cancelToken?: CancelToken } = {},
   ): Promise<LinkPreviewData> => {
     const { cancelToken } = options;
-    const { data } = await Api.get<LinkPreviewDataResponse>(
+    const { data } = await Api.get<LinkPreviewData>(
       `${ApiEndpoint.GetOGLinkMetadata}?${stringify({ url })}`,
       { cancelToken },
     );
 
-    return {
-      ...data,
-      image: data.image?.url,
-    };
+    return data;
   };
 }
 
