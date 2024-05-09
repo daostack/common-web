@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { ButtonIcon } from "@/shared/components";
+import { ButtonIcon, Image } from "@/shared/components";
 import { Close2Icon } from "@/shared/icons";
 import { LinkPreviewData } from "@/shared/interfaces";
 import { TextEditorValue } from "@/shared/ui-kit";
@@ -37,21 +37,28 @@ const MessageLinkPreview: React.FC<MessageLinkPreviewProps> = (props) => {
       >
         {previewData && (
           <>
-            <img
-              className={styles.image}
-              src={previewData.image}
-              alt={previewData.title}
-            />
+            {previewData.image && (
+              <Image
+                className={styles.image}
+                src={previewData.image}
+                alt={previewData.title || ""}
+                placeholderElement={null}
+              />
+            )}
             <div className={styles.infoContainer}>
-              <span className={styles.title} title={previewData.title}>
-                {previewData.title}
-              </span>
-              <span
-                className={styles.description}
-                title={previewData.description}
-              >
-                {previewData.description}
-              </span>
+              {previewData.title && (
+                <span className={styles.title} title={previewData.title}>
+                  {previewData.title}
+                </span>
+              )}
+              {previewData.description && (
+                <span
+                  className={styles.description}
+                  title={previewData.description}
+                >
+                  {previewData.description}
+                </span>
+              )}
               <span className={styles.url}>{previewData.url}</span>
             </div>
           </>
