@@ -118,7 +118,6 @@ export default function ChatMessage({
   }>();
   const [isEditMode, setEditMode] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [showReactWithEmoji, setShowReactWithEmoji] = useState(false);
   const [isMessageEditLoading, setIsMessageEditLoading] = useState(false);
   const isTabletView = useIsTabletView();
   const isUserDiscussionMessage =
@@ -408,7 +407,7 @@ export default function ChatMessage({
 
   const emojiButton = (
     <ReactWithEmoji
-      showEmojiButton={showReactWithEmoji}
+      emojiButtonClassName={styles.emojiButton}
       discussionId={discussionMessage.discussionId}
       discussionMessageId={discussionMessage.id}
       className={
@@ -425,8 +424,6 @@ export default function ChatMessage({
       <li
         id={discussionMessage.id}
         className={classNames(styles.container, className)}
-        onMouseEnter={() => setShowReactWithEmoji(true)}
-        onMouseLeave={() => setShowReactWithEmoji(false)}
       >
         <div
           className={classNames(styles.message, {
@@ -556,7 +553,11 @@ export default function ChatMessage({
                 )}
 
                 {!isSystemMessage && isUserDiscussionMessage && (
-                  <Reactions reactions={discussionMessage.reactionCounts} />
+                  <Reactions
+                    reactions={discussionMessage.reactionCounts}
+                    discussionMessageId={discussionMessage.id}
+                    users={users}
+                  />
                 )}
               </div>
             </>

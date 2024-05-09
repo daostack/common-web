@@ -42,7 +42,7 @@ import {
   ROUTE_PATHS,
 } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
-import { useQueryParams } from "@/shared/hooks";
+import { useMemoizedFunction, useQueryParams } from "@/shared/hooks";
 import { useGovernanceByCommonId } from "@/shared/hooks/useCases";
 import { useDisableOverscroll } from "@/shared/hooks/useDisableOverscroll";
 import { useIsTabletView } from "@/shared/hooks/viewport";
@@ -458,6 +458,14 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     setShouldAllowChatAutoOpen(true);
   };
 
+  const getItemsContainerEl = useCallback(() => {
+    const containerEl = isTabletView
+      ? window
+      : document.getElementsByClassName("Pane Pane1")[0];
+
+    return containerEl || null;
+  }, [isTabletView]);
+
   const onDMClick =
     !isTabletView && dmChatChannelItemForProfile ? handleDMClick : undefined;
 
@@ -533,20 +541,13 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     }
   };
 
-  const handleFeedItemClick = onFeedItemSelect
-    ? handleFeedItemClickExternal
-    : handleFeedItemClickInternal;
-  const feedItemClickRef = useRef(handleFeedItemClick);
-  feedItemClickRef.current = handleFeedItemClick;
-
-  const handleFeedItemClickMemoized = useCallback<typeof handleFeedItemClick>(
-    (...args) => {
-      feedItemClickRef.current(...args);
-    },
-    [feedItemClickRef],
+  const handleFeedItemClick = useMemoizedFunction(
+    onFeedItemSelect
+      ? handleFeedItemClickExternal
+      : handleFeedItemClickInternal,
   );
 
-  const handleInternalLinkClick = useCallback(
+  const handleInternalLinkClick = useMemoizedFunction(
     (data: InternalLinkData) => {
       const feedPageParams = getParamsFromOneOfRoutes<{ id: string }>(
         data.pathname,
@@ -575,19 +576,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
         }),
       );
     },
-    [getCommonPagePath, handleFeedItemClick],
-  );
-
-  const internalLinkClickRef = useRef(handleInternalLinkClick);
-  internalLinkClickRef.current = handleInternalLinkClick;
-
-  const handleInternalLinkClickMemoized = useCallback<
-    typeof handleInternalLinkClick
-  >(
-    (...args) => {
-      internalLinkClickRef.current(...args);
-    },
-    [internalLinkClickRef],
   );
 
   const handleRefresh = async () => {
@@ -615,8 +603,8 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       getLastMessage,
       getNonAllowedItems,
       onUserSelect: handleUserWithCommonClick,
-      onFeedItemClick: handleFeedItemClickMemoized,
-      onInternalLinkClick: handleInternalLinkClickMemoized,
+      onFeedItemClick: handleFeedItemClick,
+      onInternalLinkClick: handleInternalLinkClick,
       onActiveItemDataChange: handleActiveFeedItemDataChange,
     }),
     [
@@ -626,8 +614,8 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       getLastMessage,
       getNonAllowedItems,
       handleUserWithCommonClick,
-      handleFeedItemClickMemoized,
-      handleInternalLinkClickMemoized,
+      handleFeedItemClick,
+      handleInternalLinkClick,
       handleActiveFeedItemDataChange,
     ],
   );
@@ -750,8 +738,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       setExpandedFeedItemId,
       setActiveItem,
       setShouldAllowChatAutoOpen,
+      getItemsContainerEl,
     }),
-    [setActiveItem],
+    [setActiveItem, getItemsContainerEl],
   );
 
   const pageContentStyles = {

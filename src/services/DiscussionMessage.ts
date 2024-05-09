@@ -185,20 +185,28 @@ class DiscussionMessageService {
     await Api.post(ApiEndpoint.DeleteDiscussionMessageReaction, payload);
   };
 
-  public getUserReaction = async (
+  public getUsersReactions = async (
     discussionMsgId: string,
-    userId: string,
-  ): Promise<UserReaction | null> =>
-    (
-      await firebase
-        .firestore()
-        .collection(Collection.DiscussionMessage)
-        .doc(discussionMsgId)
-        .collection(Collection.Reactions)
-        .withConverter(getUserReactionConverter)
-        .doc(userId)
-        .get()
-    ).data() || null;
+    userId?: string,
+    fetchAll?: boolean,
+  ): Promise<UserReaction[] | null | undefined> => {
+    const reactionsRef = firebase
+      .firestore()
+      .collection(Collection.DiscussionMessage)
+      .doc(discussionMsgId)
+      .collection(Collection.Reactions)
+      .withConverter(getUserReactionConverter);
+
+    if (fetchAll) {
+      const snapshot = await reactionsRef.get();
+      const reactions = snapshot.docs.map((doc) => doc.data());
+      return reactions;
+    }
+
+    const doc = await reactionsRef.doc(userId).get();
+    const reaction = doc.exists ? doc.data() : null;
+    return reaction ? [reaction] : null;
+  };
 }
 
 export default new DiscussionMessageService();

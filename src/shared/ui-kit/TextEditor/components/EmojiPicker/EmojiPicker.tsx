@@ -16,7 +16,6 @@ export interface EmojiPickerProps {
   onEmojiSelect: (emoji: Skin) => void;
   isMessageSent?: boolean;
   onToggleIsMessageSent?: () => void;
-  isRtl: boolean;
 }
 
 const EmojiPicker: FC<EmojiPickerProps> = (props) => {
@@ -26,7 +25,6 @@ const EmojiPicker: FC<EmojiPickerProps> = (props) => {
     onEmojiSelect,
     isMessageSent,
     onToggleIsMessageSent,
-    isRtl,
   } = props;
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef(null);
@@ -64,9 +62,6 @@ const EmojiPicker: FC<EmojiPickerProps> = (props) => {
         <div
           className={classNames(
             pickerContainerClassName || styles.pickerContainer,
-            {
-              [styles.pickerContainerRtl]: isRtl,
-            },
           )}
         >
           <Picker

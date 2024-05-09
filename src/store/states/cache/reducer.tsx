@@ -238,6 +238,11 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
         };
       }),
   )
+  .handleAction(actions.resetDiscussionMessagesStates, (state) =>
+    produce(state, (nextState) => {
+      nextState.discussionMessagesStates = {};
+    }),
+  )
   .handleAction(
     actions.addDiscussionMessageByDiscussionId,
     (state, { payload }) =>
