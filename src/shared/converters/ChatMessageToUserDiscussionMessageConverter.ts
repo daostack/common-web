@@ -27,7 +27,8 @@ class ChatMessageToUserDiscussionMessageConverter extends Converter<
     owner: chatMessage.owner,
     parentMessage: chatMessage.parentMessage || null,
     hasUncheckedItems: chatMessage.hasUncheckedItems,
-    reactionCounts: chatMessage?.reactionCounts,
+    reactionCounts: chatMessage.reactionCounts,
+    linkPreviews: chatMessage.linkPreviews,
   });
 
   public toBaseEntity = (
@@ -52,6 +53,7 @@ class ChatMessageToUserDiscussionMessageConverter extends Converter<
     owner: discussionMessage.owner,
     parentMessage: discussionMessage.parentMessage,
     hasUncheckedItems: discussionMessage.hasUncheckedItems,
+    linkPreviews: discussionMessage.linkPreviews,
   });
 }
 

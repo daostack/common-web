@@ -13,7 +13,7 @@ import { extractUrls } from "@/shared/utils";
 
 interface Options {
   message: TextEditorValue;
-  onLinkPreviewDataChange: (data: LinkPreviewData | null) => void;
+  onLinkPreviewDataChange: (data?: LinkPreviewData | null) => void;
 }
 
 interface Return {
@@ -21,6 +21,7 @@ interface Return {
   urls: string[];
   previewDataState: LoadingState<LinkPreviewData | null>;
   onPreviewDataReset: () => void;
+  onPreviewDataHide: () => void;
 }
 
 export const useLinkPreviewData = (options: Options): Return => {
@@ -34,7 +35,7 @@ export const useLinkPreviewData = (options: Options): Return => {
     [message],
   );
 
-  const handlePreviewDataReset = useCallback(() => {
+  const handlePreviewDataReset = useCallback((shouldFullyReset = false) => {
     if (cancelTokenRef.current) {
       cancelTokenRef.current.cancel();
       cancelTokenRef.current = null;
@@ -45,8 +46,13 @@ export const useLinkPreviewData = (options: Options): Return => {
       fetched: false,
       data: null,
     });
-    onLinkPreviewDataChange(null);
+    onLinkPreviewDataChange(shouldFullyReset ? undefined : null);
   }, []);
+
+  const handlePreviewDataHide = useCallback(
+    () => handlePreviewDataReset(false),
+    [handlePreviewDataReset],
+  );
 
   useEffect(() => {
     if (urls.length === 0) {
@@ -62,10 +68,7 @@ export const useLinkPreviewData = (options: Options): Return => {
 
   useEffect(() => {
     if (!currentUrl) {
-      if (previewDataState.loading || previewDataState.data) {
-        handlePreviewDataReset();
-      }
-
+      handlePreviewDataReset(true);
       return;
     }
 
@@ -112,5 +115,6 @@ export const useLinkPreviewData = (options: Options): Return => {
     urls,
     previewDataState,
     onPreviewDataReset: handlePreviewDataReset,
+    onPreviewDataHide: handlePreviewDataHide,
   };
 };

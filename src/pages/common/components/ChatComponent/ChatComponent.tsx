@@ -221,8 +221,9 @@ export default function ChatComponent({
   const chatInputWrapperRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [isScrolling, setIsScrolling] = useState(false);
-  const [linkPreviewData, setLinkPreviewData] =
-    useState<LinkPreviewData | null>(null);
+  const [linkPreviewData, setLinkPreviewData] = useState<
+    LinkPreviewData | null | undefined
+  >();
   const chatContentContextValue: ChatContentData = useMemo(
     () => ({
       isScrolling,
@@ -451,6 +452,12 @@ export default function ChatComponent({
           tags: mentionTags,
           mentions: mentionTags.map((tag) => tag.value),
           hasUncheckedItems: checkUncheckedItemsInTextEditorValue(message),
+          linkPreviews:
+            typeof linkPreviewData === "undefined"
+              ? undefined
+              : linkPreviewData
+              ? [linkPreviewData]
+              : [],
         };
 
         const filePreviewPayload: CreateDiscussionMessageDtoWithFilesPreview[] =
@@ -566,6 +573,7 @@ export default function ChatComponent({
       discussionId,
       discussionMessages,
       isChatChannel,
+      linkPreviewData,
     ],
   );
 

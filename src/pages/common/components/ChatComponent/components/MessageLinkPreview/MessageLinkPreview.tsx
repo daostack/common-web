@@ -10,13 +10,13 @@ import styles from "./MessageLinkPreview.module.scss";
 
 interface MessageLinkPreviewProps {
   message: TextEditorValue;
-  onLinkPreviewDataChange: (data: LinkPreviewData | null) => void;
+  onLinkPreviewDataChange: (data?: LinkPreviewData | null) => void;
 }
 
 const MessageLinkPreview: React.FC<MessageLinkPreviewProps> = (props) => {
   const { message, onLinkPreviewDataChange } = props;
   const filesPreview = useSelector(selectFilesPreview());
-  const { currentUrl, previewDataState, onPreviewDataReset } =
+  const { currentUrl, previewDataState, onPreviewDataHide } =
     useLinkPreviewData({ message, onLinkPreviewDataChange });
   const { loading: isPreviewDataLoading, data: previewData } = previewDataState;
 
@@ -72,7 +72,7 @@ const MessageLinkPreview: React.FC<MessageLinkPreviewProps> = (props) => {
       </a>
       <ButtonIcon
         className={styles.closeIconWrapper}
-        onClick={onPreviewDataReset}
+        onClick={onPreviewDataHide}
       >
         <Close2Icon />
       </ButtonIcon>
