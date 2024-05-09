@@ -36,6 +36,8 @@ import {
   FeedLayoutEventEmitter,
 } from "@/pages/commonFeed/components/FeedLayout/events";
 import {
+  AI_PRO_USER,
+  AI_USER,
   InboxItemType,
   LOADER_APPEARANCE_DELAY,
   QueryParamKey,
@@ -331,6 +333,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
   const handleUserWithCommonClick = useCallback(
     (userId: string, commonId?: string) => {
+      if ([AI_USER.uid, AI_PRO_USER.uid].includes(userId)) {
+        return;
+      }
+
       userForProfile.setUserForProfileData({
         userId,
         commonId,
@@ -457,6 +463,14 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     setActiveChatItem(null);
     setShouldAllowChatAutoOpen(true);
   };
+
+  const getItemsContainerEl = useCallback(() => {
+    const containerEl = isTabletView
+      ? window
+      : document.getElementsByClassName("Pane Pane1")[0];
+
+    return containerEl || null;
+  }, [isTabletView]);
 
   const onDMClick =
     !isTabletView && dmChatChannelItemForProfile ? handleDMClick : undefined;
@@ -730,8 +744,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       setExpandedFeedItemId,
       setActiveItem,
       setShouldAllowChatAutoOpen,
+      getItemsContainerEl,
     }),
-    [setActiveItem],
+    [setActiveItem, getItemsContainerEl],
   );
 
   const pageContentStyles = {

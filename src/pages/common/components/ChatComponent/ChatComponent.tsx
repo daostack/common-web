@@ -199,7 +199,10 @@ export default function ChatComponent({
     markChatChannelAsSeen,
     chatUsers,
     fetchChatUsers,
-  } = useChatChannelChatAdapter({ participants: chatChannel?.participants });
+  } = useChatChannelChatAdapter({
+    chatChannelId: chatChannel?.id || "",
+    participants: chatChannel?.participants,
+  });
   const users = chatChannel ? chatUsers : discussionUsers;
   const discussionMessages = chatChannel
     ? chatMessagesData.data
@@ -209,7 +212,9 @@ export default function ChatComponent({
   const areInitialMessagesLoading = isChatChannel
     ? chatMessagesData.loading
     : discussionMessagesData.loading;
-  const areMessagesLoading = discussionMessagesData.isBatchLoading;
+  const areMessagesLoading = chatChannel
+    ? chatMessagesData.isBatchLoading
+    : discussionMessagesData.isBatchLoading;
   const currentFilesPreview = useSelector(selectFilesPreview());
   const chatContentRef = useRef<ChatContentRef>(null);
   const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);

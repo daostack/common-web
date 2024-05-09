@@ -300,6 +300,8 @@ const resetGlobalData = (fullReset: boolean) => {
   }
   store.dispatch(inboxActions.resetInbox());
   store.dispatch(cacheActions.resetFeedStates());
+  store.dispatch(cacheActions.resetDiscussionMessagesStates());
+  store.dispatch(cacheActions.resetChatChannelMessagesStates());
   store.dispatch(commonActions.resetCommon());
 };
 

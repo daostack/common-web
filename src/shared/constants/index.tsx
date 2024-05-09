@@ -1,3 +1,4 @@
+export * from "./aiUser";
 export * from "./governance";
 export * from "./authProvider";
 export * from "./commonAction";
