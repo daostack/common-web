@@ -348,6 +348,7 @@ export default function ChatComponent({
               hasUncheckedItems: checkUncheckedItemsInTextEditorValue(
                 parseStringToTextEditorValue(payload.text),
               ),
+              linkPreviews: payload.linkPreviews,
             });
             chatMessagesData.updateChatMessage(response);
 
