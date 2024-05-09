@@ -1,7 +1,9 @@
+import { stringify } from "query-string";
 import { ApiEndpoint, FirestoreDataSource } from "@/shared/constants";
 import {
   DMUser,
   LinkPreviewData,
+  LinkPreviewDataResponse,
   UnsubscribeFunction,
 } from "@/shared/interfaces";
 import {
@@ -465,15 +467,14 @@ class ChatService {
     options: { cancelToken?: CancelToken } = {},
   ): Promise<LinkPreviewData> => {
     const { cancelToken } = options;
+    const { data } = await Api.get<LinkPreviewDataResponse>(
+      `${ApiEndpoint.GetOGLinkMetadata}?${stringify({ url })}`,
+      { cancelToken },
+    );
 
-    // return await Api.get<LinkPreviewData>(ApiEndpoint., { cancelToken });
-    await new Promise((res) => setTimeout(res, 2000));
     return {
-      title: "David Kushner - Mr. Forgettable [Official Music Video]",
-      description:
-        "HEADLINE SHOWSOctober 18th - Brooklyn, NY - https://bit.ly/3SkMxSlOctober 21st - Los Angeles, CA - https://bit.ly/3BPd9UCOctober 26th - Chicago, IL - https:/...",
-      image: "https://i.ytimg.com/vi/7TCncxWNcPU/maxresdefault.jpg",
-      url: "https://youtu.be/7TCncxWNcPU?list=RD7TCncxWNcPU",
+      ...data,
+      image: data.image?.url,
     };
   };
 }
