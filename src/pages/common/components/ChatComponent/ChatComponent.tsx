@@ -528,6 +528,7 @@ export default function ChatComponent({
             ),
             tags: mentionTags,
             hasUncheckedItems: checkUncheckedItemsInTextEditorValue(message),
+            linkPreviews: payload.linkPreviews,
           });
         }
 
