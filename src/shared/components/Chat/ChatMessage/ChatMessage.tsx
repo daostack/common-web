@@ -505,9 +505,12 @@ export default function ChatMessage({
                     />
                   )}
                   <ChatImageGallery gallery={discussionMessage.images ?? []} />
-                  <MessageLinkPreview
-                    isOtherPersonMessage={isNotCurrentUserMessage}
-                  />
+                  {discussionMessage.linkPreviews?.[0] && (
+                    <MessageLinkPreview
+                      linkPreview={discussionMessage.linkPreviews?.[0]}
+                      isOtherPersonMessage={isNotCurrentUserMessage}
+                    />
+                  )}
                   <ChatMessageLinkify
                     onInternalLinkClick={handleInternalLinkClick}
                   >
