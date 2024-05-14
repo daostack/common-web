@@ -189,6 +189,14 @@ export const reducer = createReducer<CommonLayoutState, Action>(initialState)
           return;
         }
 
+        const common = nextState.commons.find(
+          ({ commonId }) => commonId === rootCommonId,
+        );
+
+        if (common) {
+          common.hasMembership = false;
+        }
+
         nextState.projects = nextState.projects.filter(
           (project) => project.listVisibility !== SpaceListVisibility.Members,
         );

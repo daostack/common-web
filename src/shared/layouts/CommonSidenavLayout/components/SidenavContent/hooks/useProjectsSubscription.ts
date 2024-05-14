@@ -1,15 +1,22 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { usePreviousDistinct } from "react-use";
 import { CommonEvent, CommonEventEmitter } from "@/events";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { CommonService, GovernanceService, Logger } from "@/services";
+import {
+  CommonService,
+  GovernanceService,
+  Logger,
+  UserService,
+} from "@/services";
 import { GovernanceActions } from "@/shared/constants";
 import { SpaceListVisibility } from "@/shared/interfaces";
 import { Common } from "@/shared/models";
 import { generateCirclesDataForCommonMember } from "@/shared/utils";
-import { ProjectsStateItem } from "@/store/states";
+import { commonLayoutActions, ProjectsStateItem } from "@/store/states";
 
 interface Data {
+  currentCommonId: string | null;
   activeItemId: string;
   areProjectsFetched: boolean;
   commons: ProjectsStateItem[];
@@ -77,8 +84,21 @@ const getProjectItemFromCommon = async (
 };
 
 export const useProjectsSubscription = (data: Data) => {
-  const { activeItemId, areProjectsFetched, commons, projects } = data;
+  const {
+    currentCommonId,
+    activeItemId,
+    areProjectsFetched,
+    commons,
+    projects,
+  } = data;
+  const dispatch = useDispatch();
   const [updatedItemsQueue, setUpdatedItemsQueue] = useState<Common[][]>([]);
+  const [isCurrentCommonMember, setIsCurrentCommonMember] = useState<
+    boolean | null
+  >(null);
+  const previousIsCurrentCommonMember = usePreviousDistinct(
+    isCurrentCommonMember,
+  );
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const nextUpdatedItems = updatedItemsQueue[0];
@@ -151,4 +171,49 @@ export const useProjectsSubscription = (data: Data) => {
       }
     })();
   }, [nextUpdatedItems]);
+
+  useEffect(() => {
+    setIsCurrentCommonMember(null);
+
+    if (!userId || !currentCommonId) {
+      return;
+    }
+
+    const unsubscribe = UserService.subscribeToUserMemberships(
+      userId,
+      (userMemberships) => {
+        setIsCurrentCommonMember(
+          Boolean(userMemberships && userMemberships.commons[currentCommonId]),
+        );
+      },
+    );
+
+    return unsubscribe;
+  }, [userId, currentCommonId]);
+
+  useEffect(() => {
+    if (
+      typeof isCurrentCommonMember !== "boolean" ||
+      typeof previousIsCurrentCommonMember !== "boolean"
+    ) {
+      return;
+    }
+
+    if (!previousIsCurrentCommonMember && isCurrentCommonMember) {
+      dispatch(commonLayoutActions.clearProjects());
+      return;
+    }
+
+    if (
+      currentCommonId &&
+      previousIsCurrentCommonMember &&
+      !isCurrentCommonMember
+    ) {
+      dispatch(
+        commonLayoutActions.removeMembershipFromProjectsByRootCommonId(
+          currentCommonId,
+        ),
+      );
+    }
+  }, [isCurrentCommonMember]);
 };

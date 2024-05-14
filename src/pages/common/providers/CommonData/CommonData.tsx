@@ -156,9 +156,6 @@ const CommonData: FC<CommonDataProps> = (props) => {
       CommonMemberEventEmitter.emit(CommonMemberEvent.Clear, commonMember.id);
     }
 
-    dispatch(
-      commonLayoutActions.removeMembershipFromProjectsByRootCommonId(common.id),
-    );
     dispatch(projectsActions.removeMembershipFromProjectAndChildren(common.id));
     notify("You’ve successfully left the common");
     handleMenuClose();

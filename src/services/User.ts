@@ -294,6 +294,17 @@ class UserService {
 
     return snapshot.data() || null;
   };
+
+  public subscribeToUserMemberships = (
+    userId: string,
+    callback: (userMemberships: UserMemberships | null) => void,
+  ): UnsubscribeFunction => {
+    const query = this.getUserMembershipsCollection().doc(userId);
+
+    return query.onSnapshot((snapshot) => {
+      callback(snapshot.data() || null);
+    });
+  };
 }
 
 export default new UserService();

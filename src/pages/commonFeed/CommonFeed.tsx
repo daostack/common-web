@@ -50,7 +50,6 @@ import { checkIsAutomaticJoin, checkIsProject } from "@/shared/utils";
 import {
   cacheActions,
   commonActions,
-  commonLayoutActions,
   selectCommonAction,
   selectFeedSearchValue,
   selectIsSearchingFeedItems,
@@ -452,9 +451,6 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
 
   useEffect(() => {
     if (commonMember && isCommonJoinModalOpen) {
-      setTimeout(() => {
-        dispatch(commonLayoutActions.clearProjects());
-      }, 500);
       onCommonJoinModalClose();
     }
   }, [commonMember?.id]);
