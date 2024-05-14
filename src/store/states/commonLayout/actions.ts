@@ -53,6 +53,10 @@ export const clearProjects = createStandardAction(
   CommonLayoutActionType.CLEAR_PROJECTS,
 )();
 
+export const removeMembershipFromProjectsByRootCommonId = createStandardAction(
+  CommonLayoutActionType.REMOVE_MEMBERSHIP_FROM_PROJECTS_BY_ROOT_COMMON_ID,
+)<string | undefined>();
+
 export const markDataAsNotFetched = createStandardAction(
   CommonLayoutActionType.MARK_DATA_AS_NOT_FETCHED,
 )();

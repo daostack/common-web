@@ -17,7 +17,7 @@ import {
   SupportersData,
 } from "@/shared/models";
 import { checkIsProject, getProjectCreationPagePath } from "@/shared/utils";
-import { projectsActions } from "@/store/states";
+import { commonLayoutActions, projectsActions } from "@/store/states";
 import { getDefaultGovDocUrl } from "../../components/CommonTabPanels/components/AboutTab/utils";
 import { JoinProjectModal } from "../../components/JoinProjectModal";
 import { CommonMenuItem } from "../../constants";
@@ -156,6 +156,9 @@ const CommonData: FC<CommonDataProps> = (props) => {
       CommonMemberEventEmitter.emit(CommonMemberEvent.Clear, commonMember.id);
     }
 
+    dispatch(
+      commonLayoutActions.removeMembershipFromProjectsByRootCommonId(common.id),
+    );
     dispatch(projectsActions.removeMembershipFromProjectAndChildren(common.id));
     notify("You’ve successfully left the common");
     handleMenuClose();
@@ -166,6 +169,11 @@ const CommonData: FC<CommonDataProps> = (props) => {
       CommonMemberEventEmitter.emit(CommonMemberEvent.Clear, commonMember.id);
     }
 
+    dispatch(
+      commonLayoutActions.removeMembershipFromProjectsByRootCommonId(
+        common.rootCommonId,
+      ),
+    );
     dispatch(projectsActions.removeMembershipFromProjectAndChildren(common.id));
     notify("You’ve successfully left the space");
     handleMenuClose();

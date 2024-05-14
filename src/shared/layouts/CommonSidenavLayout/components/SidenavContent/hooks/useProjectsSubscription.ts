@@ -30,6 +30,7 @@ const getProjectItemFromCommon = async (
     name: common.name,
     directParent: common.directParent,
     rootCommonId: common.rootCommonId,
+    listVisibility: common.listVisibility,
   };
 
   if (initialItem) {
