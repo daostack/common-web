@@ -19,9 +19,15 @@ export const generatePreviewPayload = (
         (initialCircle) =>
           initialCircle.derivedFrom?.circleId === circle.circleId,
       );
+      const isChangedToSynced = Boolean(
+        initialCircle &&
+          !initialCircle.inheritFrom &&
+          circle.synced &&
+          inheritFrom,
+      );
 
       return {
-        type: initialCircle ? "existing" : "new",
+        type: initialCircle && !isChangedToSynced ? "existing" : "new",
         circleId: initialCircle?.id || circle.circleId,
         ...(circle.synced &&
           inheritFrom && {
