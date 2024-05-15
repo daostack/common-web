@@ -135,7 +135,7 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
   );
 
   useEffect(() => {
-    fetchCommonMember(commonId, {}, true);
+    fetchCommonMember(commonId);
     fetchCommon(commonId);
     fetchGovernance(commonId);
   }, [commonId]);
