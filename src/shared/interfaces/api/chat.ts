@@ -1,4 +1,4 @@
-import { ChatMessage } from "@/shared/models";
+import { ChatMessage, LinkPreview } from "@/shared/models";
 import { SynchronizedDate } from "../SynchronizedDate";
 import { InfoItem } from "./discussionMessages";
 
@@ -21,6 +21,7 @@ export interface SendChatMessageDto {
   mentions?: string[];
   parentId?: string;
   hasUncheckedItems: boolean;
+  linkPreviews?: LinkPreview[];
 }
 
 export interface UpdateChatMessageDto {

@@ -44,6 +44,20 @@ export interface ParentDiscussionMessage {
   createdAt: Timestamp;
 }
 
+export interface LinkPreview {
+  hidden?: boolean;
+  title?: string;
+  description?: string;
+  image?: {
+    height?: number;
+    type?: string;
+    url: string;
+    width?: number;
+    alt?: string;
+  };
+  url: string;
+}
+
 interface BaseDiscussionMessage extends BaseEntity {
   discussionId: string;
   commonId: string;
@@ -59,6 +73,7 @@ interface BaseDiscussionMessage extends BaseEntity {
   editedAt?: Timestamp;
   ownerType: DiscussionMessageOwnerType;
   hasUncheckedItems: boolean;
+  linkPreviews?: LinkPreview[];
 }
 
 export interface ReactionCounts {

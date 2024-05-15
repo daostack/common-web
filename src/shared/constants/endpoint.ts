@@ -73,4 +73,5 @@ export const ApiEndpoint = {
     `/chat/message/${chatMessageId}/seen`,
   CreateChatMessageReaction: "/chat/create-message-reaction",
   DeleteChatMessageReaction: "/chat/delete-message-reaction",
+  GetOGLinkMetadata: "/metadata/og-link",
 };

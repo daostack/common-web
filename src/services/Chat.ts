@@ -1,5 +1,10 @@
+import { stringify } from "query-string";
 import { ApiEndpoint, FirestoreDataSource } from "@/shared/constants";
-import { DMUser, UnsubscribeFunction } from "@/shared/interfaces";
+import {
+  DMUser,
+  LinkPreviewData,
+  UnsubscribeFunction,
+} from "@/shared/interfaces";
 import {
   CreateChatMessageReaction,
   DeleteChatMessageReaction,
@@ -454,6 +459,19 @@ class ChatService {
     const doc = await reactionsRef.doc(userId).get();
     const reaction = doc.exists ? doc.data() : null;
     return reaction ? [reaction] : null;
+  };
+
+  public getLinkPreviewData = async (
+    url: string,
+    options: { cancelToken?: CancelToken } = {},
+  ): Promise<LinkPreviewData> => {
+    const { cancelToken } = options;
+    const { data } = await Api.get<LinkPreviewData>(
+      `${ApiEndpoint.GetOGLinkMetadata}?${stringify({ url })}`,
+      { cancelToken },
+    );
+
+    return data;
   };
 }
 

@@ -26,6 +26,7 @@ import { HotKeys } from "@/shared/constants/keyboardKeys";
 import { ChatMessageToUserDiscussionMessageConverter } from "@/shared/converters";
 import { useZoomDisabling, useImageSizeCheck } from "@/shared/hooks";
 import { ArrowInCircleIcon, PlusIcon, SendIcon } from "@/shared/icons";
+import { LinkPreviewData } from "@/shared/interfaces";
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 import {
   ChatChannel,
@@ -69,6 +70,7 @@ import { ChatContentContext, ChatContentData } from "../CommonContent/context";
 import {
   ChatContent,
   ChatContentRef,
+  MessageLinkPreview,
   MessageReply,
   ChatFilePreview,
 } from "./components";
@@ -219,6 +221,9 @@ export default function ChatComponent({
   const chatInputWrapperRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [isScrolling, setIsScrolling] = useState(false);
+  const [linkPreviewData, setLinkPreviewData] = useState<
+    LinkPreviewData | null | undefined
+  >();
   const chatContentContextValue: ChatContentData = useMemo(
     () => ({
       isScrolling,
@@ -343,6 +348,7 @@ export default function ChatComponent({
               hasUncheckedItems: checkUncheckedItemsInTextEditorValue(
                 parseStringToTextEditorValue(payload.text),
               ),
+              linkPreviews: payload.linkPreviews,
             });
             chatMessagesData.updateChatMessage(response);
 
@@ -447,6 +453,12 @@ export default function ChatComponent({
           tags: mentionTags,
           mentions: mentionTags.map((tag) => tag.value),
           hasUncheckedItems: checkUncheckedItemsInTextEditorValue(message),
+          linkPreviews:
+            typeof linkPreviewData === "undefined"
+              ? undefined
+              : linkPreviewData
+              ? [linkPreviewData]
+              : [],
         };
 
         const filePreviewPayload: CreateDiscussionMessageDtoWithFilesPreview[] =
@@ -517,6 +529,7 @@ export default function ChatComponent({
             ),
             tags: mentionTags,
             hasUncheckedItems: checkUncheckedItemsInTextEditorValue(message),
+            linkPreviews: payload.linkPreviews,
           });
         }
 
@@ -562,6 +575,7 @@ export default function ChatComponent({
       discussionId,
       discussionMessages,
       isChatChannel,
+      linkPreviewData,
     ],
   );
 
@@ -852,6 +866,10 @@ export default function ChatComponent({
         </div>
       )}
       <MessageReply users={users} />
+      <MessageLinkPreview
+        message={message}
+        onLinkPreviewDataChange={setLinkPreviewData}
+      />
       <ChatFilePreview />
       <div
         ref={chatInputWrapperRef}
