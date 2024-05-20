@@ -3,14 +3,9 @@ import { useMeasure } from "react-use";
 import classNames from "classnames";
 import { ButtonLink, Image } from "@/shared/components";
 import { useModal } from "@/shared/hooks";
-import { useIsTabletView } from "@/shared/hooks/viewport";
 import { CommonLink } from "@/shared/models";
 import { FilePrefix, ResizeType, getResizedFileUrl } from "@/shared/utils";
-import {
-  ImageGalleryModal,
-  ImageGalleryMobileModal,
-  GalleryMainContent,
-} from "./components";
+import { ImageGalleryModal, GalleryMainContent } from "./components";
 import styles from "./ImageGallery.module.scss";
 
 interface ImageGalleryProps {
@@ -21,7 +16,6 @@ interface ImageGalleryProps {
 
 const ImageGallery: FC<ImageGalleryProps> = (props) => {
   const { gallery, videoSrc, useResizedFile = true } = props;
-  const isTabletView = useIsTabletView();
   const [videoContainerRef, { width: videoContainerWidth }] = useMeasure();
   const { isShowing, onOpen, onClose } = useModal(false);
   const images = (gallery || []).map(({ value }) =>
@@ -97,21 +91,13 @@ const ImageGallery: FC<ImageGalleryProps> = (props) => {
           See all gallery
         </ButtonLink>
       )}
-      {isTabletView ? (
-        <ImageGalleryMobileModal
-          images={images}
-          isShowing={isShowing}
-          onClose={onClose}
-          videoSrc={videoSrc}
-        />
-      ) : (
-        <ImageGalleryModal
-          isShowing={isShowing}
-          onClose={onClose}
-          images={images}
-          videoSrc={videoSrc}
-        />
-      )}
+
+      <ImageGalleryModal
+        isShowing={isShowing}
+        onClose={onClose}
+        images={images}
+        videoSrc={videoSrc}
+      />
     </div>
   );
 };
