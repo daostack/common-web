@@ -260,24 +260,31 @@ export const useCommonMember = (options: Options = {}): Return => {
       CommonService.subscribeToCommonMemberByCommonIdAndUserId(
         commonId,
         userId,
-        (commonMember, { isAdded, isRemoved }) => {
+        (subscriptionData) => {
           try {
             let data: State["data"] = null;
 
-            if (isAdded) {
-              CommonEventEmitter.emit(CommonEvent.ProjectUpdated, {
-                commonId,
-                hasMembership: true,
-              });
-            }
-            if (!isRemoved) {
-              data = {
-                ...commonMember,
-                ...generateCirclesDataForCommonMember(
-                  governanceCircles,
-                  commonMember.circleIds,
-                ),
-              };
+            if (subscriptionData) {
+              const {
+                commonMember,
+                statuses: { isAdded, isRemoved },
+              } = subscriptionData;
+
+              if (isAdded) {
+                CommonEventEmitter.emit(CommonEvent.ProjectUpdated, {
+                  commonId,
+                  hasMembership: true,
+                });
+              }
+              if (!isRemoved) {
+                data = {
+                  ...commonMember,
+                  ...generateCirclesDataForCommonMember(
+                    governanceCircles,
+                    commonMember.circleIds,
+                  ),
+                };
+              }
             }
 
             const finalState = {
