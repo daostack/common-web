@@ -1,6 +1,7 @@
 import produce from "immer";
 import { WritableDraft } from "immer/dist/types/types-external";
 import { ActionType, createReducer } from "typesafe-actions";
+import { SpaceListVisibility } from "@/shared/interfaces";
 import { getAllNestedItems } from "../projects/utils";
 import * as actions from "./actions";
 import { CommonLayoutState, ProjectsStateItem } from "./types";
@@ -179,6 +180,32 @@ export const reducer = createReducer<CommonLayoutState, Action>(initialState)
       nextState.areProjectsLoading = false;
       nextState.areProjectsFetched = false;
     }),
+  )
+  .handleAction(
+    actions.removeMembershipFromProjectsByRootCommonId,
+    (state, { payload: rootCommonId }) =>
+      produce(state, (nextState) => {
+        if (!rootCommonId) {
+          return;
+        }
+
+        const common = nextState.commons.find(
+          ({ commonId }) => commonId === rootCommonId,
+        );
+
+        if (common) {
+          common.hasMembership = false;
+        }
+
+        nextState.projects = nextState.projects.filter(
+          (project) => project.listVisibility !== SpaceListVisibility.Members,
+        );
+        nextState.projects.forEach((project) => {
+          if (project.rootCommonId === rootCommonId) {
+            project.hasMembership = false;
+          }
+        });
+      }),
   )
   .handleAction(actions.markDataAsNotFetched, (state) =>
     produce(state, (nextState) => {

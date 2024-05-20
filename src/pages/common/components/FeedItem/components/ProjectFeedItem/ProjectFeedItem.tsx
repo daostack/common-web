@@ -17,7 +17,11 @@ import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { useFeedItemContext } from "@/pages/common";
 import { ButtonIcon } from "@/shared/components";
 import { useRoutesContext } from "@/shared/contexts";
-import { useCommon, useFeedItemFollow } from "@/shared/hooks/useCases";
+import {
+  useCommon,
+  useFeedItemFollow,
+  useGovernanceByCommonId,
+} from "@/shared/hooks/useCases";
 import { OpenIcon, SmallArrowIcon } from "@/shared/icons";
 import { SpaceListVisibility } from "@/shared/interfaces";
 import { CommonFeed } from "@/shared/models";
@@ -47,11 +51,17 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
   const { getCommonPagePath } = useRoutesContext();
   const { renderFeedItemBaseContent, feedCardSettings } = useFeedItemContext();
   const { data: common, fetched: isCommonFetched, fetchCommon } = useCommon();
+  const { data: governance, fetchGovernance } = useGovernanceByCommonId();
   const {
     fetched: isCommonMemberFetched,
     data: commonMember,
     fetchCommonMember,
-  } = useCommonMember();
+  } = useCommonMember({
+    shouldAutoReset: false,
+    withSubscription: true,
+    commonId: item.data.id,
+    governanceCircles: governance?.circles,
+  });
   const feedItemFollow = useFeedItemFollow(
     { feedItemId: item.id, commonId: item.data.id },
     { withSubscription: true },
@@ -127,6 +137,7 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
   useEffect(() => {
     fetchCommonMember(commonId);
     fetchCommon(commonId);
+    fetchGovernance(commonId);
   }, [commonId]);
 
   useEffect(() => {
