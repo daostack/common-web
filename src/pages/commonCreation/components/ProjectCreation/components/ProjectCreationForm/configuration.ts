@@ -1,4 +1,7 @@
+import { FeatureFlags } from "@/shared/constants";
+import { useFeatureFlag } from "@/shared/hooks";
 import {
+  Circles,
   NotionIntegration,
   Roles,
   SpaceAdvancedSettingsIntermediate,
@@ -16,6 +19,8 @@ import styles from "./ProjectCreationForm.module.scss";
 
 interface Options {
   isProject: boolean;
+  governanceId?: string | null;
+  governanceCircles?: Circles;
   roles?: Roles;
   shouldBeUnique?: { existingNames: string[] };
   isImageRequired?: boolean;
@@ -28,6 +33,8 @@ interface Options {
 export const getConfiguration = (options: Options): CreationFormItem[] => {
   const {
     isProject = true,
+    governanceId,
+    governanceCircles,
     roles,
     shouldBeUnique,
     notionIntegration,
@@ -36,6 +43,10 @@ export const getConfiguration = (options: Options): CreationFormItem[] => {
     isImageRequired = false,
     isEditing,
   } = options;
+  const featureFlags = useFeatureFlag();
+  const isAdvancedSettingsEnabled = featureFlags?.get(
+    isEditing ? FeatureFlags.UpdateRoles : FeatureFlags.AdvancedSettings,
+  );
   const type = isProject ? "Space" : "Common";
 
   const items: CreationFormItem[] = [
@@ -141,7 +152,7 @@ export const getConfiguration = (options: Options): CreationFormItem[] => {
 
   /**
    * For now, if we have advancedSettings we don't show the roles editing section.
-   * It's showen only for root commons since advancedSettings is enabled only for spaces.
+   * It's shown only for root commons since advancedSettings is enabled only for spaces.
    */
   if (!advancedSettings && roles) {
     items.push({
@@ -194,15 +205,15 @@ export const getConfiguration = (options: Options): CreationFormItem[] => {
       },
     });
 
-    /**
-     * We don't support editing roles inheritance in the BE yet.
-     */
-    if (!isEditing && advancedSettings) {
+    if (isAdvancedSettingsEnabled && advancedSettings) {
       items.push({
         type: CreationFormItemType.AdvancedSettings,
         props: {
           name: "advancedSettings",
+          governanceId,
+          governanceCircles,
           parentCommonName,
+          shouldSaveChangesImmediately: isEditing,
         },
       });
     }
