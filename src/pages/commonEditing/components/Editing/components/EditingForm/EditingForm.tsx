@@ -12,7 +12,6 @@ import { usePreventReload } from "@/shared/hooks";
 import { useGovernance } from "@/shared/hooks/useCases";
 import { Common, Roles } from "@/shared/models";
 import { Loader, LoaderVariant } from "@/shared/ui-kit";
-import { removeProjectCircles } from "@/shared/utils";
 
 const CreationForm = generateCreationForm<CommonFormValues>();
 
@@ -31,7 +30,7 @@ const EditingForm: FC<EditingFormProps> = (props) => {
     fetchGovernance,
   } = useGovernance();
   const governanceCircles = useMemo(
-    () => removeProjectCircles(Object.values(governance?.circles || {})),
+    () => Object.values(governance?.circles || {}),
     [governance?.circles],
   );
   const {
@@ -43,6 +42,7 @@ const EditingForm: FC<EditingFormProps> = (props) => {
   const roles: Roles = governanceCircles.map((circle) => ({
     circleId: circle.id,
     circleName: circle.name,
+    derivedFrom: circle.derivedFrom,
   }));
   const { initialValues, formItems, onSubmit } = useCommonForm(
     updateCommon,

@@ -57,6 +57,16 @@ export const useCommonPinnedFeedItems = (
     return unsubscribe;
   }, [commonId, idsForListening]);
 
+  useEffect(() => {
+    return () => {
+      dispatch(
+        commonActions.getPinnedFeedItems.cancel(
+          "Cancel pinned feed items fetch on unmount",
+        ),
+      );
+    };
+  }, []);
+
   return {
     ...pinnedFeedItems,
     data: filteredPinnedFeedItems || pinnedFeedItems.data,

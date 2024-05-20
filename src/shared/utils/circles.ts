@@ -1,17 +1,5 @@
 import uniqBy from "lodash/uniqBy";
-import { Circle, CircleType, CommonFeedType } from "../models";
-
-export const removeProjectCircles = <T extends Pick<Circle, "type">>(
-  circles: T[] | null,
-): T[] => {
-  return (circles || []).filter(({ type }) => type !== CircleType.Project);
-};
-
-export const filterProjectCircles = <T extends Pick<Circle, "type">>(
-  circles: T[] | null,
-): T[] => {
-  return (circles || []).filter(({ type }) => type === CircleType.Project);
-};
+import { Circle, CommonFeedType } from "../models";
 
 export const getFilteredByIdCircles = (
   circles: Circle[] | null,
@@ -96,11 +84,10 @@ const sortCirclesByTierAscending = <T extends Pick<Circle, "hierarchy">>(
   });
 
 export const getCirclesWithHighestTier = <
-  T extends Pick<Circle, "id" | "hierarchy" | "type">,
+  T extends Pick<Circle, "id" | "hierarchy">,
 >(
-  outerCircles: T[],
+  circles: T[],
 ): T[] => {
-  const circles = removeProjectCircles(outerCircles);
   const finalCircles = circles.filter((circle) => !circle.hierarchy);
   const circlesWithHierarchy = circles.filter((circle) =>
     Boolean(circle.hierarchy),
@@ -139,11 +126,10 @@ export const getCirclesWithHighestTier = <
 };
 
 export const getCirclesWithLowestTier = <
-  T extends Pick<Circle, "id" | "hierarchy" | "type">,
+  T extends Pick<Circle, "id" | "hierarchy">,
 >(
-  outerCircles: T[],
+  circles: T[],
 ): T[] => {
-  const circles = removeProjectCircles(outerCircles);
   const finalCircles = circles.filter((circle) => !circle.hierarchy);
   const circlesWithHierarchy = circles.filter((circle) =>
     Boolean(circle.hierarchy),
@@ -179,17 +165,17 @@ export const getCirclesWithLowestTier = <
 };
 
 export const addCirclesWithHigherTier = <
-  T extends Pick<Circle, "id" | "hierarchy" | "type">,
+  T extends Pick<Circle, "id" | "hierarchy">,
 >(
   currentCircles: T[],
   allCircles: T[],
   allowedCircleIds: string[] = [],
 ): T[] => {
-  const allowedCurrentCircles = removeProjectCircles(currentCircles).filter(
-    (circle) => allowedCircleIds.includes(circle.id),
+  const allowedCurrentCircles = currentCircles.filter((circle) =>
+    allowedCircleIds.includes(circle.id),
   );
 
-  return removeProjectCircles(allCircles).filter((circleToCheck) => {
+  return allCircles.filter((circleToCheck) => {
     const isInCurrentCircles = allowedCurrentCircles.some(
       (circle) => circle.id === circleToCheck.id,
     );

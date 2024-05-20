@@ -16,7 +16,6 @@ import {
   TextEditorValue,
   parseStringToTextEditorValue,
 } from "@/shared/ui-kit/TextEditor";
-import { removeProjectCircles } from "@/shared/utils";
 import {
   selectDiscussionCreationData,
   selectIsDiscussionCreationLoading,
@@ -79,9 +78,9 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
     };
 
     if (defaultVisibility) {
-      const circles: Circle[] = removeProjectCircles(
-        Object.values(governanceCircles),
-      ).filter((circle) => userCircleIds?.includes(circle.id));
+      const circles: Circle[] = Object.values(governanceCircles).filter(
+        (circle) => userCircleIds?.includes(circle.id),
+      );
 
       const defaultCircle = circles.find(
         (circle) => circle.id === defaultVisibility,

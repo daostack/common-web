@@ -144,7 +144,6 @@ export interface SpaceAdvancedSettings {
 
 export interface Project extends Common {
   directParent: DirectParent;
-  advancedSettings?: SpaceAdvancedSettings;
 }
 
 /**

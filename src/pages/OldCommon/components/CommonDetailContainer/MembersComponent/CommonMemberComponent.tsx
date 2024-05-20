@@ -17,7 +17,6 @@ import {
   getCirclesWithHighestTier,
   getFilteredByIdCircles,
   getUserName,
-  removeProjectCircles,
 } from "@/shared/utils";
 import { selectRecentAssignedCircle } from "@/store/states";
 import { UserAvatar, UserInfoPopup } from "../../../../../shared/components";
@@ -92,10 +91,8 @@ const CommonMember: FC<CommonMemberProps> = ({
     }
   });
 
-  const notMemberCircles = removeProjectCircles(
-    governanceCircles.filter(
-      ({ id }) => !memberCircles.map((circle) => circle.id).includes(id),
-    ),
+  const notMemberCircles = governanceCircles.filter(
+    ({ id }) => !memberCircles.map((circle) => circle.id).includes(id),
   );
 
   const circlesString = getCirclesWithHighestTier(memberCircles)

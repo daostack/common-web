@@ -7,7 +7,6 @@ import { Portal } from "@/shared/ui-kit";
 import {
   getCirclesWithHighestTier,
   getFilteredByIdCircles,
-  removeProjectCircles,
 } from "@/shared/utils";
 import { PopoverPanel, PopoverButton } from "./components";
 import styles from "./CommonMemberInfo.module.scss";
@@ -31,7 +30,7 @@ const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
     circlesMap,
   } = props;
   const governanceCircles = useMemo(
-    () => removeProjectCircles(Object.values(circles || {})),
+    () => Object.values(circles || {}),
     [circles],
   );
   const circleIds: string[] = useMemo(

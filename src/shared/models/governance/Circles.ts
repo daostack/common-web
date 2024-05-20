@@ -45,10 +45,6 @@ export type CircleIndex =
   | 30
   | 31;
 
-export enum CircleType {
-  Project = "project",
-}
-
 export enum CircleAccessLevel {
   Public = "public",
   Inherit = "inherit",
@@ -68,7 +64,14 @@ export type Circle = {
     tier: number;
     exclusions: number[];
   } | null;
-  type?: CircleType | null;
+  derivedFrom?: {
+    governanceId: string;
+    circleId: string;
+  };
+  inheritFrom?: {
+    governanceId: string;
+    circleId: string;
+  };
 };
 
 export type CirclesMap = {

@@ -1,15 +1,15 @@
 export interface InheritFromCircle {
-  governanceId?: string;
-  circleId?: string;
-  circleName?: string;
+  governanceId: string;
+  circleId: string;
+  circleName: string;
   tier?: number;
 }
 
 export interface InheritedCircleIntermediate {
-  circleId?: string;
-  circleName?: string;
-  selected?: boolean;
-  synced?: boolean;
+  circleId: string;
+  circleName: string;
+  selected: boolean;
+  synced: boolean;
   inheritFrom?: InheritFromCircle;
 }
 
