@@ -139,12 +139,13 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
 
   if (
     shouldCheckItemVisibility &&
-    !checkIsItemVisibleForUser(
-      item.circleVisibility,
+    !checkIsItemVisibleForUser({
+      itemCircleVisibility: item.circleVisibility,
       userCircleIds,
-      item.userId,
+      itemUserId: item.userId,
       currentUserId,
-    )
+      itemDataType: item.data.type,
+    })
   ) {
     return null;
   }

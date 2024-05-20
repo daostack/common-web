@@ -1,5 +1,5 @@
 import uniqBy from "lodash/uniqBy";
-import { Circle, CircleType } from "../models";
+import { Circle, CircleType, CommonFeedType } from "../models";
 
 export const removeProjectCircles = <T extends Pick<Circle, "type">>(
   circles: T[] | null,
@@ -211,13 +211,25 @@ export const addCirclesWithHigherTier = <
   });
 };
 
-export const checkIsItemVisibleForUser = (
-  itemCircleVisibility: string[],
-  userCircleIds: string[],
-  itemUserId: string,
-  currentUserId?: string,
-): boolean => {
-  if (itemCircleVisibility.length <= 0) {
+export const checkIsItemVisibleForUser = (data: {
+  itemCircleVisibility: string[];
+  itemDataType: CommonFeedType;
+  userCircleIds: string[];
+  itemUserId: string;
+  currentUserId?: string;
+}): boolean => {
+  const {
+    itemCircleVisibility,
+    itemDataType,
+    userCircleIds,
+    itemUserId,
+    currentUserId,
+  } = data;
+
+  if (
+    itemCircleVisibility.length <= 0 ||
+    itemDataType === CommonFeedType.Project
+  ) {
     return true;
   }
 
