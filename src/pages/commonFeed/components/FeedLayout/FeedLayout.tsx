@@ -36,6 +36,8 @@ import {
   FeedLayoutEventEmitter,
 } from "@/pages/commonFeed/components/FeedLayout/events";
 import {
+  AI_PRO_USER,
+  AI_USER,
   InboxItemType,
   LOADER_APPEARANCE_DELAY,
   QueryParamKey,
@@ -331,6 +333,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
   const handleUserWithCommonClick = useCallback(
     (userId: string, commonId?: string) => {
+      if ([AI_USER.uid, AI_PRO_USER.uid].includes(userId)) {
+        return;
+      }
+
       userForProfile.setUserForProfileData({
         userId,
         commonId,

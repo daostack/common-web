@@ -8,6 +8,7 @@ export { default as useAuthorizedDropdown } from "./useAuthorizedDropdown";
 export { default as useAuthorizedModal } from "./useAuthorizedModal";
 export { useComponentWillUnmount } from "./useComponentWillUnmount";
 export { default as useCountdown } from "./useCountdown";
+export { useFeatureFlag } from "./useFeatureFlag";
 export { useForceUpdate } from "./useForceUpdate";
 export { default as useFullText } from "./useFullText";
 export { useGoBack } from "./useGoBack";

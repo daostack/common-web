@@ -7,6 +7,7 @@ import {
   UserService,
 } from "@/services";
 import { getTextFromTextEditorString } from "@/shared/components/Chat/ChatMessage/utils";
+import { AI_PRO_USER, AI_USER } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
 import { LoadingState } from "@/shared/interfaces";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
@@ -336,6 +337,8 @@ export const useDiscussionMessagesById = ({
             checkIsUserDiscussionMessage(newDiscussionMessage)
           ) {
             const commonMemberMessageOwner = [
+              AI_USER,
+              AI_PRO_USER,
               ...users,
               ...externalCommonUsers,
             ].find((o) => o.uid === d.ownerId);

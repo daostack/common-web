@@ -72,11 +72,6 @@ export const useCommonMember = (options: Options = {}): Return => {
   const dispatch = useDispatch();
   const currentLoadingIdRef = useRef("");
   const isMounted = useIsMounted();
-  const [state, setState] = useState<State>({
-    loading: false,
-    fetched: false,
-    data: null,
-  });
   const [missingCirclesError, setMissingCirclesError] = useState(false);
   const user = useSelector(selectUser());
   const userId = options.userId || user?.uid;
@@ -94,6 +89,7 @@ export const useCommonMember = (options: Options = {}): Return => {
         identificationInfo || { userId: "", commonId: "" },
       ),
     ) || DEFAULT_STATE;
+  const [state, setState] = useState<State>(commonMemberState);
   const commonMemberId = state.data?.id;
 
   const fetchCommonMember = useCallback(
@@ -264,24 +260,31 @@ export const useCommonMember = (options: Options = {}): Return => {
       CommonService.subscribeToCommonMemberByCommonIdAndUserId(
         commonId,
         userId,
-        (commonMember, { isAdded, isRemoved }) => {
+        (subscriptionData) => {
           try {
             let data: State["data"] = null;
 
-            if (isAdded) {
-              CommonEventEmitter.emit(CommonEvent.ProjectUpdated, {
-                commonId,
-                hasMembership: true,
-              });
-            }
-            if (!isRemoved) {
-              data = {
-                ...commonMember,
-                ...generateCirclesDataForCommonMember(
-                  governanceCircles,
-                  commonMember.circleIds,
-                ),
-              };
+            if (subscriptionData) {
+              const {
+                commonMember,
+                statuses: { isAdded, isRemoved },
+              } = subscriptionData;
+
+              if (isAdded) {
+                CommonEventEmitter.emit(CommonEvent.ProjectUpdated, {
+                  commonId,
+                  hasMembership: true,
+                });
+              }
+              if (!isRemoved) {
+                data = {
+                  ...commonMember,
+                  ...generateCirclesDataForCommonMember(
+                    governanceCircles,
+                    commonMember.circleIds,
+                  ),
+                };
+              }
             }
 
             const finalState = {

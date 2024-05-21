@@ -517,11 +517,13 @@ class CommonService {
     commonId: string,
     userId: string,
     callback: (
-      commonMember: CommonMember,
-      statuses: {
-        isAdded: boolean;
-        isRemoved: boolean;
-      },
+      data: {
+        commonMember: CommonMember;
+        statuses: {
+          isAdded: boolean;
+          isRemoved: boolean;
+        };
+      } | null,
     ) => void,
   ): UnsubscribeFunction => {
     const query = commonMembersSubCollection(commonId)
@@ -531,12 +533,17 @@ class CommonService {
     return query.onSnapshot((snapshot) => {
       const docChange = snapshot.docChanges()[0];
 
-      if (docChange) {
-        callback(docChange.doc.data(), {
-          isAdded: docChange.type === DocChange.Added,
-          isRemoved: docChange.type === DocChange.Removed,
-        });
-      }
+      callback(
+        docChange
+          ? {
+              commonMember: docChange.doc.data(),
+              statuses: {
+                isAdded: docChange.type === DocChange.Added,
+                isRemoved: docChange.type === DocChange.Removed,
+              },
+            }
+          : null,
+      );
     });
   };
 

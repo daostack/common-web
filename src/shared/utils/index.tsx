@@ -4,6 +4,7 @@ export * from "./shared";
 export { default as tokenHandler } from "./tokenHandler";
 export * from "./download";
 export * from "./emptyFunction";
+export * from "./extractUrls";
 export * from "./countdown";
 export * from "./firebaseUploadFile";
 export * from "./formatDate";

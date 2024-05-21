@@ -3,7 +3,6 @@ import { LeftArrowIcon } from "@/shared/icons";
 import { MenuItem } from "@/shared/interfaces";
 import { Circle, Governance } from "@/shared/models";
 import { DesktopMenu } from "@/shared/ui-kit";
-import { removeProjectCircles } from "@/shared/utils";
 import { Permission } from "./constants";
 import styles from "./PermissionSelection.module.scss";
 
@@ -24,9 +23,7 @@ const PermissionSelection: FC<PermissionSelectionProps> = (props) => {
     disabled,
   } = props;
 
-  const circleOptions: MenuItem[] = removeProjectCircles(
-    Object.values(governanceCircles),
-  )
+  const circleOptions: MenuItem[] = Object.values(governanceCircles)
     .filter((circle) => userCircleIds?.includes(circle.id))
     .map((circle) => ({
       id: `${Permission.Private}_${circle.id}`,
