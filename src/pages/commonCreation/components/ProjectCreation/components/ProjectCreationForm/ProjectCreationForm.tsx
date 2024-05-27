@@ -332,6 +332,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
             existingNames: existingProjectsNames,
           },
           isEditing,
+          featureFlags,
         })}
         submitButtonText={isEditing ? "Save changes" : "Create Space"}
         disabled={isLoading}
