@@ -28,6 +28,7 @@ interface Options {
   advancedSettings?: SpaceAdvancedSettingsIntermediate;
   parentCommonName?: string;
   isEditing?: boolean;
+  featureFlags?: Map<FeatureFlags, boolean>;
 }
 
 export const getConfiguration = (options: Options): CreationFormItem[] => {
@@ -42,8 +43,8 @@ export const getConfiguration = (options: Options): CreationFormItem[] => {
     parentCommonName,
     isImageRequired = false,
     isEditing,
+    featureFlags,
   } = options;
-  const featureFlags = useFeatureFlag();
   const isAdvancedSettingsEnabled = featureFlags?.get(
     isEditing ? FeatureFlags.UpdateRoles : FeatureFlags.AdvancedSettings,
   );

@@ -10,6 +10,7 @@ import { convertLinksToUploadFiles } from "@/shared/utils";
 import { projectsActions } from "@/store/states";
 import { CommonFormValues, CreationFormItem } from "../components";
 import { getConfiguration } from "../components/ProjectCreation/components";
+import { useFeatureFlag } from "@/shared/hooks";
 
 interface Return {
   initialValues: CommonFormValues;
@@ -51,6 +52,8 @@ export const useCommonForm = (
     [common, roles],
   );
 
+  const featureFlags = useFeatureFlag();
+
   useEffect(() => {
     dispatch(projectsActions.setIsCommonCreationDisabled(true));
 
@@ -80,6 +83,7 @@ export const useCommonForm = (
       isProject: false,
       roles,
       isImageRequired: true,
+      featureFlags
     }),
   };
 };
