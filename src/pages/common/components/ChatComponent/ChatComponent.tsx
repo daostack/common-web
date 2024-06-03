@@ -15,16 +15,22 @@ import { debounce, delay, omit } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { ChatService, DiscussionMessageService, FileService } from "@/services";
+import { Separator } from "@/shared/components";
 import {
   ChatType,
   DiscussionMessageOwnerType,
   GovernanceActions,
   LastSeenEntity,
+  QueryParamKey,
 } from "@/shared/constants";
 import { FILES_ACCEPTED_EXTENSIONS } from "@/shared/constants";
 import { HotKeys } from "@/shared/constants/keyboardKeys";
 import { ChatMessageToUserDiscussionMessageConverter } from "@/shared/converters";
-import { useZoomDisabling, useImageSizeCheck } from "@/shared/hooks";
+import {
+  useZoomDisabling,
+  useImageSizeCheck,
+  useQueryParams,
+} from "@/shared/hooks";
 import { ArrowInCircleIcon, PlusIcon, SendIcon } from "@/shared/icons";
 import { LinkPreviewData } from "@/shared/interfaces";
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
@@ -73,7 +79,9 @@ import {
   MessageLinkPreview,
   MessageReply,
   ChatFilePreview,
+  MessageInfoWithDateList,
 } from "./components";
+import { checkIsLastSeenInPreviousDay } from "./components/ChatContent/utils";
 import { useChatChannelChatAdapter, useDiscussionChatAdapter } from "./hooks";
 import { getLastNonUserMessage } from "./utils";
 import styles from "./ChatComponent.module.scss";
@@ -152,6 +160,9 @@ export default function ChatComponent({
   onInternalLinkClick,
 }: ChatComponentInterface) {
   const dispatch = useDispatch();
+  const queryParams = useQueryParams();
+  const shouldDisplayMessagesOnlyWithUncheckedItems =
+    queryParams[QueryParamKey.Unchecked] === "true";
   const { checkImageSize } = useImageSizeCheck();
   useZoomDisabling();
   const editorRef = useRef<HTMLElement>(null);
@@ -289,7 +300,43 @@ export default function ChatComponent({
       ),
     [discussionMessages],
   );
-  const dateList = useMemo(() => Object.keys(messages), [messages]);
+
+  const dateList: MessageInfoWithDateList = useMemo(() => {
+    const messagesDates = Object.keys(messages);
+    const messagesWithInfo = messagesDates.map((day, dayIndex) => {
+      const date = new Date(Number(day));
+      const currentMessages = shouldDisplayMessagesOnlyWithUncheckedItems
+        ? messages[Number(day)].filter((message) => message.hasUncheckedItems)
+        : messages[Number(day)];
+      const previousDayMessages =
+        messages[Number(messagesDates[dayIndex + 1])] || [];
+      const isLastSeenInPreviousDay = checkIsLastSeenInPreviousDay(
+        previousDayMessages,
+        lastSeenItem?.id,
+      );
+      const isMyMessageFirst =
+        checkIsUserDiscussionMessage(currentMessages[0]) &&
+        currentMessages[0].ownerId === userId;
+      const newSeparatorEl = (
+        <li>
+          <Separator>New</Separator>
+        </li>
+      );
+
+      return {
+        day,
+        date,
+        currentMessages,
+        isLastSeenInPreviousDay,
+        isMyMessageFirst,
+        newSeparatorEl,
+      };
+    });
+
+    return messagesWithInfo;
+  }, [messages]);
+
+  // const dateListWith
 
   const [newMessages, setMessages] = useState<
     CreateDiscussionMessageDtoWithFilesPreview[]
