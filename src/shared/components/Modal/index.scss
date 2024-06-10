@@ -145,6 +145,7 @@ $modal-mobile-padding: 1.5rem;
   .modal__content {
     flex: 1;
     padding: 0 $modal-padding;
+    overflow-y: auto;
 
     @include big-phone {
       padding-left: $modal-mobile-padding;
