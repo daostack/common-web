@@ -94,7 +94,7 @@ const getStaticLinkByChatType = (chatType: ChatType): StaticLinkType => {
 
 const FILE_NAME_LIMIT = 20;
 
-export default function ChatMessage({
+const ChatMessage = ({
   discussionMessage,
   chatType,
   highlighted = false,
@@ -112,7 +112,7 @@ export default function ChatMessage({
   onFeedItemClick,
   onInternalLinkClick,
   isMessageEditAllowed,
-}: ChatMessageProps) {
+}: ChatMessageProps) => {
   const dispatch = useDispatch();
   const { notify } = useNotification();
   const updateMessageRef = useRef<{
@@ -268,7 +268,7 @@ export default function ChatMessage({
     setIsMessageEditLoading(true);
 
     try {
-      const updatedMessage = await ChatService.updateChatMessage({
+      await ChatService.updateChatMessage({
         chatMessageId: discussionMessage.id,
         text: JSON.stringify(message),
         hasUncheckedItems: checkUncheckedItemsInTextEditorValue(message),
@@ -582,4 +582,8 @@ export default function ChatMessage({
       </li>
     </ChatMessageContext.Provider>
   );
-}
+};
+
+const MemoizedChatMessage = React.memo(ChatMessage)
+
+export default MemoizedChatMessage;

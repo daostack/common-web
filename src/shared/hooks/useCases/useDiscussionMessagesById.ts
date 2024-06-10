@@ -1,6 +1,6 @@
-import { useEffect, useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useUpdateEffect } from "react-use";
+import { useDeepCompareEffect, useUpdateEffect } from "react-use";
 import {
   DiscussionMessageService,
   MESSAGES_NUMBER_IN_BATCH,
@@ -309,7 +309,7 @@ export const useDiscussionMessagesById = ({
     );
   };
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     (async () => {
       if (!state.data || state.data.length === 0) {
         setDiscussionMessagesWithOwners([]);
