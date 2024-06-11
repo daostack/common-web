@@ -1,3 +1,5 @@
+import { LinkPreview } from "@/shared/models";
+
 export interface InfoItem {
   value: string;
 }
@@ -15,6 +17,7 @@ export interface CreateDiscussionMessageDto {
   tags?: InfoItem[];
   mentions?: string[];
   hasUncheckedItems: boolean;
+  linkPreviews?: LinkPreview[];
 }
 
 export interface CreateDiscussionMessageReaction {

@@ -2,6 +2,8 @@ export const ApiEndpoint = {
   GovernanceCreate: "/governance/create",
   GovernanceUpdateRules: "/governance/updateRules",
   GovernanceUpdateCircleName: "/governance/circle-name",
+  GovernanceUpdateCircles: "/governance/update-circles",
+  GovernancePreviewCirclesUpdate: "/governance/preview-circles-update",
   AddFounderToMembers: "/commons/add-founder-to-members",
   CreateCommon: "/commons/create",
   UpdateCommon: "/commons/update",
@@ -71,4 +73,5 @@ export const ApiEndpoint = {
     `/chat/message/${chatMessageId}/seen`,
   CreateChatMessageReaction: "/chat/create-message-reaction",
   DeleteChatMessageReaction: "/chat/delete-message-reaction",
+  GetOGLinkMetadata: "/metadata/og-link",
 };

@@ -44,6 +44,20 @@ export interface ParentDiscussionMessage {
   createdAt: Timestamp;
 }
 
+export interface LinkPreview {
+  hidden?: boolean;
+  title?: string;
+  description?: string;
+  image?: {
+    height?: number;
+    type?: string;
+    url: string;
+    width?: number;
+    alt?: string;
+  };
+  url: string;
+}
+
 interface BaseDiscussionMessage extends BaseEntity {
   discussionId: string;
   commonId: string;
@@ -59,6 +73,7 @@ interface BaseDiscussionMessage extends BaseEntity {
   editedAt?: Timestamp;
   ownerType: DiscussionMessageOwnerType;
   hasUncheckedItems: boolean;
+  linkPreviews?: LinkPreview[];
 }
 
 export interface ReactionCounts {
@@ -71,6 +86,12 @@ export interface UserDiscussionMessage extends BaseDiscussionMessage {
   owner?: User | null;
   reactionCounts?: ReactionCounts;
 }
+
+type BotDiscussionMessage = BaseDiscussionMessage & {
+  ownerType: DiscussionMessageOwnerType.Bot;
+  ownerId: string;
+  owner?: User | null;
+};
 
 interface BaseSystemDiscussionMessage extends BaseDiscussionMessage {
   ownerType: DiscussionMessageOwnerType.System;
@@ -195,7 +216,10 @@ export type SystemDiscussionMessage =
   | StreamLinkedTargetSystemMessage
   | StreamLinkedInternalSystemMessage;
 
-export type DiscussionMessage = UserDiscussionMessage | SystemDiscussionMessage;
+export type DiscussionMessage =
+  | UserDiscussionMessage
+  | BotDiscussionMessage
+  | SystemDiscussionMessage;
 
 export type Text = string | JSX.Element;
 
@@ -220,6 +244,11 @@ export const checkIsUserDiscussionMessage = (
   discussionMessage?: BaseDiscussionMessage,
 ): discussionMessage is UserDiscussionMessage =>
   discussionMessage?.ownerType === DiscussionMessageOwnerType.User;
+
+export const checkIsBotDiscussionMessage = (
+  discussionMessage?: BaseDiscussionMessage,
+): discussionMessage is BotDiscussionMessage =>
+  discussionMessage?.ownerType === DiscussionMessageOwnerType.Bot;
 
 export const checkIsSystemDiscussionMessage = (
   discussionMessage?: BaseDiscussionMessage,

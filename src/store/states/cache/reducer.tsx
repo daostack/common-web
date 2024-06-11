@@ -17,6 +17,7 @@ export const INITIAL_CACHE_STATE: CacheState = {
   governanceByCommonIdStates: {},
   discussionStates: {},
   discussionMessagesStates: {},
+  chatChannelMessagesStates: {},
   proposalStates: {},
   feedByCommonIdStates: {},
   feedItemUserMetadataStates: {},
@@ -241,6 +242,78 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
   .handleAction(actions.resetDiscussionMessagesStates, (state) =>
     produce(state, (nextState) => {
       nextState.discussionMessagesStates = {};
+    }),
+  )
+  .handleAction(
+    actions.setChatChannelMessagesStateByChatChannelId,
+    (state, { payload }) =>
+      produce(state, (nextState) => {
+        const { chatChannelId, chatChannelMessages } = payload;
+
+        nextState.chatChannelMessagesStates[chatChannelId] = {
+          loading: false,
+          fetched: true,
+          data: chatChannelMessages,
+        };
+      }),
+  )
+  .handleAction(
+    actions.addChatChannelMessageByChatChannelId,
+    (state, { payload }) =>
+      produce(state, (nextState) => {
+        const { chatChannelId, chatChannelMessage } = payload;
+        const chatChannelMessages =
+          nextState.chatChannelMessagesStates[chatChannelId]?.data ?? [];
+        const messageIndex = chatChannelMessages.findIndex(
+          (item) => item.id === chatChannelMessage.id,
+        );
+
+        if (messageIndex === -1) {
+          chatChannelMessages.push(chatChannelMessage);
+        } else {
+          chatChannelMessages[messageIndex] = { ...chatChannelMessage };
+        }
+
+        nextState.chatChannelMessagesStates[chatChannelId] = {
+          ...(nextState.chatChannelMessagesStates[chatChannelId] || {
+            loading: false,
+            fetched: true,
+          }),
+          data: chatChannelMessages,
+        };
+      }),
+  )
+  .handleAction(actions.updateChatChannelMessages, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const {
+        chatChannelId,
+        updatedChatChannelMessages = [],
+        removedChatChannelMessageIds = [],
+      } = payload;
+      const chatChannelMessages =
+        nextState.chatChannelMessagesStates[chatChannelId]?.data ?? [];
+
+      const finalMessages = unionBy(
+        updatedChatChannelMessages,
+        chatChannelMessages.filter(
+          ({ id }) => !removedChatChannelMessageIds.includes(id),
+        ),
+        "id",
+      ).sort(
+        (a, b) =>
+          a.createdAt.toDate().getTime() - b.createdAt.toDate().getTime(),
+      );
+
+      nextState.chatChannelMessagesStates[chatChannelId] = {
+        loading: false,
+        fetched: true,
+        data: finalMessages,
+      };
+    }),
+  )
+  .handleAction(actions.resetChatChannelMessagesStates, (state) =>
+    produce(state, (nextState) => {
+      nextState.chatChannelMessagesStates = {};
     }),
   )
   .handleAction(

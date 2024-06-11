@@ -113,7 +113,7 @@ class Api {
 }
 
 export const isRequestError = (error: unknown): error is AxiosError => {
-  return axios.isAxiosError(error);
+  return Boolean(error) && axios.isAxiosError(error);
 };
 
 export const getCancelTokenSource = (): CancelTokenSource => {

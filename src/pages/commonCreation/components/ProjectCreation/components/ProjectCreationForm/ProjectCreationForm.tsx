@@ -26,7 +26,6 @@ import {
 import {
   convertLinksToUploadFiles,
   getCirclesWithHighestTier,
-  removeProjectCircles,
 } from "@/shared/utils";
 import { projectsActions, selectCommonLayoutProjects } from "@/store/states";
 import { generateCreationForm, CreationFormRef } from "../../../CreationForm";
@@ -43,10 +42,12 @@ interface ProjectCreationFormProps {
   rootCommonId: string;
   parentCommonId: string;
   parentCommonName?: string;
-  governanceCircles: Circles;
+  parentGovernanceCircles: Circles;
   parentGovernanceId?: string;
   initialCommon?: Project;
+  governance?: Governance | null;
   isEditing: boolean;
+  onProjectCreated: (project: Common) => void;
   onFinish: (data: { project: Common; governance: Governance }) => void;
   onCancel: () => void;
 }
@@ -101,17 +102,18 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
     rootCommonId,
     parentCommonId,
     parentCommonName,
-    governanceCircles,
+    parentGovernanceCircles,
     parentGovernanceId,
     initialCommon,
+    governance,
     isEditing,
+    onProjectCreated,
     onFinish,
     onCancel,
   } = props;
   const dispatch = useDispatch();
   const projects = useSelector(selectCommonLayoutProjects);
   const formRef = useRef<CreationFormRef>(null);
-  const { data: governance, fetchGovernance } = useGovernanceByCommonId();
   const { data: rootGovernance, fetchGovernance: fetchRootGovernance } =
     useGovernanceByCommonId();
   const isParentIsRoot = initialCommon
@@ -147,6 +149,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   );
   const isLoading =
     isProjectCreationLoading ||
+    (project && !governance) ||
     isCommonUpdateLoading ||
     isNotionIntegrationLoading;
   const error = createProjectError || updateProjectError;
@@ -157,50 +160,63 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
     }
   }, [initialCommon?.id]);
 
-  const nonProjectCircles = useMemo(
-    () => removeProjectCircles(Object.values(governanceCircles || {})),
-    [governance?.circles || governanceCircles],
-  );
-  const roles: Roles = nonProjectCircles.map((circle) => ({
-    circleId: circle.id,
-    circleName: circle.name,
-    tier: circle.hierarchy?.tier,
-  }));
-  const nonProjectRootCircles = useMemo(
-    () => removeProjectCircles(Object.values(rootGovernance?.circles || {})),
-    [rootGovernance?.circles],
-  );
-  const rootCommonRoles: Roles = isParentIsRoot
-    ? roles
-    : nonProjectRootCircles.map((circle) => ({
+  const parentCommonRoles = useMemo<Roles>(
+    () =>
+      Object.values(parentGovernanceCircles || {}).map((circle) => ({
         circleId: circle.id,
         circleName: circle.name,
         tier: circle.hierarchy?.tier,
-      }));
+        derivedFrom: circle.derivedFrom,
+      })),
+    [parentGovernanceCircles],
+  );
+  const rootCommonRoles = useMemo<Roles>(
+    () =>
+      isParentIsRoot
+        ? parentCommonRoles
+        : Object.values(rootGovernance?.circles || {}).map((circle) => ({
+            circleId: circle.id,
+            circleName: circle.name,
+            tier: circle.hierarchy?.tier,
+            derivedFrom: circle.derivedFrom,
+          })),
+    [isParentIsRoot, parentCommonRoles, rootGovernance?.circles],
+  );
 
   const advancedSettings: SpaceAdvancedSettingsIntermediate = useMemo(() => {
-    if (initialCommon?.advancedSettings) {
-      return initialCommon?.advancedSettings;
-    }
+    const initialCircles = Object.values(governance?.circles || {});
 
     return {
       permissionGovernanceId: isParentIsRoot
         ? parentGovernanceId
         : rootGovernance?.id,
-      circles: rootCommonRoles.map((role, index) => {
+      circles: rootCommonRoles.map((rootCommonRole, index) => {
+        const initialCircle = initialCircles.find(
+          (circle) => circle.derivedFrom?.circleId === rootCommonRole.circleId,
+        );
+        const isSelected = Boolean(!isEditing || initialCircle);
+        const roleForInheritance =
+          parentCommonRoles.find(
+            (parentRole) =>
+              parentRole.circleId === initialCircle?.inheritFrom?.circleId,
+          ) || parentCommonRoles[index];
+
         return {
-          circleId: role.circleId,
-          circleName: `${role.circleName}s`,
-          selected: true,
-          synced: index === 0 ? true : false,
-          ...(roles[index]?.circleId && {
-            inheritFrom: {
-              governanceId: parentGovernanceId,
-              circleId: roles[index]?.circleId,
-              circleName: `${roles[index]?.circleName}s`,
-              tier: roles[index]?.tier,
-            },
-          }),
+          circleId: rootCommonRole.circleId,
+          circleName: `${rootCommonRole.circleName}s`,
+          selected: isSelected,
+          synced: Boolean(
+            isEditing ? initialCircle?.inheritGovernanceId : index === 0,
+          ),
+          ...(parentGovernanceId &&
+            roleForInheritance && {
+              inheritFrom: {
+                governanceId: parentGovernanceId,
+                circleId: roleForInheritance.circleId,
+                circleName: `${roleForInheritance.circleName}s`,
+                tier: roleForInheritance.tier,
+              },
+            }),
         };
       }),
     };
@@ -209,21 +225,21 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
     parentGovernanceId,
     rootCommonRoles,
     isParentIsRoot,
-    roles,
-    initialCommon?.advancedSettings,
+    parentCommonRoles,
+    governance?.circles,
+    isEditing,
   ]);
 
   const initialValues = useMemo(
     () =>
       getInitialValues(
-        governanceCircles,
+        parentGovernanceCircles,
         initialCommon,
-        roles,
+        parentCommonRoles,
         advancedSettings,
       ),
-    [governanceCircles, roles, nonProjectCircles, advancedSettings],
+    [parentGovernanceCircles, parentCommonRoles, advancedSettings],
   );
-  const projectId = initialCommon?.id || project?.id;
 
   /**
    * Existing projects names under the same direct parent only.
@@ -270,16 +286,16 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   }, []);
 
   useEffect(() => {
-    if (projectId) {
-      fetchGovernance(projectId);
-    }
-  }, [projectId]);
-
-  useEffect(() => {
     if (rootCommonId) {
       fetchRootGovernance(rootCommonId);
     }
   }, [rootCommonId]);
+
+  useEffect(() => {
+    if (project) {
+      onProjectCreated(project);
+    }
+  }, [project?.id]);
 
   useEffect(() => {
     const finalProject = project || updatedProject;
@@ -306,7 +322,9 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
         onSubmit={isEditing ? handleProjectUpdate : handleProjectCreate}
         items={getConfiguration({
           isProject: true,
-          roles,
+          governanceId: initialCommon?.governanceId,
+          governanceCircles: governance?.circles,
+          roles: parentCommonRoles,
           notionIntegration,
           advancedSettings,
           parentCommonName,
@@ -314,6 +332,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
             existingNames: existingProjectsNames,
           },
           isEditing,
+          featureFlags,
         })}
         submitButtonText={isEditing ? "Save changes" : "Create Space"}
         disabled={isLoading}

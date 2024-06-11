@@ -149,28 +149,13 @@ class CommonFeedService {
     }
 
     const filteredFeedItems = feedItems
-      .map((item) => {
-        if (
-          pinnedFeedItems.some(
-            (pinnedFeedItem) => pinnedFeedItem.feedObjectId === item.id,
-          )
-        ) {
-          return null;
-        }
-        if (item.circleVisibility.length === 0) {
-          return item;
-        }
-        if (
-          commonMember?.circleIds &&
-          item.circleVisibility.some((circleId) =>
-            commonMember.circleIds.includes(circleId),
-          )
-        ) {
-          return item;
-        }
-
-        return null;
-      })
+      .map((item) =>
+        pinnedFeedItems.some(
+          (pinnedFeedItem) => pinnedFeedItem.feedObjectId === item.id,
+        )
+          ? null
+          : item,
+      )
       .filter(checkIsFeedItemDefined);
     const firstDocTimestamp = filteredFeedItems[0]?.updatedAt || null;
     const lastDocTimestamp =

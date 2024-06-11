@@ -11,6 +11,7 @@ import {
 import { User, UserDiscussionMessage } from "@/shared/models";
 
 interface Options {
+  chatChannelId: string;
   participants?: string[];
 }
 
@@ -30,8 +31,8 @@ interface Return {
 }
 
 export const useChatChannelChatAdapter = (options: Options): Return => {
-  const { participants = [] } = options;
-  const chatMessagesData = useChatMessages();
+  const { chatChannelId, participants = [] } = options;
+  const chatMessagesData = useChatMessages(chatChannelId);
   const { markChatMessageAsSeen } = useMarkChatMessageAsSeen();
   const { markChatChannelAsSeen } = useUpdateChatChannelSeenState();
   const { fetchUsers: fetchDMUsers, data: dmUsers } = useUsersByIds();

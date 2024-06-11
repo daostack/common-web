@@ -1,0 +1,51 @@
+@import "../../../../../../../constants";
+@import "../../../../../../../styles/mixins";
+@import "../../../../../../../styles/sizes";
+
+.modal {
+  max-width: 34.5rem;
+
+  .modalHeader {
+    padding-bottom: 1rem;
+    justify-content: flex-start;
+  }
+
+  .modalContent {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.loader {
+  margin: 0 auto;
+}
+
+.changesList {
+  margin: 1rem 0;
+  padding: 1.5rem;
+  background-color: $c-light-gray-3;
+  border-radius: 0.5rem;
+  list-style-type: none;
+
+  & * {
+    margin-bottom: 1.125rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.confirmationCheckbox {
+  margin-bottom: 3.125rem;
+}
+
+.noChangesText {
+  margin-bottom: 3.125rem;
+}
+
+.buttonsWrapper {
+  @include flex-list-with-gap(1.5rem);
+
+  justify-content: flex-end;
+}

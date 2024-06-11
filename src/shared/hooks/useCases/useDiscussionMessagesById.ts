@@ -1,12 +1,13 @@
-import { useEffect, useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useUpdateEffect } from "react-use";
+import { useDeepCompareEffect, useUpdateEffect } from "react-use";
 import {
   DiscussionMessageService,
   MESSAGES_NUMBER_IN_BATCH,
   UserService,
 } from "@/services";
 import { getTextFromTextEditorString } from "@/shared/components/Chat/ChatMessage/utils";
+import { AI_PRO_USER, AI_USER } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
 import { LoadingState } from "@/shared/interfaces";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
@@ -308,7 +309,7 @@ export const useDiscussionMessagesById = ({
     );
   };
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     (async () => {
       if (!state.data || state.data.length === 0) {
         setDiscussionMessagesWithOwners([]);
@@ -336,6 +337,8 @@ export const useDiscussionMessagesById = ({
             checkIsUserDiscussionMessage(newDiscussionMessage)
           ) {
             const commonMemberMessageOwner = [
+              AI_USER,
+              AI_PRO_USER,
               ...users,
               ...externalCommonUsers,
             ].find((o) => o.uid === d.ownerId);

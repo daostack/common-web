@@ -15,17 +15,24 @@ import { debounce, delay, omit } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { ChatService, DiscussionMessageService, FileService } from "@/services";
+import { Separator } from "@/shared/components";
 import {
   ChatType,
   DiscussionMessageOwnerType,
   GovernanceActions,
   LastSeenEntity,
+  QueryParamKey,
 } from "@/shared/constants";
 import { FILES_ACCEPTED_EXTENSIONS } from "@/shared/constants";
 import { HotKeys } from "@/shared/constants/keyboardKeys";
 import { ChatMessageToUserDiscussionMessageConverter } from "@/shared/converters";
-import { useZoomDisabling, useImageSizeCheck } from "@/shared/hooks";
+import {
+  useZoomDisabling,
+  useImageSizeCheck,
+  useQueryParams,
+} from "@/shared/hooks";
 import { ArrowInCircleIcon, PlusIcon, SendIcon } from "@/shared/icons";
+import { LinkPreviewData } from "@/shared/interfaces";
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 import {
   ChatChannel,
@@ -69,9 +76,12 @@ import { ChatContentContext, ChatContentData } from "../CommonContent/context";
 import {
   ChatContent,
   ChatContentRef,
+  MessageLinkPreview,
   MessageReply,
   ChatFilePreview,
+  MessageInfoWithDateList,
 } from "./components";
+import { checkIsLastSeenInPreviousDay } from "./components/ChatContent/utils";
 import { useChatChannelChatAdapter, useDiscussionChatAdapter } from "./hooks";
 import { getLastNonUserMessage } from "./utils";
 import styles from "./ChatComponent.module.scss";
@@ -150,6 +160,9 @@ export default function ChatComponent({
   onInternalLinkClick,
 }: ChatComponentInterface) {
   const dispatch = useDispatch();
+  const queryParams = useQueryParams();
+  const shouldDisplayMessagesOnlyWithUncheckedItems =
+    queryParams[QueryParamKey.Unchecked] === "true";
   const { checkImageSize } = useImageSizeCheck();
   useZoomDisabling();
   const editorRef = useRef<HTMLElement>(null);
@@ -197,7 +210,10 @@ export default function ChatComponent({
     markChatChannelAsSeen,
     chatUsers,
     fetchChatUsers,
-  } = useChatChannelChatAdapter({ participants: chatChannel?.participants });
+  } = useChatChannelChatAdapter({
+    chatChannelId: chatChannel?.id || "",
+    participants: chatChannel?.participants,
+  });
   const users = chatChannel ? chatUsers : discussionUsers;
   const discussionMessages = chatChannel
     ? chatMessagesData.data
@@ -207,13 +223,18 @@ export default function ChatComponent({
   const areInitialMessagesLoading = isChatChannel
     ? chatMessagesData.loading
     : discussionMessagesData.loading;
-  const areMessagesLoading = discussionMessagesData.isBatchLoading;
+  const areMessagesLoading = chatChannel
+    ? chatMessagesData.isBatchLoading
+    : discussionMessagesData.isBatchLoading;
   const currentFilesPreview = useSelector(selectFilesPreview());
   const chatContentRef = useRef<ChatContentRef>(null);
   const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
   const chatInputWrapperRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [isScrolling, setIsScrolling] = useState(false);
+  const [linkPreviewData, setLinkPreviewData] = useState<
+    LinkPreviewData | null | undefined
+  >();
   const chatContentContextValue: ChatContentData = useMemo(
     () => ({
       isScrolling,
@@ -279,7 +300,43 @@ export default function ChatComponent({
       ),
     [discussionMessages],
   );
-  const dateList = useMemo(() => Object.keys(messages), [messages]);
+
+  const dateList: MessageInfoWithDateList = useMemo(() => {
+    const messagesDates = Object.keys(messages);
+    const messagesWithInfo = messagesDates.map((day, dayIndex) => {
+      const date = new Date(Number(day));
+      const currentMessages = shouldDisplayMessagesOnlyWithUncheckedItems
+        ? messages[Number(day)].filter((message) => message.hasUncheckedItems)
+        : messages[Number(day)];
+      const previousDayMessages =
+        messages[Number(messagesDates[dayIndex + 1])] || [];
+      const isLastSeenInPreviousDay = checkIsLastSeenInPreviousDay(
+        previousDayMessages,
+        lastSeenItem?.id,
+      );
+      const isMyMessageFirst =
+        checkIsUserDiscussionMessage(currentMessages[0]) &&
+        currentMessages[0].ownerId === userId;
+      const newSeparatorEl = (
+        <li>
+          <Separator>New</Separator>
+        </li>
+      );
+
+      return {
+        day,
+        date,
+        currentMessages,
+        isLastSeenInPreviousDay,
+        isMyMessageFirst,
+        newSeparatorEl,
+      };
+    });
+
+    return messagesWithInfo;
+  }, [messages]);
+
+  // const dateListWith
 
   const [newMessages, setMessages] = useState<
     CreateDiscussionMessageDtoWithFilesPreview[]
@@ -338,6 +395,7 @@ export default function ChatComponent({
               hasUncheckedItems: checkUncheckedItemsInTextEditorValue(
                 parseStringToTextEditorValue(payload.text),
               ),
+              linkPreviews: payload.linkPreviews,
             });
             chatMessagesData.updateChatMessage(response);
 
@@ -442,6 +500,12 @@ export default function ChatComponent({
           tags: mentionTags,
           mentions: mentionTags.map((tag) => tag.value),
           hasUncheckedItems: checkUncheckedItemsInTextEditorValue(message),
+          linkPreviews:
+            typeof linkPreviewData === "undefined"
+              ? undefined
+              : linkPreviewData
+              ? [linkPreviewData]
+              : [],
         };
 
         const filePreviewPayload: CreateDiscussionMessageDtoWithFilesPreview[] =
@@ -512,6 +576,7 @@ export default function ChatComponent({
             ),
             tags: mentionTags,
             hasUncheckedItems: checkUncheckedItemsInTextEditorValue(message),
+            linkPreviews: payload.linkPreviews,
           });
         }
 
@@ -557,6 +622,7 @@ export default function ChatComponent({
       discussionId,
       discussionMessages,
       isChatChannel,
+      linkPreviewData,
     ],
   );
 
@@ -847,6 +913,10 @@ export default function ChatComponent({
         </div>
       )}
       <MessageReply users={users} />
+      <MessageLinkPreview
+        message={message}
+        onLinkPreviewDataChange={setLinkPreviewData}
+      />
       <ChatFilePreview />
       <div
         ref={chatInputWrapperRef}

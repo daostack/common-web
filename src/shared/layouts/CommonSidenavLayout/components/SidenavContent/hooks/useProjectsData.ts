@@ -89,6 +89,7 @@ export const useProjectsData = (): Return => {
     location.pathname,
   );
   useProjectsSubscription({
+    currentCommonId,
     activeItemId,
     areProjectsFetched,
     commons,
