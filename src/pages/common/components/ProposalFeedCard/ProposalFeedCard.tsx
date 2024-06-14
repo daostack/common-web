@@ -1,6 +1,5 @@
 import React, {
   forwardRef,
-  ReactNode,
   useCallback,
   useEffect,
   useMemo,
@@ -33,45 +32,19 @@ import {
   CommonNotion,
   Governance,
   PredefinedTypes,
-  ResolutionType,
 } from "@/shared/models";
 import { TextEditorValue } from "@/shared/ui-kit";
-import {
-  StaticLinkType,
-  checkIsCountdownState,
-  getUserName,
-  InternalLinkData,
-} from "@/shared/utils";
+import { StaticLinkType, getUserName, InternalLinkData } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
 import { useMenuItems } from "../DiscussionFeedCard/hooks";
-import {
-  FeedCard,
-  FeedCardHeader,
-  FeedCardContent,
-  getVisibilityString,
-  FeedCountdown,
-  FeedCardShare,
-} from "../FeedCard";
+import { FeedCard, FeedCardShare } from "../FeedCard";
 import {
   FeedItemRef,
   GetLastMessageOptions,
   GetNonAllowedItemsOptions,
 } from "../FeedItem";
-import {
-  ProposalFeedVotingInfo,
-  ProposalFeedButtonContainer,
-  UserVoteInfo,
-  ImmediateProposalInfo,
-} from "./components";
-import { ImmediateProposalVoteInfo } from "./components/ImmediateProposalVoteInfo";
+import { ProposalFeedCardContent } from "./components";
 import { useProposalSpecificData } from "./hooks";
-import {
-  checkIsVotingAllowed,
-  checkUserPermissionsToVote,
-  getProposalDescriptionString,
-  getProposalSubtitle,
-  getProposalTypeString,
-} from "./utils";
 
 interface ProposalFeedCardProps {
   commonId?: string;
@@ -402,111 +375,6 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       }
     }, [item.data.lastMessage?.content]);
 
-    const renderContent = (): ReactNode => {
-      if (isLoading) {
-        return null;
-      }
-
-      const isCountdownState = checkIsCountdownState(proposal);
-      const userHasPermissionsToVote = checkUserPermissionsToVote({
-        proposal,
-        commonMember,
-      });
-      const isVotingAllowed =
-        userHasPermissionsToVote &&
-        checkIsVotingAllowed({
-          userVote,
-          proposal,
-        });
-      const circleVisibility = getVisibilityString(
-        governanceCircles,
-        item.circleVisibility,
-        proposal?.type,
-        getUserName(feedItemUser),
-      );
-
-      return (
-        <>
-          <FeedCardHeader
-            avatar={feedItemUser?.photoURL}
-            title={getUserName(feedItemUser)}
-            createdAt={
-              <>
-                Created:{" "}
-                <FeedCountdown
-                  isCountdownFinished
-                  expirationTimestamp={item.createdAt}
-                />
-              </>
-            }
-            type={getProposalTypeString(proposal.type)}
-            circleVisibility={circleVisibility}
-            commonId={commonId}
-            userId={item.userId}
-            menuItems={menuItems}
-            onUserSelect={onUserClick && (() => onUserClick(item.userId))}
-          />
-          <FeedCardContent
-            item={item}
-            subtitle={getProposalSubtitle(
-              proposal,
-              proposalSpecificData,
-              getCommonPagePath(proposalSpecificData.targetCommon?.id || ""),
-            )}
-            description={getProposalDescriptionString(
-              proposal.data.args.description,
-              proposal.type,
-            )}
-            notion={discussionNotion}
-            images={discussion?.images}
-            onClick={handleOpenChat}
-            onMouseEnter={() => {
-              onHover(true);
-            }}
-            onMouseLeave={() => {
-              onHover(false);
-            }}
-          >
-            {proposal.resolutionType === ResolutionType.WAIT_FOR_EXPIRATION && (
-              <>
-                <ProposalFeedVotingInfo
-                  proposal={proposal}
-                  governanceCircles={governanceCircles}
-                />
-                <UserVoteInfo
-                  userVote={userVote}
-                  userHasPermissionsToVote={userHasPermissionsToVote}
-                  isCountdownState={isCountdownState}
-                />
-              </>
-            )}
-
-            {proposal.resolutionType === ResolutionType.IMMEDIATE && (
-              <>
-                <ImmediateProposalInfo
-                  proposal={proposal}
-                  governanceCircles={governanceCircles}
-                  proposerUserName={getUserName(feedItemUser)}
-                />
-                <ImmediateProposalVoteInfo
-                  proposal={proposal}
-                  userVote={userVote}
-                />
-              </>
-            )}
-
-            {isVotingAllowed && (
-              <ProposalFeedButtonContainer
-                proposalId={proposal.id}
-                onVoteCreate={setVote}
-                resolutionType={proposal.resolutionType}
-              />
-            )}
-          </FeedCardContent>
-        </>
-      );
-    };
-
     return (
       <>
         <FeedCard
@@ -553,7 +421,27 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
             feedItemUserMetadata?.hasUnseenMention
           }
         >
-          {renderContent()}
+          {(isActive || isExpanded) && (
+            <ProposalFeedCardContent
+              isLoading={isLoading}
+              proposal={proposal}
+              commonMember={commonMember}
+              userVote={userVote}
+              governanceCircles={governanceCircles}
+              feedItemUser={feedItemUser}
+              setVote={setVote}
+              commonId={commonId}
+              item={item}
+              onUserClick={onUserClick}
+              proposalSpecificData={proposalSpecificData}
+              menuItems={menuItems}
+              discussionNotion={discussionNotion}
+              discussion={discussion}
+              handleOpenChat={handleOpenChat}
+              onHover={onHover}
+              getCommonPagePath={getCommonPagePath}
+            />
+          )}
         </FeedCard>
         {discussion && (
           <FeedCardShare
