@@ -48,9 +48,11 @@
 
 .arrow-wrapper {
   position: absolute;
-  bottom: 2.125rem;
+  top: 50%;
+  transform: translate(0%, -50%);
   z-index: 2;
   color: var(--primary-text);
+  height: 10rem;
 
   &:disabled {
     color: $gray;
@@ -59,7 +61,7 @@
 
 .arrow-wrapper-left {
   @extend .arrow-wrapper;
-  left: 19rem;
+  left: 1rem;
 
   @include tablet {
     left: 18rem;
@@ -69,7 +71,7 @@
 .arrow-wrapper-right {
   @extend .arrow-wrapper;
 
-  right: 19rem;
+  right: 1rem;
 
   @include tablet {
     right: 18rem;

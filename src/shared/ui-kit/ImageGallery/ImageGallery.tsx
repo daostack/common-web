@@ -18,15 +18,7 @@ const ImageGallery: FC<ImageGalleryProps> = (props) => {
   const { gallery, videoSrc, useResizedFile = true } = props;
   const [videoContainerRef, { width: videoContainerWidth }] = useMeasure();
   const { isShowing, onOpen, onClose } = useModal(false);
-  const images = (gallery || []).map(({ value }) =>
-    useResizedFile
-      ? `${getResizedFileUrl(
-          value,
-          ResizeType.Images,
-          FilePrefix.Image,
-        )} 1x, ${value} 2x`
-      : value,
-  );
+  const images = (gallery || []).map(({ value }) => value);
 
   const imagesWithSrcSets = (gallery || []).map(({ value }) =>
     useResizedFile
