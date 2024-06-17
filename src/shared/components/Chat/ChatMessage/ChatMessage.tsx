@@ -584,6 +584,6 @@ const ChatMessage = ({
   );
 };
 
-const MemoizedChatMessage = React.memo(ChatMessage)
+const MemoizedChatMessage = React.memo(ChatMessage);
 
 export default MemoizedChatMessage;

@@ -40,7 +40,6 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
   const {
     loading: areDMUsersLoading,
     dmUsers,
-    fetchDMUsers,
     error: dmUsersFetchError,
   } = useDMUsers();
   const {
@@ -57,11 +56,6 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
   };
 
   useEffect(() => {
-    if (isOpen) {
-      fetchDMUsers();
-      return;
-    }
-
     resetDMUserChatChannel();
   }, [isOpen]);
 

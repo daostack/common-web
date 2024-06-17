@@ -50,59 +50,6 @@
   align-items: flex-end;
 }
 
-.messageInput {
-  width: 100%;
-  min-height: 2.625rem;
-  line-height: 1.5rem;
-  border-radius: 1.25rem;
-  background-color: var(--secondary-background);
-  border: 0.0625rem solid var(--gentle-stroke);
-  outline: none;
-  resize: none;
-  font-size: 0.875rem;
-  color: var(--primary-text);
-  box-sizing: border-box;
-  text-align: left;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  word-break: break-word;
-  padding: 0.125rem 2.5rem 0.125rem 0.75rem;
-  margin: 0.3rem 0;
-  overflow-x: hidden;
-  min-height: 2.625rem !important;
-}
-
-.messageInputRtl {
-  padding: 0.125rem 2.5rem 0.125rem 0.75rem;
-}
-
-.messageInputEmpty {
-  padding-left: 0.75rem;
-  overflow-x: hidden;
-}
-
-.addFilesIcon {
-  margin-bottom: 0.8rem;
-  margin-right: 0.5rem;
-  height: 1.5rem;
-  color: var(--primary-text);
-}
-
-.sendIcon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 0.8rem;
-  border: none;
-  outline: none;
-  background: transparent;
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
-  }
-}
 $phone-breakpoint: 415px;
 
 .container {
