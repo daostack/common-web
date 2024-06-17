@@ -57,11 +57,6 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
   };
 
   useEffect(() => {
-    if (isOpen) {
-      fetchDMUsers();
-      return;
-    }
-
     resetDMUserChatChannel();
   }, [isOpen]);
 
