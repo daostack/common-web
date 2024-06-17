@@ -57,7 +57,7 @@ export const useDMUsers = (): Return => {
     }
 
     fetchDMUsers();
-  },[userId]);
+  },[userId, fetchDMUsers]);
 
   return {
     fetchDMUsers,

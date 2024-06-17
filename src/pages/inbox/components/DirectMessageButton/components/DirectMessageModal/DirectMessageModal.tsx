@@ -40,7 +40,6 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
   const {
     loading: areDMUsersLoading,
     dmUsers,
-    fetchDMUsers,
     error: dmUsersFetchError,
   } = useDMUsers();
   const {
