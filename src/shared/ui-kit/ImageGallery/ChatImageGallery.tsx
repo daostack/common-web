@@ -24,14 +24,26 @@ const ChatImageGallery: FC<ChatImageGalleryProps> = (props) => {
   const isTabletView = useIsTabletView();
   const { isShowing, onOpen, onClose } = useModal(false);
   const [initialSlide, setInitialSlide] = useState(0);
-  const images = (gallery || []).map(({ value }) =>
+  const images = (gallery || []).map(({ value }) => value);
+
+  const imagesWithSrcSets = (gallery || []).map(({ value }) =>
     useResizedFile
-      ? getResizedFileUrl(value, ResizeType.Images, FilePrefix.Image)
+      ? `${getResizedFileUrl(
+          value,
+          ResizeType.Images,
+          FilePrefix.Image,
+        )} 1x, ${value} 2x`
       : value,
   );
 
   const [leftImage, rightImage, secondRowLeftImage, secondRowRightImage] =
     images;
+  const [
+    leftImageSrcSet,
+    rightImageSrcSet,
+    secondRowLeftImageSrcSet,
+    secondRowRightImageSrcSet,
+  ] = imagesWithSrcSets;
 
   const hasOneImage = Boolean(leftImage && !rightImage);
   const singleImageWithoutVideo = hasOneImage && !videoSrc;
@@ -61,6 +73,7 @@ const ChatImageGallery: FC<ChatImageGalleryProps> = (props) => {
             <GalleryMainContent
               videoSrc={videoSrc}
               mainImage={secondRowLeftImage}
+              srcSet={secondRowLeftImageSrcSet}
               hasOneImage={hasOneImage}
             />
           </div>
@@ -79,6 +92,7 @@ const ChatImageGallery: FC<ChatImageGalleryProps> = (props) => {
                 [styles.leftItem]: !hasOneImage,
               })}
               src={leftImage}
+              srcSet={leftImageSrcSet}
               imageOverlayClassName={styles.imageOverlay}
               alt="1st Image"
               onClick={() => handleOpenSlide(0)}
@@ -88,6 +102,7 @@ const ChatImageGallery: FC<ChatImageGalleryProps> = (props) => {
             <Image
               className={styles.image}
               src={rightImage}
+              srcSet={rightImageSrcSet}
               imageContainerClassName={styles.rightItem}
               imageOverlayClassName={styles.imageOverlay}
               alt="2nd Image"
@@ -113,6 +128,7 @@ const ChatImageGallery: FC<ChatImageGalleryProps> = (props) => {
               })}
               imageOverlayClassName={styles.imageOverlay}
               src={secondRowLeftImage}
+              srcSet={secondRowLeftImageSrcSet}
               alt="3st Image"
               onClick={() => handleOpenSlide(2)}
             />
@@ -120,6 +136,7 @@ const ChatImageGallery: FC<ChatImageGalleryProps> = (props) => {
               className={styles.image}
               imageContainerClassName={styles.rightItem}
               src={secondRowRightImage}
+              srcSet={secondRowRightImageSrcSet}
               imageOverlayClassName={styles.imageOverlay}
               alt="4nd Image"
               onClick={() => handleOpenSlide(3)}
