@@ -47,7 +47,7 @@ export const useDMUsers = (): Return => {
         }
       }
     },
-    [state, userId],
+    [state.loading, state.fetched, userId],
   );
 
 
