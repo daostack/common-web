@@ -253,12 +253,12 @@ const ChatMessage = ({
         isProposalMessage: chatType === ChatType.ProposalComments,
         discussionId: discussionMessage.discussionId,
         callback(isSucceed) {
+          setIsMessageEditLoading(false);
           if (isSucceed) {
             handleEditModeClose();
           } else {
             notify("Something went wrong");
           }
-          setIsMessageEditLoading(false);
         },
       }),
     );
@@ -409,18 +409,25 @@ const ChatMessage = ({
     return null;
   }
 
-  const emojiButton = (
-    <ReactWithEmoji
-      emojiButtonClassName={styles.emojiButton}
-      discussionId={discussionMessage.discussionId}
-      discussionMessageId={discussionMessage.id}
-      className={
-        isNotCurrentUserMessage
-          ? styles.reactWithEmoji
-          : styles.reactWithEmojiSelf
-      }
-      isNotCurrentUserMessage={isNotCurrentUserMessage}
-    />
+  const emojiButton = useCallback(
+    () => (
+      <ReactWithEmoji
+        emojiButtonClassName={styles.emojiButton}
+        discussionId={discussionMessage.discussionId}
+        discussionMessageId={discussionMessage.id}
+        className={
+          isNotCurrentUserMessage
+            ? styles.reactWithEmoji
+            : styles.reactWithEmojiSelf
+        }
+        isNotCurrentUserMessage={isNotCurrentUserMessage}
+      />
+    ),
+    [
+      discussionMessage.discussionId,
+      discussionMessage.id,
+      isNotCurrentUserMessage,
+    ],
   );
 
   return (
