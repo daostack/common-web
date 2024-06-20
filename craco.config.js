@@ -3,7 +3,12 @@ const CracoAlias = require("craco-alias");
 module.exports = {
   webpack: {
     configure: (webpackConfig, { env, paths }) => {
-      if (env === "development" || env === "staging" || env === "stage") {
+      if (
+        env === "dev" ||
+        env === "development" ||
+        env === "staging" ||
+        env === "stage"
+      ) {
         webpackConfig.devtool = "source-map";
       } else {
         webpackConfig.devtool = false;
