@@ -1,6 +1,17 @@
 const CracoAlias = require("craco-alias");
 
 module.exports = {
+  webpack: {
+    configure: (webpackConfig, { env, paths }) => {
+      const reactAppEnv = process.env.REACT_APP_ENV;
+      if (reactAppEnv === "dev" || reactAppEnv === "stage") {
+        webpackConfig.devtool = "source-map";
+      } else {
+        webpackConfig.devtool = false;
+      }
+      return webpackConfig;
+    },
+  },
   style: {
     css: {
       loaderOptions: () => ({
