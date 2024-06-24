@@ -12,9 +12,6 @@ interface FirebaseError extends Error {
 }
 
 firebase.initializeApp(config.firebase);
-firebase.firestore().settings({
-  experimentalForceLongPolling: true,
-});
 
 if (REACT_APP_ENV === Environment.Local) {
   firebase.auth().useEmulator(local.firebase.authDomain);
@@ -28,8 +25,7 @@ if (REACT_APP_ENV === Environment.Local) {
   firebase
     .firestore()
     .enablePersistence({
-      synchronizeTabs: true,
-      experimentalForceOwningTab: false,
+      synchronizeTabs: false,
     })
     .catch((error) => {
       console.error("Error enabling persistence", error);
