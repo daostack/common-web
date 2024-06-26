@@ -59,48 +59,58 @@ export const usePreloadDiscussionMessagesById = ({
       return;
     }
 
-    const discussionMessages =
-      await DiscussionMessageService.getPreloadDiscussionMessagesByDiscussionId(
-        discussionId,
+    try {
+      const discussionMessages =
+        await DiscussionMessageService.getPreloadDiscussionMessagesByDiscussionId(
+          discussionId,
+        );
+  
+      const users = commonMembers.map(({ user }) => user);
+  
+      const discussionsWithText = await Promise.all(
+        discussionMessages.map(async (discussionMessage) => {
+          const isUserDiscussionMessage =
+            checkIsUserDiscussionMessage(discussionMessage);
+          const isSystemMessage =
+            checkIsSystemDiscussionMessage(discussionMessage);
+  
+          const parsedText = await getTextFromTextEditorString({
+            userId,
+            ownerId: isUserDiscussionMessage ? discussionMessage.ownerId : null,
+            textEditorString: discussionMessage.text,
+            users,
+            commonId: discussionMessage.commonId,
+            systemMessage: isSystemMessage ? discussionMessage : undefined,
+            getCommonPagePath,
+            getCommonPageAboutTabPath,
+            onUserClick,
+            onFeedItemClick,
+            onInternalLinkClick,
+          });
+  
+          return {
+            ...discussionMessage,
+            parsedText,
+          };
+        }),
       );
-
-    const users = commonMembers.map(({ user }) => user);
-
-    const discussionsWithText = await Promise.all(
-      discussionMessages.map(async (discussionMessage) => {
-        const isUserDiscussionMessage =
-          checkIsUserDiscussionMessage(discussionMessage);
-        const isSystemMessage =
-          checkIsSystemDiscussionMessage(discussionMessage);
-
-        const parsedText = await getTextFromTextEditorString({
-          userId,
-          ownerId: isUserDiscussionMessage ? discussionMessage.ownerId : null,
-          textEditorString: discussionMessage.text,
-          users,
-          commonId: discussionMessage.commonId,
-          systemMessage: isSystemMessage ? discussionMessage : undefined,
-          getCommonPagePath,
-          getCommonPageAboutTabPath,
-          onUserClick,
-          onFeedItemClick,
-          onInternalLinkClick,
-        });
-
-        return {
-          ...discussionMessage,
-          parsedText,
-        };
-      }),
-    );
-
-    dispatch(
-      cacheActions.updateDiscussionMessagesStateByDiscussionId({
-        discussionId,
-        updatedDiscussionMessages: discussionsWithText,
-        removedDiscussionMessages: [],
-      }),
-    );
+  
+      dispatch(
+        cacheActions.updateDiscussionMessagesStateByDiscussionId({
+          discussionId,
+          updatedDiscussionMessages: discussionsWithText,
+          removedDiscussionMessages: [],
+        }),
+      );
+    } catch(err) {
+      dispatch(
+        cacheActions.updateDiscussionMessagesStateByDiscussionId({
+          discussionId,
+          updatedDiscussionMessages: [],
+          removedDiscussionMessages: [],
+        }),
+      );
+    }
   };
 
   useEffect(() => {
