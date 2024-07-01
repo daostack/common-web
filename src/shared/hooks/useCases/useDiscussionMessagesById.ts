@@ -311,7 +311,15 @@ export const useDiscussionMessagesById = ({
 
   useDeepCompareEffect(() => {
     (async () => {
-      if (!state.data || state.data.length === 0) {
+      if(Array.isArray(state.data) && state.data.length === 0) {
+        setIsFirstBatchLoaded((prev) => ({
+          ...prev,
+          [discussionId]: true,
+        }));
+        setDiscussionMessagesWithOwners([]);
+      }
+
+      if (!state.data) {
         setDiscussionMessagesWithOwners([]);
         return;
       }
