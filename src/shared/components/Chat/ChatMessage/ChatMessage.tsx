@@ -405,6 +405,26 @@ const ChatMessage = ({
     [isMessageEditLoading, handleCheckboxChange, isMessageEditAllowed],
   );
 
+  const EmojiButton = useCallback(() => {
+    return (
+      <ReactWithEmoji
+        emojiButtonClassName={styles.emojiButton}
+        discussionId={discussionMessage.discussionId}
+        discussionMessageId={discussionMessage.id}
+        className={
+          isNotCurrentUserMessage
+            ? styles.reactWithEmoji
+            : styles.reactWithEmojiSelf
+        }
+        isNotCurrentUserMessage={isNotCurrentUserMessage}
+      />
+    );
+  }, [
+    discussionMessage.discussionId,
+    discussionMessage.id,
+    isNotCurrentUserMessage,
+  ]);
+
   if (isSystemMessage && discussionMessage.parsedText.length === 0) {
     return null;
   }
@@ -421,19 +441,7 @@ const ChatMessage = ({
             [styles.systemMessageContainer]: isSystemMessage,
           })}
         >
-          {!isSystemMessage && !isNotCurrentUserMessage && (
-            <ReactWithEmoji
-              emojiButtonClassName={styles.emojiButton}
-              discussionId={discussionMessage.discussionId}
-              discussionMessageId={discussionMessage.id}
-              className={
-                isNotCurrentUserMessage
-                  ? styles.reactWithEmoji
-                  : styles.reactWithEmojiSelf
-              }
-              isNotCurrentUserMessage={isNotCurrentUserMessage}
-            />
-          )}
+          {!isSystemMessage && !isNotCurrentUserMessage && <EmojiButton />}
           {isNotCurrentUserMessage &&
             (isUserDiscussionMessage || isBotMessage) && (
               <div className={styles.iconWrapper} onClick={handleUserClick}>
@@ -575,19 +583,7 @@ const ChatMessage = ({
               </div>
             </>
           )}
-          {!isSystemMessage && isNotCurrentUserMessage && (
-            <ReactWithEmoji
-              emojiButtonClassName={styles.emojiButton}
-              discussionId={discussionMessage.discussionId}
-              discussionMessageId={discussionMessage.id}
-              className={
-                isNotCurrentUserMessage
-                  ? styles.reactWithEmoji
-                  : styles.reactWithEmojiSelf
-              }
-              isNotCurrentUserMessage={isNotCurrentUserMessage}
-            />
-          )}
+          {!isSystemMessage && isNotCurrentUserMessage && <EmojiButton />}
         </div>
       </li>
     </ChatMessageContext.Provider>
