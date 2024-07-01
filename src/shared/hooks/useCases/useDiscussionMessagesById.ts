@@ -316,9 +316,10 @@ export const useDiscussionMessagesById = ({
           ...prev,
           [discussionId]: true,
         }));
+        setDiscussionMessagesWithOwners([]);
       }
 
-      if (!state.data || state.data.length === 0) {
+      if (!state.data) {
         setDiscussionMessagesWithOwners([]);
         return;
       }
