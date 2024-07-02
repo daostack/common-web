@@ -12,9 +12,6 @@ interface FirebaseError extends Error {
 }
 
 firebase.initializeApp(config.firebase);
-firebase.firestore().settings({
-  experimentalForceLongPolling: true,
-});
 
 if (REACT_APP_ENV === Environment.Local) {
   firebase.auth().useEmulator(local.firebase.authDomain);

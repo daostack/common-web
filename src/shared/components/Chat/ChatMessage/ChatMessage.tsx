@@ -253,12 +253,12 @@ const ChatMessage = ({
         isProposalMessage: chatType === ChatType.ProposalComments,
         discussionId: discussionMessage.discussionId,
         callback(isSucceed) {
+          setIsMessageEditLoading(false);
           if (isSucceed) {
             handleEditModeClose();
           } else {
             notify("Something went wrong");
           }
-          setIsMessageEditLoading(false);
         },
       }),
     );
@@ -405,23 +405,29 @@ const ChatMessage = ({
     [isMessageEditLoading, handleCheckboxChange, isMessageEditAllowed],
   );
 
+  const EmojiButton = useCallback(() => {
+    return (
+      <ReactWithEmoji
+        emojiButtonClassName={styles.emojiButton}
+        discussionId={discussionMessage.discussionId}
+        discussionMessageId={discussionMessage.id}
+        className={
+          isNotCurrentUserMessage
+            ? styles.reactWithEmoji
+            : styles.reactWithEmojiSelf
+        }
+        isNotCurrentUserMessage={isNotCurrentUserMessage}
+      />
+    );
+  }, [
+    discussionMessage.discussionId,
+    discussionMessage.id,
+    isNotCurrentUserMessage,
+  ]);
+
   if (isSystemMessage && discussionMessage.parsedText.length === 0) {
     return null;
   }
-
-  const emojiButton = (
-    <ReactWithEmoji
-      emojiButtonClassName={styles.emojiButton}
-      discussionId={discussionMessage.discussionId}
-      discussionMessageId={discussionMessage.id}
-      className={
-        isNotCurrentUserMessage
-          ? styles.reactWithEmoji
-          : styles.reactWithEmojiSelf
-      }
-      isNotCurrentUserMessage={isNotCurrentUserMessage}
-    />
-  );
 
   return (
     <ChatMessageContext.Provider value={chatMessageContextValue}>
@@ -435,7 +441,7 @@ const ChatMessage = ({
             [styles.systemMessageContainer]: isSystemMessage,
           })}
         >
-          {!isSystemMessage && !isNotCurrentUserMessage && emojiButton}
+          {!isSystemMessage && !isNotCurrentUserMessage && <EmojiButton />}
           {isNotCurrentUserMessage &&
             (isUserDiscussionMessage || isBotMessage) && (
               <div className={styles.iconWrapper} onClick={handleUserClick}>
@@ -577,13 +583,13 @@ const ChatMessage = ({
               </div>
             </>
           )}
-          {!isSystemMessage && isNotCurrentUserMessage && emojiButton}
+          {!isSystemMessage && isNotCurrentUserMessage && <EmojiButton />}
         </div>
       </li>
     </ChatMessageContext.Provider>
   );
 };
 
-const MemoizedChatMessage = React.memo(ChatMessage)
+const MemoizedChatMessage = React.memo(ChatMessage);
 
 export default MemoizedChatMessage;

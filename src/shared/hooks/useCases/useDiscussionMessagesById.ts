@@ -238,148 +238,164 @@ export const useDiscussionMessagesById = ({
       setIsBatchLoading(true);
     }
 
-    DiscussionMessageService.subscribeToDiscussionMessagesByDiscussionId(
-      discussionId,
-      lastVisible && lastVisible[discussionId],
-      async (
-        addedDiscussionMessages,
-        modifiedDiscussionMessages,
-        removedDiscussionMessages,
-        lastVisibleDocument,
-      ) => {
-        const updatedDiscussionMessages = [
-          ...addedDiscussionMessages,
-          ...modifiedDiscussionMessages,
-        ];
-        setLastVisible((prevVisible) => ({
-          ...prevVisible,
-          [discussionId]: lastVisibleDocument,
-        }));
-
-        const hasLastVisibleDocument = !!lastVisibleDocument?.data();
-
-        const discussionsWithText = await Promise.all(
-          updatedDiscussionMessages.map(async (discussionMessage) => {
-            const isUserDiscussionMessage =
-              checkIsUserDiscussionMessage(discussionMessage);
-            const isSystemMessage =
-              checkIsSystemDiscussionMessage(discussionMessage);
-
-            const parsedText = await getTextFromTextEditorString({
-              userId,
-              ownerId: isUserDiscussionMessage
-                ? discussionMessage.ownerId
-                : null,
-              textEditorString: discussionMessage.text,
-              users,
-              commonId: discussionMessage.commonId,
-              systemMessage: isSystemMessage ? discussionMessage : undefined,
-              getCommonPagePath,
-              getCommonPageAboutTabPath,
-              directParent,
-              onUserClick,
-              onFeedItemClick,
-              onInternalLinkClick,
-            });
-
-            return {
-              ...discussionMessage,
-              parsedText,
-            };
-          }),
-        );
-        if (
-          discussionsWithText.length < MESSAGES_NUMBER_IN_BATCH &&
-          !hasLastVisibleDocument
-        ) {
-          setIsEndOfList((prevIsEndOfList) => ({
-            ...prevIsEndOfList,
-            [discussionId]: true,
+    try {
+      DiscussionMessageService.subscribeToDiscussionMessagesByDiscussionId(
+        discussionId,
+        lastVisible && lastVisible[discussionId],
+        async (
+          addedDiscussionMessages,
+          modifiedDiscussionMessages,
+          removedDiscussionMessages,
+          lastVisibleDocument,
+        ) => {
+          const updatedDiscussionMessages = [
+            ...addedDiscussionMessages,
+            ...modifiedDiscussionMessages,
+          ];
+          setLastVisible((prevVisible) => ({
+            ...prevVisible,
+            [discussionId]: lastVisibleDocument,
           }));
-        }
-        dispatch(
-          cacheActions.updateDiscussionMessagesStateByDiscussionId({
-            discussionId,
-            removedDiscussionMessages,
-            updatedDiscussionMessages: discussionsWithText,
-          }),
-        );
-        setIsBatchLoading(false);
-      },
-    );
+  
+          const hasLastVisibleDocument = !!lastVisibleDocument?.data();
+  
+          const discussionsWithText = await Promise.all(
+            updatedDiscussionMessages.map(async (discussionMessage) => {
+              const isUserDiscussionMessage =
+                checkIsUserDiscussionMessage(discussionMessage);
+              const isSystemMessage =
+                checkIsSystemDiscussionMessage(discussionMessage);
+  
+              const parsedText = await getTextFromTextEditorString({
+                userId,
+                ownerId: isUserDiscussionMessage
+                  ? discussionMessage.ownerId
+                  : null,
+                textEditorString: discussionMessage.text,
+                users,
+                commonId: discussionMessage.commonId,
+                systemMessage: isSystemMessage ? discussionMessage : undefined,
+                getCommonPagePath,
+                getCommonPageAboutTabPath,
+                directParent,
+                onUserClick,
+                onFeedItemClick,
+                onInternalLinkClick,
+              });
+  
+              return {
+                ...discussionMessage,
+                parsedText,
+              };
+            }),
+          );
+          if (
+            discussionsWithText.length < MESSAGES_NUMBER_IN_BATCH &&
+            !hasLastVisibleDocument
+          ) {
+            setIsEndOfList((prevIsEndOfList) => ({
+              ...prevIsEndOfList,
+              [discussionId]: true,
+            }));
+          }
+          dispatch(
+            cacheActions.updateDiscussionMessagesStateByDiscussionId({
+              discussionId,
+              removedDiscussionMessages,
+              updatedDiscussionMessages: discussionsWithText,
+            }),
+          );
+          setIsBatchLoading(false);
+        },
+      );
+    } catch(err) {
+      setIsBatchLoading(false);
+    }
   };
 
   useDeepCompareEffect(() => {
     (async () => {
-      if (!state.data || state.data.length === 0) {
+      if(Array.isArray(state.data) && state.data.length === 0) {
+        setIsFirstBatchLoaded((prev) => ({
+          ...prev,
+          [discussionId]: true,
+        }));
+        setDiscussionMessagesWithOwners([]);
+      }
+
+      if (!state.data) {
         setDiscussionMessagesWithOwners([]);
         return;
       }
 
-      const discussionMessages = [...state.data];
+      try {
+        const discussionMessages = [...state.data];
 
-      // if (discussionMessages.length > 0 && users.length === 0) {
-      // return;
-      // }
-
-      const filteredMessages = discussionMessages.filter(
-        ({ moderation }) =>
-          moderation?.flag !== ModerationFlags.Hidden || hasPermissionToHide,
-      );
-      const loadedDiscussionMessages = await Promise.all(
-        filteredMessages.map(async (d) => {
-          const newDiscussionMessage = { ...d };
-          const parentMessage = filteredMessages.find(
-            ({ id }) => id === d.parentId,
-          );
-          if (
-            checkIsUserDiscussionMessage(d) &&
-            checkIsUserDiscussionMessage(newDiscussionMessage)
-          ) {
-            const commonMemberMessageOwner = [
-              AI_USER,
-              AI_PRO_USER,
-              ...users,
-              ...externalCommonUsers,
-            ].find((o) => o.uid === d.ownerId);
-            const messageOwner =
-              commonMemberMessageOwner ||
-              (await UserService.getUserById(d.ownerId));
-            newDiscussionMessage.owner = messageOwner;
-            if (!commonMemberMessageOwner && messageOwner) {
-              dispatch(
-                cacheActions.addUserToExternalCommonUsers({
-                  user: messageOwner,
-                }),
-              );
-            }
-          }
-          newDiscussionMessage.parentMessage = parentMessage
-            ? {
-                id: parentMessage.id,
-                text: parentMessage.text,
-                ownerName: parentMessage?.ownerName,
-                ...(checkIsUserDiscussionMessage(parentMessage) && {
-                  ownerId: parentMessage.ownerId,
-                }),
-                moderation: parentMessage?.moderation,
-                images: parentMessage?.images,
-                files: parentMessage?.files,
-                createdAt: parentMessage.createdAt,
+        const filteredMessages = discussionMessages.filter(
+          ({ moderation }) =>
+            moderation?.flag !== ModerationFlags.Hidden || hasPermissionToHide,
+        );
+        const loadedDiscussionMessages = await Promise.all(
+          filteredMessages.map(async (d) => {
+            const newDiscussionMessage = { ...d };
+            const parentMessage = filteredMessages.find(
+              ({ id }) => id === d.parentId,
+            );
+            if (
+              checkIsUserDiscussionMessage(d) &&
+              checkIsUserDiscussionMessage(newDiscussionMessage)
+            ) {
+              const commonMemberMessageOwner = [
+                AI_USER,
+                AI_PRO_USER,
+                ...users,
+                ...externalCommonUsers,
+              ].find((o) => o.uid === d.ownerId);
+              const messageOwner =
+                commonMemberMessageOwner ||
+                (await UserService.getUserById(d.ownerId));
+              newDiscussionMessage.owner = messageOwner;
+              if (!commonMemberMessageOwner && messageOwner) {
+                dispatch(
+                  cacheActions.addUserToExternalCommonUsers({
+                    user: messageOwner,
+                  }),
+                );
               }
-            : null;
-
-          return newDiscussionMessage;
-        }),
-      );
-
-      setDiscussionMessagesWithOwners(loadedDiscussionMessages);
-      setIsFirstBatchLoaded((prev) => ({
-        ...prev,
-        [discussionId]: true,
-      }));
+            }
+            newDiscussionMessage.parentMessage = parentMessage
+              ? {
+                  id: parentMessage.id,
+                  text: parentMessage.text,
+                  ownerName: parentMessage?.ownerName,
+                  ...(checkIsUserDiscussionMessage(parentMessage) && {
+                    ownerId: parentMessage.ownerId,
+                  }),
+                  moderation: parentMessage?.moderation,
+                  images: parentMessage?.images,
+                  files: parentMessage?.files,
+                  createdAt: parentMessage.createdAt,
+                }
+              : null;
+  
+            return newDiscussionMessage;
+          }),
+        );
+  
+        setDiscussionMessagesWithOwners(loadedDiscussionMessages);
+        setIsFirstBatchLoaded((prev) => ({
+          ...prev,
+          [discussionId]: true,
+        }));
+      } catch(err) {
+        setDiscussionMessagesWithOwners([]);
+        setIsFirstBatchLoaded((prev) => ({
+          ...prev,
+          [discussionId]: true,
+        }));
+      }
     })();
-  }, [state.data, hasPermissionToHide, users, externalCommonUsers]);
+  }, [state.data, hasPermissionToHide, users, externalCommonUsers, discussionId]);
 
   return {
     ...state,

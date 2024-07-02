@@ -1,6 +1,5 @@
 import React, {
   forwardRef,
-  ReactNode,
   useCallback,
   useEffect,
   useMemo,
@@ -36,13 +35,7 @@ import {
 import { TextEditorValue } from "@/shared/ui-kit";
 import { StaticLinkType, getUserName, InternalLinkData } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
-import {
-  FeedCard,
-  FeedCardHeader,
-  FeedCardContent,
-  FeedCountdown,
-} from "../FeedCard";
-import { getVisibilityString } from "../FeedCard";
+import { FeedCard } from "../FeedCard";
 import { FeedCardShare } from "../FeedCard";
 import {
   FeedItemRef,
@@ -403,23 +396,25 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
           originalCommonIdForLinking={discussion?.commonId}
           linkedCommonIds={discussion?.linkedCommonIds}
         >
-          <DiscussionFeedCardContent
-            item={item}
-            governanceCircles={governanceCircles}
-            isMobileVersion={isMobileVersion}
-            commonId={commonId}
-            directParent={directParent}
-            onUserSelect={onUserClick && (() => onUserClick(item.userId))}
-            discussionCreator={discussionCreator}
-            isHome={isHome}
-            menuItems={menuItems}
-            discussion={discussion}
-            common={common}
-            discussionNotion={discussionNotion}
-            handleOpenChat={handleOpenChat}
-            onHover={onHover}
-            isLoading={isLoading}
-          />
+          {(isExpanded || isActive) && (
+            <DiscussionFeedCardContent
+              item={item}
+              governanceCircles={governanceCircles}
+              isMobileVersion={isMobileVersion}
+              commonId={commonId}
+              directParent={directParent}
+              onUserSelect={onUserClick && (() => onUserClick(item.userId))}
+              discussionCreator={discussionCreator}
+              isHome={isHome}
+              menuItems={menuItems}
+              discussion={discussion}
+              common={common}
+              discussionNotion={discussionNotion}
+              handleOpenChat={handleOpenChat}
+              onHover={onHover}
+              isLoading={isLoading}
+            />
+          )}
         </FeedCard>
         {userId && discussion && (
           <ReportModal

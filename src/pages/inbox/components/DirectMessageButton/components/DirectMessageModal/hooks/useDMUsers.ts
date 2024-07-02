@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { ChatService } from "@/services";
@@ -47,8 +47,17 @@ export const useDMUsers = (): Return => {
         }
       }
     },
-    [state, userId],
+    [state.loading, state.fetched, userId],
   );
+
+
+  useEffect(() => {
+    if(!userId) {
+      return;
+    }
+
+    fetchDMUsers();
+  },[userId, fetchDMUsers]);
 
   return {
     fetchDMUsers,
