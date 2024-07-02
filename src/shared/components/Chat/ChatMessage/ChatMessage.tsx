@@ -405,12 +405,8 @@ const ChatMessage = ({
     [isMessageEditLoading, handleCheckboxChange, isMessageEditAllowed],
   );
 
-  if (isSystemMessage && discussionMessage.parsedText.length === 0) {
-    return null;
-  }
-
-  const emojiButton = useCallback(
-    () => (
+  const EmojiButton = useCallback(() => {
+    return (
       <ReactWithEmoji
         emojiButtonClassName={styles.emojiButton}
         discussionId={discussionMessage.discussionId}
@@ -422,13 +418,16 @@ const ChatMessage = ({
         }
         isNotCurrentUserMessage={isNotCurrentUserMessage}
       />
-    ),
-    [
-      discussionMessage.discussionId,
-      discussionMessage.id,
-      isNotCurrentUserMessage,
-    ],
-  );
+    );
+  }, [
+    discussionMessage.discussionId,
+    discussionMessage.id,
+    isNotCurrentUserMessage,
+  ]);
+
+  if (isSystemMessage && discussionMessage.parsedText.length === 0) {
+    return null;
+  }
 
   return (
     <ChatMessageContext.Provider value={chatMessageContextValue}>
@@ -442,7 +441,7 @@ const ChatMessage = ({
             [styles.systemMessageContainer]: isSystemMessage,
           })}
         >
-          {!isSystemMessage && !isNotCurrentUserMessage && emojiButton}
+          {!isSystemMessage && !isNotCurrentUserMessage && <EmojiButton />}
           {isNotCurrentUserMessage &&
             (isUserDiscussionMessage || isBotMessage) && (
               <div className={styles.iconWrapper} onClick={handleUserClick}>
@@ -584,7 +583,7 @@ const ChatMessage = ({
               </div>
             </>
           )}
-          {!isSystemMessage && isNotCurrentUserMessage && emojiButton}
+          {!isSystemMessage && isNotCurrentUserMessage && <EmojiButton />}
         </div>
       </li>
     </ChatMessageContext.Provider>
