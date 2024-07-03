@@ -47,5 +47,6 @@ export { useEligibleVoters } from "./useEligibleVoters";
 export { useDiscussionMessageReaction } from "./useDiscussionMessageReaction";
 export { useChatMessageReaction } from "./useChatMessageReaction";
 export { useUserReaction } from "./useUserReaction";
+export { useUpdateCommonSeenState } from "./useUpdateCommonSeenState";
 export * from "./useCommonFollow";
 export * from "./usePreloadDiscussionMessagesById";
