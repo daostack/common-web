@@ -6,7 +6,8 @@ import useNotification from "../useNotification";
 
 interface Return {
   markCommonAsSeen: (
-    commonId: string
+    commonId: string,
+    delay?: number,
   ) => ReturnType<typeof setTimeout>;
 }
 
