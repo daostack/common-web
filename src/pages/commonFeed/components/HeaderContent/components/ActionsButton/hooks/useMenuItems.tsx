@@ -2,6 +2,7 @@ import React from "react";
 import { CommonFollowState } from "@/shared/hooks/useCases";
 import {
   FollowIcon,
+  Message3Icon,
   SearchIcon,
   Share3Icon,
   UnfollowIcon,
@@ -17,6 +18,7 @@ interface Actions {
   share: () => void;
   onSearchClick?: () => void;
   onFollowToggle: CommonFollowState["onFollowToggle"];
+  markCommonAsSeen: (commonId: string) => void;
 }
 
 export const useMenuItems = (
@@ -24,7 +26,7 @@ export const useMenuItems = (
   actions: Actions,
 ): Item[] => {
   const { common } = options;
-  const { share, onFollowToggle, onSearchClick } = actions;
+  const { share, onFollowToggle, onSearchClick, markCommonAsSeen } = actions;
 
   const items: Item[] = [
     {
@@ -50,6 +52,18 @@ export const useMenuItems = (
       text: `Unfollow ${common.name}`,
       onClick: () => onFollowToggle(),
       icon: <UnfollowIcon />,
+    },
+    {
+      id: CommonFeedMenuItem.MarkRead,
+      text: "Mark all as read",
+      onClick: () => {
+        if (!common.id) {
+          return;
+        }
+
+        markCommonAsSeen(common.id);
+      },
+      icon: <Message3Icon />,
     },
   ];
 

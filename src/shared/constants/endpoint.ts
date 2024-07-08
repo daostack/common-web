@@ -8,6 +8,7 @@ export const ApiEndpoint = {
   CreateCommon: "/commons/create",
   UpdateCommon: "/commons/update",
   CreateSubCommon: "/commons/subcommon/create",
+  MarkCommonSeenForUser: "/commons/mark-seen-for-user",
   MarkFeedObjectSeenForUser: "/commons/mark-feed-object-seen-for-user",
   MarkFeedObjectUnseenForUser: "/commons/mark-feed-object-unseen-for-user",
   LinkStream: "/commons/link-stream",

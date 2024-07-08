@@ -609,6 +609,19 @@ class CommonService {
 
     return snapshot.data() || null;
   };
+
+  public markCommonAsSeen = async (
+    commonId: string,
+    userId: string,
+  ): Promise<void> => {
+    await Api.post(
+      ApiEndpoint.MarkCommonSeenForUser,
+      {
+        commonId,
+        userId
+      },
+    );
+  };
 }
 
 export default new CommonService();
