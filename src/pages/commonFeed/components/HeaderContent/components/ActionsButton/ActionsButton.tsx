@@ -6,6 +6,7 @@ import { CirclesPermissions, Common, CommonMember } from "@/shared/models";
 import { DesktopMenu, MenuButton } from "@/shared/ui-kit";
 import { StaticLinkType, generateStaticShareLink } from "@/shared/utils";
 import { useMenuItems } from "./hooks";
+import { useUpdateCommonSeenState } from "@/shared/hooks/useCases";
 
 interface ActionsButtonProps {
   common: Common;
@@ -22,6 +23,7 @@ const ActionsButton: FC<ActionsButtonProps> = (props) => {
     onOpen: onShareModalOpen,
     onClose: onShareModalClose,
   } = useModal(false);
+  const { markCommonAsSeen } = useUpdateCommonSeenState();
   const items = useMenuItems(
     {
       common,
@@ -33,6 +35,7 @@ const ActionsButton: FC<ActionsButtonProps> = (props) => {
       share: onShareModalOpen,
       onFollowToggle: commonFollow.onFollowToggle,
       onSearchClick,
+      markCommonAsSeen
     },
   );
   const shareLink = generateStaticShareLink(StaticLinkType.Common, common);

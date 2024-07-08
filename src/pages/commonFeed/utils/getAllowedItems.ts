@@ -20,6 +20,7 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
     !isFollowInProgress && Boolean(commonMember && !commonMember.isFollowing),
   [CommonFeedMenuItem.Mute]: ({ commonMember, isFollowInProgress }) =>
     !isFollowInProgress && Boolean(commonMember?.isFollowing),
+  [CommonFeedMenuItem.MarkRead]: () => true,
 };
 
 export const getAllowedItems = (items: Item[], options: Options): Item[] =>
