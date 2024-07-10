@@ -34,7 +34,19 @@ if (REACT_APP_ENV === Environment.Local) {
     });
 }
 
-export const perf = getPerformance(app);
+let perf;
+if (typeof window !== "undefined" && typeof window.fetch !== "undefined") {
+  perf = getPerformance(app);
+} else {
+  perf = {
+    trace: () => ({
+      start: () => {},
+      stop: () => {},
+    }),
+  };
+}
+
+export { perf };
 // firebase.firestore.setLogLevel("debug");
 
 export const isFirebaseError = (error: any): error is FirebaseError =>
