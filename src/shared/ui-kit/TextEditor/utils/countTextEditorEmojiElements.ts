@@ -2,7 +2,7 @@ import { Element } from "slate";
 import { ElementType } from "../constants";
 import { TextEditorValue, ParagraphElement } from "../types";
 
-interface EmojiCount {
+export interface EmojiCount {
   isSingleEmoji: boolean;
   isMultipleEmoji: boolean;
 }

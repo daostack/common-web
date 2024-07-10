@@ -18,13 +18,21 @@ const ImageGallery: FC<ImageGalleryProps> = (props) => {
   const { gallery, videoSrc, useResizedFile = true } = props;
   const [videoContainerRef, { width: videoContainerWidth }] = useMeasure();
   const { isShowing, onOpen, onClose } = useModal(false);
-  const images = (gallery || []).map(({ value }) =>
+  const images = (gallery || []).map(({ value }) => value);
+
+  const imagesWithSrcSets = (gallery || []).map(({ value }) =>
     useResizedFile
-      ? getResizedFileUrl(value, ResizeType.Images, FilePrefix.Image)
+      ? `${getResizedFileUrl(
+          value,
+          ResizeType.Images,
+          FilePrefix.Image,
+        )} 1x, ${value} 2x`
       : value,
   );
 
   const [leftImage, rightImage, mainImage] = images;
+  const [leftImageSrcSet, rightImageSrcSet, mainImageSrcSet] =
+    imagesWithSrcSets;
 
   const hasOneImage = Boolean(leftImage && !rightImage);
   const singleImageWithoutVideo = hasOneImage && !videoSrc;
@@ -56,6 +64,7 @@ const ImageGallery: FC<ImageGalleryProps> = (props) => {
           <GalleryMainContent
             videoSrc={videoSrc}
             mainImage={mainImage}
+            srcSet={mainImageSrcSet}
             hasOneImage={hasOneImage}
             imagePreviewStyle={imagePreviewStyle}
           />
@@ -73,6 +82,7 @@ const ImageGallery: FC<ImageGalleryProps> = (props) => {
               })}
               style={singleImageWithoutVideo ? {} : imagePreviewStyle}
               src={leftImage}
+              srcSet={leftImageSrcSet}
               alt="1st Image"
             />
           )}
@@ -81,6 +91,7 @@ const ImageGallery: FC<ImageGalleryProps> = (props) => {
               className={classNames(styles.image, styles.rightItem)}
               style={imagePreviewStyle}
               src={rightImage}
+              srcSet={rightImageSrcSet}
               alt="2nd Image"
             />
           )}

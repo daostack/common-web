@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Common.io",
+  "name": "Common.io",
   "icons": [
     {
       "src": "favicon.ico",
@@ -38,7 +38,7 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": ".",
+  "start_url": "./inbox",
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff"

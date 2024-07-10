@@ -23,7 +23,6 @@ import {
   LastSeenEntity,
   QueryParamKey,
 } from "@/shared/constants";
-import { FILES_ACCEPTED_EXTENSIONS } from "@/shared/constants";
 import { HotKeys } from "@/shared/constants/keyboardKeys";
 import { ChatMessageToUserDiscussionMessageConverter } from "@/shared/converters";
 import {
@@ -31,7 +30,7 @@ import {
   useImageSizeCheck,
   useQueryParams,
 } from "@/shared/hooks";
-import { ArrowInCircleIcon, PlusIcon, SendIcon } from "@/shared/icons";
+import { ArrowInCircleIcon } from "@/shared/icons";
 import { LinkPreviewData } from "@/shared/interfaces";
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 import {
@@ -47,24 +46,16 @@ import {
   UserDiscussionMessage,
 } from "@/shared/models";
 import {
-  BaseTextEditor,
   TextEditorValue,
   getMentionTags,
   parseStringToTextEditorValue,
-  ButtonIcon,
   checkIsTextEditorValueEmpty,
-  TextEditorSize,
   removeTextEditorEmptyEndLinesValues,
   countTextEditorEmojiElements,
 } from "@/shared/ui-kit";
 import { checkUncheckedItemsInTextEditorValue } from "@/shared/ui-kit/TextEditor/utils";
 import { InternalLinkData, notEmpty } from "@/shared/utils";
-import {
-  emptyFunction,
-  getUserName,
-  hasPermission,
-  isMobile,
-} from "@/shared/utils";
+import { getUserName, hasPermission, isMobile } from "@/shared/utils";
 import {
   cacheActions,
   chatActions,
@@ -80,6 +71,7 @@ import {
   MessageReply,
   ChatFilePreview,
   MessageInfoWithDateList,
+  ChatInput,
 } from "./components";
 import { checkIsLastSeenInPreviousDay } from "./components/ChatContent/utils";
 import { useChatChannelChatAdapter, useDiscussionChatAdapter } from "./hooks";
@@ -335,8 +327,6 @@ export default function ChatComponent({
 
     return messagesWithInfo;
   }, [messages]);
-
-  // const dateListWith
 
   const [newMessages, setMessages] = useState<
     CreateDiscussionMessageDtoWithFilesPreview[]
@@ -761,73 +751,6 @@ export default function ChatComponent({
     };
   }, []);
 
-  const renderChatInput = (): ReactNode => {
-    if (shouldHideChatInput) {
-      return null;
-    }
-    if (!isChatChannel) {
-      const chatInputEl = renderChatInputOuter?.();
-
-      if (chatInputEl || chatInputEl === null) {
-        return chatInputEl;
-      }
-    }
-    if (!isAuthorized) {
-      return null;
-    }
-
-    return (
-      <>
-        <ButtonIcon
-          className={styles.addFilesIcon}
-          onClick={() => {
-            document.getElementById("file")?.click();
-          }}
-        >
-          <PlusIcon />
-        </ButtonIcon>
-        <input
-          id="file"
-          type="file"
-          onChange={uploadFiles}
-          style={{ display: "none" }}
-          multiple
-          accept={FILES_ACCEPTED_EXTENSIONS}
-        />
-        <BaseTextEditor
-          inputContainerRef={inputContainerRef}
-          size={TextEditorSize.Auto}
-          editorRef={editorRef}
-          className={classNames(styles.messageInput, {
-            [styles.messageInputEmpty]: checkIsTextEditorValueEmpty(message),
-          })}
-          classNameRtl={styles.messageInputRtl}
-          elementStyles={{
-            emoji: classNames({
-              [styles.singleEmojiText]: emojiCount.isSingleEmoji,
-              [styles.multipleEmojiText]: emojiCount.isMultipleEmoji,
-            }),
-          }}
-          value={message}
-          onChange={setMessage}
-          placeholder="Message"
-          onKeyDown={onEnterKeyDown}
-          users={users}
-          shouldReinitializeEditor={shouldReinitializeEditor}
-          onClearFinished={onClearFinished}
-          scrollSelectionIntoView={emptyFunction}
-        />
-        <button
-          className={styles.sendIcon}
-          onClick={sendChatMessage}
-          disabled={!canSendMessage}
-        >
-          <SendIcon />
-        </button>
-      </>
-    );
-  };
-
   const { y } = useScroll(chatContainerRef);
   const isScrolledToTop = Boolean(chatContainerRef.current && Math.abs(y) > 20);
 
@@ -924,7 +847,26 @@ export default function ChatComponent({
           [styles.chatInputWrapperMultiLine]: isMultiLineInput,
         })}
       >
-        {renderChatInput()}
+        <ChatInput
+          onClearFinished={onClearFinished}
+          shouldReinitializeEditor={shouldReinitializeEditor}
+          users={users}
+          onEnterKeyDown={onEnterKeyDown}
+          emojiCount={emojiCount}
+          setMessage={setMessage}
+          message={message}
+          uploadFiles={uploadFiles}
+          isAuthorized={isAuthorized}
+          renderChatInputOuter={
+            renderChatInputOuter as () => React.ReactElement
+          }
+          isChatChannel={isChatChannel}
+          shouldHideChatInput={shouldHideChatInput}
+          sendChatMessage={sendChatMessage}
+          canSendMessage={Boolean(canSendMessage)}
+          inputContainerRef={inputContainerRef}
+          editorRef={editorRef}
+        />
       </div>
     </div>
   );

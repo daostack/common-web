@@ -7,12 +7,13 @@ import styles from "./GalleryMainContent.module.scss";
 interface GalleryMainContentProps {
   videoSrc?: string;
   mainImage: string;
+  srcSet?: string;
   hasOneImage: boolean;
   imagePreviewStyle?: React.CSSProperties;
 }
 
 const GalleryMainContent: FC<GalleryMainContentProps> = (props) => {
-  const { mainImage, videoSrc, hasOneImage, imagePreviewStyle } = props;
+  const { mainImage, srcSet, videoSrc, hasOneImage, imagePreviewStyle } = props;
 
   if (!videoSrc && !mainImage) {
     return null;
@@ -34,6 +35,7 @@ const GalleryMainContent: FC<GalleryMainContentProps> = (props) => {
     <Image
       className={styles.mainContent}
       src={mainImage}
+      srcSet={srcSet}
       imageContainerClassName={styles.imageContainer}
       imageOverlayClassName={styles.imageOverlay}
       alt="3rd Image"

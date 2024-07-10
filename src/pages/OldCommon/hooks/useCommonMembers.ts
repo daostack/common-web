@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CommonService, Logger, UserService } from "@/services";
 import { store } from "@/shared/appConfig";
@@ -9,6 +9,7 @@ import {
   selectCommonMembersStateByCommonId,
   selectUserStates,
 } from "@/store/states";
+import { useDeepCompareEffect } from "react-use";
 
 interface Options {
   commonId?: string;
@@ -93,7 +94,7 @@ export const useCommonMembers = ({ commonId }: Options): Return => {
     [dispatch, commonId],
   );
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     const commonMembers = commonMembersState.data;
 
     if (!commonMembers) {
