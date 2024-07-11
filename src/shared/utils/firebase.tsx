@@ -3,6 +3,7 @@ import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import "firebase/compat/performance";
 import "firebase/compat/storage";
+import { getPerformance } from "firebase/performance";
 import { local } from "@/config";
 import { Environment, REACT_APP_ENV } from "@/shared/constants";
 import config from "../../config";
@@ -11,7 +12,7 @@ interface FirebaseError extends Error {
   code: string;
 }
 
-firebase.initializeApp(config.firebase);
+const app = firebase.initializeApp(config.firebase);
 
 if (REACT_APP_ENV === Environment.Local) {
   firebase.auth().useEmulator(local.firebase.authDomain);
@@ -33,6 +34,19 @@ if (REACT_APP_ENV === Environment.Local) {
     });
 }
 
+let perf;
+if (typeof window !== "undefined" && typeof window.fetch !== "undefined") {
+  perf = getPerformance(app);
+} else {
+  perf = {
+    trace: () => ({
+      start: () => {},
+      stop: () => {},
+    }),
+  };
+}
+
+export { perf };
 // firebase.firestore.setLogLevel("debug");
 
 export const isFirebaseError = (error: any): error is FirebaseError =>
