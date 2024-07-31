@@ -122,7 +122,7 @@ const CommonMember: FC<CommonMemberProps> = ({
             </div>
           </div>
         </div>
-        {joinedAt && (
+        {joinedAt && joinedAt.toDate && (
           <div className="members__section__common-member-date">
             {joinedAt
               ?.toDate()
