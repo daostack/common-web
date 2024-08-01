@@ -1,14 +1,14 @@
 import React, {
   CSSProperties,
   forwardRef,
-  ForwardRefRenderFunction,
-  ReactNode,
   useCallback,
   useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
   useState,
+  ReactNode,
+  ForwardRefRenderFunction,
 } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -221,8 +221,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     fetchedCommonMember;
   const userForProfile = useUserForProfile();
   const governance = chatItem?.nestedItemData
-    ? fetchedGovernance
+    ? fetchedGovernance || outerGovernance
     : outerGovernance || fetchedGovernance;
+
   const [splitPaneRef, setSplitPaneRef] = useState<Element | null>(null);
   const maxContentSize =
     settings?.getSplitViewMaxSize?.(windowWidth) ??
