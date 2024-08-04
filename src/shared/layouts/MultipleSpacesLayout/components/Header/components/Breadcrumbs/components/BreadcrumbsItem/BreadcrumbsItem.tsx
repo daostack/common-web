@@ -39,16 +39,17 @@ const BreadcrumbsItem: FC<BreadcrumbsItemProps> = (props) => {
     onClick,
   } = props;
   const history = useHistory();
-  const [containerRef, { width: containerWidth }] = useMeasure<HTMLLIElement>();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [listRef, { width: listWidth }] = useMeasure<HTMLLIElement>();
   const [buttonRef, { width: buttonWidth }] = useMeasure<HTMLButtonElement>();
 
   const hasOverlay = useMemo(() => {
     return (
       Math.abs(
-        Math.floor(containerWidth) - Math.floor(buttonWidth + PADDING),
+        Math.floor(listWidth) - Math.floor(buttonWidth + PADDING),
       ) >= OVERLAY_THRESHOLD
     );
-  }, [containerWidth, buttonWidth]);
+  }, [listWidth, buttonWidth]);
 
   const { getCommonPagePath } = useRoutesContext();
   const contextMenuRef = useRef<ContextMenuRef>(null);
@@ -59,37 +60,43 @@ const BreadcrumbsItem: FC<BreadcrumbsItemProps> = (props) => {
       onClick?.();
       return;
     }
+    if (containerRef.current) {
+      const { x, y, height } = containerRef.current.getBoundingClientRect();
+      contextMenuRef.current?.open(x, y + height);
+    }
   };
 
   return (
-    <li ref={containerRef} className={styles.li}>
-      <Tooltip placement="bottom-start">
-        <TooltipTrigger asChild>
-          <button
-            ref={buttonRef}
-            className={styles.button}
-            onClick={handleButtonClick}
-          >
-            {truncate
-              ? truncateBreadcrumbName(activeItem.name)
-              : activeItem.name}
-          </button>
-        </TooltipTrigger>
-        <TooltipContent withOverlay={hasOverlay}>
-          <span className={styles.tooltipContent}>{activeItem.name}</span>
-        </TooltipContent>
-      </Tooltip>
-      {withMenu && (
-        <BreadcrumbsMenu
-          ref={contextMenuRef}
-          items={items}
-          activeItemId={activeItem.commonId}
-          commonIdToAddProject={commonIdToAddProject}
-          isLoading={isLoading}
-          onCommonCreate={onCommonCreate}
-        />
-      )}
-    </li>
+    <div ref={containerRef} className={styles.li}>
+      <li ref={listRef} className={styles.li}>
+        <Tooltip placement="bottom-start">
+          <TooltipTrigger asChild>
+            <button
+              ref={buttonRef}
+              className={styles.button}
+              onClick={handleButtonClick}
+            >
+              {truncate
+                ? truncateBreadcrumbName(activeItem.name)
+                : activeItem.name}
+            </button>
+          </TooltipTrigger>
+          <TooltipContent withOverlay={hasOverlay}>
+            <span className={styles.tooltipContent}>{activeItem.name}</span>
+          </TooltipContent>
+        </Tooltip>
+        {withMenu && (
+          <BreadcrumbsMenu
+            ref={contextMenuRef}
+            items={items}
+            activeItemId={activeItem.commonId}
+            commonIdToAddProject={commonIdToAddProject}
+            isLoading={isLoading}
+            onCommonCreate={onCommonCreate}
+          />
+        )}
+      </li>
+    </div>
   );
 };
 
