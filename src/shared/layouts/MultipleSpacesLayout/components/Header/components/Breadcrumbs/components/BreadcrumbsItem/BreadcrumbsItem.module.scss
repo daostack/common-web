@@ -29,6 +29,19 @@
   }
 }
 
+.tooltipContent {
+  font-family: PoppinsSans, sans-serif;
+  font-size: $moderate-xsmall;
+  font-weight: normal;
+  color: var(--breadcrumbs-color);
+}
+
+.li {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 @include tablet {
   .li {
     &:first-child {
