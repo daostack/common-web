@@ -144,18 +144,6 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     onFeedItemUnfollowed,
   ]);
 
-  if (
-    shouldCheckItemVisibility &&
-    !checkIsItemVisibleForUser({
-      itemCircleVisibility: item.circleVisibility,
-      userCircleIds,
-      itemUserId: item.userId,
-      currentUserId,
-      itemDataType: item.data.type,
-    })
-  ) {
-    return null;
-  }
 
   const generalProps = useMemo(
     () => ({
@@ -217,6 +205,20 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
       onInternalLinkClick,
     ],
   );
+
+
+  if (
+    shouldCheckItemVisibility &&
+    !checkIsItemVisibleForUser({
+      itemCircleVisibility: item.circleVisibility,
+      userCircleIds,
+      itemUserId: item.userId,
+      currentUserId,
+      itemDataType: item.data.type,
+    })
+  ) {
+    return null;
+  }
 
   if (item.data.type === CommonFeedType.Discussion) {
     return <DiscussionFeedCard {...generalProps} />;

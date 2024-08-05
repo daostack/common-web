@@ -221,7 +221,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     fetchedCommonMember;
   const userForProfile = useUserForProfile();
   const governance = chatItem?.nestedItemData
-    ? fetchedGovernance || outerGovernance
+    ? (fetchedGovernance || outerGovernance)
     : outerGovernance || fetchedGovernance;
 
   const [splitPaneRef, setSplitPaneRef] = useState<Element | null>(null);
