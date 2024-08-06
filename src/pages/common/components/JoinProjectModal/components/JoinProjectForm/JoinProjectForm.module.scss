@@ -9,7 +9,7 @@
 }
 
 .field {
-  border: 0.0625rem $light-gray-3 solid;
+  border: 0.0625rem var(--gentle-stroke) solid;
 
   &::placeholder {
     font-size: $xsmall;
@@ -22,10 +22,12 @@
   width: 100%;
   border-width: 0;
   outline: 0;
-  border: 0.0625rem $light-gray-3 solid;
+  border: 0.0625rem var(--gentle-stroke) solid;
   height: 100%;
   min-height: 6.4375rem;
   padding: 0.75rem;
+  background-color: var(--secondary-background);
+  color: var(--primary-text);
 
   @include tablet {
     max-height: 4.25rem;
