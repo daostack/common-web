@@ -72,400 +72,398 @@ interface ProposalFeedCardProps {
   onInternalLinkClick: (data: InternalLinkData) => void;
 }
 
-const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
-  (props, ref) => {
-    const {
+function ProposalFeedCard(props: ProposalFeedCardProps, ref: React.Ref<FeedItemRef>) {
+  const {
+    commonId,
+    commonName,
+    commonImage,
+    commonNotion: outerCommonNotion,
+    pinnedFeedItems,
+    isProject,
+    isPinned,
+    item,
+    governanceCircles,
+    isPreviewMode,
+    isActive,
+    isExpanded,
+    getLastMessage,
+    getNonAllowedItems,
+    isMobileVersion,
+    feedItemFollow,
+    onActiveItemDataChange,
+    shouldPreLoadMessages,
+    withoutMenu,
+    onUserClick,
+    onFeedItemClick,
+    onInternalLinkClick,
+  } = props;
+  const user = useSelector(selectUser());
+  const userId = user?.uid;
+  const {
+    setChatItem,
+    feedItemIdForAutoChatOpen,
+    shouldAllowChatAutoOpen,
+    nestedItemData,
+  } = useChatContext();
+  const { notify } = useNotification();
+  const forceUpdate = useForceUpdate();
+  const { getCommonPagePath } = useRoutesContext();
+  const {
+    fetchUser: fetchFeedItemUser,
+    data: feedItemUser,
+    fetched: isFeedItemUserFetched,
+  } = useUserById();
+  const {
+    fetchDiscussion,
+    data: discussion,
+    fetched: isDiscussionFetched,
+  } = useDiscussionById();
+  const {
+    fetchProposal,
+    data: proposal,
+    fetched: isProposalFetched,
+  } = useProposalById();
+  const {
+    fetched: isCommonMemberFetched,
+    data: commonMember,
+    fetchCommonMember,
+  } = useCommonMember();
+  const {
+    data: userVote,
+    loading: isUserVoteLoading,
+    fetchProposalVote,
+    setVote,
+  } = useProposalUserVote();
+  const {
+    data: proposalSpecificData,
+    fetched: isProposalSpecificDataFetched,
+    fetchData: fetchProposalSpecificData,
+  } = useProposalSpecificData();
+  const {
+    data: feedItemUserMetadata,
+    fetched: isFeedItemUserMetadataFetched,
+    fetchFeedItemUserMetadata,
+  } = useFeedItemUserMetadata();
+  const discussionNotion = commonId
+    ? discussion?.notionByCommon?.[commonId]
+    : undefined;
+  const shouldLoadCommonData = discussionNotion && !outerCommonNotion;
+  const { data: common } = useCommon(shouldLoadCommonData ? commonId : "");
+  const {
+    isShowing: isProposalDeleteModalOpen,
+    onOpen: onProposalDeleteModalOpen,
+    onClose: onProposalDeleteModalClose,
+  } = useModal(false);
+  const [isProposalDeletingInProgress, setProposalDeletingInProgress] =
+    useState(false);
+  const isLoading =
+    !isFeedItemUserFetched ||
+    !isDiscussionFetched ||
+    !isProposalFetched ||
+    !proposal ||
+    isUserVoteLoading ||
+    !isCommonMemberFetched ||
+    !isProposalSpecificDataFetched ||
+    !isFeedItemUserMetadataFetched ||
+    !commonId ||
+    !governanceCircles;
+  const [isHovering, setHovering] = useState(false);
+  const onHover = (isMouseEnter: boolean): void => {
+    setHovering(isMouseEnter);
+  };
+  const proposalId = item.data.id;
+  const {
+    isShowing: isShareModalOpen,
+    onOpen: onShareModalOpen,
+    onClose: onShareModalClose,
+  } = useModal(false);
+  const preloadDiscussionMessagesData = usePreloadDiscussionMessagesById({
+    commonId,
+    discussionId: discussion?.id,
+    onUserClick,
+    onFeedItemClick,
+    onInternalLinkClick,
+  });
+  const { markFeedItemAsSeen, markFeedItemAsUnseen } =
+    useUpdateFeedItemSeenState();
+  const menuItems = useMenuItems(
+    {
       commonId,
-      commonName,
-      commonImage,
-      commonNotion: outerCommonNotion,
       pinnedFeedItems,
-      isProject,
-      isPinned,
-      item,
-      governanceCircles,
-      isPreviewMode,
-      isActive,
-      isExpanded,
-      getLastMessage,
-      getNonAllowedItems,
-      isMobileVersion,
-      feedItemFollow,
-      onActiveItemDataChange,
-      shouldPreLoadMessages,
-      withoutMenu,
-      onUserClick,
-      onFeedItemClick,
-      onInternalLinkClick,
-    } = props;
-    const user = useSelector(selectUser());
-    const userId = user?.uid;
-    const {
-      setChatItem,
-      feedItemIdForAutoChatOpen,
-      shouldAllowChatAutoOpen,
-      nestedItemData,
-    } = useChatContext();
-    const { notify } = useNotification();
-    const forceUpdate = useForceUpdate();
-    const { getCommonPagePath } = useRoutesContext();
-    const {
-      fetchUser: fetchFeedItemUser,
-      data: feedItemUser,
-      fetched: isFeedItemUserFetched,
-    } = useUserById();
-    const {
-      fetchDiscussion,
-      data: discussion,
-      fetched: isDiscussionFetched,
-    } = useDiscussionById();
-    const {
-      fetchProposal,
-      data: proposal,
-      fetched: isProposalFetched,
-    } = useProposalById();
-    const {
-      fetched: isCommonMemberFetched,
-      data: commonMember,
-      fetchCommonMember,
-    } = useCommonMember();
-    const {
-      data: userVote,
-      loading: isUserVoteLoading,
-      fetchProposalVote,
-      setVote,
-    } = useProposalUserVote();
-    const {
-      data: proposalSpecificData,
-      fetched: isProposalSpecificDataFetched,
-      fetchData: fetchProposalSpecificData,
-    } = useProposalSpecificData();
-    const {
-      data: feedItemUserMetadata,
-      fetched: isFeedItemUserMetadataFetched,
-      fetchFeedItemUserMetadata,
-    } = useFeedItemUserMetadata();
-    const discussionNotion = commonId
-      ? discussion?.notionByCommon?.[commonId]
-      : undefined;
-    const shouldLoadCommonData = discussionNotion && !outerCommonNotion;
-    const { data: common } = useCommon(shouldLoadCommonData ? commonId : "");
-    const {
-      isShowing: isProposalDeleteModalOpen,
-      onOpen: onProposalDeleteModalOpen,
-      onClose: onProposalDeleteModalClose,
-    } = useModal(false);
-    const [isProposalDeletingInProgress, setProposalDeletingInProgress] =
-      useState(false);
-    const isLoading =
-      !isFeedItemUserFetched ||
-      !isDiscussionFetched ||
-      !isProposalFetched ||
-      !proposal ||
-      isUserVoteLoading ||
-      !isCommonMemberFetched ||
-      !isProposalSpecificDataFetched ||
-      !isFeedItemUserMetadataFetched ||
-      !commonId ||
-      !governanceCircles;
-    const [isHovering, setHovering] = useState(false);
-    const onHover = (isMouseEnter: boolean): void => {
-      setHovering(isMouseEnter);
-    };
-    const proposalId = item.data.id;
-    const {
-      isShowing: isShareModalOpen,
-      onOpen: onShareModalOpen,
-      onClose: onShareModalClose,
-    } = useModal(false);
-    const preloadDiscussionMessagesData = usePreloadDiscussionMessagesById({
-      commonId,
-      discussionId: discussion?.id,
-      onUserClick,
-      onFeedItemClick,
-      onInternalLinkClick,
-    });
-    const { markFeedItemAsSeen, markFeedItemAsUnseen } =
-      useUpdateFeedItemSeenState();
-    const menuItems = useMenuItems(
-      {
-        commonId,
-        pinnedFeedItems,
-        feedItem: item,
-        discussion,
-        governanceCircles,
-        commonMember,
-        feedItemFollow,
-        getNonAllowedItems,
-        feedItemUserMetadata,
-        withoutMenu,
-      },
-      {
-        report: () => {},
-        share: () => onShareModalOpen(),
-        remove: onProposalDeleteModalOpen,
-        markFeedItemAsSeen,
-        markFeedItemAsUnseen,
-      },
-    );
-    const cardTitle = discussion?.title;
-    const commonNotion = outerCommonNotion ?? common?.notion;
-
-    const onProposalDelete = useCallback(async () => {
-      try {
-        setProposalDeletingInProgress(true);
-        await ProposalService.deleteProposal(proposalId);
-        onProposalDeleteModalClose();
-      } catch {
-        notify("Something went wrong");
-      } finally {
-        setProposalDeletingInProgress(false);
-      }
-    }, [proposalId]);
-
-    const preloadDiscussionMessages = useMemo(
-      () =>
-        debounce<
-          typeof preloadDiscussionMessagesData.preloadDiscussionMessages
-        >(
-          (...args) =>
-            preloadDiscussionMessagesData.preloadDiscussionMessages(...args),
-          6000,
-        ),
-      [preloadDiscussionMessagesData.preloadDiscussionMessages],
-    );
-
-    useEffect(() => {
-      fetchFeedItemUser(item.userId);
-    }, [item.userId]);
-
-    useEffect(() => {
-      if (item.data.discussionId) {
-        fetchDiscussion(item.data.discussionId);
-      }
-    }, [item.data.discussionId]);
-
-    useEffect(() => {
-      fetchProposal(item.data.id);
-    }, [item.data.id]);
-
-    useEffect(() => {
-      fetchProposalVote(proposalId);
-    }, [fetchProposalVote, proposalId]);
-
-    useEffect(() => {
-      if (commonId) {
-        fetchCommonMember(commonId, {});
-      }
-    }, [fetchCommonMember, commonId]);
-
-    useEffect(() => {
-      if (commonId) {
-        fetchFeedItemUserMetadata({
-          userId: userId || "",
-          commonId,
-          feedObjectId: item.id,
-        });
-      }
-    }, [userId, commonId, item.id]);
-
-    useEffect(() => {
-      if (proposal) {
-        fetchProposalSpecificData(proposal, true);
-      }
-    }, [proposal?.id]);
-
-    useEffect(() => {
-      if (isActive && cardTitle) {
-        onActiveItemDataChange?.({
-          itemId: item.id,
-          title: cardTitle,
-        });
-      }
-    }, [isActive, cardTitle]);
-
-    const handleOpenChat = useCallback(() => {
-      if (discussion && proposal && !isPreviewMode) {
-        setChatItem({
-          feedItemId: item.id,
-          discussion,
-          proposal,
-          circleVisibility: item.circleVisibility,
-          lastSeenItem: feedItemUserMetadata?.lastSeen,
-          lastSeenAt: feedItemUserMetadata?.lastSeenAt,
-          seenOnce: feedItemUserMetadata?.seenOnce,
-          seen: feedItemUserMetadata?.seen,
-          hasUnseenMention: feedItemUserMetadata?.hasUnseenMention,
-          nestedItemData: nestedItemData && {
-            ...nestedItemData,
-            feedItem: {
-              type: InboxItemType.FeedItemFollow,
-              itemId: item.id,
-              feedItem: item,
-            },
-          },
-        });
-      }
-    }, [
-      item.id,
-      proposal,
+      feedItem: item,
       discussion,
-      setChatItem,
-      item.circleVisibility,
-      feedItemUserMetadata?.lastSeen,
-      feedItemUserMetadata?.lastSeenAt,
-      feedItemUserMetadata?.seenOnce,
-      feedItemUserMetadata?.seen,
-      feedItemUserMetadata?.hasUnseenMention,
-      nestedItemData,
-      isPreviewMode,
-    ]);
+      governanceCircles,
+      commonMember,
+      feedItemFollow,
+      getNonAllowedItems,
+      feedItemUserMetadata,
+      withoutMenu,
+    },
+    {
+      report: () => {},
+      share: () => onShareModalOpen(),
+      remove: onProposalDeleteModalOpen,
+      markFeedItemAsSeen,
+      markFeedItemAsUnseen,
+    },
+  );
+  const cardTitle = discussion?.title;
+  const commonNotion = outerCommonNotion ?? common?.notion;
 
-    useEffect(() => {
-      if (
-        (!isActive ||
-          shouldAllowChatAutoOpen === null ||
-          shouldAllowChatAutoOpen) &&
-        isDiscussionFetched &&
-        isProposalFetched &&
-        isFeedItemUserMetadataFetched &&
-        item.id === feedItemIdForAutoChatOpen &&
-        !isMobileVersion
-      ) {
-        handleOpenChat();
-      }
-    }, [
-      isDiscussionFetched,
-      isProposalFetched,
-      isFeedItemUserMetadataFetched,
-      shouldAllowChatAutoOpen,
-    ]);
+  const onProposalDelete = useCallback(async () => {
+    try {
+      setProposalDeletingInProgress(true);
+      await ProposalService.deleteProposal(proposalId);
+      onProposalDeleteModalClose();
+    } catch {
+      notify("Something went wrong");
+    } finally {
+      setProposalDeletingInProgress(false);
+    }
+  }, [proposalId]);
 
-    useEffect(() => {
-      if (isActive && shouldAllowChatAutoOpen !== null) {
-        handleOpenChat();
-      }
-    }, [isActive, shouldAllowChatAutoOpen, handleOpenChat]);
+  const preloadDiscussionMessages = useMemo(
+    () =>
+      debounce<
+        typeof preloadDiscussionMessagesData.preloadDiscussionMessages
+      >(
+        (...args) =>
+          preloadDiscussionMessagesData.preloadDiscussionMessages(...args),
+        6000,
+      ),
+    [preloadDiscussionMessagesData.preloadDiscussionMessages],
+  );
 
-    useEffect(() => {
-      if (isExpanded) {
-        forceUpdate();
-      }
-    }, [isExpanded]);
+  useEffect(() => {
+    fetchFeedItemUser(item.userId);
+  }, [item.userId]);
 
-    useEffect(() => {
-      if (
-        shouldPreLoadMessages &&
-        !isActive &&
-        commonId &&
-        item.circleVisibility
-      ) {
-        preloadDiscussionMessages(item.circleVisibility);
-      }
-    }, [shouldPreLoadMessages, isActive]);
+  useEffect(() => {
+    if (item.data.discussionId) {
+      fetchDiscussion(item.data.discussionId);
+    }
+  }, [item.data.discussionId]);
 
-    useUpdateEffect(() => {
-      if (
-        shouldPreLoadMessages &&
-        !isActive &&
-        commonId &&
-        item.circleVisibility
-      ) {
-        preloadDiscussionMessages(item.circleVisibility, true);
-      }
-    }, [item.data.lastMessage?.content]);
+  useEffect(() => {
+    fetchProposal(item.data.id);
+  }, [item.data.id]);
 
-    return (
-      <>
-        <FeedCard
-          ref={ref}
-          feedItemId={item.id}
-          isHovering={isHovering}
-          onClick={handleOpenChat}
-          lastActivity={item.updatedAt.seconds * 1000}
-          isActive={isActive}
-          isExpanded={isExpanded}
-          unreadMessages={feedItemUserMetadata?.count || 0}
-          title={cardTitle}
-          lastMessage={getLastMessage({
-            commonFeedType: item.data.type,
-            lastMessage: item.data.lastMessage,
-            discussion,
-            currentUserId: userId,
-            feedItemCreatorName: getUserName(feedItemUser),
-            commonName,
-            isProject,
-            hasFiles: item.data.hasFiles,
-            hasImages: item.data.hasImages,
-          })}
-          canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
-          isPreviewMode={isPreviewMode}
-          commonName={commonName}
-          image={commonImage}
-          imageAlt={`${commonName}'s image`}
-          isProject={isProject}
-          isPinned={isPinned}
-          isFollowing={feedItemFollow.isFollowing}
-          isLoading={isLoading}
-          type={item.data.type}
-          seenOnce={
-            feedItemUserMetadata?.seenOnce ?? !isFeedItemUserMetadataFetched
-          }
-          seen={feedItemUserMetadata?.seen ?? !isFeedItemUserMetadataFetched}
-          menuItems={menuItems}
-          ownerId={item.userId}
-          commonId={commonId}
-          notion={discussionNotion && commonNotion}
-          hasUnseenMention={
-            isFeedItemUserMetadataFetched &&
-            feedItemUserMetadata?.hasUnseenMention
-          }
-        >
-          {(isActive || isExpanded) && (
-            <ProposalFeedCardContent
-              isLoading={isLoading}
-              proposal={proposal}
-              commonMember={commonMember}
-              userVote={userVote}
-              governanceCircles={governanceCircles}
-              feedItemUser={feedItemUser}
-              setVote={setVote}
-              commonId={commonId}
-              item={item}
-              onUserClick={onUserClick}
-              proposalSpecificData={proposalSpecificData}
-              menuItems={menuItems}
-              discussionNotion={discussionNotion}
-              discussion={discussion}
-              handleOpenChat={handleOpenChat}
-              onHover={onHover}
-              getCommonPagePath={getCommonPagePath}
-            />
-          )}
-        </FeedCard>
-        {discussion && (
-          <FeedCardShare
-            isOpen={isShareModalOpen}
-            onClose={onShareModalClose}
-            linkType={StaticLinkType.Proposal}
-            element={discussion}
-            feedItemId={item.id}
+  useEffect(() => {
+    fetchProposalVote(proposalId);
+  }, [fetchProposalVote, proposalId]);
+
+  useEffect(() => {
+    if (commonId) {
+      fetchCommonMember(commonId, {});
+    }
+  }, [fetchCommonMember, commonId]);
+
+  useEffect(() => {
+    if (commonId) {
+      fetchFeedItemUserMetadata({
+        userId: userId || "",
+        commonId,
+        feedObjectId: item.id,
+      });
+    }
+  }, [userId, commonId, item.id]);
+
+  useEffect(() => {
+    if (proposal) {
+      fetchProposalSpecificData(proposal, true);
+    }
+  }, [proposal?.id]);
+
+  useEffect(() => {
+    if (isActive && cardTitle) {
+      onActiveItemDataChange?.({
+        itemId: item.id,
+        title: cardTitle,
+      });
+    }
+  }, [isActive, cardTitle]);
+
+  const handleOpenChat = useCallback(() => {
+    if (discussion && proposal && !isPreviewMode) {
+      setChatItem({
+        feedItemId: item.id,
+        discussion,
+        proposal,
+        circleVisibility: item.circleVisibility,
+        lastSeenItem: feedItemUserMetadata?.lastSeen,
+        lastSeenAt: feedItemUserMetadata?.lastSeenAt,
+        seenOnce: feedItemUserMetadata?.seenOnce,
+        seen: feedItemUserMetadata?.seen,
+        hasUnseenMention: feedItemUserMetadata?.hasUnseenMention,
+        nestedItemData: nestedItemData && {
+          ...nestedItemData,
+          feedItem: {
+            type: InboxItemType.FeedItemFollow,
+            itemId: item.id,
+            feedItem: item,
+          },
+        },
+      });
+    }
+  }, [
+    item.id,
+    proposal,
+    discussion,
+    setChatItem,
+    item.circleVisibility,
+    feedItemUserMetadata?.lastSeen,
+    feedItemUserMetadata?.lastSeenAt,
+    feedItemUserMetadata?.seenOnce,
+    feedItemUserMetadata?.seen,
+    feedItemUserMetadata?.hasUnseenMention,
+    nestedItemData,
+    isPreviewMode,
+  ]);
+
+  useEffect(() => {
+    if (
+      (!isActive ||
+        shouldAllowChatAutoOpen === null ||
+        shouldAllowChatAutoOpen) &&
+      isDiscussionFetched &&
+      isProposalFetched &&
+      isFeedItemUserMetadataFetched &&
+      item.id === feedItemIdForAutoChatOpen &&
+      !isMobileVersion
+    ) {
+      handleOpenChat();
+    }
+  }, [
+    isDiscussionFetched,
+    isProposalFetched,
+    isFeedItemUserMetadataFetched,
+    shouldAllowChatAutoOpen,
+  ]);
+
+  useEffect(() => {
+    if (isActive && shouldAllowChatAutoOpen !== null) {
+      handleOpenChat();
+    }
+  }, [isActive, shouldAllowChatAutoOpen, handleOpenChat]);
+
+  useEffect(() => {
+    if (isExpanded) {
+      forceUpdate();
+    }
+  }, [isExpanded]);
+
+  useEffect(() => {
+    if (
+      shouldPreLoadMessages &&
+      !isActive &&
+      commonId &&
+      item.circleVisibility
+    ) {
+      preloadDiscussionMessages(item.circleVisibility);
+    }
+  }, [shouldPreLoadMessages, isActive]);
+
+  useUpdateEffect(() => {
+    if (
+      shouldPreLoadMessages &&
+      !isActive &&
+      commonId &&
+      item.circleVisibility
+    ) {
+      preloadDiscussionMessages(item.circleVisibility, true);
+    }
+  }, [item.data.lastMessage?.content]);
+
+  return (
+    <>
+      <FeedCard
+        ref={ref}
+        feedItemId={item.id}
+        isHovering={isHovering}
+        onClick={handleOpenChat}
+        lastActivity={item.updatedAt.seconds * 1000}
+        isActive={isActive}
+        isExpanded={isExpanded}
+        unreadMessages={feedItemUserMetadata?.count || 0}
+        title={cardTitle}
+        lastMessage={getLastMessage({
+          commonFeedType: item.data.type,
+          lastMessage: item.data.lastMessage,
+          discussion,
+          currentUserId: userId,
+          feedItemCreatorName: getUserName(feedItemUser),
+          commonName,
+          isProject,
+          hasFiles: item.data.hasFiles,
+          hasImages: item.data.hasImages,
+        })}
+        canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
+        isPreviewMode={isPreviewMode}
+        commonName={commonName}
+        image={commonImage}
+        imageAlt={`${commonName}'s image`}
+        isProject={isProject}
+        isPinned={isPinned}
+        isFollowing={feedItemFollow.isFollowing}
+        isLoading={isLoading}
+        type={item.data.type}
+        seenOnce={
+          feedItemUserMetadata?.seenOnce ?? !isFeedItemUserMetadataFetched
+        }
+        seen={feedItemUserMetadata?.seen ?? !isFeedItemUserMetadataFetched}
+        menuItems={menuItems}
+        ownerId={item.userId}
+        commonId={commonId}
+        notion={discussionNotion && commonNotion}
+        hasUnseenMention={
+          isFeedItemUserMetadataFetched &&
+          feedItemUserMetadata?.hasUnseenMention
+        }
+      >
+        {(isActive || isExpanded) && (
+          <ProposalFeedCardContent
+            isLoading={isLoading}
+            proposal={proposal}
+            commonMember={commonMember}
+            userVote={userVote}
+            governanceCircles={governanceCircles}
+            feedItemUser={feedItemUser}
+            setVote={setVote}
+            commonId={commonId}
+            item={item}
+            onUserClick={onUserClick}
+            proposalSpecificData={proposalSpecificData}
+            menuItems={menuItems}
+            discussionNotion={discussionNotion}
+            discussion={discussion}
+            handleOpenChat={handleOpenChat}
+            onHover={onHover}
+            getCommonPagePath={getCommonPagePath}
           />
         )}
-        {isProposalDeleteModalOpen && (
-          <GlobalOverlay>
-            <DeletePrompt
-              title="Are you sure you want to delete this proposal?"
-              description="Note that this action could not be undone."
-              onCancel={onProposalDeleteModalClose}
-              onDelete={onProposalDelete}
-              isDeletingInProgress={isProposalDeletingInProgress}
-            />
-          </GlobalOverlay>
-        )}
-      </>
-    );
-  },
-);
+      </FeedCard>
+      {discussion && (
+        <FeedCardShare
+          isOpen={isShareModalOpen}
+          onClose={onShareModalClose}
+          linkType={StaticLinkType.Proposal}
+          element={discussion}
+          feedItemId={item.id}
+        />
+      )}
+      {isProposalDeleteModalOpen && (
+        <GlobalOverlay>
+          <DeletePrompt
+            title="Are you sure you want to delete this proposal?"
+            description="Note that this action could not be undone."
+            onCancel={onProposalDeleteModalClose}
+            onDelete={onProposalDelete}
+            isDeletingInProgress={isProposalDeletingInProgress}
+          />
+        </GlobalOverlay>
+      )}
+    </>
+  );
+}
 
-export default ProposalFeedCard;
+export default forwardRef<FeedItemRef, ProposalFeedCardProps>(ProposalFeedCard);
