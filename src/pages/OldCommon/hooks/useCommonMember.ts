@@ -141,6 +141,7 @@ export const useCommonMember = (options: Options = {}): Return => {
             loading: false,
             fetched: true,
             data: {
+              commonId,
               ...commonMember,
               ...generateCirclesDataForCommonMember(
                 governance.circles,
@@ -189,7 +190,7 @@ export const useCommonMember = (options: Options = {}): Return => {
         }
       }
     },
-    [state, userId],
+    [state, userId, commonId],
   );
 
   const setCommonMember = useCallback(

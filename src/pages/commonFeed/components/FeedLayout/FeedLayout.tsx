@@ -13,7 +13,7 @@ import React, {
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import PullToRefresh from "react-simple-pull-to-refresh";
-import { useWindowSize } from "react-use";
+import { useDeepCompareEffect, useWindowSize } from "react-use";
 import classNames from "classnames";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
@@ -219,9 +219,39 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     chatItem?.nestedItemData?.commonMember ||
     outerCommonMember ||
     fetchedCommonMember;
+
+  const [
+    commonMemberForSpecificCommonIds,
+    setCommonMemberForSpecificCommonIds,
+  ] = useState({});
+
+  useDeepCompareEffect(() => {
+    const chatItemCommonMember = { ...chatItem?.nestedItemData?.commonMember };
+
+    setCommonMemberForSpecificCommonIds((prevCommonMembers) => {
+      if (chatItemCommonMember?.commonId) {
+        prevCommonMembers[chatItemCommonMember.commonId] = chatItemCommonMember;
+      }
+
+      if (outerCommonMember?.commonId) {
+        prevCommonMembers[outerCommonMember.commonId] = outerCommonMember;
+      }
+
+      if (fetchedCommonMember?.commonId) {
+        prevCommonMembers[fetchedCommonMember.commonId] = fetchedCommonMember;
+      }
+
+      return prevCommonMembers;
+    });
+  }, [
+    fetchedCommonMember,
+    chatItem?.nestedItemData?.commonMember,
+    outerCommonMember,
+  ]);
+
   const userForProfile = useUserForProfile();
   const governance = chatItem?.nestedItemData
-    ? (fetchedGovernance || outerGovernance)
+    ? fetchedGovernance || outerGovernance
     : outerGovernance || fetchedGovernance;
 
   const [splitPaneRef, setSplitPaneRef] = useState<Element | null>(null);
@@ -312,9 +342,16 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   ]);
   const activeFeedItemId = chatItem?.feedItemId || feedItemIdForAutoChatOpen;
   const sizeKey = `${windowWidth}_${contentWidth}`;
-  const userCircleIds = useMemo(
-    () => Object.values(commonMember?.circles.map ?? {}),
-    [commonMember?.circles.map],
+
+  const getUserCircleIds = useCallback(
+    (commonId) => {
+      return Object.values(
+        commonMemberForSpecificCommonIds[commonId]?.circles.map ??
+          commonMember?.circles.map ??
+          {},
+      ) as string[];
+    },
+    [commonMemberForSpecificCommonIds, commonMember?.circles.map],
   );
 
   const selectedFeedItem = useMemo(
@@ -831,7 +868,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                           item={item.feedItem}
                           governanceCircles={governance?.circles}
                           isMobileVersion={isTabletView}
-                          userCircleIds={userCircleIds}
+                          userCircleIds={getUserCircleIds(commonData?.id)}
                           isActive={isActive}
                           isExpanded={item.feedItem.id === expandedFeedItemId}
                           sizeKey={isActive ? sizeKey : undefined}
@@ -917,7 +954,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       isProject={selectedItemCommonData.isProject}
                       governanceCircles={governance?.circles}
                       selectedFeedItem={selectedFeedItem?.feedItem}
-                      userCircleIds={userCircleIds}
+                      userCircleIds={getUserCircleIds(
+                        selectedItemCommonData.id,
+                      )}
                       isShowFeedItemDetailsModal={isShowFeedItemDetailsModal}
                       sizeKey={sizeKey}
                       isMainModalOpen={Boolean(chatItem)}
