@@ -45,5 +45,7 @@ export const useMenuItems = (
     [chatChannelUserStatus?.chatChannelId],
   );
 
-  return getAllowedItems(items, options);
+  const menuItems = useMemo(() => getAllowedItems(items, options), [items, options]);
+
+  return menuItems;
 };
