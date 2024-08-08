@@ -237,11 +237,14 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     fetchUserRelatedData();
   };
 
-  const fetchMoreCommonFeedItems = (feedItemId?: string) => {
-    if (hasMoreCommonFeedItems && !isSearchingFeedItems) {
-      fetchCommonFeedItems(feedItemId);
-    }
-  };
+  const fetchMoreCommonFeedItems = useCallback(
+    (feedItemId?: string) => {
+      if (hasMoreCommonFeedItems && !isSearchingFeedItems) {
+        fetchCommonFeedItems(feedItemId);
+      }
+    },
+    [hasMoreCommonFeedItems, isSearchingFeedItems, fetchCommonFeedItems]
+  );
 
   const renderFeedItemBaseContent = useCallback(
     (props: FeedItemBaseContentProps) => <FeedItemBaseContent {...props} />,
@@ -281,7 +284,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
       : onProjectJoinModalOpen
     : onCommonJoinModalOpen;
 
-  const renderChatInput = (): ReactNode => {
+  const renderChatInput = useCallback((): ReactNode => {
     if (commonMember) {
       return;
     }
@@ -333,9 +336,19 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
         )}
       </span>
     );
-  };
+  }, [
+    commonMember,
+    isJoinPending,
+    commonData,
+    isRootCommonMember,
+    canJoin,
+    onRootCommonJoinModalOpen,
+    getCommonPagePath,
+    parentCommonMember,
+    onJoinCommon
+  ]);
 
-  const renderLayoutTabs = (): ReactElement => {
+  const renderLayoutTabs = useCallback((): ReactElement => {
     return (
       <div className={classnames(styles.tabs, styles.layoutTabs)}>
         <span className={styles.layoutTabsText} onClick={() => onJoinCommon()}>
@@ -343,7 +356,24 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
         </span>
       </div>
     );
-  };
+  }, [onJoinCommon]);
+
+  const renderContentWrapper = useCallback(
+    (children: ReactNode, wrapperStyles?: CSSProperties): ReactNode =>
+      outerContentWrapperRenderer({
+        children,
+        wrapperStyles,
+        commonData,
+        commonMember,
+        isGlobalDataFetched,
+      }),
+    [outerContentWrapperRenderer, commonData, commonMember, isGlobalDataFetched]
+  );
+
+  const onPullToRefresh = useCallback(() => {
+    dispatch(cacheActions.clearFeedStateByCommonId(commonId));
+    dispatch(commonActions.resetFeedItems());
+  }, [dispatch, commonId]);
 
   useEffect(() => {
     if (
@@ -537,23 +567,6 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
       </>
     );
   }
-
-  const onPullToRefresh = () => {
-    dispatch(cacheActions.clearFeedStateByCommonId(commonId));
-    dispatch(commonActions.resetFeedItems());
-  };
-
-  const renderContentWrapper = (
-    children: ReactNode,
-    wrapperStyles?: CSSProperties,
-  ): ReactNode =>
-    outerContentWrapperRenderer({
-      children,
-      wrapperStyles,
-      commonData,
-      commonMember,
-      isGlobalDataFetched,
-    });
 
   return (
     <>
