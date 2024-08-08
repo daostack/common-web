@@ -363,7 +363,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
       outerContentWrapperRenderer({
         children,
         wrapperStyles,
-        commonData,
+        commonData: commonData!,
         commonMember,
         isGlobalDataFetched,
       }),
