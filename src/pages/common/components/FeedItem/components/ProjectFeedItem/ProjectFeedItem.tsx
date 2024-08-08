@@ -87,11 +87,11 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
     duration: COLLAPSE_DURATION,
   });
   const isLoading = !fetched;
-  const lastMessage = parseStringToTextEditorValue(
+  const lastMessage = useMemo(() => parseStringToTextEditorValue(
     `${unreadStreamsCount ?? 0} unread stream${
       unreadStreamsCount === 1 ? "" : "s"
     }`,
-  );
+  ),[unreadStreamsCount]);
   const commonPath = getCommonPagePath(commonId);
   const isProject = checkIsProject(common);
   const titleEl = useMemo(
