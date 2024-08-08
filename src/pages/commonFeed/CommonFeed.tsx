@@ -243,7 +243,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
         fetchCommonFeedItems(feedItemId);
       }
     },
-    [hasMoreCommonFeedItems, isSearchingFeedItems, fetchCommonFeedItems]
+    [hasMoreCommonFeedItems, isSearchingFeedItems, fetchCommonFeedItems],
   );
 
   const renderFeedItemBaseContent = useCallback(
@@ -345,7 +345,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     onRootCommonJoinModalOpen,
     getCommonPagePath,
     parentCommonMember,
-    onJoinCommon
+    onJoinCommon,
   ]);
 
   const renderLayoutTabs = useCallback((): ReactElement => {
@@ -367,7 +367,12 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
         commonMember,
         isGlobalDataFetched,
       }),
-    [outerContentWrapperRenderer, commonData, commonMember, isGlobalDataFetched]
+    [
+      outerContentWrapperRenderer,
+      commonData,
+      commonMember,
+      isGlobalDataFetched,
+    ],
   );
 
   const onPullToRefresh = useCallback(() => {
@@ -526,6 +531,51 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     }
   }, [commonAction]);
 
+  const FeedLayoutTopContent = useCallback(() => {
+    if (!commonData) {
+      return null;
+    }
+
+    return (
+      <ErrorBoundary
+        fallback={null}
+        onError={() => {
+          dispatch(commonActions.setCommonAction(null));
+        }}
+      >
+        {(commonAction === CommonAction.NewDiscussion ||
+          commonAction === CommonAction.EditDiscussion) && (
+          <NewDiscussionCreation
+            common={commonData.common}
+            governanceCircles={commonData.governance.circles}
+            commonMember={commonMember}
+            isModalVariant={false}
+            edit={commonAction === CommonAction.EditDiscussion}
+            defaultVisibility={
+              commonData.governance.discussions.defaultVisibility
+            }
+            onDiscussionIdChange={scrollToItemsTop}
+          />
+        )}
+        {commonAction === CommonAction.NewProposal && (
+          <NewProposalCreation
+            common={commonData.common}
+            governance={commonData.governance}
+            parentCommons={commonData.parentCommons}
+            subCommons={commonData.subCommons}
+            commonMember={commonMember}
+            isModalVariant={false}
+          />
+        )}
+      </ErrorBoundary>
+    );
+  }, [
+    JSON.stringify(commonData),
+    JSON.stringify(commonMember),
+    commonAction,
+    scrollToItemsTop,
+  ]);
+
   if (!isDataFetched) {
     const headerEl = renderLoadingHeader ? (
       renderLoadingHeader()
@@ -574,39 +624,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
         ref={setFeedLayoutRef}
         className={styles.feedLayout}
         renderContentWrapper={renderContentWrapper}
-        topContent={
-          <ErrorBoundary
-            fallback={null}
-            onError={() => {
-              dispatch(commonActions.setCommonAction(null));
-            }}
-          >
-            {(commonAction === CommonAction.NewDiscussion ||
-              commonAction === CommonAction.EditDiscussion) && (
-              <NewDiscussionCreation
-                common={commonData.common}
-                governanceCircles={commonData.governance.circles}
-                commonMember={commonMember}
-                isModalVariant={false}
-                edit={commonAction === CommonAction.EditDiscussion}
-                defaultVisibility={
-                  commonData.governance.discussions.defaultVisibility
-                }
-                onDiscussionIdChange={scrollToItemsTop}
-              />
-            )}
-            {commonAction === CommonAction.NewProposal && (
-              <NewProposalCreation
-                common={commonData.common}
-                governance={commonData.governance}
-                parentCommons={commonData.parentCommons}
-                subCommons={commonData.subCommons}
-                commonMember={commonMember}
-                isModalVariant={false}
-              />
-            )}
-          </ErrorBoundary>
-        }
+        topContent={FeedLayoutTopContent}
         common={commonData.common}
         governance={commonData.governance}
         commonMember={commonMember}
