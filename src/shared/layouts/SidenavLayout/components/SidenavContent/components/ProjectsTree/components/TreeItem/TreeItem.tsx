@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useState, useMemo } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import classNames from "classnames";
 import { Item } from "../../types";
 import { TreeItemTrigger } from "../TreeItemTrigger";
