@@ -1,17 +1,70 @@
-import { BillingPage_v04 } from "@/pages/billing";
-import { ALL_COMMON_PAGE_TABS, CommonPage_v04 } from "@/pages/common";
-import {
-  CommonCreationPage,
-  ProjectCreationPage_v04,
-} from "@/pages/commonCreation";
-import { CommonEditingPage_v04 } from "@/pages/commonEditing";
-import { CommonFeedPage_v04 } from "@/pages/commonFeed";
-import { InboxPage_v04 } from "@/pages/inbox";
-import { ProfilePage_v04 } from "@/pages/profile";
-import { SettingsPage_v04 } from "@/pages/settings";
+import React from "react";
+// import { BillingPage_v04 } from "@/pages/billing";
+// import { ALL_COMMON_PAGE_TABS, CommonPage_v04 } from "@/pages/common";
+import { ALL_COMMON_PAGE_TABS } from "@/pages/common";
+// import {
+//   ProjectCreationPage_v04,
+//   CommonCreationPage,
+// } from "@/pages/commonCreation";
+// import { CommonEditingPage_v04 } from "@/pages/commonEditing";
+// import { CommonFeedPage_v04 } from "@/pages/commonFeed";
+// import { InboxPage_v04 } from "@/pages/inbox";
+// import { ProfilePage_v04 } from "@/pages/profile";
+// import { SettingsPage_v04 } from "@/pages/settings";
 import { ROUTE_PATHS } from "@/shared/constants";
-import { CommonSidenavLayout } from "@/shared/layouts";
+// import { CommonSidenavLayout } from "@/shared/layouts";
 import { LayoutConfiguration, RouteType } from "../types";
+
+const BillingPage_v04 = React.lazy(() =>
+  import("../../../../pages/billing").then((module) => ({
+    default: module.BillingPage_v04,
+  })),
+);
+const CommonPage_v04 = React.lazy(() =>
+  import("../../../../pages/common").then((module) => ({
+    default: module.CommonPage_v04,
+  })),
+);
+const CommonSidenavLayout = React.lazy(() =>
+  import("../../../../shared/layouts").then((module) => ({
+    default: module.CommonSidenavLayout,
+  })),
+);
+const CommonCreationPage = React.lazy(() =>
+  import("../../../../pages/commonCreation").then((module) => ({
+    default: module.CommonCreationPage,
+  })),
+);
+const ProjectCreationPage_v04 = React.lazy(() =>
+  import("../../../../pages/commonCreation").then((module) => ({
+    default: module.ProjectCreationPage_v04,
+  })),
+);
+const CommonFeedPage_v04 = React.lazy(() =>
+  import("../../../../pages/commonFeed").then((module) => ({
+    default: module.CommonFeedPage_v04,
+  })),
+);
+const CommonEditingPage_v04 = React.lazy(() =>
+  import("../../../../pages/commonEditing").then((module) => ({
+    default: module.CommonEditingPage_v04,
+  })),
+);
+const InboxPage_v04 = React.lazy(() =>
+  import("../../../../pages/inbox").then((module) => ({
+    default: module.InboxPage_v04,
+  })),
+);
+const SettingsPage_v04 = React.lazy(() =>
+  import("../../../../pages/settings").then((module) => ({
+    default: module.SettingsPage_v04,
+  })),
+);
+const ProfilePage_v04 = React.lazy(() =>
+  import("../../../../pages/profile").then((module) => ({
+    default: module.ProfilePage_v04,
+  })),
+);
 
 export interface CommonSidenavLayoutRouteOptions {
   sidenav?: boolean;
