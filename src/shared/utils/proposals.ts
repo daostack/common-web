@@ -1,4 +1,4 @@
-import { lowerCase, startCase } from "lodash-es";
+import { lowerCase, startCase } from "lodash";
 import { ProposalsTypes } from "@/shared/constants";
 import { CommonMember, Governance } from "@/shared/models";
 import { generateCirclesDataForCommonMember } from "./generateCircleDataForCommonMember";

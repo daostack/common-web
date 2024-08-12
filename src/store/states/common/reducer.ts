@@ -1,6 +1,6 @@
 import produce from "immer";
 import { WritableDraft } from "immer/dist/types/types-external";
-import { differenceBy } from "lodash-es";
+import { differenceBy } from "lodash";
 import { ActionType, createReducer } from "typesafe-actions";
 import { InboxItemType } from "@/shared/constants";
 import {

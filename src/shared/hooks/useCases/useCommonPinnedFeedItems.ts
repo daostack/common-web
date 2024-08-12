@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { usePreviousDistinct } from "react-use";
-import { difference } from "lodash-es";
+import difference from "lodash/difference";
 import { CommonFeedService } from "@/services";
 import {
   commonActions,

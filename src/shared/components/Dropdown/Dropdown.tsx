@@ -19,7 +19,7 @@ import {
   closeMenu,
 } from "react-aria-menubutton";
 import classNames from "classnames";
-import { isEqual } from "lodash-es";
+import { isEqual } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { useChatContentContext } from "@/pages/common/components/CommonContent/context";
 import { Loader } from "@/shared/components";

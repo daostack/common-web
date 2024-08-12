@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { useFormikContext } from "formik";
-import { debounce } from "lodash-es";
+import debounce from "lodash/debounce";
 import { NewDiscussionCreationFormValues } from "@/shared/interfaces";
 import { commonActions } from "@/store/states";
 

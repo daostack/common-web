@@ -1,4 +1,4 @@
-import { lowerCase, startCase } from "lodash-es";
+import { lowerCase, startCase } from "lodash";
 import { GovernanceActions } from "@/shared/constants";
 import { AllowedActions } from "@/shared/models";
 import { commonTypeText } from "@/shared/utils";

@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { last } from "lodash-es";
+import { last } from "lodash";
 import { CommonService, GovernanceService } from "@/services";
 import { useSupportersData } from "@/shared/hooks/useCases";
 import { Common } from "@/shared/models";

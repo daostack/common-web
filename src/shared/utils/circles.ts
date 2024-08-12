@@ -1,4 +1,4 @@
-import { uniqBy } from "lodash-es";
+import uniqBy from "lodash/uniqBy";
 import { Circle, CommonFeedType } from "../models";
 
 export const getFilteredByIdCircles = (

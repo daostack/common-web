@@ -1,4 +1,4 @@
-import { debounce } from "lodash-es";
+import { debounce } from "lodash";
 import { StorageKey } from "@/shared/constants";
 
 export const saveChatSize = debounce((size: number) => {

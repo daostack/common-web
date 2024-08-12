@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useDebounce, useMeasure, useScroll } from "react-use";
 import classNames from "classnames";
 import isHotkey from "is-hotkey";
-import { debounce, delay, omit } from "lodash-es";
+import { debounce, delay, omit } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { ChatService, DiscussionMessageService, FileService } from "@/services";

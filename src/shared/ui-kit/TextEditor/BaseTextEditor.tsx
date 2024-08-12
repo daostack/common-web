@@ -11,7 +11,7 @@ import React, {
 } from "react";
 import { useDebounce } from "react-use";
 import classNames from "classnames";
-import { isEqual } from "lodash-es";
+import { isEqual } from "lodash";
 import {
   createEditor,
   Transforms,

@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useMemo, useRef, useState } from "react";
-import { uniq } from "lodash-es";
+import { uniq } from "lodash";
 import { UserAvatar } from "@/shared/components";
 import { AI_PRO_USER, AI_USER, FeatureFlags } from "@/shared/constants";
 import { KeyboardKeys } from "@/shared/constants/keyboardKeys";

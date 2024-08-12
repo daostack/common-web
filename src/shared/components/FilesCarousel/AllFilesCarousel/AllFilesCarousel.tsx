@@ -9,14 +9,14 @@ import React, {
   ForwardRefRenderFunction,
 } from "react";
 import classNames from "classnames";
-import throttle from "lodash-es/throttle";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperClass from "swiper/types/swiper-class";
+import throttle from "lodash/throttle";
 import DownloadIcon from "../../../icons/download.icon";
 import LeftArrowIcon from "../../../icons/leftArrow.icon";
 import RightArrowIcon from "../../../icons/rightArrow.icon";
-import { DocInfo } from "../../../models";
 import { saveZip } from "../../../utils";
+import { DocInfo } from "../../../models";
 import { ButtonIcon } from "../../ButtonIcon";
 import { InvoiceTile } from "../../InvoiceTile";
 import { getSwiperConfig } from "./helpers";
@@ -45,8 +45,10 @@ const AllFilesCarousel: ForwardRefRenderFunction<
     initialDocIndex,
     onDocClick,
   } = props;
-  const [swiperWrapperRef, setSwiperWrapperRef] =
-    useState<HTMLDivElement | null>(null);
+  const [
+    swiperWrapperRef,
+    setSwiperWrapperRef,
+  ] = useState<HTMLDivElement | null>(null);
   const [{ isBeginning, isEnd }, setSlideState] = useState<{
     isBeginning: boolean;
     isEnd: boolean;
@@ -57,7 +59,7 @@ const AllFilesCarousel: ForwardRefRenderFunction<
   const swiperClientWidth = swiperWrapperRef?.clientWidth || 0;
   const swiperConfig = useMemo(
     () => getSwiperConfig(payoutDocs.length, swiperClientWidth),
-    [payoutDocs.length, swiperClientWidth],
+    [payoutDocs.length, swiperClientWidth]
   );
 
   const handleSlideChange = useCallback(
@@ -68,17 +70,17 @@ const AllFilesCarousel: ForwardRefRenderFunction<
           : {
               isBeginning,
               isEnd,
-            },
+            }
       );
     },
-    [],
+    []
   );
   const handleSwiper = useCallback(
     (swiper: SwiperClass) => {
       swiperRef.current = swiper;
       handleSlideChange(swiper);
     },
-    [handleSlideChange],
+    [handleSlideChange]
   );
 
   const handleLeftClick = () => {
@@ -129,14 +131,14 @@ const AllFilesCarousel: ForwardRefRenderFunction<
         swiperRef.current?.slideTo(index);
       },
     }),
-    [],
+    []
   );
 
   const contentWrapperClassName = classNames(
     "all-files-carousel-wrapper__content-wrapper",
     {
       "all-files-carousel-wrapper__content-wrapper--without-actions": false,
-    },
+    }
   );
 
   return (
@@ -157,8 +159,7 @@ const AllFilesCarousel: ForwardRefRenderFunction<
       <div className={contentWrapperClassName}>
         <ButtonIcon
           className={classNames("all-files-carousel-wrapper__button-icon", {
-            "all-files-carousel-wrapper__button-icon--hidden":
-              !swiperConfig.scrollable,
+            "all-files-carousel-wrapper__button-icon--hidden": !swiperConfig.scrollable,
           })}
           onClick={handleLeftClick}
           disabled={!swiperConfig.scrollable || isBeginning}
@@ -183,14 +184,13 @@ const AllFilesCarousel: ForwardRefRenderFunction<
                 "all-files-carousel-wrapper__invoice-tile",
                 {
                   "all-files-carousel-wrapper__invoice-tile--active": isActive,
-                },
+                }
               );
               const imageClassName = classNames(
                 "all-files-carousel-wrapper__invoice-tile-image",
                 {
-                  "all-files-carousel-wrapper__invoice-tile-image--active":
-                    isActive,
-                },
+                  "all-files-carousel-wrapper__invoice-tile-image--active": isActive,
+                }
               );
 
               return (
@@ -212,8 +212,7 @@ const AllFilesCarousel: ForwardRefRenderFunction<
         </div>
         <ButtonIcon
           className={classNames("all-files-carousel-wrapper__button-icon", {
-            "all-files-carousel-wrapper__button-icon--hidden":
-              !swiperConfig.scrollable,
+            "all-files-carousel-wrapper__button-icon--hidden": !swiperConfig.scrollable,
           })}
           onClick={handleRightClick}
           disabled={!swiperConfig.scrollable || isEnd}

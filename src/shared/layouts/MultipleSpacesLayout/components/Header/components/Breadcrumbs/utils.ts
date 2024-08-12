@@ -1,4 +1,4 @@
-import { truncate } from "lodash-es";
+import { truncate } from "lodash";
 
 const OMISSION = "...";
 const MOBILE_MAXIMUM_ITEM_LENGTH = 10 + OMISSION.length;

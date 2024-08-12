@@ -1,6 +1,6 @@
 import React, { useCallback, FC } from "react";
 import classNames from "classnames";
-import { upperFirst } from "lodash-es";
+import { upperFirst } from "lodash";
 import { useRadioButtonGroupContext } from "../context";
 import "./index.scss";
 

@@ -1,5 +1,5 @@
 import { RefObject, useCallback, useRef, useState } from "react";
-import { last } from "lodash-es";
+import { last } from "lodash";
 import {
   CommonFeedService,
   CommonService,
