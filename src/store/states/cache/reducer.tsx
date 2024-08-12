@@ -1,5 +1,5 @@
 import produce from "immer";
-import { unionBy, cloneDeep } from "lodash";
+import { unionBy, cloneDeep } from "lodash-es";
 import { ActionType, createReducer } from "typesafe-actions";
 import {
   getChatChannelUserStatusKey,

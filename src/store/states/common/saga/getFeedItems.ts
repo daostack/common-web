@@ -1,4 +1,4 @@
-import { uniqBy } from "lodash";
+import { uniqBy } from "lodash-es";
 import { call, put, select } from "redux-saga/effects";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { CommonFeedService } from "@/services";

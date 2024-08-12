@@ -1,7 +1,7 @@
 import React, { FC, useMemo, useRef } from "react";
 import classNames from "classnames";
 import { FieldArray, useFormikContext } from "formik";
-import { min, max, uniqBy } from "lodash";
+import { min, max, uniqBy } from "lodash-es";
 import { Option } from "@/shared/components/Dropdown/Dropdown";
 import { Dropdown } from "@/shared/components/Form/Formik";
 import { Modal } from "@/shared/components/Modal";

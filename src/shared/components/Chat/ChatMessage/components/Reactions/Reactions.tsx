@@ -7,7 +7,7 @@ import React, {
   useState,
 } from "react";
 import { useSelector } from "react-redux";
-import { isEmpty } from "lodash";
+import { isEmpty } from "lodash-es";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { Logger } from "@/services";
 import { UserAvatar } from "@/shared/components/UserAvatar";

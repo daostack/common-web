@@ -2,7 +2,7 @@ import React, { FC, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { CancelTokenSource } from "axios";
 import classNames from "classnames";
-import { isError } from "lodash";
+import { isError } from "lodash-es";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import {
   CommonFeedService,
@@ -71,7 +71,11 @@ const UnlinkStreamModal: FC<UnlinkStreamModalProps> = (props) => {
         cancelTokenRef.current = null;
       }
       setIsUnlinking(false);
-      setErrorText(isError(error) ? error.message : "Something went wrong...");
+      setErrorText(
+        isError(error)
+          ? (error as Record<string, string>)?.message
+          : "Something went wrong...",
+      );
     }
   };
 

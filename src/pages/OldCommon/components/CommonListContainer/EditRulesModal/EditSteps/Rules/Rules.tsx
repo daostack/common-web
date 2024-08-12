@@ -8,7 +8,7 @@ import {
   intersectionBy,
   isEmpty,
   isEqual,
-} from "lodash";
+} from "lodash-es";
 import { Button, Separator } from "@/shared/components";
 import { Form, RulesArray } from "@/shared/components/Form/Formik";
 import { ModalFooter, ModalHeaderContent } from "@/shared/components/Modal";

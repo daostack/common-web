@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { MultiValue, SingleValue } from "react-select";
 import classNames from "classnames";
 import { Formik } from "formik";
-import { omit } from "lodash";
+import { omit } from "lodash-es";
 import * as Yup from "yup";
 import { createDiscussion } from "@/pages/OldCommon/store/actions";
 import { getCommonGovernanceCircles } from "@/pages/OldCommon/store/api";

@@ -1,4 +1,4 @@
-import findLast from "lodash/findLast";
+import { findLast } from "lodash-es";
 import {
   checkIsUserDiscussionMessage,
   DiscussionMessage,

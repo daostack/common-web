@@ -1,4 +1,4 @@
-import { words } from "lodash";
+import { words } from "lodash-es";
 import millify from "millify";
 import moment from "moment";
 import { store } from "@/shared/appConfig";

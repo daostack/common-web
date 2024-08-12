@@ -1,5 +1,5 @@
 import React, { FC, useMemo } from "react";
-import { flattenDeep, uniq } from "lodash";
+import { flattenDeep, uniq } from "lodash-es";
 import { ProposalsTypes } from "@/shared/constants";
 import { Circles, Governance } from "@/shared/models";
 import {

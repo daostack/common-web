@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { debounce } from "lodash";
+import { debounce } from "lodash-es";
 import { QueryParamKey } from "@/shared/constants";
 import { ToggleState, useQueryParams, useToggle } from "@/shared/hooks";
 import { addQueryParam, deleteQueryParam } from "@/shared/utils";

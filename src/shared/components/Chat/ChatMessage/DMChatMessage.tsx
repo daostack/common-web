@@ -9,7 +9,7 @@ import React, {
 import { useDispatch } from "react-redux";
 import { usePrevious } from "react-use";
 import classNames from "classnames";
-import { isEmpty, isEqual } from "lodash";
+import { isEmpty, isEqual } from "lodash-es";
 import { Element } from "slate";
 import { useLongPress } from "use-long-press";
 import { ChatService, Logger } from "@/services";

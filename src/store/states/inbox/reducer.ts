@@ -1,6 +1,6 @@
 import produce from "immer";
 import { WritableDraft } from "immer/dist/types/types-external";
-import { pick } from "lodash";
+import { pick } from "lodash-es";
 import { ActionType, createReducer } from "typesafe-actions";
 import { InboxItemType, QueryParamKey } from "@/shared/constants";
 import {

@@ -1,6 +1,6 @@
 import produce from "immer";
 import { WritableDraft } from "immer/dist/types/types-external";
-import { cloneDeep } from "lodash";
+import { cloneDeep } from "lodash-es";
 import { ActionType, createReducer } from "typesafe-actions";
 import { InboxItemType } from "@/shared/constants";
 import * as actions from "./actions";

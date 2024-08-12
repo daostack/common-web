@@ -1,4 +1,4 @@
-import { get, set } from "lodash";
+import { get, set } from "lodash-es";
 import { SynchronizedDate } from "@/shared/interfaces";
 import { Timestamp } from "@/shared/models";
 import { checkIsSynchronizedDate } from "@/shared/utils";
