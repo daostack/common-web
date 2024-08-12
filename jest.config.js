@@ -16,5 +16,6 @@ module.exports = {
     "^@/(.*)$": "<rootDir>/src/$1",
   },
   testPathIgnorePatterns: ["/node_modules/", "/public/"],
+  transformIgnorePatterns: ["<rootDir>/node_modules/(?!lodash-es)"],
   testEnvironment: "jsdom",
 };
