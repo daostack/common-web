@@ -139,7 +139,7 @@
     "@types/google-libphonenumber": "^7.4.23",
     "@types/is-hotkey": "^0.1.7",
     "@types/jest": "^27.5.2",
-    "@types/lodash-es": "^4.17.12",
+    "@types/lodash": "^4.14.163",
     "@types/node": "^12.19.3",
     "@types/openpgp": "4.4.12",
     "@types/react": "^16.9.55",
