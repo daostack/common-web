@@ -27,6 +27,8 @@ export const local: Configuration = {
   deadSeaCommonId: "958dca85-7bc1-4714-95bd-1fc6343f0654",
   parentsForClimateCommonId: "958dca85-7bc1-4714-95bd-1fc6343f0654",
   saadiaCommonId: "958dca85-7bc1-4714-95bd-1fc6343f0654",
+  vapidKey:
+    "BHVFyNetSC6oA2uFejnUFuDcSUYcas2R5lwW80z6gZc6zODp7rRdh2t8bht3LygJWjyI1toV165EYgdZqxCS_Y4",
 };
 
 const dev: Configuration = {
@@ -44,6 +46,8 @@ const dev: Configuration = {
   deadSeaCommonId: "958dca85-7bc1-4714-95bd-1fc6343f0654",
   parentsForClimateCommonId: "958dca85-7bc1-4714-95bd-1fc6343f0654",
   saadiaCommonId: "958dca85-7bc1-4714-95bd-1fc6343f0654",
+  vapidKey:
+    "BHVFyNetSC6oA2uFejnUFuDcSUYcas2R5lwW80z6gZc6zODp7rRdh2t8bht3LygJWjyI1toV165EYgdZqxCS_Y4",
 };
 
 const stage: Configuration = {
@@ -62,6 +66,8 @@ const stage: Configuration = {
   deadSeaCommonId: "a55a1e9b-104a-4866-9f4f-3e017bbae281",
   parentsForClimateCommonId: "a55a1e9b-104a-4866-9f4f-3e017bbae281",
   saadiaCommonId: "a55a1e9b-104a-4866-9f4f-3e017bbae281",
+  vapidKey:
+    "BBvr8z8QaPSJJfIRxmjBrq5Vs49BY95uZK_6QFyR7gKWgwrs5toDy-hvwWEtk-rbkVHBgOu9l2orK45u1n--9M0",
 };
 
 const production: Configuration = {
@@ -80,6 +86,8 @@ const production: Configuration = {
   deadSeaCommonId: "6cfbfae6-2e5c-4b3b-ba70-e8fd871f48e2",
   parentsForClimateCommonId: "04ac2ec2-5cb2-4ab9-ae3f-5f223f482768",
   saadiaCommonId: "7c8c8996-b678-44df-9a57-e291431eb00f",
+  vapidKey:
+    "BKJ324iR-B5SoDG42bMrC_Q_poAv7BO-Z3AuMh5Grrg6TxO1QnN6mgzt2KyFFax0JSuuUhUKP-OrcTUPfboVqns",
 };
 
 const config: ConfigurationObject = {
