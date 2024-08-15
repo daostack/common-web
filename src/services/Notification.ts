@@ -64,7 +64,7 @@ class NotificationService {
   }
 
   public onForegroundMessage = () => {
-    console.log('-subscribe');
+    console.log('-subscribe', firebase.messaging().onMessage);
     const unsubscribe =  firebase.messaging().onMessage((payload) => {
       console.log('Message received. ', payload);
       

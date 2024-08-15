@@ -7,36 +7,41 @@ importScripts(
   "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js",
 );
 
-let firebaseConfig = {};
+let firebaseConfig = {
+  apiKey: "AIzaSyDbTFuksgOkIVWDiFe_HG7-BE8X6Dwsg-0",
+  authDomain: "common-dev-34b09.firebaseapp.com",
+  databaseURL: "https://common-dev-34b09.firebaseio.com",
+  projectId: "common-dev-34b09",
+  storageBucket: "common-dev-34b09.appspot.com",
+  messagingSenderId: "870639147922",
+  appId: "1:870639147922:web:9ee954bb1dd52e25cb7f4b",
+};
 
-self.addEventListener("message", (event) => {
-  console.log("--INIT_ENV", event);
-  if (event.data && event.data.type === "INIT_ENV") {
-    firebaseConfig = event.data.env;
-    initializeFirebase();
-  }
-});
+// self.addEventListener("message", (event) => {
+//   console.log("--INIT_ENV", event);
+//   if (event.data && event.data.type === "INIT_ENV") {
+//     firebaseConfig = event.data.env;
+//     initializeFirebase();
+//   }
+// });
 
-function initializeFirebase() {
-  if (firebaseConfig.apiKey) {
-    console.log("--firebaseConfig", firebaseConfig);
-    firebase.initializeApp(firebaseConfig);
+// function initializeFirebase() {
+if (firebaseConfig.apiKey) {
+  console.log("--firebaseConfig", firebaseConfig);
+  firebase.initializeApp(firebaseConfig);
 
-    const messaging = firebase.messaging();
+  const messaging = firebase.messaging();
 
-    messaging.onBackgroundMessage((payload) => {
-      console.log("--notif-back", payload);
-      const notificationTitle = payload.notification.title;
-      const notificationOptions = {
-        body: payload.notification.body,
-        data: payload.data,
-        icon: "/logo.png",
-      };
+  messaging.onBackgroundMessage((payload) => {
+    console.log("--notif-back", payload);
+    const notificationTitle = payload.notification.title;
+    const notificationOptions = {
+      body: payload.notification.body,
+      data: payload.data,
+      icon: "/logo.png",
+    };
 
-      self.registration.showNotification(
-        notificationTitle,
-        notificationOptions,
-      );
-    });
-  }
+    self.registration.showNotification(notificationTitle, notificationOptions);
+  });
 }
+// }

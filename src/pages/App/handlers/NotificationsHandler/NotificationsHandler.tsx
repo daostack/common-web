@@ -76,10 +76,10 @@ const NotificationsHandler: FC = () => {
       }
     })();
 
-    return () => {
-      unsubscribeLoad && unsubscribeLoad();
-      unsubscribeOnMessage && unsubscribeOnMessage();
-    };
+    // return () => {
+    //   unsubscribeLoad && unsubscribeLoad();
+    //   unsubscribeOnMessage && unsubscribeOnMessage();
+    // };
   }, [userId]);
 
   // useEffect(() => {
