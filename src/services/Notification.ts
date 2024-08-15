@@ -1,6 +1,7 @@
 import firebase from "@/shared/utils/firebase";
 import firebaseConfig from "@/config";
 import Api from "./Api";
+import { NODATA } from "dns";
 
 enum NOTIFICATIONS_PERMISSIONS {
   DEFAULT = "default",
@@ -22,6 +23,9 @@ class NotificationService {
 
   public requestPermissions = async (): Promise<boolean> => {
     try {
+      if(Notification.permission === NOTIFICATIONS_PERMISSIONS.GRANTED) {
+        return true;
+      }
       const permission = await Notification.requestPermission();
         if (permission === NOTIFICATIONS_PERMISSIONS.GRANTED) {
           console.log('Notification permission granted.');
@@ -60,18 +64,21 @@ class NotificationService {
   }
 
   public onForegroundMessage = () => {
-    return firebase.messaging().onMessage((payload) => {
+    console.log('-subscribe');
+    const unsubscribe =  firebase.messaging().onMessage((payload) => {
       console.log('Message received. ', payload);
       
       const { title, body } = payload.notification;
       if (Notification.permission === 'granted') {
         new Notification(title, {
           body,
-          data: payload.data,
+          data: payload?.data,
           icon: '/logo.png', // Replace with your icon
         });
       }
     });
+
+    return unsubscribe;
   }
 }
 
