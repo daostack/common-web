@@ -15,6 +15,7 @@ export interface Configuration {
   deadSeaCommonId: string;
   parentsForClimateCommonId: string;
   saadiaCommonId: string;
+  vapidKey: string;
 }
 
 export type ConfigurationObject = Record<Environment, Configuration>;
