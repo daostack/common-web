@@ -1,7 +1,6 @@
 import firebase from "@/shared/utils/firebase";
 import firebaseConfig from "@/config";
 import Api from "./Api";
-import { NODATA } from "dns";
 
 enum NOTIFICATIONS_PERMISSIONS {
   DEFAULT = "default",
@@ -28,7 +27,6 @@ class NotificationService {
       }
       const permission = await Notification.requestPermission();
         if (permission === NOTIFICATIONS_PERMISSIONS.GRANTED) {
-          console.log('Notification permission granted.');
           return true;
         } else {
           return false;
@@ -40,23 +38,15 @@ class NotificationService {
 
   public saveFCMToken = async (): Promise<void> => {
     try {
-      console.log('-hastPermissions', firebaseConfig.vapidKey);
         const token = await firebase.messaging().getToken({ vapidKey: firebaseConfig.vapidKey });
         if (token) {
-          try {
-            console.log("FCM Token:", token);
       
-            await Api.post(
-              this.endpoints.setFCMToken,
-              {
-                token,
-              }
-            );
-          } catch (error) {
-            console.error("An error occurred while retrieving token. ", error);
-          }
-        } else {
-          console.log("No registration token available. Request permission to generate one.");
+          await Api.post(
+            this.endpoints.setFCMToken,
+            {
+              token,
+            }
+          );
         }
     } catch (error) {
       console.error("An error occurred while retrieving token. ", error);
@@ -64,16 +54,14 @@ class NotificationService {
   }
 
   public onForegroundMessage = () => {
-    console.log('-subscribe', firebase.messaging().onMessage);
     const unsubscribe =  firebase.messaging().onMessage((payload) => {
-      console.log('Message received. ', payload);
       
       const { title, body } = payload.notification;
       if (Notification.permission === 'granted') {
         new Notification(title, {
           body,
           data: payload?.data,
-          icon: '/logo.png', // Replace with your icon
+          icon: "/logo.png",
         });
       }
     });
