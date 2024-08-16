@@ -1,15 +1,15 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 const useModal = (show: boolean) => {
   const [isShowing, setIsShowing] = useState(show);
 
-  function onClose() {
+  const onClose = useCallback(() => {
     setIsShowing(false);
-  }
+  }, []);
 
-  function onOpen() {
+  const onOpen = useCallback(() => {
     setIsShowing(true);
-  }
+  }, []);
 
   return {
     isShowing,
