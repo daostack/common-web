@@ -141,7 +141,7 @@ export const useCommonMembers = ({ commonId }: Options): Return => {
 
               const user = cachedUserStates[commonMember.userId]?.data;
 
-              return user ? [...acc, { ...commonMember, user }] : acc;
+              return user ? [...acc, { ...commonMember, user, commonId }] : acc;
             }, []);
 
             return {
@@ -178,7 +178,7 @@ export const useCommonMembers = ({ commonId }: Options): Return => {
               ({ uid }) => uid === commonMember.userId,
             );
 
-            return user ? [...acc, { ...commonMember, user }] : acc;
+            return user ? [...acc, { ...commonMember, user, commonId }] : acc;
           }, []);
 
           return {
@@ -198,7 +198,7 @@ export const useCommonMembers = ({ commonId }: Options): Return => {
         }));
       }
     })();
-  }, [commonMembersState.data]);
+  }, [commonMembersState.data, commonId]);
 
   return {
     ...state,
