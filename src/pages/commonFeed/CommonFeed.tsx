@@ -531,7 +531,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     }
   }, [commonAction]);
 
-  const FeedLayoutTopContent = useCallback(() => {
+  const FeedLayoutTopContent = useMemo(() => {
     if (!commonData) {
       return null;
     }
