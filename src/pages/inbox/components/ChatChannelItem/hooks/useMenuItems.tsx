@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Message3Icon } from "@/shared/icons";
 import { ContextMenuItem as Item } from "@/shared/interfaces";
 import { ChatChannelMenuItem } from "../constants";
@@ -15,32 +15,37 @@ export const useMenuItems = (
 ): Item[] => {
   const { chatChannelUserStatus } = options;
   const { markChatChannelAsSeen, markChatChannelAsUnseen } = actions;
-  const items: Item[] = [
-    {
-      id: ChatChannelMenuItem.MarkUnread,
-      text: "Mark as unread",
-      onClick: async () => {
-        if (!chatChannelUserStatus) {
-          return;
-        }
+  const items: Item[] = useMemo(
+    () => [
+      {
+        id: ChatChannelMenuItem.MarkUnread,
+        text: "Mark as unread",
+        onClick: async () => {
+          if (!chatChannelUserStatus) {
+            return;
+          }
 
-        markChatChannelAsUnseen(chatChannelUserStatus.chatChannelId);
+          markChatChannelAsUnseen(chatChannelUserStatus.chatChannelId);
+        },
+        icon: <Message3Icon />,
       },
-      icon: <Message3Icon />,
-    },
-    {
-      id: ChatChannelMenuItem.MarkRead,
-      text: "Mark as read",
-      onClick: async () => {
-        if (!chatChannelUserStatus) {
-          return;
-        }
+      {
+        id: ChatChannelMenuItem.MarkRead,
+        text: "Mark as read",
+        onClick: async () => {
+          if (!chatChannelUserStatus) {
+            return;
+          }
 
-        markChatChannelAsSeen(chatChannelUserStatus.chatChannelId);
+          markChatChannelAsSeen(chatChannelUserStatus.chatChannelId);
+        },
+        icon: <Message3Icon />,
       },
-      icon: <Message3Icon />,
-    },
-  ];
+    ],
+    [chatChannelUserStatus?.chatChannelId],
+  );
 
-  return getAllowedItems(items, options);
+  const menuItems = useMemo(() => getAllowedItems(items, options), [items, options]);
+
+  return menuItems;
 };

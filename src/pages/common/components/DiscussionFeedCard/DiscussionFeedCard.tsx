@@ -346,6 +346,30 @@ function DiscussionFeedCard(props, ref) {
     }
   }, [item.data.lastMessage?.content]);
 
+  const lastMessage = useMemo(() => {
+    return getLastMessage({
+      commonFeedType: item.data.type,
+      lastMessage: item.data.lastMessage,
+      discussion,
+      currentUserId: userId,
+      feedItemCreatorName: getUserName(discussionCreator),
+      commonName,
+      isProject,
+      hasFiles: item.data.hasFiles,
+      hasImages: item.data.hasImages,
+    });
+  }, [
+    item.data.type,
+    item.data.lastMessage,
+    discussion,
+    userId,
+    discussionCreator,
+    commonName,
+    isProject,
+    item.data.hasFiles,
+    item.data.hasImages,
+  ]);
+
   return (
     <>
       <FeedCard
@@ -358,17 +382,7 @@ function DiscussionFeedCard(props, ref) {
         isExpanded={isExpanded}
         onClick={handleOpenChat}
         title={cardTitle}
-        lastMessage={getLastMessage({
-          commonFeedType: item.data.type,
-          lastMessage: item.data.lastMessage,
-          discussion,
-          currentUserId: userId,
-          feedItemCreatorName: getUserName(discussionCreator),
-          commonName,
-          isProject,
-          hasFiles: item.data.hasFiles,
-          hasImages: item.data.hasImages,
-        })}
+        lastMessage={lastMessage}
         isPreviewMode={isPreviewMode}
         isPinned={isPinned}
         commonName={commonName}

@@ -231,7 +231,7 @@ export const useDiscussionMessagesById = ({
     ],
   );
 
-  const fetchDiscussionMessages = () => {
+  const fetchDiscussionMessages = useCallback(() => {
     if (
       !discussionId ||
       isEndOfList[discussionId] ||
@@ -324,7 +324,7 @@ export const useDiscussionMessagesById = ({
     } catch(err) {
       setIsBatchLoading(false);
     }
-  };
+  },[discussionId, isEndOfList, state.loading, state.data, isBatchLoading, lastVisible, userId, users, directParent, getCommonPagePath, getCommonPageAboutTabPath, onUserClick, onFeedItemClick, onInternalLinkClick, dispatch]);
 
   useDeepCompareEffect(() => {
     (async () => {

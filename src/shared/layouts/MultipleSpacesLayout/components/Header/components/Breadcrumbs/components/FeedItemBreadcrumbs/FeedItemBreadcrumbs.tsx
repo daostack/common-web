@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useMemo, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { CommonEvent, CommonEventEmitter } from "@/events";
 import { CommonService } from "@/services";
@@ -19,22 +19,33 @@ interface FeedItemBreadcrumbsProps {
   truncate: boolean;
 }
 
-const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
-  const { breadcrumbs, itemsWithMenus, truncate } = props;
+const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = ({
+  breadcrumbs,
+  itemsWithMenus,
+  truncate,
+}) => {
   const dispatch = useDispatch();
   const goToCreateCommon = useGoToCreateCommon();
   const isMobileView = useIsTabletView();
-  const breadcrumbsItems = truncate
-    ? [breadcrumbs.items[0], breadcrumbs.items[breadcrumbs.items.length - 1]]
-    : breadcrumbs.items;
 
-  const handleItemClick = (item: ProjectsStateItem) => {
-    if (item.rootCommonId) {
-      dispatch(
-        commonLayoutActions.resetCurrentCommonIdAndProjects(item.rootCommonId),
-      );
-    }
-  };
+  const breadcrumbsItems = useMemo(() => {
+    return truncate
+      ? [breadcrumbs.items[0], breadcrumbs.items[breadcrumbs.items.length - 1]]
+      : breadcrumbs.items;
+  }, [breadcrumbs.items, truncate]);
+
+  const handleItemClick = useCallback(
+    (item: ProjectsStateItem) => {
+      if (item.rootCommonId) {
+        dispatch(
+          commonLayoutActions.resetCurrentCommonIdAndProjects(
+            item.rootCommonId,
+          ),
+        );
+      }
+    },
+    [dispatch],
+  );
 
   useEffect(() => {
     const commonIds = breadcrumbs.items.map((item) => item.commonId);
@@ -55,7 +66,9 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
       });
     });
 
-    return unsubscribe;
+    return () => {
+      unsubscribe();
+    };
   }, [breadcrumbs.activeItem?.id]);
 
   return (

@@ -215,10 +215,17 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   } = useCommonMember({
     shouldAutoReset: false,
   });
-  const commonMember =
-    chatItem?.nestedItemData?.commonMember ||
-    outerCommonMember ||
-    fetchedCommonMember;
+  const commonMember = useMemo(
+    () =>
+      chatItem?.nestedItemData?.commonMember ||
+      outerCommonMember ||
+      fetchedCommonMember,
+    [
+      chatItem?.nestedItemData?.commonMember,
+      outerCommonMember,
+      fetchedCommonMember,
+    ],
+  );
 
   const [
     commonMemberForSpecificCommonIds,
@@ -248,7 +255,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     chatItem?.nestedItemData?.commonMember,
     outerCommonMember,
   ]);
-
   const userForProfile = useUserForProfile();
   const governance = chatItem?.nestedItemData
     ? fetchedGovernance || outerGovernance
