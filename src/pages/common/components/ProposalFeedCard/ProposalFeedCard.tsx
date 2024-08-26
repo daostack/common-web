@@ -375,6 +375,30 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       }
     }, [item.data.lastMessage?.content]);
 
+    const lastMessage = useMemo(() => {
+      return getLastMessage({
+        commonFeedType: item.data.type,
+        lastMessage: item.data.lastMessage,
+        discussion,
+        currentUserId: userId,
+        feedItemCreatorName: getUserName(feedItemUser),
+        commonName,
+        isProject,
+        hasFiles: item.data.hasFiles,
+        hasImages: item.data.hasImages,
+      });
+    }, [
+      item.data.type,
+      item.data.lastMessage,
+      discussion,
+      userId,
+      feedItemUser,
+      commonName,
+      isProject,
+      item.data.hasFiles,
+      item.data.hasImages,
+    ]);
+
     return (
       <>
         <FeedCard
@@ -387,17 +411,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
           isExpanded={isExpanded}
           unreadMessages={feedItemUserMetadata?.count || 0}
           title={cardTitle}
-          lastMessage={getLastMessage({
-            commonFeedType: item.data.type,
-            lastMessage: item.data.lastMessage,
-            discussion,
-            currentUserId: userId,
-            feedItemCreatorName: getUserName(feedItemUser),
-            commonName,
-            isProject,
-            hasFiles: item.data.hasFiles,
-            hasImages: item.data.hasImages,
-          })}
+          lastMessage={lastMessage}
           canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
           isPreviewMode={isPreviewMode}
           commonName={commonName}

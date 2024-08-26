@@ -149,6 +149,8 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
     }
   }, [isActive, finalTitle, dmUsers?.[0]?.photoURL, dmUsersNames?.[0]]);
 
+  const lastMessage = useMemo(() => getLastMessage(chatChannel.lastMessage), [chatChannel.lastMessage]);
+
   return (
     <FeedItemBaseContent
       lastActivity={chatChannel.updatedAt.seconds * 1000}
@@ -156,7 +158,7 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
       isMobileView={isTabletView}
       isActive={isActive}
       title={finalTitle}
-      lastMessage={getLastMessage(chatChannel.lastMessage)}
+      lastMessage={lastMessage}
       canBeExpanded={false}
       onClick={handleOpenChat}
       menuItems={menuItems}
