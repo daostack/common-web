@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { Logger, UserService } from "@/services";
@@ -87,10 +87,10 @@ export const useInboxItems = (
     );
   };
 
-  const refetch = () => {
+  const refetch = useCallback(() => {
     setNewItemsBatches([]);
     dispatch(inboxActions.refetchInboxItems(Boolean(unread)));
-  };
+  },[unread, setNewItemsBatches]);
 
   const addNewInboxItems = (
     data: {

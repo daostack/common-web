@@ -54,7 +54,7 @@ export const ThemeColorsValues = {
     [ThemeColors.secondaryBackground]: "#1f2124",
     [ThemeColors.hoverFill]: "#271d21",
     [ThemeColors.secondaryHoverFill]: "#432b33",
-    [ThemeColors.primaryText]: "#ffffff",
+    [ThemeColors.primaryText]: "#ddd",
     [ThemeColors.secondaryText]: "#a75a93",
     [ThemeColors.tertiaryText]: "#001a36",
     [ThemeColors.quaternaryText]: "#432B33",

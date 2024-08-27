@@ -30,7 +30,7 @@ const MembersComponent: FC<MembersComponentProps> = (props) => {
     () =>
       [...commonMembers].sort(
         (commonMember, prevCommonMember) =>
-          prevCommonMember.joinedAt.seconds - commonMember.joinedAt.seconds,
+          prevCommonMember.joinedAt?.seconds - commonMember.joinedAt?.seconds,
       ),
     [commonMembers],
   );

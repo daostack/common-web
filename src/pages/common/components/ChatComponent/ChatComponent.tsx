@@ -206,10 +206,15 @@ export default function ChatComponent({
     chatChannelId: chatChannel?.id || "",
     participants: chatChannel?.participants,
   });
-  const users = chatChannel ? chatUsers : discussionUsers;
-  const discussionMessages = chatChannel
-    ? chatMessagesData.data
-    : discussionMessagesData.data || [];
+  const users = useMemo(
+    () => (chatChannel ? chatUsers : discussionUsers),
+    [chatUsers, discussionUsers, chatChannel],
+  );
+  const discussionMessages = useMemo(
+    () =>
+      chatChannel ? chatMessagesData.data : discussionMessagesData.data || [],
+    [chatChannel, chatMessagesData.data, discussionMessagesData.data],
+  );
   const isFetchedDiscussionMessages =
     discussionMessagesData.fetched || chatMessagesData.fetched;
   const areInitialMessagesLoading = isChatChannel

@@ -1,4 +1,10 @@
-import React, { FC, MouseEventHandler, useState } from "react";
+import React, {
+  FC,
+  MouseEventHandler,
+  useState,
+  useMemo,
+  useCallback,
+} from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { ButtonIcon } from "@/shared/components";
@@ -27,51 +33,56 @@ const DesktopCommonDropdown: FC<DesktopCommonDropdownProps> = (props) => {
     setMenuRerenderHack((value) => !value);
   };
 
-  const finalItems = items.map((item) => ({
-    ...item,
-    className: classNames(item.className, styles.menuItem, {
-      [styles.menuItemForCommonCreation]: item.id === CREATE_COMMON_ITEM_ID,
-    }),
-    activeClassName: classNames(item.activeClassName, styles.menuItemActive),
-    text: (
-      <>
-        <span
-          className={styles.menuItemText}
-          title={typeof item.text === "string" ? item.text : ""}
-        >
-          {item.text}
-        </span>
-        {item.id === activeItemId && (
-          <Check2Icon className={styles.checkIcon} />
-        )}
-      </>
-    ),
-    onClick: (event) => {
-      event.preventDefault();
-      handleItemClick();
+  const finalItems = useMemo(() => {
+    return items.map((item) => ({
+      ...item,
+      className: classNames(item.className, styles.menuItem, {
+        [styles.menuItemForCommonCreation]: item.id === CREATE_COMMON_ITEM_ID,
+      }),
+      activeClassName: classNames(item.activeClassName, styles.menuItemActive),
+      text: (
+        <>
+          <span
+            className={styles.menuItemText}
+            title={typeof item.text === "string" ? item.text : ""}
+          >
+            {item.text}
+          </span>
+          {item.id === activeItemId && (
+            <Check2Icon className={styles.checkIcon} />
+          )}
+        </>
+      ),
+      onClick: (event) => {
+        event.preventDefault();
+        handleItemClick();
 
-      if (item.type !== MenuItemType.Link) {
-        item.onClick(event);
-      }
-    },
-  }));
+        if (item.type !== MenuItemType.Link) {
+          item.onClick(event);
+        }
+      },
+    }));
+  }, [items]);
 
-  const onClick: MouseEventHandler = (event) => {
+  const onClick: MouseEventHandler = useCallback((event) => {
     event.stopPropagation();
-  };
+  }, []);
 
-  const triggerEl = (
-    <ButtonIcon onClick={onClick}>
-      {isMobileView ? (
-        <span className={styles.changeLabel}>Change</span>
-      ) : (
-        <Menu2Icon
-          className={classNames(styles.icon, {
-            [styles.iconActive]: isActive,
-          })}
-        />
-      )}
-    </ButtonIcon>
+  const triggerEl = useMemo(
+    () => (
+      <ButtonIcon onClick={onClick}>
+        {isMobileView ? (
+          <span className={styles.changeLabel}>Change</span>
+        ) : (
+          <Menu2Icon
+            className={classNames(styles.icon, {
+              [styles.iconActive]: isActive,
+            })}
+          />
+        )}
+      </ButtonIcon>
+    ),
+    [onClick, isActive, isMobileView],
   );
 
   return (
