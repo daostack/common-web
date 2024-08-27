@@ -62,7 +62,7 @@ type FeedCardProps = PropsWithChildren<{
   linkedCommonIds?: string[];
 }>;
 
-export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
+const FeedCard = (props, ref) => {
   const {
     className,
     feedItemId,
@@ -319,4 +319,6 @@ export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
       </div>
     </div>
   );
-});
+};
+
+export default forwardRef<FeedCardRef, FeedCardProps>(FeedCard);
