@@ -75,6 +75,7 @@ import {
   getParamsFromOneOfRoutes,
   getUserName,
 } from "@/shared/utils";
+import { selectOptimisticFeedItems } from "@/store/states";
 import { MIN_CONTENT_WIDTH } from "../../constants";
 import {
   DesktopChat,
@@ -254,6 +255,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
     return items;
   }, [topFeedItems, feedItems]);
+
   const dmChatChannelItemForProfile = useMemo(
     () =>
       getDMChatChannelItemByUserIds(

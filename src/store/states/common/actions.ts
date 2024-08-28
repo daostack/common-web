@@ -16,7 +16,9 @@ import {
   CommonFeed,
   CommonMember,
   Discussion,
+  DiscussionMessage,
   Governance,
+  OptimisticFeedItemState,
   Proposal,
 } from "@/shared/models";
 import { CommonActionType } from "./constants";
@@ -217,6 +219,27 @@ export const setSharedFeedItemId = createStandardAction(
 export const setSharedFeedItem = createStandardAction(
   CommonActionType.SET_SHARED_FEED_ITEM,
 )<CommonFeed | null>();
+
+export const setOptimisticFeedItem = createStandardAction(
+  CommonActionType.SET_OPTIMISTIC_FEED_ITEM,
+)<CommonFeed>();
+
+export const updateOptimisticFeedItemState = createStandardAction(
+  CommonActionType.UPDATE_OPTIMISTIC_FEED_ITEM,
+)<{
+  id: string;
+  state: OptimisticFeedItemState;
+}>();
+
+export const removeOptimisticFeedItemState = createStandardAction(
+  CommonActionType.REMOVE_OPTIMISTIC_FEED_ITEM,
+)<{
+  id: string;
+}>();
+
+export const setOptimisticDiscussionMessages = createStandardAction(
+  CommonActionType.SET_OPTIMISTIC_DISCUSSION_MESSAGES,
+)<DiscussionMessage>();
 
 export const setRecentStreamId = createStandardAction(
   CommonActionType.SET_RECENT_STREAM_ID,

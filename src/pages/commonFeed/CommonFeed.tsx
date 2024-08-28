@@ -53,6 +53,7 @@ import {
   selectCommonAction,
   selectFeedSearchValue,
   selectIsSearchingFeedItems,
+  selectOptimisticFeedItems,
   selectRecentStreamId,
   selectSharedFeedItem,
 } from "@/store/states";
@@ -114,6 +115,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
       sharedFeedItemIdQueryParam) ||
     null;
   const commonAction = useSelector(selectCommonAction);
+  const optimisticFeedItems = useSelector(selectOptimisticFeedItems);
   const {
     data: commonData,
     stateRef,
@@ -204,7 +206,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   );
 
   const sharedFeedItem = useSelector(selectSharedFeedItem);
-  const topFeedItems = useMemo(() => {
+  const topFeedItemsWithoutOptimistic = useMemo(() => {
     const items: FeedLayoutItem[] = [];
     const filteredPinnedItems =
       commonPinnedFeedItems?.filter(
@@ -220,6 +222,18 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
 
     return items;
   }, [sharedFeedItem, sharedFeedItemId, commonPinnedFeedItems]);
+
+  const topFeedItems = useMemo(() => {
+    const items: FeedLayoutItem[] = [...topFeedItemsWithoutOptimistic];
+
+    if (optimisticFeedItems.size > 0) {
+      const optimisticItems = Array.from(optimisticFeedItems.values());
+      items.push(...optimisticItems);
+    }
+
+    return items;
+  }, [topFeedItemsWithoutOptimistic, optimisticFeedItems]);
+
   const firstItem = commonFeedItems?.[0];
   const isDataFetched = isCommonDataFetched;
   const hasPublicItems = commonData?.common.hasPublicItems ?? false;
@@ -454,8 +468,15 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
         feedItemId: firstItem.feedItem.id,
       });
       dispatch(commonActions.setRecentStreamId(""));
+    } else if (
+      checkIsFeedItemFollowLayoutItem(firstItem) &&
+      optimisticFeedItems.has(recentStreamId)
+    ) {
+      feedLayoutRef?.setActiveItem({
+        feedItemId: optimisticFeedItems.get(recentStreamId)!.feedItem.id,
+      });
     }
-  }, [feedLayoutRef, recentStreamId, firstItem]);
+  }, [feedLayoutRef, recentStreamId, firstItem, optimisticFeedItems]);
 
   useEffect(() => {
     const handler: CommonEventToListener[CommonEvent.CommonDeleted] = (

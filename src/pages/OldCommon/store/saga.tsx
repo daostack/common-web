@@ -555,7 +555,7 @@ export function* createDiscussionSaga(
       );
     }
 
-    yield put(startLoading());
+    // yield put(startLoading());
 
     const discussion = (yield createDiscussion(
       action.payload.payload,

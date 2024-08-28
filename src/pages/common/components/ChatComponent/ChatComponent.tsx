@@ -62,6 +62,7 @@ import {
   selectCurrentDiscussionMessageReply,
   selectFilesPreview,
   FileInfo,
+  selectOptimisticFeedItems,
 } from "@/store/states";
 import { ChatContentContext, ChatContentData } from "../CommonContent/context";
 import {
@@ -163,9 +164,14 @@ export default function ChatComponent({
   const discussionMessageReply = useSelector(
     selectCurrentDiscussionMessageReply(),
   );
+  const optimisticFeedItems = useSelector(selectOptimisticFeedItems);
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const discussionId = discussion?.id || "";
+
+  const isOptimisticChat = optimisticFeedItems.has(discussionId);
+
+  console.log("---isOptimisticChat", isOptimisticChat);
   const isChatChannel = Boolean(chatChannel);
 
   const hasPermissionToHide =

@@ -248,6 +248,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       feedItemUserMetadata?.hasUnseenMention,
       nestedItemData,
       isPreviewMode,
+      isActive,
     ]);
 
     const onDiscussionDelete = useCallback(async () => {
@@ -316,7 +317,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       if (isActive && shouldAllowChatAutoOpen !== null) {
         handleOpenChat();
       }
-    }, [isActive, shouldAllowChatAutoOpen, handleOpenChat]);
+    }, [isActive, shouldAllowChatAutoOpen, handleOpenChat, item]);
 
     useEffect(() => {
       if (isActive && cardTitle) {

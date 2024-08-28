@@ -70,24 +70,26 @@ const FeedItems: FC<FeedItemsProps> = (props) => {
             const isPinned = (common.pinnedFeedItems || []).some(
               (pinnedItem) => pinnedItem.feedObjectId === item.feedItem.id,
             );
-            return (
-              <FeedItem
-                key={item.feedItem.id}
-                commonId={common.id}
-                commonName={common.name}
-                commonImage={common.image}
-                commonNotion={common.notion}
-                pinnedFeedItems={common.pinnedFeedItems}
-                isPinned={isPinned}
-                isProject={checkIsProject(common)}
-                item={item.feedItem}
-                governanceCircles={governance.circles}
-                isMobileVersion={isTabletView}
-                userCircleIds={userCircleIds}
-                isPreviewMode
-                directParent={common.directParent}
-              />
-            );
+
+            return <></>;
+            // return (
+            //   <FeedItem
+            //     key={item.feedItem.id}
+            //     commonId={common.id}
+            //     commonName={common.name}
+            //     commonImage={common.image}
+            //     commonNotion={common.notion}
+            //     pinnedFeedItems={common.pinnedFeedItems}
+            //     isPinned={isPinned}
+            //     isProject={checkIsProject(common)}
+            //     item={item.feedItem}
+            //     governanceCircles={governance.circles}
+            //     isMobileVersion={isTabletView}
+            //     userCircleIds={userCircleIds}
+            //     isPreviewMode
+            //     directParent={common.directParent}
+            //   />
+            // );
           })}
         </InfiniteScroll>
       </FeedItemContext.Provider>

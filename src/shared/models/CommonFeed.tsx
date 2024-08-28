@@ -1,15 +1,23 @@
 import { DiscussionMessageOwnerType } from "@/shared/constants";
 import { BaseEntity } from "./BaseEntity";
+import { Discussion } from "./Discussion";
 import { SoftDeleteEntity } from "./SoftDeleteEntity";
 
 export enum CommonFeedType {
   Proposal = "Proposal",
   Discussion = "Discussion",
+  OptimisticDiscussion = "OptimisticDiscussion",
   Project = "Project",
   PayIn = "PayIn",
   ProjectCreation = "ProjectCreation",
   JoinCommon = "JoinCommon",
   JoinProjectInCommon = "JoinProjectInCommon",
+}
+
+export enum OptimisticFeedItemState {
+  loading = 'loading',
+  rejected = 'failed',
+  fulfilled = 'fulfilled'
 }
 
 export interface CommonFeed extends BaseEntity, SoftDeleteEntity {
@@ -27,6 +35,9 @@ export interface CommonFeed extends BaseEntity, SoftDeleteEntity {
     };
     hasFiles?: boolean;
     hasImages?: boolean;
+  };
+  optimisticData?: Discussion & {
+    state?: OptimisticFeedItemState
   };
   circleVisibility: string[];
 }

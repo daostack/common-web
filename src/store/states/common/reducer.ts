@@ -50,6 +50,8 @@ const initialState: CommonState = {
   searchState: { ...initialSearchState },
   sharedFeedItemId: null,
   sharedFeedItem: null,
+  optimisticFeedItems: new Map(),
+  optimisticDiscussionMessages: new Map(),
   commonAction: null,
   discussionCreation: {
     data: null,
@@ -449,9 +451,9 @@ export const reducer = createReducer<CommonState, Action>(initialState)
     produce(state, (nextState) => {
       const payloadData = nextState.sharedFeedItemId
         ? payload.data &&
-          payload.data.filter(
-            (item) => item.feedItem.id !== nextState.sharedFeedItemId,
-          )
+        payload.data.filter(
+          (item) => item.feedItem.id !== nextState.sharedFeedItemId,
+        )
         : payload.data;
       const nextData = nextState.feedItems.data || [];
       const filteredPayloadData =
@@ -688,10 +690,71 @@ export const reducer = createReducer<CommonState, Action>(initialState)
     produce(state, (nextState) => {
       nextState.sharedFeedItem = payload
         ? {
-            type: InboxItemType.FeedItemFollow,
-            itemId: payload.id,
-            feedItem: payload,
-          }
+          type: InboxItemType.FeedItemFollow,
+          itemId: payload.id,
+          feedItem: payload,
+        }
         : null;
+    }),
+  )
+  .handleAction(actions.setOptimisticFeedItem, (state, { payload }) =>
+    produce(state, (nextState) => {
+        const updatedMap = new Map(nextState.optimisticFeedItems);
+
+        // Add the new item to the Map
+        updatedMap.set(payload.data.id, {
+          type: InboxItemType.FeedItemFollow,
+          itemId: payload.id,
+          feedItem: payload,
+        });
+
+        // Assign the new Map back to the state
+        nextState.optimisticFeedItems = updatedMap;
+        nextState.recentStreamId = payload.data.id;
+    }),
+  )
+  .handleAction(actions.updateOptimisticFeedItemState, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const updatedMap = new Map(nextState.optimisticFeedItems);
+
+      const optimisticFeedItem = updatedMap.get(payload.id);
+      // Add the new item to the Map
+
+      if(optimisticFeedItem && optimisticFeedItem?.feedItem.optimisticData) {
+        updatedMap.set(payload.id, {
+          ...optimisticFeedItem,
+          feedItem: {
+            ...optimisticFeedItem?.feedItem,
+            optimisticData: {
+              ...optimisticFeedItem.feedItem.optimisticData,
+              state: payload.state
+            }
+          }
+        });
+      }
+
+      // Assign the new Map back to the state
+      nextState.optimisticFeedItems = updatedMap;
+    }),
+  )
+  .handleAction(actions.removeOptimisticFeedItemState, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const updatedMap = new Map(nextState.optimisticFeedItems);
+
+      updatedMap.delete(payload.id);
+
+      // Assign the new Map back to the state
+      nextState.optimisticFeedItems = updatedMap;
+    }),
+  )
+  .handleAction(actions.setOptimisticDiscussionMessages, (state, { payload }) =>
+    produce(state, (nextState) => {
+        const updatedMap = new Map(nextState.optimisticDiscussionMessages);
+
+        // Add the new item to the Map
+        updatedMap.set(payload.id, payload);
+
+        // Assign the new Map back to the state
+        nextState.optimisticDiscussionMessages = updatedMap;
     }),
   );
