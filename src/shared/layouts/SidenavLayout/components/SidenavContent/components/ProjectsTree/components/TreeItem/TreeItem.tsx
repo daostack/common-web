@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import classNames from "classnames";
 import { Item } from "../../types";
 import { TreeItemTrigger } from "../TreeItemTrigger";
@@ -40,10 +40,14 @@ const TreeItem: FC<TreeItemProps> = (props) => {
     }
   }, [isActive, hasNestedContent, isOpenedManually, hasActiveChild]);
 
-  const handleTriggerToggle = () => {
+  const handleTriggerToggle = useCallback(() => {
+    if (!hasNestedContent) {
+      return;
+    }
+
     setIsOpenedManually(!isOpen);
     setIsOpen((value) => !value);
-  };
+  }, [hasNestedContent]);
 
   return (
     <li
@@ -59,7 +63,7 @@ const TreeItem: FC<TreeItemProps> = (props) => {
         level={level}
         isActive={isActive}
         isOpen={isOpen}
-        onToggle={hasNestedContent ? handleTriggerToggle : undefined}
+        onToggle={handleTriggerToggle}
       />
       {isOpen ? children : null}
     </li>

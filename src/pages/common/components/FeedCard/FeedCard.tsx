@@ -5,6 +5,8 @@ import React, {
   forwardRef,
   useImperativeHandle,
   PropsWithChildren,
+  useCallback,
+  useMemo,
 } from "react";
 import { useCollapse } from "react-collapsed";
 import classNames from "classnames";
@@ -60,7 +62,7 @@ type FeedCardProps = PropsWithChildren<{
   linkedCommonIds?: string[];
 }>;
 
-export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
+const FeedCard = (props, ref) => {
   const {
     className,
     feedItemId,
@@ -106,11 +108,11 @@ export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
   });
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const toggleExpanding = () => {
+  const toggleExpanding = useCallback(() => {
     if (setExpandedFeedItemId) {
       setExpandedFeedItemId(isExpanded ? null : feedItemId);
     }
-  };
+  }, [setExpandedFeedItemId, isExpanded, feedItemId]);
 
   const scrollToTargetTop = (
     headerOffset: number,
@@ -140,7 +142,7 @@ export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
     }
   };
 
-  const scrollToTargetAdjusted = () => {
+  const scrollToTargetAdjusted = useCallback(() => {
     if (scrollTimeoutRef.current) {
       clearTimeout(scrollTimeoutRef.current);
     }
@@ -192,7 +194,7 @@ export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
         });
       }
     }, COLLAPSE_DURATION + EXTRA_WAITING_TIME_FOR_TIMEOUT);
-  };
+  }, [isTabletView]);
 
   useEffect(() => {
     if (isExpanded && containerRef?.current) {
@@ -203,63 +205,102 @@ export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
       clearTimeout(scrollTimeoutRef.current);
       scrollTimeoutRef.current = null;
     }
-  }, [isExpanded]);
+  }, [isExpanded, scrollToTargetAdjusted]);
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     onClick?.();
 
     if (!isTabletView && isActive) {
       toggleExpanding();
     }
-  };
+  }, [onClick, isTabletView, isActive, toggleExpanding]);
 
-  const handleExpand: MouseEventHandler = (event) => {
-    event.stopPropagation();
-    toggleExpanding();
-  };
+  const handleExpand: MouseEventHandler = useCallback(
+    (event) => {
+      event.stopPropagation();
+      toggleExpanding();
+    },
+    [toggleExpanding],
+  );
 
-  useImperativeHandle(ref, () => ({
-    itemId: feedItemId,
-    scrollToItem: scrollToTargetAdjusted,
-  }));
+  useImperativeHandle(
+    ref,
+    () => ({
+      itemId: feedItemId,
+      scrollToItem: scrollToTargetAdjusted,
+    }),
+    [feedItemId, scrollToTargetAdjusted],
+  );
+
+  const feedItemBaseContent = useMemo(() => {
+    return renderFeedItemBaseContent?.({
+      lastActivity,
+      unreadMessages,
+      isMobileView: isTabletView,
+      isActive,
+      isExpanded,
+      canBeExpanded,
+      onClick: handleClick,
+      onExpand: handleExpand,
+      title,
+      lastMessage: !isLoading ? lastMessage : undefined,
+      menuItems,
+      commonName,
+      commonId,
+      image,
+      imageAlt,
+      isProject,
+      isPinned,
+      isFollowing,
+      type,
+      seenOnce,
+      seen,
+      ownerId,
+      discussionPredefinedType,
+      hasFiles,
+      hasImages,
+      hasUnseenMention,
+      notion,
+      originalCommonIdForLinking,
+      linkedCommonIds,
+    });
+  }, [
+    lastActivity,
+    unreadMessages,
+    isTabletView,
+    isActive,
+    isExpanded,
+    canBeExpanded,
+    handleClick,
+    handleExpand,
+    title,
+    lastMessage,
+    isLoading,
+    menuItems,
+    commonName,
+    commonId,
+    image,
+    imageAlt,
+    isProject,
+    isPinned,
+    isFollowing,
+    type,
+    seenOnce,
+    seen,
+    ownerId,
+    discussionPredefinedType,
+    hasFiles,
+    hasImages,
+    hasUnseenMention,
+    notion,
+    originalCommonIdForLinking,
+    linkedCommonIds,
+    renderFeedItemBaseContent,
+  ]);
 
   return (
     <div ref={containerRef}>
-      {!isPreviewMode && (
-        <div {...getToggleProps()}>
-          {renderFeedItemBaseContent?.({
-            lastActivity,
-            unreadMessages,
-            isMobileView: isTabletView,
-            isActive,
-            isExpanded,
-            canBeExpanded,
-            onClick: handleClick,
-            onExpand: handleExpand,
-            title,
-            lastMessage: !isLoading ? lastMessage : undefined,
-            menuItems,
-            commonName,
-            commonId,
-            image,
-            imageAlt,
-            isProject,
-            isPinned,
-            isFollowing,
-            type,
-            seenOnce,
-            seen,
-            ownerId,
-            discussionPredefinedType,
-            hasFiles,
-            hasImages,
-            hasUnseenMention,
-            notion,
-            originalCommonIdForLinking,
-            linkedCommonIds,
-          })}
-        </div>
-      )}
+      {!isPreviewMode && <div {...getToggleProps()}>{feedItemBaseContent}</div>}
       <div {...getCollapseProps()}>
         <CommonCard
           className={classNames(
@@ -278,4 +319,6 @@ export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
       </div>
     </div>
   );
-});
+};
+
+export default forwardRef<FeedCardRef, FeedCardProps>(FeedCard);

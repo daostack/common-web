@@ -1,0 +1,58 @@
+@import "../../../../../../../../../constants";
+
+.arrowIconButton {
+  padding: 0.75rem 1.25rem 0.75rem var(--item-arrow-pl);
+  width: 2.25rem;
+}
+.arrowIconButtonHidden {
+  visibility: hidden;
+}
+
+.arrowIcon {
+  width: 0.5rem;
+  height: 0.625rem;
+  color: $c-neutrals-600;
+  transition: transform 0.2s;
+}
+
+.arrowIconOpen {
+  transform: rotate(90deg);
+}
+
+.image {
+  flex-shrink: 0;
+  margin-right: var(--item-image-mr);
+  width: 1.5rem;
+  height: 1.5rem;
+  object-fit: cover;
+}
+.imageNonRounded {
+  border-radius: 0.1875rem;
+}
+.imageRounded {
+  border-radius: 50%;
+}
+
+.name {
+  font-family: PoppinsSans, sans-serif;
+  font-weight: 600;
+  font-size: $small;
+  color: var(--item-text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.notificationsAmount {
+  height: 1rem;
+  margin-left: auto;
+  padding: 0 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: $xxsmall-2;
+  color: $c-shades-white;
+  background-color: $c-primary-400;
+  border-radius: 0.5rem;
+}

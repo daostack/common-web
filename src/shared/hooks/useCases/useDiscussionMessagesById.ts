@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useDeepCompareEffect, useUpdateEffect } from "react-use";
+import { trace } from "firebase/performance";
 import {
   DiscussionMessageService,
   MESSAGES_NUMBER_IN_BATCH,
@@ -20,7 +21,7 @@ import {
   User,
 } from "@/shared/models";
 import { InternalLinkData } from "@/shared/utils";
-import firebase from "@/shared/utils/firebase";
+import firebase, { perf } from "@/shared/utils/firebase";
 import {
   cacheActions,
   selectDiscussionMessagesStateByDiscussionId,
@@ -153,59 +154,67 @@ export const useDiscussionMessagesById = ({
 
   const fetchRepliedMessages = useCallback(
     async (messageId: string, endDate: Date): Promise<void> => {
-      if (state.data?.find((item) => item.id === messageId)) {
-        return Promise.resolve();
-      }
+      const fetchRepliedMessagesTrace = trace(perf, 'fetchRepliedMessagesTrace');
+      try {
+        fetchRepliedMessagesTrace.start();
 
-      const {
-        updatedDiscussionMessages,
-        removedDiscussionMessages,
-        lastVisibleSnapshot,
-      } = await DiscussionMessageService.getDiscussionMessagesByEndDate(
-        discussionId,
-        lastVisible && lastVisible[discussionId],
-        endDate,
-      );
+        if (state.data?.find((item) => item.id === messageId)) {
+          return Promise.resolve();
+        }
 
-      setLastVisible((prevVisible) => ({
-        ...prevVisible,
-        [discussionId]: lastVisibleSnapshot,
-      }));
-      const discussionsWithText = await Promise.all(
-        updatedDiscussionMessages.map(async (discussionMessage) => {
-          const isUserDiscussionMessage =
-            checkIsUserDiscussionMessage(discussionMessage);
-          const isSystemMessage =
-            checkIsSystemDiscussionMessage(discussionMessage);
-
-          const parsedText = await getTextFromTextEditorString({
-            userId,
-            ownerId: isUserDiscussionMessage ? discussionMessage.ownerId : null,
-            textEditorString: discussionMessage.text,
-            users,
-            commonId: discussionMessage.commonId,
-            systemMessage: isSystemMessage ? discussionMessage : undefined,
-            getCommonPagePath,
-            getCommonPageAboutTabPath,
-            directParent,
-            onUserClick,
-            onFeedItemClick,
-            onInternalLinkClick,
-          });
-
-          return {
-            ...discussionMessage,
-            parsedText,
-          };
-        }),
-      );
-      dispatch(
-        cacheActions.updateDiscussionMessagesStateByDiscussionId({
-          discussionId,
+        const {
+          updatedDiscussionMessages,
           removedDiscussionMessages,
-          updatedDiscussionMessages: discussionsWithText,
-        }),
-      );
+          lastVisibleSnapshot,
+        } = await DiscussionMessageService.getDiscussionMessagesByEndDate(
+          discussionId,
+          lastVisible && lastVisible[discussionId],
+          endDate,
+        );
+
+        setLastVisible((prevVisible) => ({
+          ...prevVisible,
+          [discussionId]: lastVisibleSnapshot,
+        }));
+        const discussionsWithText = await Promise.all(
+          updatedDiscussionMessages.map(async (discussionMessage) => {
+            const isUserDiscussionMessage =
+              checkIsUserDiscussionMessage(discussionMessage);
+            const isSystemMessage =
+              checkIsSystemDiscussionMessage(discussionMessage);
+
+            const parsedText = await getTextFromTextEditorString({
+              userId,
+              ownerId: isUserDiscussionMessage ? discussionMessage.ownerId : null,
+              textEditorString: discussionMessage.text,
+              users,
+              commonId: discussionMessage.commonId,
+              systemMessage: isSystemMessage ? discussionMessage : undefined,
+              getCommonPagePath,
+              getCommonPageAboutTabPath,
+              directParent,
+              onUserClick,
+              onFeedItemClick,
+              onInternalLinkClick,
+            });
+
+            return {
+              ...discussionMessage,
+              parsedText,
+            };
+          }),
+        );
+        dispatch(
+          cacheActions.updateDiscussionMessagesStateByDiscussionId({
+            discussionId,
+            removedDiscussionMessages,
+            updatedDiscussionMessages: discussionsWithText,
+          }),
+        );
+        fetchRepliedMessagesTrace.stop();
+      } catch(err) {
+        fetchRepliedMessagesTrace.stop();
+      }
     },
     [
       state.data,
@@ -222,7 +231,7 @@ export const useDiscussionMessagesById = ({
     ],
   );
 
-  const fetchDiscussionMessages = () => {
+  const fetchDiscussionMessages = useCallback(() => {
     if (
       !discussionId ||
       isEndOfList[discussionId] ||
@@ -239,6 +248,9 @@ export const useDiscussionMessagesById = ({
     }
 
     try {
+      const fetchDiscussionMessagesTrace = trace(perf, 'fetchDiscussionMessages');
+      fetchDiscussionMessagesTrace.start();
+
       DiscussionMessageService.subscribeToDiscussionMessagesByDiscussionId(
         discussionId,
         lastVisible && lastVisible[discussionId],
@@ -308,10 +320,11 @@ export const useDiscussionMessagesById = ({
           setIsBatchLoading(false);
         },
       );
+      fetchDiscussionMessagesTrace.stop();
     } catch(err) {
       setIsBatchLoading(false);
     }
-  };
+  },[discussionId, isEndOfList, state.loading, state.data, isBatchLoading, lastVisible, userId, users, directParent, getCommonPagePath, getCommonPageAboutTabPath, onUserClick, onFeedItemClick, onInternalLinkClick, dispatch]);
 
   useDeepCompareEffect(() => {
     (async () => {

@@ -143,11 +143,11 @@ const InboxPage: FC<InboxPageProps> = (props) => {
     });
   };
 
-  const fetchMoreInboxItems = () => {
+  const fetchMoreInboxItems = useCallback(() => {
     if (hasMoreInboxItems && !isSearchingInboxItems && !areInboxItemsLoading) {
       fetchInboxItems();
     }
-  };
+  },[hasMoreInboxItems, isSearchingInboxItems, areInboxItemsLoading]);
 
   const renderFeedItemBaseContent = useCallback(
     (props: FeedItemBaseContentProps) => <FeedItemBaseContent {...props} />,

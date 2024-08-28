@@ -122,11 +122,13 @@ const CommonMember: FC<CommonMemberProps> = ({
             </div>
           </div>
         </div>
-        <div className="members__section__common-member-date">
-          {joinedAt
-            .toDate()
-            .toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-        </div>
+        {joinedAt && joinedAt.toDate && (
+          <div className="members__section__common-member-date">
+            {joinedAt
+              ?.toDate()
+              .toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+          </div>
+        )}
         <MemberDropdown
           notMemberCircles={notMemberCircles}
           memberName={memberName}

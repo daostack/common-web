@@ -2,10 +2,11 @@ import React, {
   CSSProperties,
   FC,
   MouseEventHandler,
-  ReactNode,
   useEffect,
+  useMemo,
   useRef,
   useState,
+  useCallback,
 } from "react";
 import { useCollapse } from "react-collapsed";
 import { useSelector } from "react-redux";
@@ -86,52 +87,63 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
     duration: COLLAPSE_DURATION,
   });
   const isLoading = !fetched;
-  const lastMessage = parseStringToTextEditorValue(
+  const lastMessage = useMemo(() => parseStringToTextEditorValue(
     `${unreadStreamsCount ?? 0} unread stream${
       unreadStreamsCount === 1 ? "" : "s"
     }`,
-  );
+  ),[unreadStreamsCount]);
   const commonPath = getCommonPagePath(commonId);
   const isProject = checkIsProject(common);
-  const titleEl = (
-    <>
-      <span className={styles.title}>{common?.name}</span>
-      <OpenIcon className={styles.openIcon} />
-    </>
+  const titleEl = useMemo(
+    () => (
+      <>
+        <span className={styles.title}>{common?.name}</span>
+        <OpenIcon className={styles.openIcon} />
+      </>
+    ),
+    [common?.name],
   );
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     history.push(commonPath);
-  };
+  }, [history, commonPath]);
 
-  const handleExpand: MouseEventHandler = (event) => {
-    event.stopPropagation();
-    setIsExpanded((v) => !v);
-  };
+  const handleExpand: MouseEventHandler = useCallback(
+    (event) => {
+      event.stopPropagation();
+      setIsExpanded((v) => !v);
+    },
+    [setIsExpanded],
+  );
 
-  const renderLeftContent = (): ReactNode => (
-    <div className={styles.leftContent}>
-      <ButtonIcon
-        className={styles.arrowIconButton}
-        onClick={handleExpand}
-        aria-label={`${isExpanded ? "Hide" : "Show"} ${common?.name}'s spaces`}
-      >
-        <SmallArrowIcon
-          className={classNames(styles.arrowIcon, {
-            [styles.arrowIconOpen]: isExpanded,
+  const renderLeftContent = useCallback(
+    () => (
+      <div className={styles.leftContent}>
+        <ButtonIcon
+          className={styles.arrowIconButton}
+          onClick={handleExpand}
+          aria-label={`${isExpanded ? "Hide" : "Show"} ${
+            common?.name
+          }'s spaces`}
+        >
+          <SmallArrowIcon
+            className={classNames(styles.arrowIcon, {
+              [styles.arrowIconOpen]: isExpanded,
+            })}
+          />
+        </ButtonIcon>
+        <CommonAvatar
+          className={classNames(styles.image, {
+            [styles.imageNonRounded]: !isProject,
+            [styles.imageRounded]: isProject,
           })}
+          src={common?.image}
+          alt={`${common?.name}'s image`}
+          name={common?.name}
         />
-      </ButtonIcon>
-      <CommonAvatar
-        className={classNames(styles.image, {
-          [styles.imageNonRounded]: !isProject,
-          [styles.imageRounded]: isProject,
-        })}
-        src={common?.image}
-        alt={`${common?.name}'s image`}
-        name={common?.name}
-      />
-    </div>
+      </div>
+    ),
+    [common?.image, common?.name, isExpanded, isProject, handleExpand],
   );
 
   useEffect(() => {
@@ -145,6 +157,45 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
       fetchFeedItems();
     }
   }, [isExpanded]);
+
+  const feedItemProps = useMemo(
+    () => ({
+      className: styles.container,
+      titleWrapperClassName: styles.titleWrapper,
+      lastActivity: item.updatedAt.seconds * 1000,
+      isMobileView: isMobileVersion,
+      title: titleEl,
+      onClick: handleClick,
+      onExpand: handleExpand,
+      seenOnce: true,
+      isLoading: !isCommonFetched,
+      unreadMessages,
+      lastMessage,
+      seen: !(
+        unreadStreamsCount &&
+        unreadStreamsCount > 0 &&
+        unreadMessages === 0
+      ),
+      renderLeftContent,
+      shouldHideBottomContent: !lastMessage,
+      isFollowing: feedItemFollow.isFollowing,
+      notion: common?.notion,
+    }),
+    [
+      item.updatedAt.seconds,
+      isMobileVersion,
+      titleEl,
+      handleClick,
+      handleExpand,
+      isCommonFetched,
+      unreadMessages,
+      lastMessage,
+      unreadStreamsCount,
+      renderLeftContent,
+      feedItemFollow.isFollowing,
+      common?.notion,
+    ],
+  );
 
   if (
     !isCommonMemberFetched ||
@@ -164,28 +215,7 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
       style={itemStyles}
     >
       <div {...getToggleProps()}>
-        {renderFeedItemBaseContent?.({
-          className: styles.container,
-          titleWrapperClassName: styles.titleWrapper,
-          lastActivity: item.updatedAt.seconds * 1000,
-          isMobileView: isMobileVersion,
-          title: titleEl,
-          onClick: handleClick,
-          onExpand: handleExpand,
-          seenOnce: true,
-          isLoading: !isCommonFetched,
-          unreadMessages,
-          lastMessage,
-          seen: !(
-            unreadStreamsCount &&
-            unreadStreamsCount > 0 &&
-            unreadMessages === 0
-          ),
-          renderLeftContent,
-          shouldHideBottomContent: !lastMessage,
-          isFollowing: feedItemFollow.isFollowing,
-          notion: common?.notion,
-        })}
+        {renderFeedItemBaseContent?.(feedItemProps)}
       </div>
       <div {...getCollapseProps()}>
         <CommonCard

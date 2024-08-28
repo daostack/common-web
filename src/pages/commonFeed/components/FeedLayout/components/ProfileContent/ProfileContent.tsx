@@ -169,7 +169,7 @@ const ProfileContent: FC<ProfileContentProps> = (props) => {
           <p className={styles.infoContent}>
             Joined {common.name} at{" "}
             {formatDate(
-              new Date(commonMember.joinedAt.seconds * 1000),
+              new Date(commonMember.joinedAt?.seconds * 1000),
               DateFormat.SuperShortSecondary,
             )}
           </p>

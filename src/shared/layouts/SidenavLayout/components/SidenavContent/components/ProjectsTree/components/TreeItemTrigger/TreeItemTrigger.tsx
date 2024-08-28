@@ -1,11 +1,9 @@
 import React, { FC, MouseEventHandler } from "react";
 import { NavLink } from "react-router-dom";
 import classNames from "classnames";
-import { ButtonIcon } from "@/shared/components/ButtonIcon";
-import { SmallArrowIcon } from "@/shared/icons";
-import { CommonAvatar } from "@/shared/ui-kit";
 import { useTreeContext } from "../../context";
 import { Item } from "../../types";
+import { TreeItemTriggerContent } from "../TreeItemTriggerContent";
 import styles from "./TreeItemTrigger.module.scss";
 
 interface TreeItemTriggerProps {
@@ -50,51 +48,6 @@ const TreeItemTrigger: FC<TreeItemTriggerProps> = (props) => {
     className,
     treeItemTriggerStyles?.container,
   );
-  const contentEl = (
-    <>
-      <ButtonIcon
-        className={classNames(styles.arrowIconButton, {
-          [styles.arrowIconButtonHidden]: !onToggle,
-        })}
-        onClick={handleToggle}
-        aria-label={`${isOpen ? "Hide" : "Show"} ${item.name}'s spaces`}
-        aria-hidden={!onToggle}
-      >
-        <SmallArrowIcon
-          className={classNames(styles.arrowIcon, {
-            [styles.arrowIconOpen]: isOpen,
-          })}
-        />
-      </ButtonIcon>
-
-      <CommonAvatar
-        name={item.name}
-        src={item.image}
-        className={classNames(styles.image, {
-          [classNames(
-            styles.imageNonRounded,
-            treeItemTriggerStyles?.imageNonRounded,
-          )]: level === 1,
-          [styles.imageRounded]: level !== 1,
-        })}
-      />
-
-      <span className={classNames(styles.name, treeItemTriggerStyles?.name)}>
-        {item.name}
-      </span>
-      {item.nameRightContent}
-      {item.rightContent}
-      {!!item.notificationsAmount && (
-        <span
-          className={styles.notificationsAmount}
-          title={`Notifications amount: ${item.notificationsAmount}`}
-          aria-label={`Notifications amount: ${item.notificationsAmount}`}
-        >
-          {item.notificationsAmount}
-        </span>
-      )}
-    </>
-  );
 
   if (onItemClick || item.disabled) {
     return (
@@ -106,7 +59,15 @@ const TreeItemTrigger: FC<TreeItemTriggerProps> = (props) => {
         tabIndex={0}
         onClick={handleItemClick}
       >
-        {contentEl}
+        <TreeItemTriggerContent
+          isActive={isActive}
+          treeItemTriggerStyles={treeItemTriggerStyles}
+          item={item}
+          level={level}
+          isOpen={isOpen}
+          handleToggle={handleToggle}
+          onToggle={onToggle}
+        />
       </div>
     );
   }
@@ -118,7 +79,15 @@ const TreeItemTrigger: FC<TreeItemTriggerProps> = (props) => {
       title={item.name}
       aria-label={`Go to ${item.name}`}
     >
-      {contentEl}
+      <TreeItemTriggerContent
+        isActive={isActive}
+        treeItemTriggerStyles={treeItemTriggerStyles}
+        item={item}
+        level={level}
+        isOpen={isOpen}
+        handleToggle={handleToggle}
+        onToggle={onToggle}
+      />
     </NavLink>
   );
 };

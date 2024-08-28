@@ -7,15 +7,20 @@ import React, {
 } from "react";
 import { mergeRefs } from "react-merge-refs";
 import classNames from "classnames";
-import { FloatingPortal } from "@floating-ui/react-dom-interactions";
+import { FloatingPortal, FloatingOverlay } from "@floating-ui/react";
 import { CaretIcon } from "@/shared/icons";
 import { useTooltipContext } from "../../context";
 import styles from "./TooltipContent.module.scss";
 
+interface TooltipContentProps extends HTMLProps<HTMLDivElement> {
+  withOverlay?: boolean;
+}
+
 const TooltipContent: ForwardRefRenderFunction<
   HTMLDivElement,
-  HTMLProps<HTMLDivElement>
+  TooltipContentProps
 > = (props, propRef) => {
+  const { withOverlay } = props;
   const state = useTooltipContext();
   const { children, ...containerProps } = state.getFloatingProps(props);
   const [side] = state.placement.split("-");
@@ -44,35 +49,64 @@ const TooltipContent: ForwardRefRenderFunction<
     [state.floating, propRef],
   );
 
+  const divProps = useMemo(
+    () => ({
+      ref,
+      style: {
+        position: state.strategy,
+        top: state.y ?? 0,
+        left: state.x ?? 0,
+        visibility: state.x === null ? "hidden" : "visible",
+        ...props.style,
+      } as CSSProperties,
+      ...containerProps,
+      className: containerClassName,
+    }),
+    [
+      state.strategy,
+      state.x,
+      state.y,
+      props.style,
+      containerProps,
+      containerClassName,
+    ],
+  );
+
   return (
     <FloatingPortal>
       {state.open && (
-        <div
-          ref={ref}
-          style={{
-            position: state.strategy,
-            top: state.y ?? 0,
-            left: state.x ?? 0,
-            visibility: state.x === null ? "hidden" : "visible",
-            ...props.style,
-          }}
-          {...containerProps}
-          className={containerClassName}
-        >
-          {children}
-          <div
-            ref={state.arrowRef}
-            className={styles.arrowWrapper}
-            style={arrowStyles}
-          >
-            <CaretIcon />
-          </div>
-        </div>
+        <>
+          {withOverlay ? (
+            <FloatingOverlay className={styles.overlay}>
+              <div {...divProps}>
+                {children}
+                <div
+                  ref={state.arrowRef}
+                  className={styles.arrowWrapper}
+                  style={arrowStyles}
+                >
+                  <CaretIcon />
+                </div>
+              </div>
+            </FloatingOverlay>
+          ) : (
+            <div {...divProps}>
+              {children}
+              <div
+                ref={state.arrowRef}
+                className={styles.arrowWrapper}
+                style={arrowStyles}
+              >
+                <CaretIcon />
+              </div>
+            </div>
+          )}
+        </>
       )}
     </FloatingPortal>
   );
 };
 
-export default forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
+export default forwardRef<HTMLDivElement, TooltipContentProps>(
   TooltipContent,
 );
