@@ -6,10 +6,7 @@ import React, {
   useMemo,
 } from "react";
 import { useFeedItemFollow } from "@/shared/hooks/useCases";
-import {
-  FeedLayoutItemChangeData,
-  SpaceListVisibility,
-} from "@/shared/interfaces";
+import { FeedLayoutItemChangeData } from "@/shared/interfaces";
 import {
   Circles,
   CirclesPermissions,
@@ -20,7 +17,7 @@ import {
   CommonNotion,
   DirectParent,
 } from "@/shared/models";
-import { checkIsItemVisibleForUser, InternalLinkData } from "@/shared/utils";
+import { checkIsItemVisibleForUser } from "@/shared/utils";
 import { useFeedItemSubscription } from "../../hooks";
 import { DiscussionFeedCard } from "../DiscussionFeedCard";
 import { OptimisticDiscussionFeedCard } from "../OptimisticDiscussionFeedCard";
@@ -114,14 +111,20 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
   const getNonAllowedItems =
     outerGetNonAllowedItems || contextGetNonAllowedItems;
 
-  const handleUserClick = useMemo(
-    () => onUserSelect && ((userId: string) => onUserSelect(userId, commonId)),
+  const handleUserClick = useCallback(
+    (userId: string) => {
+      if (onUserSelect) {
+        onUserSelect(userId, commonId);
+      }
+    },
     [onUserSelect, commonId],
   );
 
   const handleActiveItemDataChange = useCallback(
     (data: FeedLayoutItemChangeData) => {
-      onActiveItemDataChange?.(data, commonId);
+      if (onActiveItemDataChange) {
+        onActiveItemDataChange(data, commonId);
+      }
     },
     [onActiveItemDataChange, commonId],
   );
@@ -131,12 +134,79 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
       feedItemFollow.isUserFeedItemFollowDataFetched &&
       !feedItemFollow.userFeedItemFollowData
     ) {
-      onFeedItemUnfollowed?.(item.id);
+      if (onFeedItemUnfollowed) {
+        onFeedItemUnfollowed(item.id);
+      }
     }
   }, [
     feedItemFollow.isUserFeedItemFollowDataFetched,
     feedItemFollow.userFeedItemFollowData,
+    item.id,
+    onFeedItemUnfollowed,
   ]);
+
+
+  const generalProps = useMemo(
+    () => ({
+      ref,
+      item,
+      commonId,
+      commonName,
+      commonImage,
+      commonNotion,
+      pinnedFeedItems,
+      isActive,
+      isExpanded,
+      isProject,
+      isPinned,
+      governanceCircles,
+      isPreviewMode,
+      getLastMessage,
+      commonMember,
+      getNonAllowedItems,
+      isMobileVersion,
+      onActiveItemDataChange: handleActiveItemDataChange,
+      directParent,
+      rootCommonId,
+      feedItemFollow,
+      onUserSelect,
+      shouldPreLoadMessages,
+      withoutMenu,
+      onUserClick: handleUserClick,
+      onFeedItemClick,
+      onInternalLinkClick,
+    }),
+    [
+      ref,
+      item,
+      commonId,
+      commonName,
+      commonImage,
+      commonNotion,
+      pinnedFeedItems,
+      isActive,
+      isExpanded,
+      isProject,
+      isPinned,
+      governanceCircles,
+      isPreviewMode,
+      getLastMessage,
+      commonMember,
+      getNonAllowedItems,
+      isMobileVersion,
+      handleActiveItemDataChange,
+      directParent,
+      rootCommonId,
+      feedItemFollow,
+      onUserSelect,
+      shouldPreLoadMessages,
+      withoutMenu,
+      handleUserClick,
+      onFeedItemClick,
+      onInternalLinkClick,
+    ],
+  );
+
 
   if (
     shouldCheckItemVisibility &&
@@ -150,36 +220,6 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
   ) {
     return null;
   }
-
-  const generalProps = {
-    ref,
-    item,
-    commonId,
-    commonName,
-    commonImage,
-    commonNotion,
-    pinnedFeedItems,
-    isActive,
-    isExpanded,
-    isProject,
-    isPinned,
-    governanceCircles,
-    isPreviewMode,
-    getLastMessage,
-    commonMember,
-    getNonAllowedItems,
-    isMobileVersion,
-    onActiveItemDataChange: handleActiveItemDataChange,
-    directParent,
-    rootCommonId,
-    feedItemFollow,
-    onUserSelect,
-    shouldPreLoadMessages,
-    withoutMenu,
-    onUserClick: handleUserClick,
-    onFeedItemClick,
-    onInternalLinkClick,
-  };
 
   if (item.data.type === CommonFeedType.OptimisticDiscussion) {
     return (

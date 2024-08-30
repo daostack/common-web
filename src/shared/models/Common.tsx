@@ -172,6 +172,7 @@ export interface CommonMember {
   isFollowing: boolean;
   streamsUnreadCountByProjectStream?: Record<string, number>;
   unreadCountByProjectStream?: Record<string, number>;
+  commonId?: string;
 }
 
 export interface CirclesPermissions {
