@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { ProposalService } from "@/services";
 import { ProposalsTypes, SUPPORT_EMAIL } from "@/shared/constants";
@@ -135,9 +136,13 @@ export const useJoinProjectAutomatically = (
 
     setIsJoinPending(true);
 
+    const proposalId = uuidv4();
+    const discussionId = uuidv4();
     try {
       await ProposalService.createAssignProposal({
         args: {
+          id: proposalId,
+          discussionId,
           commonId: parentCommon.id,
           userId: user?.uid,
           circleId,

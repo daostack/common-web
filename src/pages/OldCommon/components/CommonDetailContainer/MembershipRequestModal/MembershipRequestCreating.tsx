@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { Loader } from "@/shared/components";
 import { ContributionSourceType, Currency } from "@/shared/models";
@@ -39,10 +40,14 @@ export default function MembershipRequestCreating(
         return;
       }
 
+      const proposalId = uuidv4();
+      const discussionId = uuidv4();
       dispatch(
         createMemberAdmittanceProposal.request({
           payload: {
             args: {
+              id: proposalId,
+              discussionId,
               commonId: common.id,
               title: `Membership request from ${userName}`,
               description: userData.intro,

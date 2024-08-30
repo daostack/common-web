@@ -1,5 +1,6 @@
 import React, { FC, PropsWithChildren, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { GovernanceService, ProposalService } from "@/services";
 import { Modal } from "@/shared/components";
@@ -132,6 +133,7 @@ const JoinProjectModal: FC<PropsWithChildren<JoinProjectModalProps>> = (
       )?.name;
 
       const payload = {
+        id: uuidv4(),
         commonId,
         description: message,
         images: [],

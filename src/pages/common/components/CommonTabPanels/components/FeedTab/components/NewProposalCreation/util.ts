@@ -10,6 +10,8 @@ export const getFundingProposalPayload = (
   values: NewProposalCreationFormValues,
   commonId: string,
   userId: string,
+  proposalId: string,
+  discussionId: string,
 ): CreateProposalWithFiles<ProposalsTypes.FUNDS_ALLOCATION> | null => {
   if (!values.recipientInfo) {
     return null;
@@ -21,6 +23,8 @@ export const getFundingProposalPayload = (
       : AllocateFundsTo.OtherMember;
 
   return {
+    id: proposalId,
+    discussionId,
     title: values.title,
     description: JSON.stringify(values.content),
     images: values.images,
@@ -48,8 +52,12 @@ export const getFundingProposalPayload = (
 export const getSurveyProposalPayload = (
   values: NewProposalCreationFormValues,
   commonId: string,
+  proposalId: string,
+  discussionId: string,
 ): CreateProposalWithFiles<ProposalsTypes.SURVEY> => {
   return {
+    id: proposalId,
+    discussionId,
     title: values.title,
     description: JSON.stringify(values.content),
     images: values.images,

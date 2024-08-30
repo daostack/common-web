@@ -1,5 +1,6 @@
 import React, { FC, ReactNode, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import {
   PROPOSAL_TYPE_SELECT_OPTIONS,
@@ -82,12 +83,16 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
         return;
       }
 
+      const proposalId = uuidv4();
+      const discussionId = uuidv4();
       switch (values.proposalType.value) {
         case ProposalsTypes.FUNDS_ALLOCATION: {
           const fundingProposalPayload = getFundingProposalPayload(
             values,
             commonId,
             userId,
+            proposalId,
+            discussionId,
           );
 
           if (!fundingProposalPayload) {
@@ -103,7 +108,7 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
         case ProposalsTypes.SURVEY: {
           dispatch(
             commonActions.createSurveyProposal.request({
-              payload: getSurveyProposalPayload(values, commonId),
+              payload: getSurveyProposalPayload(values, commonId, proposalId, discussionId),
             }),
           );
           break;
