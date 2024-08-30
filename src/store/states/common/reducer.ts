@@ -751,10 +751,22 @@ export const reducer = createReducer<CommonState, Action>(initialState)
     produce(state, (nextState) => {
         const updatedMap = new Map(nextState.optimisticDiscussionMessages);
 
+        const discussionMessages = updatedMap.get(payload.discussionId) ?? [];
+        discussionMessages.push(payload);
         // Add the new item to the Map
-        updatedMap.set(payload.id, payload);
+        updatedMap.set(payload.discussionId, discussionMessages);
 
         // Assign the new Map back to the state
         nextState.optimisticDiscussionMessages = updatedMap;
+    }),
+  )
+  .handleAction(actions.clearOptimisticDiscussionMessages, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const updatedMap = new Map(nextState.optimisticDiscussionMessages);
+
+      updatedMap.delete(payload);
+
+      // Assign the new Map back to the state
+      nextState.optimisticDiscussionMessages = updatedMap;
     }),
   );

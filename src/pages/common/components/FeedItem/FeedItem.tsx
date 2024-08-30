@@ -22,8 +22,8 @@ import {
 } from "@/shared/models";
 import { checkIsItemVisibleForUser, InternalLinkData } from "@/shared/utils";
 import { useFeedItemSubscription } from "../../hooks";
-import { OptimisticDiscussionFeedCard } from "../OptimisticDiscussionFeedCard";
 import { DiscussionFeedCard } from "../DiscussionFeedCard";
+import { OptimisticDiscussionFeedCard } from "../OptimisticDiscussionFeedCard";
 import { ProposalFeedCard } from "../ProposalFeedCard";
 import { ProjectFeedItem } from "./components";
 import { useFeedItemContext } from "./context";
@@ -182,7 +182,12 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
   };
 
   if (item.data.type === CommonFeedType.OptimisticDiscussion) {
-    return <OptimisticDiscussionFeedCard {...generalProps} discussion={item.optimisticData}/>
+    return (
+      <OptimisticDiscussionFeedCard
+        {...generalProps}
+        discussion={item.optimisticData}
+      />
+    );
   }
 
   if (item.data.type === CommonFeedType.Discussion) {

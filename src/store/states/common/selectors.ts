@@ -51,7 +51,7 @@ export const selectRecentStreamId = (state: AppState) =>
 export const selectOptimisticFeedItems = (state: AppState) =>
   state.common.optimisticFeedItems;
 
-export const setOptimisticDiscussionMessages = (state: AppState) =>
+export const selectOptimisticDiscussionMessages = (state: AppState) =>
   state.common.optimisticDiscussionMessages;
 
 export const selectRecentAssignedCircle =

@@ -16,7 +16,6 @@ import {
   CommonFeed,
   CommonMember,
   Discussion,
-  DiscussionMessage,
   Governance,
   OptimisticFeedItemState,
   Proposal,
@@ -29,6 +28,7 @@ import {
   FeedItemsPayload,
   PinnedFeedItems,
 } from "./types";
+import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 
 export const resetCommon = createStandardAction(
   CommonActionType.RESET_COMMON,
@@ -239,7 +239,11 @@ export const removeOptimisticFeedItemState = createStandardAction(
 
 export const setOptimisticDiscussionMessages = createStandardAction(
   CommonActionType.SET_OPTIMISTIC_DISCUSSION_MESSAGES,
-)<DiscussionMessage>();
+)<CreateDiscussionMessageDto>();
+
+export const clearOptimisticDiscussionMessages = createStandardAction(
+  CommonActionType.CLEAR_OPTIMISTIC_DISCUSSION_MESSAGES,
+)<string>();
 
 export const setRecentStreamId = createStandardAction(
   CommonActionType.SET_RECENT_STREAM_ID,
