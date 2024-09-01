@@ -267,6 +267,8 @@ export default function ChatComponent({
   const timeoutId = useRef<ReturnType<typeof setTimeout> | null>();
 
   const optimisticFeedItems = useSelector(selectOptimisticFeedItems);
+
+  console.log("--optimisticFeedItems", optimisticFeedItems);
   const optimisticDiscussionMessages = useSelector(
     selectOptimisticDiscussionMessages,
   );
