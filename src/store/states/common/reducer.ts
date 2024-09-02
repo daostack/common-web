@@ -701,8 +701,9 @@ export const reducer = createReducer<CommonState, Action>(initialState)
     produce(state, (nextState) => {
         const updatedMap = new Map(nextState.optimisticFeedItems);
 
+        const optimisticItemId = payload.data.discussionId ?? payload.data.id;
         // Add the new item to the Map
-        updatedMap.set(payload.data.id, {
+        updatedMap.set(optimisticItemId, {
           type: InboxItemType.FeedItemFollow,
           itemId: payload.id,
           feedItem: payload,
@@ -710,7 +711,7 @@ export const reducer = createReducer<CommonState, Action>(initialState)
 
         // Assign the new Map back to the state
         nextState.optimisticFeedItems = updatedMap;
-        nextState.recentStreamId = payload.data.id;
+        nextState.recentStreamId = optimisticItemId;
     }),
   )
   .handleAction(actions.updateOptimisticFeedItemState, (state, { payload }) =>

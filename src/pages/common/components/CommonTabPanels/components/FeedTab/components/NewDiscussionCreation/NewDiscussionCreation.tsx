@@ -1,9 +1,7 @@
 import React, { FC, useCallback, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Timestamp as FirestoreTimestamp } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { DiscussionMessageOwnerType } from "@/shared/constants";
 import {
   NewDiscussionCreationFormValues,
   UploadFile,
@@ -15,13 +13,12 @@ import {
   CommonFeedType,
   CommonMember,
   Governance,
-  OptimisticFeedItemState,
 } from "@/shared/models";
 import {
   TextEditorValue,
   parseStringToTextEditorValue,
 } from "@/shared/ui-kit/TextEditor";
-import { getUserName } from "@/shared/utils";
+import { generateOptimisticFeedItem } from "@/shared/utils";
 import {
   selectDiscussionCreationData,
   selectIsDiscussionCreationLoading,
@@ -123,52 +120,19 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
         );
       } else {
         const discussionId = uuidv4();
-        const currentDate = FirestoreTimestamp.now();
 
-        const optimisticFeedItemId = uuidv4();
         dispatch(
-          commonActions.setOptimisticFeedItem({
-            id: optimisticFeedItemId,
-            createdAt: currentDate,
-            updatedAt: currentDate,
-            isDeleted: false,
-            userId,
-            commonId: common.id,
-            data: {
-              type: CommonFeedType.OptimisticDiscussion,
-              id: discussionId,
-              discussionId: null,
-              lastMessage: {
-                userName: getUserName(user),
-                ownerId: userId,
-                content: JSON.stringify(values.content),
-                ownerType: DiscussionMessageOwnerType.User,
-              },
-              hasFiles: false,
-              hasImages: false,
-            },
-            optimisticData: {
-              id: discussionId,
-              title: values.title,
-              message: JSON.stringify(values.content),
-              ownerId: userId,
+          commonActions.setOptimisticFeedItem(
+            generateOptimisticFeedItem({
+              userId,
               commonId: common.id,
-              lastMessage: currentDate,
-              updatedAt: currentDate,
-              createdAt: currentDate,
-              messageCount: 0,
-              followers: [],
-              files: [],
-              images: [],
-              discussionMessages: [],
-              isDeleted: false,
+              type: CommonFeedType.OptimisticDiscussion,
               circleVisibility,
-              circleVisibilityByCommon: null,
-              linkedCommonIds: [],
-              state: OptimisticFeedItemState.loading,
-            },
-            circleVisibility,
-          }),
+              discussionId,
+              title: values.title,
+              content: JSON.stringify(values.content),
+            }),
+          ),
         );
 
         dispatch(

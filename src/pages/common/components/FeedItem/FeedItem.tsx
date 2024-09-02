@@ -20,7 +20,7 @@ import {
 import { checkIsItemVisibleForUser } from "@/shared/utils";
 import { useFeedItemSubscription } from "../../hooks";
 import { DiscussionFeedCard } from "../DiscussionFeedCard";
-import { OptimisticDiscussionFeedCard } from "../OptimisticDiscussionFeedCard";
+import { OptimisticFeedCard } from "../OptimisticFeedCard";
 import { ProposalFeedCard } from "../ProposalFeedCard";
 import { ProjectFeedItem } from "./components";
 import { useFeedItemContext } from "./context";
@@ -145,7 +145,6 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     onFeedItemUnfollowed,
   ]);
 
-
   const generalProps = useMemo(
     () => ({
       ref,
@@ -207,7 +206,6 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     ],
   );
 
-
   if (
     shouldCheckItemVisibility &&
     !checkIsItemVisibleForUser({
@@ -221,11 +219,15 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     return null;
   }
 
-  if (item.data.type === CommonFeedType.OptimisticDiscussion) {
+  if (
+    item.data.type === CommonFeedType.OptimisticDiscussion ||
+    item.data.type === CommonFeedType.OptimisticProposal
+  ) {
     return (
-      <OptimisticDiscussionFeedCard
+      <OptimisticFeedCard
         {...generalProps}
         discussion={item.optimisticData}
+        type={item.data.type}
       />
     );
   }

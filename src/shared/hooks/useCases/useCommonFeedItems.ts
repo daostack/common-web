@@ -62,13 +62,14 @@ export const useCommonFeedItems = (
         } );
 
         data.forEach((item) => {
-          const discussionId = item.commonFeedItem.data.id;
+          const discussionId = item.commonFeedItem.data.discussionId ?? item.commonFeedItem.data.id;
           if(optItemIds.includes(discussionId)) {
 
             dispatch(commonActions.removeOptimisticFeedItemState({id: discussionId}))
           }
         })
 
+        console.log('-----data',data);
         const finalData =
           idsForNotListeningRef.current.length > 0
             ? data.filter(

@@ -268,7 +268,7 @@ export default function ChatComponent({
 
   const optimisticFeedItems = useSelector(selectOptimisticFeedItems);
 
-  console.log("--optimisticFeedItems", optimisticFeedItems);
+  // console.log("--optimisticFeedItems", optimisticFeedItems);
   const optimisticDiscussionMessages = useSelector(
     selectOptimisticDiscussionMessages,
   );

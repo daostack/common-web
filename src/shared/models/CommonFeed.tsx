@@ -7,6 +7,7 @@ export enum CommonFeedType {
   Proposal = "Proposal",
   Discussion = "Discussion",
   OptimisticDiscussion = "OptimisticDiscussion",
+  OptimisticProposal = "OptimisticProposal",
   Project = "Project",
   PayIn = "PayIn",
   ProjectCreation = "ProjectCreation",

@@ -3,7 +3,7 @@ export * from "./CommonMobileModal";
 export * from "./CommonTabPanels";
 export * from "./CommonTopNavigation";
 export * from "./DiscussionFeedCard";
-export * from "./OptimisticDiscussionFeedCard";
+export * from "./OptimisticFeedCard";
 export * from "./FeedCard";
 export * from "./FeedItem";
 export * from "./FeedItems";

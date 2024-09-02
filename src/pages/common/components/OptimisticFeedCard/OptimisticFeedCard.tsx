@@ -21,6 +21,7 @@ import { FeedLayoutItemChangeData } from "@/shared/interfaces";
 import {
   Common,
   CommonFeed,
+  CommonFeedType,
   CommonMember,
   CommonNotion,
   DirectParent,
@@ -36,9 +37,9 @@ import {
   GetLastMessageOptions,
   GetNonAllowedItemsOptions,
 } from "../FeedItem";
-import { OptimisticDiscussionFeedCardContent } from "./components";
+import { OptimisticFeedCardContent } from "./components";
 
-interface OptimisticDiscussionFeedCardProps {
+interface OptimisticFeedCardProps {
   item: CommonFeed;
   governanceCircles?: Governance["circles"];
   isMobileVersion?: boolean;
@@ -65,11 +66,12 @@ interface OptimisticDiscussionFeedCardProps {
   onUserClick?: (userId: string) => void;
   onFeedItemClick: (feedItemId: string) => void;
   onInternalLinkClick: (data: InternalLinkData) => void;
+  type: CommonFeedType;
 }
 
-const OptimisticDiscussionFeedCard = forwardRef<
+const OptimisticFeedCard = forwardRef<
   FeedItemRef,
-  OptimisticDiscussionFeedCardProps
+  OptimisticFeedCardProps
 >((props, ref) => {
   const {
     setChatItem,
@@ -98,6 +100,7 @@ const OptimisticDiscussionFeedCard = forwardRef<
     onUserClick,
     onFeedItemClick,
     onInternalLinkClick,
+    type,
   } = props;
 
   const { fetchUser: fetchDiscussionCreator, data: discussionCreator } =
@@ -299,7 +302,7 @@ const OptimisticDiscussionFeedCard = forwardRef<
         linkedCommonIds={[]}
       >
         {(isExpanded || isActive) && (
-          <OptimisticDiscussionFeedCardContent
+          <OptimisticFeedCardContent
             item={item}
             governanceCircles={governanceCircles}
             isMobileVersion={isMobileVersion}
@@ -316,6 +319,7 @@ const OptimisticDiscussionFeedCard = forwardRef<
             handleOpenChat={handleOpenChat}
             onHover={onHover}
             isLoading={false}
+            type={type}
           />
         )}
       </FeedCard>
@@ -323,4 +327,4 @@ const OptimisticDiscussionFeedCard = forwardRef<
   );
 });
 
-export default OptimisticDiscussionFeedCard;
+export default OptimisticFeedCard;

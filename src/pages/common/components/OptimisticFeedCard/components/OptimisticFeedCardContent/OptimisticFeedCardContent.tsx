@@ -3,6 +3,7 @@ import { ContextMenuItem } from "@/shared/interfaces";
 import {
   Common,
   CommonFeed,
+  CommonFeedType,
   DirectParent,
   DiscussionNotion,
   Governance,
@@ -17,7 +18,7 @@ import {
   getVisibilityString,
 } from "../../../FeedCard";
 
-interface OptimisticDiscussionFeedCardContentProps {
+interface OptimisticFeedCardContentProps {
   item: CommonFeed;
   governanceCircles?: Governance["circles"];
   isMobileVersion?: boolean;
@@ -34,10 +35,11 @@ interface OptimisticDiscussionFeedCardContentProps {
   handleOpenChat: () => void;
   onHover: (isMouseEnter: boolean) => void;
   isLoading: boolean;
+  type?: CommonFeedType;
 }
 
-export function OptimisticDiscussionFeedCardContent(
-  props: OptimisticDiscussionFeedCardContentProps,
+export function OptimisticFeedCardContent(
+  props: OptimisticFeedCardContentProps,
 ) {
   const {
     item,
@@ -56,6 +58,7 @@ export function OptimisticDiscussionFeedCardContent(
     isLoading,
     discussionMessage,
     discussionImages,
+    type,
   } = props;
 
   if (isLoading || !commonId) {
@@ -80,7 +83,9 @@ export function OptimisticDiscussionFeedCardContent(
             />
           </>
         }
-        type={isHome ? "Home" : "Discussion"}
+        type={
+          type === CommonFeedType.OptimisticProposal ? "Proposal" : "Discussion"
+        }
         circleVisibility={circleVisibility}
         menuItems={menuItems}
         isMobileVersion={isMobileVersion}
