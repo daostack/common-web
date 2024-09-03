@@ -1,7 +1,6 @@
 import { useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useDeepCompareEffect, useUpdateEffect } from "react-use";
-import { trace } from "firebase/performance";
 import {
   DiscussionMessageService,
   MESSAGES_NUMBER_IN_BATCH,
@@ -21,7 +20,7 @@ import {
   User,
 } from "@/shared/models";
 import { InternalLinkData } from "@/shared/utils";
-import firebase, { perf } from "@/shared/utils/firebase";
+import firebase from "@/shared/utils/firebase";
 import {
   cacheActions,
   selectDiscussionMessagesStateByDiscussionId,
@@ -154,10 +153,7 @@ export const useDiscussionMessagesById = ({
 
   const fetchRepliedMessages = useCallback(
     async (messageId: string, endDate: Date): Promise<void> => {
-      const fetchRepliedMessagesTrace = trace(perf, 'fetchRepliedMessagesTrace');
       try {
-        fetchRepliedMessagesTrace.start();
-
         if (state.data?.find((item) => item.id === messageId)) {
           return Promise.resolve();
         }
@@ -211,9 +207,8 @@ export const useDiscussionMessagesById = ({
             updatedDiscussionMessages: discussionsWithText,
           }),
         );
-        fetchRepliedMessagesTrace.stop();
       } catch(err) {
-        fetchRepliedMessagesTrace.stop();
+        // console.log(err);
       }
     },
     [
@@ -248,9 +243,6 @@ export const useDiscussionMessagesById = ({
     }
 
     try {
-      const fetchDiscussionMessagesTrace = trace(perf, 'fetchDiscussionMessages');
-      fetchDiscussionMessagesTrace.start();
-
       DiscussionMessageService.subscribeToDiscussionMessagesByDiscussionId(
         discussionId,
         lastVisible && lastVisible[discussionId],
@@ -320,7 +312,6 @@ export const useDiscussionMessagesById = ({
           setIsBatchLoading(false);
         },
       );
-      fetchDiscussionMessagesTrace.stop();
     } catch(err) {
       setIsBatchLoading(false);
     }
