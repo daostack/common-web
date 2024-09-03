@@ -1,6 +1,7 @@
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
+import "firebase/compat/messaging";
 import "firebase/compat/performance";
 import "firebase/compat/storage";
 import { getPerformance } from "firebase/performance";
