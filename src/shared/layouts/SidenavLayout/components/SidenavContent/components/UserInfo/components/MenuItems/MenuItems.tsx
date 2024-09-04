@@ -13,6 +13,7 @@ import {
 } from "@/shared/icons";
 import ThemeIcon from "@/shared/icons/theme.icon";
 import { toggleTheme } from "@/shared/store/actions";
+import { clearFirestoreCache } from "@/shared/utils/firebase";
 import { MenuItem } from "./components";
 import { Item, ItemType } from "./types";
 import styles from "./MenuItems.module.scss";
@@ -58,7 +59,11 @@ const MenuItems: FC<MenuItemsProps> = (props) => {
       key: "my-profile",
       text: "My profile",
       icon: <Avatar3Icon />,
-      to: getProfilePagePath(),
+      type: ItemType.Button,
+      // to: getProfilePagePath(),
+      onClick: () => {
+        clearFirestoreCache();
+      },
     },
     {
       key: "settings",
