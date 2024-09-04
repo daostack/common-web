@@ -14,7 +14,52 @@ interface FirebaseError extends Error {
 }
 
 const app = firebase.initializeApp(config.firebase);
+const db = firebase.firestore();
 
+// Set Firestore settings with unlimited cache size
+const settings = {
+  cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED,
+};
+db.settings(settings);
+
+// Function to clear Firestore cache and re-enable persistence
+function clearFirestoreCache() {
+  db.clearPersistence()
+    .then(() => {
+      console.log("Cache cleared successfully.");
+      enableUnlimitedCachePersistence(); // Re-enable persistence after clearing cache
+      return;
+    })
+    .catch((err) => {
+      console.error("Error clearing persistence cache:", err);
+    });
+}
+
+// Function to handle Firestore persistence errors
+function handlePersistenceError(err: any) {
+  if (err.code === "failed-precondition") {
+    console.log("Multiple tabs open or other conflict.");
+  } else if (err.code === "unimplemented") {
+    console.log("Persistence is not supported in this browser.");
+  } else if (err.name === "QuotaExceededError") {
+    console.log("Storage quota exceeded. Consider clearing cache.");
+    clearFirestoreCache();
+  } else {
+    console.error("Error enabling persistence:", err);
+  }
+}
+
+// Enable Firestore persistence with unlimited cache size and error handling
+function enableUnlimitedCachePersistence() {
+  const settings = {
+    cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED,
+  };
+  db.settings(settings);
+
+  db.enablePersistence({ synchronizeTabs: true }).catch(handlePersistenceError);
+}
+
+// Enable persistence in the local environment (with Firestore and Auth emulators)
 if (REACT_APP_ENV === Environment.Local) {
   firebase.auth().useEmulator(local.firebase.authDomain);
   firebase
@@ -24,15 +69,8 @@ if (REACT_APP_ENV === Environment.Local) {
       Number(local.firebase.databaseURL.split(/:/g)[2]),
     );
 } else {
-  firebase
-    .firestore()
-    .enablePersistence({
-      synchronizeTabs: true,
-      experimentalForceOwningTab: false,
-    })
-    .catch((error) => {
-      console.error("Error enabling persistence", error);
-    });
+  // Enable persistence for non-local environments
+  db.enablePersistence({ synchronizeTabs: true }).catch(handlePersistenceError);
 }
 
 let perf;
