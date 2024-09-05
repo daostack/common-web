@@ -1,16 +1,19 @@
-import React, { FC } from "react";
+import React, { FC, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { useLocation } from "react-router";
 import classNames from "classnames";
 import { Menu } from "@headlessui/react";
 import { logOut } from "@/pages/Auth/store/actions";
+import { FeatureFlags } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
+import { useFeatureFlag } from "@/shared/hooks/useFeatureFlag";
 import {
   Avatar3Icon,
   BillingIcon,
   LogoutIcon,
   NotificationsIcon,
 } from "@/shared/icons";
+import ReportIcon from "@/shared/icons/report.icon";
 import ThemeIcon from "@/shared/icons/theme.icon";
 import { toggleTheme } from "@/shared/store/actions";
 import { clearFirestoreCache } from "@/shared/utils/firebase";
@@ -44,6 +47,9 @@ const MenuItems: FC<MenuItemsProps> = (props) => {
   const { pathname } = useLocation();
   const isV04 = pathname.includes("-v04");
 
+  const featureFlags = useFeatureFlag();
+  const isHavingAnIssueEnabled = featureFlags?.get(FeatureFlags.HavingAnIssue);
+
   const toggleThemeMenuItem = {
     key: "theme",
     type: ItemType.Button,
@@ -54,40 +60,53 @@ const MenuItems: FC<MenuItemsProps> = (props) => {
     },
   };
 
-  const items: Item[] = [
-    {
-      key: "my-profile",
-      text: "My profile",
-      icon: <Avatar3Icon />,
-      type: ItemType.Button,
-      // to: getProfilePagePath(),
-      onClick: () => {
-        clearFirestoreCache();
+  const items: Item[] = useMemo(() => {
+    const menuItems = [
+      {
+        key: "my-profile",
+        text: "My profile",
+        icon: <Avatar3Icon />,
+        type: ItemType.Button,
+        to: getProfilePagePath(),
       },
-    },
-    {
-      key: "settings",
-      text: "Notifications",
-      icon: <NotificationsIcon />,
-      to: getSettingsPagePath(),
-    },
-    {
-      key: "billing",
-      text: "Billing",
-      icon: <BillingIcon />,
-      to: getBillingPagePath(),
-    },
-    ...insertIf(!isV04, toggleThemeMenuItem),
-    {
-      key: "log-out",
-      type: ItemType.Button,
-      text: "Log out",
-      icon: <LogoutIcon />,
-      onClick: () => {
-        dispatch(logOut());
+      {
+        key: "settings",
+        text: "Notifications",
+        icon: <NotificationsIcon />,
+        to: getSettingsPagePath(),
       },
-    },
-  ];
+      {
+        key: "billing",
+        text: "Billing",
+        icon: <BillingIcon />,
+        to: getBillingPagePath(),
+      },
+      ...insertIf(!isV04, toggleThemeMenuItem),
+      {
+        key: "log-out",
+        type: ItemType.Button,
+        text: "Log out",
+        icon: <LogoutIcon />,
+        onClick: () => {
+          dispatch(logOut());
+        },
+      },
+    ];
+
+    if (isHavingAnIssueEnabled) {
+      menuItems.push({
+        key: "issue",
+        text: "Having an issue?",
+        icon: <ReportIcon />,
+        type: ItemType.Button,
+        onClick: () => {
+          clearFirestoreCache();
+        },
+      });
+    }
+
+    return menuItems;
+  }, [isHavingAnIssueEnabled, isV04, toggleThemeMenuItem]);
 
   return (
     <Menu.Items as={React.Fragment}>

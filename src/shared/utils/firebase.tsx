@@ -55,7 +55,7 @@ export function clearFirestoreCache() {
     })
     .then(() => {
       console.log("Persistence cleared. Waiting before reinitializing...");
-      return new Promise((resolve) => setTimeout(resolve, 4000)); // Wait 1 second
+      return new Promise((resolve) => setTimeout(resolve, 2000)); // Wait 2 second
     })
     .then(() => {
       console.log("Cache cleared successfully.");
@@ -79,7 +79,6 @@ function enableUnlimitedCachePersistence() {
   };
   db.settings(settings);
 
-  console.log("-enabled");
   db.enablePersistence({ synchronizeTabs: true }).catch(handlePersistenceError);
 }
 
