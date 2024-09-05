@@ -8,37 +8,60 @@ const NotificationsHandler: FC = () => {
   const userId = user?.uid;
   const [isRegistered, setIsRegistered] = useState(false);
 
+  function initServiceWorker() {
+    navigator.serviceWorker
+      .register("/firebase-messaging-sw.js")
+      .then((registration) => {
+        setIsRegistered(true);
+        return registration;
+      })
+      .catch((err) => {
+        console.log("ServiceWorker registration failed: ", err);
+      });
+  }
+
+  // Check if the service worker is already registered or register a new one
   useEffect(() => {
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker
-        .register("/firebase-messaging-sw.js")
-        .then((registration) => {
-          setIsRegistered(true);
-          return registration;
+        .getRegistration("/firebase-messaging-sw.js")
+        .then((existingRegistration) => {
+          if (existingRegistration) {
+            setIsRegistered(true);
+          } else {
+            initServiceWorker();
+          }
+
+          return;
         })
         .catch((err) => {
-          console.log("ServiceWorker registration failed: ", err);
+          console.log("Error checking service worker registration: ", err);
         });
     }
   }, []);
 
+  // Handle notification permissions and foreground message listener
   useEffect(() => {
-    if (!userId && !isRegistered) {
+    if (!userId || !isRegistered) {
       return;
     }
 
     let unsubscribeOnMessage;
     (async () => {
       const hasPermissions = await NotificationService.requestPermissions();
-      if (hasPermissions) {
-        await NotificationService.saveFCMToken();
-
-        unsubscribeOnMessage = NotificationService.onForegroundMessage();
+      if (!hasPermissions) {
+        console.log("Notification permissions denied");
+        return;
       }
+
+      await NotificationService.saveFCMToken();
+      unsubscribeOnMessage = NotificationService.onForegroundMessage();
     })();
 
     return () => {
-      unsubscribeOnMessage && unsubscribeOnMessage();
+      if (unsubscribeOnMessage) {
+        unsubscribeOnMessage();
+      }
     };
   }, [userId, isRegistered]);
 
