@@ -149,6 +149,8 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
           }),
         );
       }
+
+      handleCancel();
     },
     [governanceCircles, userCircleIds, userId, common.id, edit],
   );

@@ -135,6 +135,8 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
           break;
         }
       }
+
+      handleCancel();
     },
     [governance.circles, userCircleIds, userId, commonId],
   );
