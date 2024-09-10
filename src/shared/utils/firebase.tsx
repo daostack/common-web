@@ -30,6 +30,7 @@ function handlePersistenceError(err: any) {
     clearFirestoreCache();
   } else {
     console.error("Error enabling persistence:", err);
+    reinitializeFirestoreWithPersistence();
   }
 }
 
