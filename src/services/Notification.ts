@@ -41,7 +41,6 @@ class NotificationService {
         const token = await firebase.messaging().getToken({ vapidKey: firebaseConfig.vapidKey });
         if (token) {
       
-          console.log('---token',token);
           await Api.post(
             this.endpoints.setFCMToken,
             {
