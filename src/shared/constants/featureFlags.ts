@@ -3,6 +3,7 @@ export enum FeatureFlags {
   AiBot = "AiBot",
   AiBotPro = "AiBotPro",
   UpdateRoles = "UpdateRoles",
+  HavingAnIssue = "HavingAnIssue"
 }
 
 export enum FeatureFlagVisibility {
