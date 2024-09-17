@@ -37,7 +37,6 @@ import {
   GetLastMessageOptions,
   GetNonAllowedItemsOptions,
 } from "../FeedItem";
-import { OptimisticFeedCardContent } from "./components";
 
 interface OptimisticFeedCardProps {
   item: CommonFeed;
@@ -81,7 +80,6 @@ const OptimisticFeedCard = forwardRef<
   } = useChatContext();
   const {
     item,
-    governanceCircles,
     isMobileVersion = false,
     commonId,
     commonName,
@@ -94,13 +92,11 @@ const OptimisticFeedCard = forwardRef<
     isExpanded,
     getLastMessage,
     onActiveItemDataChange,
-    directParent,
     feedItemFollow,
     shouldPreLoadMessages,
     onUserClick,
     onFeedItemClick,
     onInternalLinkClick,
-    type,
   } = props;
 
   const { fetchUser: fetchDiscussionCreator, data: discussionCreator } =
@@ -124,10 +120,6 @@ const OptimisticFeedCard = forwardRef<
   });
   const menuItems = [];
   const user = useSelector(selectUser());
-  const [isHovering, setHovering] = useState(false);
-  const onHover = (isMouseEnter: boolean): void => {
-    setHovering(isMouseEnter);
-  };
   const userId = user?.uid;
   const cardTitle = discussion?.title;
   const commonNotion = outerCommonNotion ?? common?.notion;
@@ -267,63 +259,39 @@ const OptimisticFeedCard = forwardRef<
   ]);
 
   return (
-    <>
-      <FeedCard
-        ref={ref}
-        feedItemId={item.id}
-        isHovering={isHovering}
-        lastActivity={item.updatedAt.seconds * 1000}
-        unreadMessages={feedItemUserMetadata?.count || 0}
-        isActive={isActive}
-        isExpanded={isExpanded}
-        onClick={handleOpenChat}
-        title={cardTitle}
-        lastMessage={lastMessage}
-        isPreviewMode={false}
-        isPinned={false}
-        commonName={commonName}
-        commonId={commonId}
-        image={commonImage}
-        imageAlt={`${commonName}'s image`}
-        isProject={isProject}
-        isFollowing={feedItemFollow.isFollowing}
-        isLoading={false}
-        menuItems={menuItems}
-        seenOnce={true}
-        seen={true}
-        ownerId={item.userId}
-        discussionPredefinedType={discussion?.predefinedType}
-        notion={discussionNotion && commonNotion}
-        hasUnseenMention={
-          isFeedItemUserMetadataFetched &&
-          feedItemUserMetadata?.hasUnseenMention
-        }
-        originalCommonIdForLinking={discussion?.commonId}
-        linkedCommonIds={[]}
-      >
-        {(isExpanded || isActive) && (
-          <OptimisticFeedCardContent
-            item={item}
-            governanceCircles={governanceCircles}
-            isMobileVersion={isMobileVersion}
-            commonId={commonId}
-            directParent={directParent}
-            onUserSelect={onUserClick && (() => onUserClick(item.userId))}
-            discussionCreator={discussionCreator}
-            isHome={isHome}
-            menuItems={menuItems}
-            discussionImages={discussion?.images ?? []}
-            discussionMessage={discussion?.message}
-            common={common}
-            discussionNotion={discussionNotion}
-            handleOpenChat={handleOpenChat}
-            onHover={onHover}
-            isLoading={false}
-            type={type}
-          />
-        )}
-      </FeedCard>
-    </>
+    <FeedCard
+      ref={ref}
+      feedItemId={item.id}
+      isHovering={false}
+      lastActivity={item.updatedAt.seconds * 1000}
+      unreadMessages={feedItemUserMetadata?.count || 0}
+      isActive={isActive}
+      isExpanded={isExpanded}
+      onClick={handleOpenChat}
+      title={cardTitle}
+      lastMessage={lastMessage}
+      isPreviewMode={false}
+      isPinned={false}
+      commonName={commonName}
+      commonId={commonId}
+      image={commonImage}
+      imageAlt={`${commonName}'s image`}
+      isProject={isProject}
+      isFollowing={feedItemFollow.isFollowing}
+      isLoading={false}
+      menuItems={menuItems}
+      seenOnce={true}
+      seen={true}
+      ownerId={item.userId}
+      discussionPredefinedType={discussion?.predefinedType}
+      notion={discussionNotion && commonNotion}
+      hasUnseenMention={
+        isFeedItemUserMetadataFetched &&
+        feedItemUserMetadata?.hasUnseenMention
+      }
+      originalCommonIdForLinking={discussion?.commonId}
+      linkedCommonIds={[]}
+    />
   );
 });
 
