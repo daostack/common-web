@@ -18,6 +18,7 @@ interface FirebaseError extends Error {
 const app = firebase.initializeApp(config.firebase);
 let db = firebase.firestore();
 
+// WARNING: This function is enabling local emulator. If removed, move the emulator config out of this function
 enableUnlimitedCachePersistence();
 // Function to handle Firestore persistence errors
 function handlePersistenceError(err: any) {
@@ -79,19 +80,17 @@ function enableUnlimitedCachePersistence() {
     cacheSizeBytes: CACHE_SIZE_LIMIT,
   };
   db.settings(settings);
-
+  // Enable Firestore emulator in the local environment
+  if (REACT_APP_ENV === Environment.Local) {
+    firebase.auth().useEmulator(local.firebase.authDomain);
+    firebase
+      .firestore()
+      .useEmulator(
+        "localhost",
+        Number(local.firebase.databaseURL.split(/:/g)[2]),
+      );
+  }
   db.enablePersistence({ synchronizeTabs: true }).catch(handlePersistenceError);
-}
-
-// Enable persistence in the local environment (with Firestore and Auth emulators)
-if (REACT_APP_ENV === Environment.Local) {
-  firebase.auth().useEmulator(local.firebase.authDomain);
-  firebase
-    .firestore()
-    .useEmulator(
-      "localhost",
-      Number(local.firebase.databaseURL.split(/:/g)[2]),
-    );
 }
 
 let perf;
