@@ -45,6 +45,7 @@ export interface CommonState {
   pinnedFeedItems: PinnedFeedItems;
   sharedFeedItemId: string | null;
   sharedFeedItem: FeedItemFollowLayoutItem | null;
+  createdOptimisticFeedItems: Map<string, FeedItemFollowLayoutItem | undefined>;
   optimisticFeedItems: Map<string, FeedItemFollowLayoutItem>;
   optimisticDiscussionMessages: Map<string, CreateDiscussionMessageDto[]>;
   commonAction: CommonAction | null;

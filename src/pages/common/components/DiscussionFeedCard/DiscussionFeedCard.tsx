@@ -5,13 +5,13 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useUpdateEffect } from "react-use";
 import { debounce } from "lodash";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { DiscussionService } from "@/services";
 import { DeletePrompt, GlobalOverlay, ReportModal } from "@/shared/components";
-import { EntityTypes, InboxItemType } from "@/shared/constants";
+import { DiscussionMessageOwnerType, EntityTypes, InboxItemType } from "@/shared/constants";
 import { useModal, useNotification } from "@/shared/hooks";
 import {
   FeedItemFollowState,
@@ -33,7 +33,7 @@ import {
   PredefinedTypes,
 } from "@/shared/models";
 import { TextEditorValue } from "@/shared/ui-kit";
-import { StaticLinkType, getUserName, InternalLinkData } from "@/shared/utils";
+import { StaticLinkType, getUserName, InternalLinkData, generateFirstMessage } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
 import { FeedCard } from "../FeedCard";
 import { FeedCardShare } from "../FeedCard";
@@ -49,6 +49,7 @@ import {
   DiscussionFeedCardContent,
 } from "./components";
 import { useMenuItems } from "./hooks";
+import { commonActions } from "@/store/states";
 
 interface DiscussionFeedCardProps {
   item: CommonFeed;
@@ -76,6 +77,7 @@ interface DiscussionFeedCardProps {
   onUserClick?: (userId: string) => void;
   onFeedItemClick: (feedItemId: string) => void;
   onInternalLinkClick: (data: InternalLinkData) => void;
+  isOptimisticallyCreated?: boolean;
 }
 
 function DiscussionFeedCard(props, ref) {
@@ -86,6 +88,7 @@ function DiscussionFeedCard(props, ref) {
     nestedItemData,
   } = useChatContext();
   const { notify } = useNotification();
+  const dispatch = useDispatch();
   const {
     item,
     governanceCircles,
@@ -112,6 +115,7 @@ function DiscussionFeedCard(props, ref) {
     onUserClick,
     onFeedItemClick,
     onInternalLinkClick,
+    isOptimisticallyCreated,
   } = props;
   const {
     isShowing: isReportModalOpen,
@@ -213,6 +217,12 @@ function DiscussionFeedCard(props, ref) {
   const cardTitle = discussion?.title;
   const commonNotion = outerCommonNotion ?? common?.notion;
 
+  // const ownerId = useMemo(() => {
+  //   if(item.userId) {
+  //     return item.userId
+  //   }
+  // },[item.userId])
+
   const handleOpenChat = useCallback(() => {
     if (discussion && !isPreviewMode) {
       setChatItem({
@@ -273,6 +283,13 @@ function DiscussionFeedCard(props, ref) {
       ),
     [preloadDiscussionMessagesData.preloadDiscussionMessages],
   );
+
+  useEffect(() => {
+    if(item.data.lastMessage?.content && discussion?.id && isOptimisticallyCreated) {
+      // markFeedItemAsSeen({feedObjectId: item.id, commonId})
+      dispatch(commonActions.clearCreatedOptimisticFeedItem(discussion?.id));
+    }
+  },[item.id, item.data.lastMessage?.content, discussion?.id, isOptimisticallyCreated, commonId])
 
   useEffect(() => {
     fetchDiscussionCreator(item.userId);
@@ -348,12 +365,21 @@ function DiscussionFeedCard(props, ref) {
   }, [item.data.lastMessage?.content]);
 
   const lastMessage = useMemo(() => {
+    const userName = getUserName(discussionCreator);
+
+    const optimisticMessage = {
+      userName,
+      ownerId: userId,
+      content: generateFirstMessage({userName, userId: userId ?? ""}),
+      ownerType: DiscussionMessageOwnerType.System,
+    }
+
     return getLastMessage({
       commonFeedType: item.data.type,
-      lastMessage: item.data.lastMessage,
+      lastMessage: isOptimisticallyCreated ? optimisticMessage : item.data.lastMessage,
       discussion,
       currentUserId: userId,
-      feedItemCreatorName: getUserName(discussionCreator),
+      feedItemCreatorName: userName,
       commonName,
       isProject,
       hasFiles: item.data.hasFiles,
@@ -369,6 +395,7 @@ function DiscussionFeedCard(props, ref) {
     isProject,
     item.data.hasFiles,
     item.data.hasImages,
+    isOptimisticallyCreated,
   ]);
 
   return (
@@ -391,13 +418,13 @@ function DiscussionFeedCard(props, ref) {
         image={commonImage}
         imageAlt={`${commonName}'s image`}
         isProject={isProject}
-        isFollowing={feedItemFollow.isFollowing}
+        isFollowing={isOptimisticallyCreated || feedItemFollow.isFollowing}
         isLoading={isLoading}
         menuItems={menuItems}
         seenOnce={
           feedItemUserMetadata?.seenOnce ?? !isFeedItemUserMetadataFetched
         }
-        seen={feedItemUserMetadata?.seen ?? !isFeedItemUserMetadataFetched}
+        seen={(isOptimisticallyCreated || feedItemUserMetadata?.seen) ?? !isFeedItemUserMetadataFetched}
         ownerId={item.userId}
         discussionPredefinedType={discussion?.predefinedType}
         notion={discussionNotion && commonNotion}

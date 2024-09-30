@@ -18,13 +18,14 @@ import {
   TextEditorValue,
   parseStringToTextEditorValue,
 } from "@/shared/ui-kit/TextEditor";
-import { generateOptimisticFeedItem } from "@/shared/utils";
+import { generateFirstMessage, generateOptimisticFeedItem, getUserName } from "@/shared/utils";
 import {
   selectDiscussionCreationData,
   selectIsDiscussionCreationLoading,
 } from "@/store/states";
 import { commonActions } from "@/store/states";
 import { DiscussionCreationCard, DiscussionCreationModal } from "./components";
+import { DiscussionMessageOwnerType } from "@/shared/constants";
 
 interface NewDiscussionCreationProps {
   common: Common;
@@ -120,7 +121,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
         );
       } else {
         const discussionId = uuidv4();
-
+        const userName = getUserName(user);
         dispatch(
           commonActions.setOptimisticFeedItem(
             generateOptimisticFeedItem({
@@ -131,6 +132,12 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
               discussionId,
               title: values.title,
               content: JSON.stringify(values.content),
+              lastMessageContent: {
+                ownerId: userId,
+                userName,
+                ownerType: DiscussionMessageOwnerType.System,
+                content: generateFirstMessage({userName, userId}),
+              }
             }),
           ),
         );

@@ -3,7 +3,6 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
-  useState,
 } from "react";
 import { useSelector } from "react-redux";
 import { useUpdateEffect } from "react-use";
@@ -15,7 +14,6 @@ import {
   useCommon,
   useFeedItemUserMetadata,
   usePreloadDiscussionMessagesById,
-  useUserById,
 } from "@/shared/hooks/useCases";
 import { FeedLayoutItemChangeData } from "@/shared/interfaces";
 import {
@@ -25,11 +23,11 @@ import {
   CommonMember,
   CommonNotion,
   DirectParent,
-  Discussion,
+  DiscussionWithOptimisticData,
   Governance,
 } from "@/shared/models";
 import { TextEditorValue } from "@/shared/ui-kit";
-import { getUserName, InternalLinkData } from "@/shared/utils";
+import { InternalLinkData } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
 import { FeedCard } from "../FeedCard";
 import {
@@ -56,7 +54,7 @@ interface OptimisticFeedCardProps {
   getLastMessage: (options: GetLastMessageOptions) => TextEditorValue;
   getNonAllowedItems?: GetNonAllowedItemsOptions;
   onActiveItemDataChange?: (data: FeedLayoutItemChangeData) => void;
-  discussion?: Discussion;
+  discussion?: DiscussionWithOptimisticData;
   directParent?: DirectParent | null;
   rootCommonId?: string;
   feedItemFollow: FeedItemFollowState;
@@ -92,15 +90,12 @@ const OptimisticFeedCard = forwardRef<
     isExpanded,
     getLastMessage,
     onActiveItemDataChange,
-    feedItemFollow,
     shouldPreLoadMessages,
     onUserClick,
     onFeedItemClick,
     onInternalLinkClick,
   } = props;
 
-  const { fetchUser: fetchDiscussionCreator, data: discussionCreator } =
-    useUserById();
   const isHome = false;
   const discussionNotion = undefined;
   const {
@@ -171,10 +166,6 @@ const OptimisticFeedCard = forwardRef<
   );
 
   useEffect(() => {
-    fetchDiscussionCreator(item.userId);
-  }, [item.userId]);
-
-  useEffect(() => {
     if (commonId) {
       fetchFeedItemUserMetadata({
         userId: userId || "",
@@ -234,30 +225,6 @@ const OptimisticFeedCard = forwardRef<
     }
   }, [item.data.lastMessage?.content]);
 
-  const lastMessage = useMemo(() => {
-    return getLastMessage({
-      commonFeedType: item.data.type,
-      lastMessage: item.data.lastMessage,
-      discussion,
-      currentUserId: userId,
-      feedItemCreatorName: getUserName(discussionCreator),
-      commonName,
-      isProject,
-      hasFiles: item.data.hasFiles,
-      hasImages: item.data.hasImages,
-    });
-  }, [
-    item.data.type,
-    item.data.lastMessage,
-    discussion,
-    userId,
-    discussionCreator,
-    commonName,
-    isProject,
-    item.data.hasFiles,
-    item.data.hasImages,
-  ]);
-
   return (
     <FeedCard
       ref={ref}
@@ -269,7 +236,7 @@ const OptimisticFeedCard = forwardRef<
       isExpanded={isExpanded}
       onClick={handleOpenChat}
       title={cardTitle}
-      lastMessage={lastMessage}
+      lastMessage={getLastMessage({ lastMessage: discussion?.lastMessageContent, isProject: false, commonName, commonFeedType: CommonFeedType.Discussion})}
       isPreviewMode={false}
       isPinned={false}
       commonName={commonName}
@@ -277,7 +244,7 @@ const OptimisticFeedCard = forwardRef<
       image={commonImage}
       imageAlt={`${commonName}'s image`}
       isProject={isProject}
-      isFollowing={feedItemFollow.isFollowing}
+      isFollowing={true}
       isLoading={false}
       menuItems={menuItems}
       seenOnce={true}

@@ -69,7 +69,6 @@ export const useCommonFeedItems = (
           }
         })
 
-        console.log('-----data',data);
         const finalData =
           idsForNotListeningRef.current.length > 0
             ? data.filter(

@@ -51,6 +51,7 @@ import {
   cacheActions,
   commonActions,
   selectCommonAction,
+  selectCreatedOptimisticFeedItems,
   selectFeedSearchValue,
   selectIsSearchingFeedItems,
   selectOptimisticFeedItems,
@@ -115,6 +116,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
       sharedFeedItemIdQueryParam) ||
     null;
   const commonAction = useSelector(selectCommonAction);
+  const createdOptimisticFeedItems = useSelector(selectCreatedOptimisticFeedItems);
   const optimisticFeedItems = useSelector(selectOptimisticFeedItems);
   const {
     data: commonData,
@@ -466,6 +468,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     ) {
       feedLayoutRef?.setActiveItem({
         feedItemId: firstItem.feedItem.id,
+        discussion: createdOptimisticFeedItems.get(recentStreamId)?.feedItem.optimisticData
       });
       dispatch(commonActions.setRecentStreamId(""));
     } else if (
@@ -474,6 +477,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     ) {
       feedLayoutRef?.setActiveItem({
         feedItemId: optimisticFeedItems.get(recentStreamId)!.feedItem.id,
+        discussion: optimisticFeedItems.get(recentStreamId)?.feedItem.optimisticData,
       });
     }
   }, [feedLayoutRef, recentStreamId, firstItem, optimisticFeedItems]);

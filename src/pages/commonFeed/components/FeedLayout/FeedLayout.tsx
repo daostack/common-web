@@ -75,7 +75,7 @@ import {
   getParamsFromOneOfRoutes,
   getUserName,
 } from "@/shared/utils";
-import { selectOptimisticFeedItems } from "@/store/states";
+import { selectCreatedOptimisticFeedItems, selectRecentStreamId } from "@/store/states";
 import { MIN_CONTENT_WIDTH } from "../../constants";
 import {
   DesktopChat,
@@ -199,6 +199,8 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const queryParams = useQueryParams();
   const isTabletView = useIsTabletView();
   const user = useSelector(selectUser());
+  const createdOptimisticFeedItems = useSelector(selectCreatedOptimisticFeedItems);
+  const recentStreamId = useSelector(selectRecentStreamId);
   const userId = user?.uid;
   const [chatItem, setChatItem] = useState<ChatItem | null>();
   const [isShowFeedItemDetailsModal, setIsShowFeedItemDetailsModal] =
@@ -400,11 +402,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
   const setActiveChatItem = useCallback((nextChatItem: ChatItem | null) => {
     setShouldAllowChatAutoOpen(false);
-    setExpandedFeedItemId((currentExpandedFeedItemId) =>
-      currentExpandedFeedItemId === nextChatItem?.feedItemId
-        ? currentExpandedFeedItemId
-        : null,
-    );
     setChatItem(nextChatItem);
   }, []);
 
@@ -422,7 +419,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const setActiveItem = useCallback((item: ChatItem) => {
     setShouldAllowChatAutoOpen(false);
     setChatItem(item);
-    setExpandedFeedItemId(item.feedItemId);
   }, []);
 
   const handleMessagesAmountChange = useCallback(
@@ -718,7 +714,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       return;
     }
 
-    setActiveChatItem(null);
+    if(!recentStreamId) {
+      setActiveChatItem(null);
+    }
 
     if (!isTabletView) {
       setShouldAllowChatAutoOpen(true);
@@ -865,6 +863,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                         <FeedItem
                           ref={handleRefSet}
                           key={item.feedItem.id}
+                          isOptimisticallyCreated={createdOptimisticFeedItems.has(item.feedItem.data.id)}
                           commonMember={commonMember}
                           commonId={commonData?.id}
                           commonName={commonData?.name || ""}

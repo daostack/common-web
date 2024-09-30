@@ -243,7 +243,7 @@ const FeedCard = (props, ref) => {
       onClick: handleClick,
       onExpand: handleExpand,
       title,
-      lastMessage: !isLoading ? lastMessage : undefined,
+      lastMessage,
       menuItems,
       commonName,
       commonId,

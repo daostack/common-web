@@ -52,6 +52,7 @@ const initialState: CommonState = {
   sharedFeedItem: null,
   optimisticFeedItems: new Map(),
   optimisticDiscussionMessages: new Map(),
+  createdOptimisticFeedItems: new Map(),
   commonAction: null,
   discussionCreation: {
     data: null,
@@ -738,12 +739,15 @@ export const reducer = createReducer<CommonState, Action>(initialState)
   )
   .handleAction(actions.removeOptimisticFeedItemState, (state, { payload }) =>
     produce(state, (nextState) => {
+      const createdOptimisticFeedItemsMap = new Map(nextState.createdOptimisticFeedItems);
       const updatedMap = new Map(nextState.optimisticFeedItems);
 
+      createdOptimisticFeedItemsMap.set(payload.id, updatedMap.get(payload.id));
       updatedMap.delete(payload.id);
 
       // Assign the new Map back to the state
       nextState.optimisticFeedItems = updatedMap;
+      nextState.createdOptimisticFeedItems = createdOptimisticFeedItemsMap;
     }),
   )
   .handleAction(actions.setOptimisticDiscussionMessages, (state, { payload }) =>
@@ -767,5 +771,15 @@ export const reducer = createReducer<CommonState, Action>(initialState)
 
       // Assign the new Map back to the state
       nextState.optimisticDiscussionMessages = updatedMap;
+    }),
+  )
+  .handleAction(actions.clearCreatedOptimisticFeedItem, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const updatedMap = new Map(nextState.createdOptimisticFeedItems);
+
+      updatedMap.delete(payload);
+
+      // Assign the new Map back to the state
+      nextState.createdOptimisticFeedItems = updatedMap;
     }),
   );

@@ -56,6 +56,7 @@ interface FeedItemProps {
   withoutMenu?: boolean;
   onFeedItemUpdate?: (item: CommonFeed, isRemoved: boolean) => void;
   getNonAllowedItems?: GetNonAllowedItemsOptions;
+  isOptimisticallyCreated?: boolean;
 }
 
 const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
@@ -86,6 +87,7 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     level,
     onFeedItemUpdate: outerOnFeedItemUpdate,
     getNonAllowedItems: outerGetNonAllowedItems,
+    isOptimisticallyCreated = false,
   } = props;
   const {
     onFeedItemUpdate,
@@ -233,7 +235,7 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
   }
 
   if (item.data.type === CommonFeedType.Discussion) {
-    return <DiscussionFeedCard {...generalProps} />;
+    return <DiscussionFeedCard isOptimisticallyCreated={isOptimisticallyCreated} {...generalProps} />;
   }
 
   if (item.data.type === CommonFeedType.Proposal) {

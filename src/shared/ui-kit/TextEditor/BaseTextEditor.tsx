@@ -1,5 +1,4 @@
 import React, {
-  FC,
   FocusEventHandler,
   KeyboardEvent,
   MutableRefObject,
@@ -8,6 +7,8 @@ import React, {
   useMemo,
   useState,
   useCallback,
+  useImperativeHandle,
+  forwardRef,
 } from "react";
 import { useDebounce } from "react-use";
 import classNames from "classnames";
@@ -45,14 +46,19 @@ import {
 } from "./utils";
 import styles from "./BaseTextEditor.module.scss";
 
+export interface BaseTextEditorHandles {
+  focus: () => void;
+  clear: () => void;
+}
+
 export interface TextEditorProps {
   className?: string;
   classNameRtl?: string;
   emojiContainerClassName?: string;
   emojiPickerContainerClassName?: string;
   inputContainerRef?:
-    | MutableRefObject<HTMLDivElement | null>
-    | RefCallback<HTMLDivElement>;
+  | MutableRefObject<HTMLDivElement | null>
+  | RefCallback<HTMLDivElement>;
   editorRef?: MutableRefObject<HTMLElement | null> | RefCallback<HTMLElement>;
   id?: string;
   name?: string;
@@ -81,7 +87,7 @@ const INITIAL_SEARCH_VALUE = {
   },
 };
 
-const BaseTextEditor: FC<TextEditorProps> = (props) => {
+const BaseTextEditor = forwardRef<BaseTextEditorHandles, TextEditorProps>((props, ref) => {
   const {
     className,
     classNameRtl,
@@ -131,11 +137,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     [value],
   );
 
-  useEffect(() => {
-    if (!shouldReinitializeEditor) {
-      return;
-    }
-
+  const clearInput = () => {
     setTimeout(() => {
       Transforms.delete(editor, {
         at: {
@@ -154,8 +156,28 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
       const editorEl = ReactEditor.toDOMNode(editor, editor);
       editorEl.scrollTo(0, 0);
       onClearFinished();
-    }, 0);
-  }, [shouldReinitializeEditor, onClearFinished]);
+    }, 0)
+  }
+
+  useEffect(() => {
+    if (!shouldReinitializeEditor) {
+      return;
+    }
+
+    clearInput();
+  }, [shouldReinitializeEditor, clearInput]);
+
+  useImperativeHandle(ref, () => ({
+    focus: () => {
+      if (editorRef) {
+        const editorEl = ReactEditor.toDOMNode(editor, editor);
+        editorEl.focus();
+      }
+    },
+    clear: () => {
+      clearInput();
+    }
+  }));
 
   useEffect(() => {
     if (!editorRef) {
@@ -368,6 +390,6 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
       </Slate>
     </div>
   );
-};
+});
 
 export default BaseTextEditor;

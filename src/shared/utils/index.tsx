@@ -46,3 +46,4 @@ export * from "./getResizedFileUrl";
 export * from "./areTimestampsEqual";
 export * from "./parseMessageLink";
 export * from "./generateOptimisticFeedItem";
+export * from "./generateFirstMessage";

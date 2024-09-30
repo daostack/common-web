@@ -21,6 +21,18 @@ export enum OptimisticFeedItemState {
   fulfilled = 'fulfilled'
 }
 
+export interface LastMessageContent {
+  userName: string;
+  ownerId: string;
+  content: string;
+  ownerType?: DiscussionMessageOwnerType;
+}
+
+export type DiscussionWithOptimisticData = Discussion & {
+  state?: OptimisticFeedItemState; // Optional state property
+  lastMessageContent: LastMessageContent; // Additional property
+};
+
 export interface CommonFeed extends BaseEntity, SoftDeleteEntity {
   userId: string;
   commonId: string;
@@ -28,17 +40,10 @@ export interface CommonFeed extends BaseEntity, SoftDeleteEntity {
     type: CommonFeedType;
     id: string;
     discussionId: string | null;
-    lastMessage?: {
-      userName: string;
-      ownerId: string;
-      content: string;
-      ownerType?: DiscussionMessageOwnerType;
-    };
+    lastMessage?: LastMessageContent;
     hasFiles?: boolean;
     hasImages?: boolean;
   };
-  optimisticData?: Discussion & {
-    state?: OptimisticFeedItemState
-  };
+  optimisticData?: DiscussionWithOptimisticData;
   circleVisibility: string[];
 }

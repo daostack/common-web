@@ -6,6 +6,7 @@ import React, {
   ChangeEvent,
   useRef,
   ReactNode,
+  useLayoutEffect,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useDebounce, useMeasure, useScroll } from "react-use";
@@ -83,6 +84,7 @@ import {
   uploadFilesAndImages,
 } from "./utils";
 import styles from "./ChatComponent.module.scss";
+import { BaseTextEditorHandles } from "@/shared/ui-kit/TextEditor/BaseTextEditor";
 
 const BASE_CHAT_INPUT_HEIGHT = 48;
 
@@ -163,6 +165,7 @@ export default function ChatComponent({
     queryParams[QueryParamKey.Unchecked] === "true";
   const { checkImageSize } = useImageSizeCheck();
   useZoomDisabling();
+  const textInputRef = useRef<BaseTextEditorHandles>(null);
   const editorRef = useRef<HTMLElement>(null);
   const [inputContainerRef, { height: chatInputHeight }] =
     useMeasure<HTMLDivElement>();
@@ -268,7 +271,6 @@ export default function ChatComponent({
 
   const optimisticFeedItems = useSelector(selectOptimisticFeedItems);
 
-  // console.log("--optimisticFeedItems", optimisticFeedItems);
   const optimisticDiscussionMessages = useSelector(
     selectOptimisticDiscussionMessages,
   );
@@ -718,6 +720,11 @@ export default function ChatComponent({
     }
   }, [discussionMessageReply, currentFilesPreview]);
 
+  useLayoutEffect(() => {
+    textInputRef?.current?.clear?.();
+    textInputRef?.current?.focus?.();
+  },[discussionId]);
+
   useEffect(() => {
     if (isFetchedDiscussionMessages) {
       onMessagesAmountChange?.(discussionMessages.length);
@@ -852,6 +859,7 @@ export default function ChatComponent({
         })}
       >
         <ChatInput
+          ref={textInputRef}
           onClearFinished={onClearFinished}
           shouldReinitializeEditor={shouldReinitializeEditor}
           users={users}

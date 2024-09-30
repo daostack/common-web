@@ -245,6 +245,10 @@ export const clearOptimisticDiscussionMessages = createStandardAction(
   CommonActionType.CLEAR_OPTIMISTIC_DISCUSSION_MESSAGES,
 )<string>();
 
+export const clearCreatedOptimisticFeedItem = createStandardAction(
+  CommonActionType.CLEAR_CREATED_OPTIMISTIC_FEED_ITEM,
+)<string>();
+
 export const setRecentStreamId = createStandardAction(
   CommonActionType.SET_RECENT_STREAM_ID,
 )<string>();

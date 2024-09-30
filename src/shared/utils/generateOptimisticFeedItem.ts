@@ -1,6 +1,6 @@
 import { Timestamp as FirestoreTimestamp } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
-import { CommonFeed, CommonFeedType, OptimisticFeedItemState } from "../models";
+import { CommonFeed, CommonFeedType, LastMessageContent, OptimisticFeedItemState } from "../models";
 
 interface GenerateOptimisticFeedItemPayload {
   userId: string;
@@ -10,6 +10,7 @@ interface GenerateOptimisticFeedItemPayload {
   title: string;
   content: string;
   circleVisibility: string[];
+  lastMessageContent: LastMessageContent
 }
 
 export const generateOptimisticFeedItem = ({
@@ -19,7 +20,8 @@ export const generateOptimisticFeedItem = ({
   type,
   title,
   content,
-  circleVisibility
+  circleVisibility,
+  lastMessageContent,
 }: GenerateOptimisticFeedItemPayload): CommonFeed => {
 
   const optimisticFeedItemId = uuidv4();
@@ -45,6 +47,7 @@ export const generateOptimisticFeedItem = ({
       ownerId: userId,
       commonId,
       lastMessage: currentDate,
+      lastMessageContent,
       updatedAt: currentDate,
       createdAt: currentDate,
       messageCount: 0,
