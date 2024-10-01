@@ -45,6 +45,8 @@ import {
   checkIsEmptyCheckboxCreationText,
 } from "./utils";
 import styles from "./BaseTextEditor.module.scss";
+import { useFeatureFlag } from "@/shared/hooks";
+import { AI_PRO_USER, AI_USER, FeatureFlags } from "@/shared/constants";
 
 export interface BaseTextEditorHandles {
   focus: () => void;
@@ -123,6 +125,13 @@ const BaseTextEditor = forwardRef<BaseTextEditorHandles, TextEditorProps>((props
       ),
     [],
   );
+  const featureFlags = useFeatureFlag();
+  const isAiBotProEnabled = featureFlags?.get(FeatureFlags.AiBotPro);
+
+  const usersWithAI = useMemo(
+    () => [isAiBotProEnabled ? AI_PRO_USER : AI_USER, ...(users ?? [])],
+    [users],
+  ); 
 
   const [target, setTarget] = useState<Range | null>();
   const [shouldFocusTarget, setShouldFocusTarget] = useState(false);
@@ -227,7 +236,7 @@ const BaseTextEditor = forwardRef<BaseTextEditorHandles, TextEditorProps>((props
     }
   };
 
-  const chars = (users ?? []).filter((user) => {
+  const chars = (usersWithAI ?? []).filter((user) => {
     return getUserName(user)
       ?.toLowerCase()
       .startsWith(search.text.substring(1).toLowerCase());
