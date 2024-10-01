@@ -79,6 +79,8 @@ const Input: ForwardRefRenderFunction<InputRef, FullInputProps> = (
     ...restProps
   } = props;
   const innerInputRef = useRef<HTMLInputElement>(null);
+  const innerRef = useRef<HTMLTextAreaElement>(null);
+
   const [inputLengthRef, setInputLengthRef] = useState<HTMLSpanElement | null>(
     null,
   );
@@ -133,7 +135,8 @@ const Input: ForwardRefRenderFunction<InputRef, FullInputProps> = (
     inputRef,
     () => ({
       focus: () => {
-        innerInputRef.current?.focus();
+        innerInputRef?.current?.focus();
+        innerRef?.current?.focus();
       },
     }),
     [],
@@ -189,10 +192,11 @@ const Input: ForwardRefRenderFunction<InputRef, FullInputProps> = (
         )}
         {restProps.isTextarea && (
           <textarea
+            ref={innerRef}
             {...filterExtraProps(restProps)}
             {...generalInputProps}
             onChange={handleTextareaChange}
-          />
+            />
         )}
         {shouldDisplayCountToUse && !countAsHint && (
           <span className="custom-input__input-length" ref={setInputLengthRef}>

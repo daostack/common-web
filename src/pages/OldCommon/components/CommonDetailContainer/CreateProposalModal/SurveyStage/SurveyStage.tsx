@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
 import { CreateProposal } from "@/pages/OldCommon/interfaces";
 import { createSurvey } from "@/pages/OldCommon/store/actions";
 import { Loader, Modal } from "@/shared/components";
@@ -68,9 +69,14 @@ const SurveyStage: FC<SurveyStageProps> = (props) => {
     }
 
     setIsProposalCreating(true);
+
+    const proposalId = uuidv4();
+    const discussionId = uuidv4();
     const payload: Omit<CreateProposal[ProposalsTypes.SURVEY]["data"], "type"> =
       {
         args: {
+          id: proposalId,
+          discussionId,
           description: surveyData.description,
           commonId: common.id,
           title: surveyData.title,

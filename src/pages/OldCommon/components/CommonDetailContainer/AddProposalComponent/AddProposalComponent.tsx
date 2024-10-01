@@ -6,6 +6,7 @@ import React, {
   useState,
 } from "react";
 import { useSelector } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
 import classNames from "classnames";
 import { Modal } from "@/shared/components";
 import { AllocateFundsTo, ScreenSize } from "@/shared/constants";
@@ -67,6 +68,8 @@ export const AddProposalComponent = ({
   const [fundingRequest, setFundingRequest] =
     useState<CreateFundsAllocationData>({
       args: {
+        id: "",
+        discussionId: "",
         title: "",
         description: "",
         links: [],
@@ -125,8 +128,10 @@ export const AddProposalComponent = ({
 
   const saveProposalState = useCallback(
     (payload: Partial<CreateFundsAllocationFormData>) => {
+      const proposalId = uuidv4();
+      const discussionId = uuidv4();
       const fundingRequestData = {
-        args: { ...fundingRequest.args, ...payload },
+        args: { ...fundingRequest.args, ...payload, id: proposalId, discussionId },
       };
       setFundingRequest(fundingRequestData);
       if (!payload?.amount) {
