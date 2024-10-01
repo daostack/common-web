@@ -261,6 +261,7 @@ export default function ChatComponent({
   const [shouldReinitializeEditor, setShouldReinitializeEditor] =
     useState(false);
   const onClear = () => {
+    textInputRef?.current?.clear?.();
     setShouldReinitializeEditor(true);
     setMessage(parseStringToTextEditorValue());
   };
