@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMembers } from "@/pages/OldCommon/hooks";
 import { CreateProposal } from "@/pages/OldCommon/interfaces";
@@ -74,11 +75,15 @@ const RemoveCircleStage: FC<RemoveCircleStageProps> = (props) => {
     }
 
     setIsProposalCreating(true);
+    const proposalId = uuidv4();
+    const discussionId = uuidv4();
     const payload: Omit<
       CreateProposal[ProposalsTypes.REMOVE_CIRCLE]["data"],
       "type"
     > = {
       args: {
+        id: proposalId,
+        discussionId,
         commonId: common.id,
         title: `Remove circle proposal for ${getUserName(
           removeCircleData.commonMember.user,

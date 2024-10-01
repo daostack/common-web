@@ -5,6 +5,7 @@ import classNames from "classnames";
 import { Formik } from "formik";
 import { omit } from "lodash";
 import * as Yup from "yup";
+import { v4 as uuidv4 } from "uuid";
 import { createDiscussion } from "@/pages/OldCommon/store/actions";
 import { getCommonGovernanceCircles } from "@/pages/OldCommon/store/api";
 import { Modal } from "@/shared/components";
@@ -109,10 +110,14 @@ const AddDiscussionComponent = ({
       );
       const payload = omit(values, "isLimitedDiscussion");
 
+
+      // TODO: CHECK if it needed for optimistic
+      const discussionId = uuidv4();
       dispatch(
         createDiscussion.request({
           payload: {
             ...payload,
+            id: discussionId,
             ownerId: uid,
             commonId: commonId,
             circleVisibility,

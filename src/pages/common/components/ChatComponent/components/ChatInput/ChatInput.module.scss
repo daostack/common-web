@@ -31,6 +31,8 @@
 .messageInputEmpty {
   padding-left: 0.75rem;
   overflow-x: hidden;
+  opacity: 1; /* Ensure it's fully visible */
+  transition: none; /* Disable any transitions or animations */
 }
 
 .addFilesIcon {

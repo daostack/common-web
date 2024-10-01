@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useRef } from "react";
 import classNames from "classnames";
 import {
   TextEditor,
@@ -17,9 +17,18 @@ interface DiscussionFormProps {
 const DiscussionForm: FC<DiscussionFormProps> = (props) => {
   const { className, disabled = false } = props;
 
+  const textEditorRef = useRef<HTMLTextAreaElement | null>(null);
+
+  useEffect(() => {
+    if (textEditorRef.current) {
+      textEditorRef.current.focus();
+    }
+  }, []);
+
   return (
     <div className={classNames(styles.container, className)}>
       <TextField
+        ref={textEditorRef}
         className={styles.field}
         id="discussionTitle"
         name="title"

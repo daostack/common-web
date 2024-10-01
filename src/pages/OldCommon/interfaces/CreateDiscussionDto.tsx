@@ -1,6 +1,7 @@
 import { CommonLink } from "@/shared/models";
 
 export interface CreateDiscussionDto {
+  id: string;
   title: string;
   message: string;
   ownerId: string;

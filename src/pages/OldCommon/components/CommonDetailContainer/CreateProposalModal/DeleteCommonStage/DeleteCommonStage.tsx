@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { CreateProposal } from "@/pages/OldCommon/interfaces";
 import { createDeleteCommonProposal } from "@/pages/OldCommon/store/actions";
@@ -68,11 +69,15 @@ const DeleteCommonStage: FC<DeleteCommonStageProps> = (props) => {
     }
 
     setIsProposalCreating(true);
+    const proposalId = uuidv4();
+    const discussionId = uuidv4();
     const payload: Omit<
       CreateProposal[ProposalsTypes.DELETE_COMMON]["data"],
       "type"
     > = {
       args: {
+        id: proposalId,
+        discussionId,
         commonId: common.id,
         title: `Delete common proposal from ${getUserName(user)}`,
         description: deleteCommonData.description,
