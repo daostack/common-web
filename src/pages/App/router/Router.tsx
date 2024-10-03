@@ -6,7 +6,7 @@ import { ROUTES } from "./configuration";
 const Router: FC = () => (
   <Switch>
     {ROUTES.map((layoutConfiguration, index) => (
-      <Layout key={index} {...layoutConfiguration} />
+        <Layout key={index} {...layoutConfiguration} />
     ))}
     <Redirect />
   </Switch>
