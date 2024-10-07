@@ -134,6 +134,9 @@ const ChatMessage = ({
     : null;
   const isNotCurrentUserMessage =
     !isUserDiscussionMessage || userId !== discussionMessageUserId;
+  const initialEditedAtDate = new Date(
+    (discussionMessage.editedAt?.seconds ?? 0) * 1000,
+  );
 
   const [replyMessageText, setReplyMessageText] = useState<
     (string | JSX.Element)[]
@@ -178,9 +181,7 @@ const ChatMessage = ({
   ]);
 
   const createdAtDate = new Date(discussionMessage.createdAt.seconds * 1000);
-  const [editedAtDate, setEditedAtDate] = useState(new Date(
-    (discussionMessage.editedAt?.seconds ?? 0) * 1000,
-  ));
+  const [editedAtDate, setEditedAtDate] = useState(initialEditedAtDate);
 
   const handleUserClick = () => {
     if (onUserClick && discussionMessageUserId && !isBotMessage) {
@@ -260,6 +261,7 @@ const ChatMessage = ({
           } else {
             notify("Something went wrong");
             setParsedMessage(discussionMessage.parsedText);
+            setEditedAtDate(initialEditedAtDate);
           }
         },
       }),
@@ -279,6 +281,7 @@ const ChatMessage = ({
     } catch (err) {
       notify("Something went wrong");
       setParsedMessage(discussionMessage.parsedText);
+      setEditedAtDate(initialEditedAtDate);
     } finally {
       setIsMessageEditLoading(false);
     }
