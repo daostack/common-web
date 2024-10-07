@@ -121,6 +121,7 @@ const ChatMessage = ({
   }>();
   const [isEditMode, setEditMode] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [parsedMessage, setParsedMessage] = useState(discussionMessage.parsedText);
   const [isMessageEditLoading, setIsMessageEditLoading] = useState(false);
   const isTabletView = useIsTabletView();
   const isUserDiscussionMessage =
@@ -177,9 +178,9 @@ const ChatMessage = ({
   ]);
 
   const createdAtDate = new Date(discussionMessage.createdAt.seconds * 1000);
-  const editedAtDate = new Date(
+  const [editedAtDate, setEditedAtDate] = useState(new Date(
     (discussionMessage.editedAt?.seconds ?? 0) * 1000,
-  );
+  ));
 
   const handleUserClick = () => {
     if (onUserClick && discussionMessageUserId && !isBotMessage) {
@@ -258,6 +259,7 @@ const ChatMessage = ({
             handleEditModeClose();
           } else {
             notify("Something went wrong");
+            setParsedMessage(discussionMessage.parsedText);
           }
         },
       }),
@@ -276,17 +278,37 @@ const ChatMessage = ({
       handleEditModeClose();
     } catch (err) {
       notify("Something went wrong");
+      setParsedMessage(discussionMessage.parsedText);
     } finally {
       setIsMessageEditLoading(false);
     }
   };
 
-  const updateMessage = (message: TextEditorValue) => {
+  const updateMessage = async (message: TextEditorValue) => {
+    try {
     if (chatType === ChatType.ChatMessages) {
       updateChatMessage(message);
     } else {
       updateDiscussionMessage(message);
     }
+    const parsedText = await getTextFromTextEditorString({
+      userId,
+      ownerId: discussionMessageUserId,
+      textEditorString: JSON.stringify(message),
+      users,
+      commonId: discussionMessage.commonId,
+      directParent,
+      onUserClick,
+      onFeedItemClick,
+      onInternalLinkClick,
+    });
+
+    setParsedMessage(parsedText);
+    setEditedAtDate(new Date());
+    handleEditModeClose();
+  } catch(err) {
+    setIsMessageEditLoading(false);
+  }
   };
   updateMessageRef.current = {
     updateMessage,
@@ -520,7 +542,7 @@ const ChatMessage = ({
                   <ChatMessageLinkify
                     onInternalLinkClick={handleInternalLinkClick}
                   >
-                    {discussionMessage.parsedText.map((text) => text)}
+                    {(parsedMessage ?? []).map((text) => text)}
                   </ChatMessageLinkify>
                   {!isSystemMessage && (
                     <Time
