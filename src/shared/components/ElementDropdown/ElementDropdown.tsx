@@ -261,7 +261,8 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
 
     switch (selectedItem) {
       case ElementDropdownMenuItems.Share:
-        onOpen();
+        copyToClipboard(staticShareLink);
+        notify("The link has copied!");
         break;
       case ElementDropdownMenuItems.Copy:
         copyToClipboard(
