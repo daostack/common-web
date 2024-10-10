@@ -256,7 +256,8 @@ const BaseTextEditor = forwardRef<BaseTextEditorHandles, TextEditorProps>((props
       event.preventDefault();
       setShouldFocusTarget(true);
     } else {
-      onKeyDown && onKeyDown(event);
+      // event.stopPropagation();
+      onKeyDown && onKeyDown(event); // Call any custom onKeyDown handler
       if (event.key === KeyboardKeys.Enter && !isMobile()) {
         onToggleIsMessageSent();
       }
@@ -340,6 +341,16 @@ const BaseTextEditor = forwardRef<BaseTextEditorHandles, TextEditorProps>((props
     [onChange, value, handleMentionSelectionChange],
   );
 
+  const customScrollSelectionIntoView = ( ) => {
+    if (inputContainerRef && 'current' in inputContainerRef && inputContainerRef?.current) {
+      inputContainerRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+        inline: "nearest",
+      });
+    }
+  }
+
   return (
     <div ref={inputContainerRef} className={styles.container}>
       <Slate editor={editor} initialValue={value} onChange={handleOnChange}>
@@ -358,7 +369,7 @@ const BaseTextEditor = forwardRef<BaseTextEditorHandles, TextEditorProps>((props
           disabled={disabled}
           onBlur={onBlur}
           onKeyDown={handleKeyDown}
-          scrollSelectionIntoView={scrollSelectionIntoView}
+          scrollSelectionIntoView={scrollSelectionIntoView ?? customScrollSelectionIntoView}
           elementStyles={elementStyles}
         />
         <EmojiPicker

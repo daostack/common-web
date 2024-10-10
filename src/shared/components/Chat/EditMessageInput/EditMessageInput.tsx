@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import classNames from "classnames";
 import { useCommonMembers } from "@/pages/OldCommon/hooks";
 import { Loader } from "@/shared/components";
@@ -29,6 +29,7 @@ export default function EditMessageInput({
   isLoading,
   updateMessage,
 }: Props) {
+  const inputContainerRef = useRef<HTMLDivElement>(null);
   const [message, setMessage] = useState(() =>
     parseStringToTextEditorValue(discussionMessage.text),
   );
@@ -53,7 +54,7 @@ export default function EditMessageInput({
   }, [commonMember, commonMembers]);
 
   return (
-    <div className={styles.container}>
+    <div ref={inputContainerRef} className={styles.container}>
       <BaseTextEditor
         className={styles.input}
         emojiPickerContainerClassName={styles.pickerContainer}
@@ -64,6 +65,7 @@ export default function EditMessageInput({
         shouldReinitializeEditor={false}
         onClearFinished={emptyFunction}
         size={TextEditorSize.Auto}
+        inputContainerRef={inputContainerRef}
       />
 
       <div className={styles.buttonContainer}>
