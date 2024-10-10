@@ -25,7 +25,7 @@ export const useMenuItems = (
   options: GetAllowedItemsOptions,
   actions: Actions,
 ): Item[] => {
-  const { common } = options;
+  const { common, shareText } = options;
   const { share, onFollowToggle, onSearchClick, markCommonAsSeen } = actions;
 
   const items: Item[] = [
@@ -37,7 +37,7 @@ export const useMenuItems = (
     },
     {
       id: CommonFeedMenuItem.Share,
-      text: "Share",
+      text: shareText ?? "Share",
       onClick: share,
       icon: <Share3Icon />,
     },

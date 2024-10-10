@@ -7,6 +7,7 @@ import { DesktopMenu, MenuButton } from "@/shared/ui-kit";
 import { StaticLinkType, generateStaticShareLink } from "@/shared/utils";
 import { useMenuItems } from "./hooks";
 import { useUpdateCommonSeenState } from "@/shared/hooks/useCases";
+import { ShareButtonText } from "@/shared/constants";
 
 interface ActionsButtonProps {
   common: Common;
@@ -27,6 +28,7 @@ const ActionsButton: FC<ActionsButtonProps> = (props) => {
       commonMember,
       isFollowInProgress: commonFollow.isFollowInProgress,
       isSearchActionAvailable: Boolean(onSearchClick),
+      shareText: ShareButtonText.Space,
     },
     {
       share: () => {

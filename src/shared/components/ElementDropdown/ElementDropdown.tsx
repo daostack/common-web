@@ -4,7 +4,7 @@ import classNames from "classnames";
 import copyToClipboard from "copy-to-clipboard";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { MenuButton, ShareModal } from "@/shared/components";
-import { Orientation, EntityTypes } from "@/shared/constants";
+import { Orientation, EntityTypes, ShareButtonText } from "@/shared/constants";
 import { useNotification, useModal } from "@/shared/hooks";
 import {
   CopyIcon,
@@ -165,9 +165,10 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     }
 
     if (!isChatMessage) {
+      const shareText = isDiscussionMessage ? ShareButtonText.Message : "Share";
       items.push({
-        text: <ElementDropdownItem text="Share" icon={<Share3Icon />} />,
-        searchText: "Share",
+        text: <ElementDropdownItem text={shareText} icon={<Share3Icon />} />,
+        searchText: shareText,
         value: ElementDropdownMenuItems.Share,
       });
     }
@@ -261,8 +262,12 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
 
     switch (selectedItem) {
       case ElementDropdownMenuItems.Share:
-        copyToClipboard(staticShareLink);
-        notify("The link has copied!");
+        if(isDiscussionMessage) {
+          copyToClipboard(staticShareLink);
+          notify("The link has copied!");
+        } else {
+          onOpen();
+        }
         break;
       case ElementDropdownMenuItems.Copy:
         copyToClipboard(
@@ -313,7 +318,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
 
   const menuInlineStyle = useMemo(
     () => ({
-      height: `${2.5 * (ElementDropdownMenuItemsList.length || 1)}rem`,
+      height: `${3 * (ElementDropdownMenuItemsList.length || 1)}rem`,
     }),
     [ElementDropdownMenuItemsList],
   );

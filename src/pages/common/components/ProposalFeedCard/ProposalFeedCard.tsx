@@ -13,7 +13,7 @@ import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember, useProposalUserVote } from "@/pages/OldCommon/hooks";
 import { ProposalService } from "@/services";
 import { DeletePrompt, GlobalOverlay } from "@/shared/components";
-import { InboxItemType } from "@/shared/constants";
+import { InboxItemType, ShareButtonText } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
 import { useForceUpdate, useModal, useNotification } from "@/shared/hooks";
 import {
@@ -195,6 +195,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
         getNonAllowedItems,
         feedItemUserMetadata,
         withoutMenu,
+        shareText: ShareButtonText.Stream
       },
       {
         report: () => {},

@@ -12,7 +12,7 @@ import copyToClipboard from "copy-to-clipboard";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { DiscussionService } from "@/services";
 import { DeletePrompt, GlobalOverlay, ReportModal } from "@/shared/components";
-import { DiscussionMessageOwnerType, EntityTypes, InboxItemType } from "@/shared/constants";
+import { DiscussionMessageOwnerType, EntityTypes, InboxItemType, ShareButtonText } from "@/shared/constants";
 import { useModal, useNotification } from "@/shared/hooks";
 import {
   FeedItemFollowState,
@@ -186,6 +186,7 @@ function DiscussionFeedCard(props, ref) {
       getNonAllowedItems,
       feedItemUserMetadata,
       withoutMenu,
+      shareText: ShareButtonText.Stream
     },
     {
       report: onReportModalOpen,
