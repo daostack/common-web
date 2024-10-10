@@ -286,8 +286,8 @@ function DiscussionFeedCard(props, ref) {
 
   useEffect(() => {
     if(item.data.lastMessage?.content && discussion?.id && isOptimisticallyCreated) {
-      // markFeedItemAsSeen({feedObjectId: item.id, commonId})
-      dispatch(commonActions.clearCreatedOptimisticFeedItem(discussion?.id));
+      markFeedItemAsSeen({feedObjectId: item.id, commonId})
+      setTimeout(() => dispatch(commonActions.clearCreatedOptimisticFeedItem(discussion?.id)), 10000);
     }
   },[item.id, item.data.lastMessage?.content, discussion?.id, isOptimisticallyCreated, commonId])
 
