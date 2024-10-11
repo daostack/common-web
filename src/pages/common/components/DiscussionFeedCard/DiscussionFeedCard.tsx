@@ -8,10 +8,11 @@ import React, {
 import { useDispatch, useSelector } from "react-redux";
 import { useUpdateEffect } from "react-use";
 import { debounce } from "lodash";
+import copyToClipboard from "copy-to-clipboard";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { DiscussionService } from "@/services";
 import { DeletePrompt, GlobalOverlay, ReportModal } from "@/shared/components";
-import { DiscussionMessageOwnerType, EntityTypes, InboxItemType } from "@/shared/constants";
+import { DiscussionMessageOwnerType, EntityTypes, InboxItemType, ShareButtonText } from "@/shared/constants";
 import { useModal, useNotification } from "@/shared/hooks";
 import {
   FeedItemFollowState,
@@ -33,10 +34,9 @@ import {
   PredefinedTypes,
 } from "@/shared/models";
 import { TextEditorValue } from "@/shared/ui-kit";
-import { StaticLinkType, getUserName, InternalLinkData, generateFirstMessage } from "@/shared/utils";
+import { StaticLinkType, getUserName, InternalLinkData, generateFirstMessage, generateStaticShareLink } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
 import { FeedCard } from "../FeedCard";
-import { FeedCardShare } from "../FeedCard";
 import {
   FeedItemRef,
   GetLastMessageOptions,
@@ -123,11 +123,6 @@ function DiscussionFeedCard(props, ref) {
     onClose: onReportModalClose,
   } = useModal(false);
   const {
-    isShowing: isShareModalOpen,
-    onOpen: onShareModalOpen,
-    onClose: onShareModalClose,
-  } = useModal(false);
-  const {
     isShowing: isDeleteModalOpen,
     onOpen: onDeleteModalOpen,
     onClose: onDeleteModalClose,
@@ -191,10 +186,16 @@ function DiscussionFeedCard(props, ref) {
       getNonAllowedItems,
       feedItemUserMetadata,
       withoutMenu,
+      shareText: ShareButtonText.Stream
     },
     {
       report: onReportModalOpen,
-      share: () => onShareModalOpen(),
+      share: () => {
+        if(discussion) {
+          copyToClipboard(generateStaticShareLink(StaticLinkType.Discussion, discussion, item.id));
+          notify("The link has been copied!");
+        }
+      },
       remove: onDeleteModalOpen,
       linkStream: onLinkStreamModalOpen,
       unlinkStream: onUnlinkStreamModalOpen,
@@ -462,15 +463,6 @@ function DiscussionFeedCard(props, ref) {
           onClose={onReportModalClose}
           entity={discussion}
           type={EntityTypes.Discussion}
-        />
-      )}
-      {discussion && (
-        <FeedCardShare
-          isOpen={isShareModalOpen}
-          onClose={onShareModalClose}
-          linkType={StaticLinkType.Discussion}
-          element={discussion}
-          feedItemId={item.id}
         />
       )}
       {isDeleteModalOpen && (
