@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useRef } from "react";
+import React, { useEffect, useMemo, useState, useRef, useLayoutEffect } from "react";
 import classNames from "classnames";
 import { useCommonMembers } from "@/pages/OldCommon/hooks";
 import { Loader } from "@/shared/components";
@@ -13,6 +13,7 @@ import {
 import { parseStringToTextEditorValue } from "@/shared/ui-kit/TextEditor/utils";
 import { emptyFunction } from "@/shared/utils";
 import styles from "./EditMessageInput.module.scss";
+import { BaseTextEditorHandles } from "@/shared/ui-kit/TextEditor/BaseTextEditor";
 
 interface Props {
   discussionMessage: DiscussionMessage;
@@ -29,6 +30,8 @@ export default function EditMessageInput({
   isLoading,
   updateMessage,
 }: Props) {
+  const textInputRef = useRef<BaseTextEditorHandles>(null);
+  const editorRef = useRef<HTMLElement>(null);
   const inputContainerRef = useRef<HTMLDivElement>(null);
   const [message, setMessage] = useState(() =>
     parseStringToTextEditorValue(discussionMessage.text),
@@ -36,6 +39,10 @@ export default function EditMessageInput({
   const { data: commonMembers, fetchCommonMembers } = useCommonMembers({
     commonId: discussionMessage.commonId,
   });
+
+  useLayoutEffect(() => {
+    textInputRef?.current?.focus?.();
+  },[discussionMessage]);
 
   const handleMessageUpdate = () => {
     updateMessage(message);
@@ -56,6 +63,7 @@ export default function EditMessageInput({
   return (
     <div ref={inputContainerRef} className={styles.container}>
       <BaseTextEditor
+        ref={textInputRef}
         className={styles.input}
         emojiPickerContainerClassName={styles.pickerContainer}
         emojiContainerClassName={styles.emojiContainer}
@@ -66,6 +74,7 @@ export default function EditMessageInput({
         onClearFinished={emptyFunction}
         size={TextEditorSize.Auto}
         inputContainerRef={inputContainerRef}
+        editorRef={editorRef}
       />
 
       <div className={styles.buttonContainer}>

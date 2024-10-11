@@ -170,9 +170,18 @@ const BaseTextEditor = forwardRef<BaseTextEditorHandles, TextEditorProps>((props
   useImperativeHandle(ref, () => ({
     focus: () => {
       if (editorRef) {
+        const end = EditorSlate.end(editor, []);
+
+        // Move the selection to the end
+        Transforms.select(editor, end);
+  
+        // Focus the editor DOM node
         const editorEl = ReactEditor.toDOMNode(editor, editor);
         editorEl.focus();
-      }
+  
+        // Ensure the editor itself is focused programmatically
+        ReactEditor.focus(editor);
+      } 
     },
     clear: () => {
       clearInput();
