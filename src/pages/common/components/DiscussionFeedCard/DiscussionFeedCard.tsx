@@ -193,7 +193,7 @@ function DiscussionFeedCard(props, ref) {
       share: () => {
         if(discussion) {
           copyToClipboard(generateStaticShareLink(StaticLinkType.Discussion, discussion, item.id));
-          notify("The link has copied!");
+          notify("The link has been copied!");
         }
       },
       remove: onDeleteModalOpen,

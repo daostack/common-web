@@ -37,7 +37,7 @@ const ShareModal: FC<PropsWithChildren<ShareModalProps>> = (props) => {
 
   const handleCopyClick = () => {
     copyToClipboard(sourceUrl);
-    notify("The link has copied!");
+    notify("The link has been copied!");
   };
 
   return (

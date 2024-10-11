@@ -264,7 +264,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
       case ElementDropdownMenuItems.Share:
         if(isDiscussionMessage) {
           copyToClipboard(staticShareLink);
-          notify("The link has copied!");
+          notify("The link has been copied!");
         } else {
           onOpen();
         }
@@ -279,7 +279,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
         break;
       case ElementDropdownMenuItems.CopyLink:
         copyToClipboard(staticShareLink || "");
-        notify("The link has copied!");
+        notify("The link has been copied!");
         break;
       case ElementDropdownMenuItems.Delete:
         onOpenDelete();

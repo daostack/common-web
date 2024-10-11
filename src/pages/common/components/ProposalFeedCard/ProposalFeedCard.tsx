@@ -202,7 +202,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
         share: () => {
           if(discussion) {
             copyToClipboard(generateStaticShareLink(StaticLinkType.Proposal, discussion, item.id));
-            notify("The link has copied!");
+            notify("The link has been copied!");
           }
         },
         remove: onProposalDeleteModalOpen,

@@ -33,7 +33,7 @@ const ActionsButton: FC<ActionsButtonProps> = (props) => {
     {
       share: () => {
         copyToClipboard(shareLink);
-        notify("The link has copied!");
+        notify("The link has been copied!");
       },
       onFollowToggle: commonFollow.onFollowToggle,
       onSearchClick,
