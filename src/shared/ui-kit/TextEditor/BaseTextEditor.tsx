@@ -179,9 +179,18 @@ const BaseTextEditor = forwardRef<BaseTextEditorHandles, TextEditorProps>((props
   useImperativeHandle(ref, () => ({
     focus: () => {
       if (editorRef) {
+        const end = EditorSlate.end(editor, []);
+
+        // Move the selection to the end
+        Transforms.select(editor, end);
+  
+        // Focus the editor DOM node
         const editorEl = ReactEditor.toDOMNode(editor, editor);
         editorEl.focus();
-      }
+  
+        // Ensure the editor itself is focused programmatically
+        ReactEditor.focus(editor);
+      } 
     },
     clear: () => {
       clearInput();
@@ -265,7 +274,8 @@ const BaseTextEditor = forwardRef<BaseTextEditorHandles, TextEditorProps>((props
       event.preventDefault();
       setShouldFocusTarget(true);
     } else {
-      onKeyDown && onKeyDown(event);
+      // event.stopPropagation();
+      onKeyDown && onKeyDown(event); // Call any custom onKeyDown handler
       if (event.key === KeyboardKeys.Enter && !isMobile()) {
         onToggleIsMessageSent();
       }
@@ -349,6 +359,16 @@ const BaseTextEditor = forwardRef<BaseTextEditorHandles, TextEditorProps>((props
     [onChange, value, handleMentionSelectionChange],
   );
 
+  const customScrollSelectionIntoView = ( ) => {
+    if (inputContainerRef && 'current' in inputContainerRef && inputContainerRef?.current) {
+      inputContainerRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+        inline: "nearest",
+      });
+    }
+  }
+
   return (
     <div ref={inputContainerRef} className={styles.container}>
       <Slate editor={editor} initialValue={value} onChange={handleOnChange}>
@@ -367,7 +387,7 @@ const BaseTextEditor = forwardRef<BaseTextEditorHandles, TextEditorProps>((props
           disabled={disabled}
           onBlur={onBlur}
           onKeyDown={handleKeyDown}
-          scrollSelectionIntoView={scrollSelectionIntoView}
+          scrollSelectionIntoView={scrollSelectionIntoView ?? customScrollSelectionIntoView}
           elementStyles={elementStyles}
         />
         <EmojiPicker
