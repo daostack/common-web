@@ -6,6 +6,7 @@ import {
   FeedItems,
   selectFeedItems,
   selectFilteredFeedItems,
+  selectOptimisticFeedItems,
 } from "@/store/states";
 
 interface Return
@@ -21,6 +22,7 @@ export const useCommonFeedItems = (
   const dispatch = useDispatch();
   const feedItems = useSelector(selectFeedItems);
   const filteredFeedItems = useSelector(selectFilteredFeedItems);
+  const optimisticFeedItems = useSelector(selectOptimisticFeedItems);
   const idsForNotListeningRef = useRef<string[]>(idsForNotListening || []);
   const isSubscriptionAllowed = feedItems.data !== null;
 
@@ -53,6 +55,20 @@ export const useCommonFeedItems = (
           return;
         }
 
+
+        // TODO: HERE I can get optFeedItem by discussionId
+        const optItemIds = Array.from(optimisticFeedItems.values()).map((item) => {
+          return item.feedItem.data.id;
+        } );
+
+        data.forEach((item) => {
+          const discussionId = item.commonFeedItem.data.discussionId ?? item.commonFeedItem.data.id;
+          if(optItemIds.includes(discussionId)) {
+
+            dispatch(commonActions.removeOptimisticFeedItemState({id: discussionId}))
+          }
+        })
+
         const finalData =
           idsForNotListeningRef.current.length > 0
             ? data.filter(
@@ -68,7 +84,7 @@ export const useCommonFeedItems = (
     );
 
     return unsubscribe;
-  }, [isSubscriptionAllowed, feedItems.firstDocTimestamp, commonId]);
+  }, [isSubscriptionAllowed, feedItems.firstDocTimestamp, commonId, optimisticFeedItems]);
 
   useEffect(() => {
     return () => {

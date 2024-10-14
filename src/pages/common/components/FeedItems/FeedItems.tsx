@@ -70,6 +70,7 @@ const FeedItems: FC<FeedItemsProps> = (props) => {
             const isPinned = (common.pinnedFeedItems || []).some(
               (pinnedItem) => pinnedItem.feedObjectId === item.feedItem.id,
             );
+
             return (
               <FeedItem
                 key={item.feedItem.id}

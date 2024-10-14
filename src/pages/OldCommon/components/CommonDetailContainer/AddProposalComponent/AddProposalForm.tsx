@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import classNames from "classnames";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import { v4 as uuidv4 } from "uuid";
 import { getBankDetails } from "@/pages/OldCommon/store/actions";
 import { Button, ButtonIcon, Loader, ModalFooter } from "@/shared/components";
 import {
@@ -101,6 +102,8 @@ export const AddProposalForm = ({
   }, [dispatch, hidden]);
 
   const [formValues] = useState<CreateFundsAllocationFormData>({
+    id: "",
+    discussionId: "",
     title: "",
     description: "",
     links: [{ title: "", value: "" }],
@@ -168,7 +171,9 @@ export const AddProposalForm = ({
       validationSchema={schema}
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(false);
-        saveProposalState({ ...values, images: uploadedFiles });
+        const proposalId = uuidv4();
+        const discussionId = uuidv4();
+        saveProposalState({ ...values, images: uploadedFiles, id: proposalId, discussionId });
       }}
       initialValues={formValues}
       validateOnChange={true}

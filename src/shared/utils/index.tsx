@@ -45,3 +45,6 @@ export * from "./joinWithLast";
 export * from "./getResizedFileUrl";
 export * from "./areTimestampsEqual";
 export * from "./parseMessageLink";
+export * from "./sortByTierDesc";
+export * from "./generateOptimisticFeedItem";
+export * from "./generateFirstMessage";

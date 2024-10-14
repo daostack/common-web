@@ -15,7 +15,7 @@ export const checkShouldAutoOpenPreview = (
     return true;
   }
   if (chatItem.discussion && !chatItem.seenOnce) {
-    return true;
+    return false;
   }
   const expirationTimestamp =
     chatItem.proposal?.data.votingExpiresOn ||

@@ -1,5 +1,4 @@
 import React, {
-  FC,
   FocusEventHandler,
   KeyboardEvent,
   MutableRefObject,
@@ -8,6 +7,8 @@ import React, {
   useMemo,
   useState,
   useCallback,
+  useImperativeHandle,
+  forwardRef,
 } from "react";
 import { useDebounce } from "react-use";
 import classNames from "classnames";
@@ -44,6 +45,13 @@ import {
   checkIsEmptyCheckboxCreationText,
 } from "./utils";
 import styles from "./BaseTextEditor.module.scss";
+import { useFeatureFlag } from "@/shared/hooks";
+import { AI_PRO_USER, AI_USER, FeatureFlags } from "@/shared/constants";
+
+export interface BaseTextEditorHandles {
+  focus: () => void;
+  clear: () => void;
+}
 
 export interface TextEditorProps {
   className?: string;
@@ -51,8 +59,8 @@ export interface TextEditorProps {
   emojiContainerClassName?: string;
   emojiPickerContainerClassName?: string;
   inputContainerRef?:
-    | MutableRefObject<HTMLDivElement | null>
-    | RefCallback<HTMLDivElement>;
+  | MutableRefObject<HTMLDivElement | null>
+  | RefCallback<HTMLDivElement>;
   editorRef?: MutableRefObject<HTMLElement | null> | RefCallback<HTMLElement>;
   id?: string;
   name?: string;
@@ -81,7 +89,7 @@ const INITIAL_SEARCH_VALUE = {
   },
 };
 
-const BaseTextEditor: FC<TextEditorProps> = (props) => {
+const BaseTextEditor = forwardRef<BaseTextEditorHandles, TextEditorProps>((props, ref) => {
   const {
     className,
     classNameRtl,
@@ -117,6 +125,13 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
       ),
     [],
   );
+  const featureFlags = useFeatureFlag();
+  const isAiBotProEnabled = featureFlags?.get(FeatureFlags.AiBotPro);
+
+  const usersWithAI = useMemo(
+    () => [isAiBotProEnabled ? AI_PRO_USER : AI_USER, ...(users ?? [])],
+    [users],
+  ); 
 
   const [target, setTarget] = useState<Range | null>();
   const [shouldFocusTarget, setShouldFocusTarget] = useState(false);
@@ -131,11 +146,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     [value],
   );
 
-  useEffect(() => {
-    if (!shouldReinitializeEditor) {
-      return;
-    }
-
+  const clearInput = () => {
     setTimeout(() => {
       Transforms.delete(editor, {
         at: {
@@ -154,8 +165,37 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
       const editorEl = ReactEditor.toDOMNode(editor, editor);
       editorEl.scrollTo(0, 0);
       onClearFinished();
-    }, 0);
-  }, [shouldReinitializeEditor, onClearFinished]);
+    }, 0)
+  }
+
+  useEffect(() => {
+    if (!shouldReinitializeEditor) {
+      return;
+    }
+
+    clearInput();
+  }, [shouldReinitializeEditor, clearInput]);
+
+  useImperativeHandle(ref, () => ({
+    focus: () => {
+      if (editorRef) {
+        const end = EditorSlate.end(editor, []);
+
+        // Move the selection to the end
+        Transforms.select(editor, end);
+  
+        // Focus the editor DOM node
+        const editorEl = ReactEditor.toDOMNode(editor, editor);
+        editorEl.focus();
+  
+        // Ensure the editor itself is focused programmatically
+        ReactEditor.focus(editor);
+      } 
+    },
+    clear: () => {
+      clearInput();
+    }
+  }));
 
   useEffect(() => {
     if (!editorRef) {
@@ -205,7 +245,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     }
   };
 
-  const chars = (users ?? []).filter((user) => {
+  const chars = (usersWithAI ?? []).filter((user) => {
     return getUserName(user)
       ?.toLowerCase()
       .startsWith(search.text.substring(1).toLowerCase());
@@ -234,7 +274,8 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
       event.preventDefault();
       setShouldFocusTarget(true);
     } else {
-      onKeyDown && onKeyDown(event);
+      // event.stopPropagation();
+      onKeyDown && onKeyDown(event); // Call any custom onKeyDown handler
       if (event.key === KeyboardKeys.Enter && !isMobile()) {
         onToggleIsMessageSent();
       }
@@ -318,6 +359,16 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     [onChange, value, handleMentionSelectionChange],
   );
 
+  const customScrollSelectionIntoView = ( ) => {
+    if (inputContainerRef && 'current' in inputContainerRef && inputContainerRef?.current) {
+      inputContainerRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+        inline: "nearest",
+      });
+    }
+  }
+
   return (
     <div ref={inputContainerRef} className={styles.container}>
       <Slate editor={editor} initialValue={value} onChange={handleOnChange}>
@@ -336,7 +387,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
           disabled={disabled}
           onBlur={onBlur}
           onKeyDown={handleKeyDown}
-          scrollSelectionIntoView={scrollSelectionIntoView}
+          scrollSelectionIntoView={scrollSelectionIntoView ?? customScrollSelectionIntoView}
           elementStyles={elementStyles}
         />
         <EmojiPicker
@@ -368,6 +419,6 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
       </Slate>
     </div>
   );
-};
+});
 
 export default BaseTextEditor;
