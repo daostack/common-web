@@ -67,7 +67,7 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = ({
     });
 
     return () => {
-      unsubscribe();
+      unsubscribe && unsubscribe();
     };
   }, [breadcrumbs.activeItem?.id]);
 

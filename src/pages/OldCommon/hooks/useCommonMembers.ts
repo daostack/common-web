@@ -1,6 +1,5 @@
 import { useCallback, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { trace } from "firebase/performance";
 import { CommonService, Logger, UserService } from "@/services";
 import { store } from "@/shared/appConfig";
 import { LoadingState } from "@/shared/interfaces";
@@ -11,7 +10,6 @@ import {
   selectUserStates,
 } from "@/store/states";
 import { useDeepCompareEffect } from "react-use";
-import { perf } from "@/shared/utils/firebase";
 
 interface Options {
   commonId?: string;
@@ -113,9 +111,6 @@ export const useCommonMembers = ({ commonId }: Options): Return => {
 
     (async () => {
       try {
-        const useCommonMembersTrace = trace(perf, 'useCommonMembers');
-        useCommonMembersTrace.start();
-
         const cachedUserStates = selectUserStates()(store.getState());
         const hasUsersFromCache = commonMembers.some(
           ({ userId }) => cachedUserStates[userId]?.data,
@@ -188,7 +183,6 @@ export const useCommonMembers = ({ commonId }: Options): Return => {
           };
         });
         dispatch(cacheActions.updateUserStates(fetchedUsers));
-        useCommonMembersTrace.stop();
       } catch (err) {
         Logger.error(err);
         setState((prevState) => ({
