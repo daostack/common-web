@@ -12,23 +12,17 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
   (options: Options) => boolean
 > = {
   [ChatChannelMenuItem.MarkUnread]: ({ chatChannelUserStatus }) => {
-    const { notSeenCount, seen, isSeenUpdating } = chatChannelUserStatus || {};
+    const { notSeenCount, seen } = chatChannelUserStatus || {};
 
-    if (isSeenUpdating) {
-      return false;
-    }
 
     return (
       notEmpty(notSeenCount) && notEmpty(seen) && notSeenCount === 0 && seen
     );
   },
   [ChatChannelMenuItem.MarkRead]: ({ chatChannelUserStatus }) => {
-    const { notSeenCount, seenOnce, seen, isSeenUpdating } =
+    const { notSeenCount, seenOnce, seen } =
       chatChannelUserStatus || {};
 
-    if (isSeenUpdating) {
-      return false;
-    }
 
     return (
       Boolean(notSeenCount) ||

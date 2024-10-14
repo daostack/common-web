@@ -36,7 +36,8 @@ export const MemoizedFeedCardTags: FC<FeedCardTagsProps> = (props) => {
   const isNewTagVisible =
     notEmpty(seenOnce) && notEmpty(isOwner) && !seenOnce && !isOwner;
     const isUnseenTagVisible =
-    !isNewTagVisible && !unreadMessages && notEmpty(seen) && !seen && !isOwner;
+    !isNewTagVisible && !unreadMessages && notEmpty(seen) && !seen;
+
   return (
     <>
       {type === CommonFeedType.Proposal && (
