@@ -1,10 +1,8 @@
 import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 import { uniq } from "lodash";
 import { UserAvatar } from "@/shared/components";
-import { AI_PRO_USER, AI_USER, FeatureFlags } from "@/shared/constants";
 import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
 import { useOutsideClick } from "@/shared/hooks";
-import { useFeatureFlag } from "@/shared/hooks/useFeatureFlag";
 import { User } from "@/shared/models";
 import { Loader } from "@/shared/ui-kit";
 import { getUserName } from "@/shared/utils";
@@ -22,20 +20,15 @@ export interface MentionDropdownProps {
 const MentionDropdown: FC<MentionDropdownProps> = (props) => {
   const {
     onClick,
-    users: initialUsers = [],
+    users = [],
     onClose,
     shouldFocusTarget,
   } = props;
   const mentionRef = useRef(null);
   const listRefs = useRef<HTMLLIElement[]>([]);
-  const featureFlags = useFeatureFlag();
-  const isAiBotProEnabled = featureFlags?.get(FeatureFlags.AiBotPro);
   const { isOutside, setOutsideValue } = useOutsideClick(mentionRef);
   const [index, setIndex] = useState(0);
-  const users = useMemo(
-    () => [isAiBotProEnabled ? AI_PRO_USER : AI_USER, ...initialUsers],
-    [initialUsers, isAiBotProEnabled],
-  );
+
   const userIds = useMemo(() => users.map(({ uid }) => uid), [users]);
 
   useEffect(() => {

@@ -25,3 +25,4 @@ export {
 } from "./DiscussionMessage";
 export { default as NotionService } from "./Notion";
 export { default as FeatureFlagService } from "./FeatureFlag";
+export { default as NotificationService } from "./Notification";

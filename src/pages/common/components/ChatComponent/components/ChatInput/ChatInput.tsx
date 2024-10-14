@@ -1,5 +1,6 @@
 import React, {
   ChangeEvent,
+  forwardRef,
   MutableRefObject,
   ReactElement,
   RefCallback,
@@ -18,6 +19,7 @@ import {
 import { EmojiCount } from "@/shared/ui-kit/TextEditor/utils";
 import { emptyFunction } from "@/shared/utils";
 import styles from "./ChatInput.module.scss";
+import { BaseTextEditorHandles } from "@/shared/ui-kit/TextEditor/BaseTextEditor";
 
 interface ChatInputProps {
   shouldHideChatInput: boolean;
@@ -33,14 +35,14 @@ interface ChatInputProps {
   canSendMessage?: boolean;
   sendChatMessage: () => void;
   inputContainerRef?:
-    | MutableRefObject<HTMLDivElement | null>
-    | RefCallback<HTMLDivElement>;
+  | MutableRefObject<HTMLDivElement | null>
+  | RefCallback<HTMLDivElement>;
   editorRef?: MutableRefObject<HTMLElement | null> | RefCallback<HTMLElement>;
   renderChatInputOuter?: () => ReactElement;
   isAuthorized?: boolean;
 }
 
-export const ChatInput = (props: ChatInputProps): ReactElement | null => {
+export const ChatInput = React.memo(forwardRef<BaseTextEditorHandles, ChatInputProps>((props, ref): ReactElement | null => {
   const {
     inputContainerRef,
     editorRef,
@@ -93,6 +95,7 @@ export const ChatInput = (props: ChatInputProps): ReactElement | null => {
         accept={FILES_ACCEPTED_EXTENSIONS}
       />
       <BaseTextEditor
+        ref={ref}
         inputContainerRef={inputContainerRef}
         size={TextEditorSize.Auto}
         editorRef={editorRef}
@@ -124,4 +127,4 @@ export const ChatInput = (props: ChatInputProps): ReactElement | null => {
       </button>
     </>
   );
-};
+}));

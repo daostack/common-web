@@ -13,6 +13,7 @@ import {
   ThemeHandler,
   UserNotificationsAmountHandler,
   WebViewLoginHandler,
+  NotificationsHandler,
 } from "./handlers";
 import { Router } from "./router";
 
@@ -34,6 +35,7 @@ const App = () => {
       <ThemeHandler />
       <UserNotificationsAmountHandler />
       <WebViewLoginHandler />
+      <NotificationsHandler />
       <LoginContainer />
       <Router />
     </ReactRouter>

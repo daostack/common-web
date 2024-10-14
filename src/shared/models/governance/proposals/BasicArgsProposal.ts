@@ -1,6 +1,10 @@
 import { CommonLink } from "../../Common";
 
 export interface BasicArgsProposal {
+  id: string;
+  
+  discussionId: string;
+
   readonly commonId: string;
 
   readonly proposerId: string;

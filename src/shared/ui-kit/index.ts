@@ -27,3 +27,4 @@ export * from "./TopNavigation";
 export * from "./UploadFiles";
 export * from "./FilePreview";
 export * from "./MenuButton";
+export * from "./SuspenseLoader";

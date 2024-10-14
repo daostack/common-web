@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
 import { useCommonMembers } from "@/pages/OldCommon/hooks";
 import { CreateProposal } from "@/pages/OldCommon/interfaces";
 import {
@@ -133,12 +134,16 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
       : { otherMemberId: fundsAllocationData.otherMemberId };
 
     setIsProposalCreating(true);
+    const proposalId = uuidv4();
+    const discussionId = uuidv4();
     const description = `${fundsAllocationData.description}\n\nGoal of Payment:\n${fundsAllocationData.goalOfPayment}`;
     const payload: Omit<
       CreateProposal[ProposalsTypes.FUNDS_ALLOCATION]["data"],
       "type"
     > = {
       args: {
+        id: proposalId,
+        discussionId,
         description,
         amount: {
           amount: fundsAllocationData.amount * 100,
