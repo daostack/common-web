@@ -17,13 +17,7 @@ interface ProjectProps {
 }
 
 const Project: FC<ProjectProps> = (props) => {
-  const {
-    title,
-    url,
-    imageURL,
-    imageAlt,
-    tooltipContent,
-  } = props;
+  const { title, url, imageURL, imageAlt, tooltipContent } = props;
 
   const contentEl = (
     <div className={styles.item}>
