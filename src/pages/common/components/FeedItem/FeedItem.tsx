@@ -20,6 +20,7 @@ import {
 import { checkIsItemVisibleForUser } from "@/shared/utils";
 import { useFeedItemSubscription } from "../../hooks";
 import { DiscussionFeedCard } from "../DiscussionFeedCard";
+import { OptimisticFeedCard } from "../OptimisticFeedCard";
 import { ProposalFeedCard } from "../ProposalFeedCard";
 import { ProjectFeedItem } from "./components";
 import { useFeedItemContext } from "./context";
@@ -55,6 +56,7 @@ interface FeedItemProps {
   withoutMenu?: boolean;
   onFeedItemUpdate?: (item: CommonFeed, isRemoved: boolean) => void;
   getNonAllowedItems?: GetNonAllowedItemsOptions;
+  isOptimisticallyCreated?: boolean;
 }
 
 const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
@@ -85,6 +87,7 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     level,
     onFeedItemUpdate: outerOnFeedItemUpdate,
     getNonAllowedItems: outerGetNonAllowedItems,
+    isOptimisticallyCreated = false,
   } = props;
   const {
     onFeedItemUpdate,
@@ -143,7 +146,6 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     item.id,
     onFeedItemUnfollowed,
   ]);
-
 
   const generalProps = useMemo(
     () => ({
@@ -206,7 +208,6 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     ],
   );
 
-
   if (
     shouldCheckItemVisibility &&
     !checkIsItemVisibleForUser({
@@ -220,8 +221,21 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     return null;
   }
 
+  if (
+    item.data.type === CommonFeedType.OptimisticDiscussion ||
+    item.data.type === CommonFeedType.OptimisticProposal
+  ) {
+    return (
+      <OptimisticFeedCard
+        {...generalProps}
+        discussion={item.optimisticData}
+        type={item.data.type}
+      />
+    );
+  }
+
   if (item.data.type === CommonFeedType.Discussion) {
-    return <DiscussionFeedCard {...generalProps} />;
+    return <DiscussionFeedCard isOptimisticallyCreated={isOptimisticallyCreated} {...generalProps} />;
   }
 
   if (item.data.type === CommonFeedType.Proposal) {

@@ -19,7 +19,7 @@ interface FeedCardTagsProps {
   hasUnseenMention?: boolean;
 }
 
-export const FeedCardTags: FC<FeedCardTagsProps> = (props) => {
+export const MemoizedFeedCardTags: FC<FeedCardTagsProps> = (props) => {
   const {
     unreadMessages,
     type,
@@ -35,7 +35,7 @@ export const FeedCardTags: FC<FeedCardTagsProps> = (props) => {
   const isOwner = ownerId === user?.uid;
   const isNewTagVisible =
     notEmpty(seenOnce) && notEmpty(isOwner) && !seenOnce && !isOwner;
-  const isUnseenTagVisible =
+    const isUnseenTagVisible =
     !isNewTagVisible && !unreadMessages && notEmpty(seen) && !seen;
 
   return (
@@ -86,3 +86,5 @@ export const FeedCardTags: FC<FeedCardTagsProps> = (props) => {
     </>
   );
 };
+
+export const FeedCardTags = React.memo(MemoizedFeedCardTags);

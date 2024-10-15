@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { DeadSeaUserDetailsFormValuesWithoutUserDetails } from "@/pages/OldCommon/components";
 import { useSupportersDataContext } from "@/pages/OldCommon/containers/SupportersContainer/context";
@@ -64,10 +65,14 @@ const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
 
       const title = `Membership request from ${userName}`;
 
+      const proposalId = uuidv4();
+      const discussionId = uuidv4();
       dispatch(
         createMemberAdmittanceProposal.request({
           payload: {
             args: {
+              id: proposalId,
+              discussionId,
               commonId,
               title,
               description: data.supportPlan || title,

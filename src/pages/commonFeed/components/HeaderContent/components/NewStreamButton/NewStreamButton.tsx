@@ -1,8 +1,12 @@
 import React, { FC } from "react";
 import { useHistory } from "react-router";
+import { useDispatch } from "react-redux";
 import { useMenuItems } from "@/pages/common/components/CommonTabPanels/components/FeedTab/components/NewStreamButton";
 import { useRoutesContext } from "@/shared/contexts";
 import { PlusIcon } from "@/shared/icons";
+import { animateScroll } from "react-scroll";
+import { CommonAction } from "@/shared/constants";
+import { commonActions } from "@/store/states";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { ButtonIcon, DesktopMenu, MobileMenu } from "@/shared/ui-kit";
 import styles from "./NewStreamButton.module.scss";
@@ -29,6 +33,12 @@ const NewStreamButton: FC<NewStreamButtonProps> = (props) => {
   const { getProjectCreationPagePath } = useRoutesContext();
   const handleNewSpace = () =>
     history.push(getProjectCreationPagePath(commonId));
+  const dispatch = useDispatch();
+
+  const onNewDiscussion = () => {
+    dispatch(commonActions.setCommonAction(CommonAction.NewDiscussion));
+    animateScroll.scrollToTop({ containerId: document.body, smooth: true });
+  };
   const items = useMenuItems({
     commonMember,
     governance,
@@ -37,6 +47,14 @@ const NewStreamButton: FC<NewStreamButtonProps> = (props) => {
 
   if (items.length === 0) {
     return null;
+  }
+
+  if(items.length === 2) {
+    return (
+      <ButtonIcon className={styles.buttonIcon} onClick={onNewDiscussion}>
+      <PlusIcon className={styles.icon} />
+    </ButtonIcon>
+    )
   }
 
   const triggerEl = (

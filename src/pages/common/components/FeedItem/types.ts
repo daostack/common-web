@@ -9,6 +9,7 @@ import {
   CommonFeedObjectUserUnique,
 } from "@/shared/models";
 import { FeedItemMenuItem } from "./constants";
+import { ShareButtonText } from "@/shared/constants";
 
 export type GetNonAllowedItemsOptions = (
   type: CommonFeedType,
@@ -26,6 +27,7 @@ export interface GetAllowedItemsOptions {
   getNonAllowedItems?: GetNonAllowedItemsOptions;
   feedItemUserMetadata: CommonFeedObjectUserUnique | null;
   withoutMenu?: boolean;
+  shareText?: ShareButtonText;
 }
 
 export type MenuItemOptions = Omit<GetAllowedItemsOptions, "feedItemFollow">;

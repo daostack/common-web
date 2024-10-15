@@ -6,15 +6,16 @@ import React, {
   ChangeEvent,
   useRef,
   ReactNode,
+  useLayoutEffect,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useDebounce, useMeasure, useScroll } from "react-use";
 import classNames from "classnames";
 import isHotkey from "is-hotkey";
-import { debounce, delay, omit } from "lodash";
+import { debounce } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { ChatService, DiscussionMessageService, FileService } from "@/services";
+import { FileService } from "@/services";
 import { Separator } from "@/shared/components";
 import {
   ChatType,
@@ -57,11 +58,13 @@ import { checkUncheckedItemsInTextEditorValue } from "@/shared/ui-kit/TextEditor
 import { InternalLinkData, notEmpty } from "@/shared/utils";
 import { getUserName, hasPermission, isMobile } from "@/shared/utils";
 import {
-  cacheActions,
   chatActions,
   selectCurrentDiscussionMessageReply,
   selectFilesPreview,
   FileInfo,
+  selectOptimisticFeedItems,
+  commonActions,
+  selectOptimisticDiscussionMessages,
 } from "@/store/states";
 import { ChatContentContext, ChatContentData } from "../CommonContent/context";
 import {
@@ -75,8 +78,13 @@ import {
 } from "./components";
 import { checkIsLastSeenInPreviousDay } from "./components/ChatContent/utils";
 import { useChatChannelChatAdapter, useDiscussionChatAdapter } from "./hooks";
-import { getLastNonUserMessage } from "./utils";
+import {
+  getLastNonUserMessage,
+  sendMessages,
+  uploadFilesAndImages,
+} from "./utils";
 import styles from "./ChatComponent.module.scss";
+import { BaseTextEditorHandles } from "@/shared/ui-kit/TextEditor/BaseTextEditor";
 
 const BASE_CHAT_INPUT_HEIGHT = 48;
 
@@ -157,6 +165,7 @@ export default function ChatComponent({
     queryParams[QueryParamKey.Unchecked] === "true";
   const { checkImageSize } = useImageSizeCheck();
   useZoomDisabling();
+  const textInputRef = useRef<BaseTextEditorHandles>(null);
   const editorRef = useRef<HTMLElement>(null);
   const [inputContainerRef, { height: chatInputHeight }] =
     useMeasure<HTMLDivElement>();
@@ -252,6 +261,7 @@ export default function ChatComponent({
   const [shouldReinitializeEditor, setShouldReinitializeEditor] =
     useState(false);
   const onClear = () => {
+    textInputRef?.current?.clear?.();
     setShouldReinitializeEditor(true);
     setMessage(parseStringToTextEditorValue());
   };
@@ -259,6 +269,51 @@ export default function ChatComponent({
   const [isMultiLineInput, setIsMultiLineInput] = useState(false);
   const prevFeedItemId = useRef<string>();
   const timeoutId = useRef<ReturnType<typeof setTimeout> | null>();
+
+  const optimisticFeedItems = useSelector(selectOptimisticFeedItems);
+
+  const optimisticDiscussionMessages = useSelector(
+    selectOptimisticDiscussionMessages,
+  );
+
+  const isOptimisticChat = optimisticFeedItems.has(discussionId);
+
+  useEffect(() => {
+    if (optimisticDiscussionMessages.size > 0) {
+      const entries = Array.from(optimisticDiscussionMessages.entries());
+      (async () => {
+        await Promise.all(
+          entries.map(async ([optimisticMessageDiscussionId, messages]) => {
+            if (!optimisticFeedItems.has(optimisticMessageDiscussionId)) {
+              const newMessagesWithFiles = await uploadFilesAndImages(messages);
+              await sendMessages({
+                newMessagesWithFiles,
+                updateChatMessage: chatMessagesData.updateChatMessage,
+                chatChannel,
+                discussionId: optimisticMessageDiscussionId,
+                dispatch,
+              });
+
+              dispatch(
+                commonActions.clearOptimisticDiscussionMessages(
+                  optimisticMessageDiscussionId,
+                ),
+              );
+
+              return messages;
+            }
+
+            return messages;
+          }),
+        );
+      })();
+    }
+  }, [
+    optimisticFeedItems,
+    optimisticDiscussionMessages,
+    chatChannel,
+    chatMessagesData.updateChatMessage,
+  ]);
 
   useEffect(() => {
     return () => {
@@ -346,71 +401,13 @@ export default function ChatComponent({
 
   useDebounce(
     async () => {
-      const newMessagesWithFiles = await Promise.all(
-        newMessages.map(async (payload) => {
-          const [uploadedFiles, uploadedImages] = await Promise.all([
-            FileService.uploadFiles(
-              (payload.filesPreview ?? []).map((file) =>
-                FileService.convertFileInfoToUploadFile(file),
-              ),
-            ),
-            FileService.uploadFiles(
-              (payload.imagesPreview ?? []).map((file) =>
-                FileService.convertFileInfoToUploadFile(file),
-              ),
-            ),
-          ]);
-
-          const updatedPayload = omit(payload, [
-            "filesPreview",
-            "imagesPreview",
-          ]);
-
-          return {
-            ...updatedPayload,
-            images: uploadedImages,
-            files: uploadedFiles,
-          };
-        }),
-      );
-
-      newMessagesWithFiles.map(async (payload, index) => {
-        delay(async () => {
-          const pendingMessageId = payload.pendingMessageId as string;
-
-          if (chatChannel) {
-            const response = await ChatService.sendChatMessage({
-              id: pendingMessageId,
-              chatChannelId: chatChannel.id,
-              text: payload.text || "",
-              images: payload.images,
-              files: payload.files,
-              mentions: payload.tags?.map((tag) => tag.value),
-              parentId: payload.parentId,
-              hasUncheckedItems: checkUncheckedItemsInTextEditorValue(
-                parseStringToTextEditorValue(payload.text),
-              ),
-              linkPreviews: payload.linkPreviews,
-            });
-            chatMessagesData.updateChatMessage(response);
-
-            return;
-          }
-
-          const response = await DiscussionMessageService.createMessage({
-            ...payload,
-            id: pendingMessageId,
-          });
-
-          dispatch(
-            cacheActions.updateDiscussionMessageWithActualId({
-              discussionId,
-              pendingMessageId,
-              actualId: response.id,
-            }),
-          );
-        }, 2000 * (index || 1));
-        return payload;
+      const newMessagesWithFiles = await uploadFilesAndImages(newMessages);
+      await sendMessages({
+        newMessagesWithFiles,
+        updateChatMessage: chatMessagesData.updateChatMessage,
+        chatChannel,
+        discussionId,
+        dispatch,
       });
 
       if (newMessages.length > 0) {
@@ -575,13 +572,17 @@ export default function ChatComponent({
           });
         }
 
-        setMessages((prev) => {
-          if (isFilesMessageWithoutTextAndImages) {
-            return [...prev, ...filePreviewPayload];
-          }
+        if (isOptimisticChat) {
+          dispatch(commonActions.setOptimisticDiscussionMessages(payload));
+        } else {
+          setMessages((prev) => {
+            if (isFilesMessageWithoutTextAndImages) {
+              return [...prev, ...filePreviewPayload];
+            }
 
-          return [...prev, ...filePreviewPayload, payload];
-        });
+            return [...prev, ...filePreviewPayload, payload];
+          });
+        }
 
         if (isChatChannel) {
           pendingMessages.forEach((pendingMessage) => {
@@ -618,6 +619,7 @@ export default function ChatComponent({
       discussionMessages,
       isChatChannel,
       linkPreviewData,
+      isOptimisticChat,
     ],
   );
 
@@ -718,6 +720,11 @@ export default function ChatComponent({
       focusOnChat();
     }
   }, [discussionMessageReply, currentFilesPreview]);
+
+  useLayoutEffect(() => {
+    textInputRef?.current?.clear?.();
+    textInputRef?.current?.focus?.();
+  },[discussionId]);
 
   useEffect(() => {
     if (isFetchedDiscussionMessages) {
@@ -853,6 +860,7 @@ export default function ChatComponent({
         })}
       >
         <ChatInput
+          ref={textInputRef}
           onClearFinished={onClearFinished}
           shouldReinitializeEditor={shouldReinitializeEditor}
           users={users}

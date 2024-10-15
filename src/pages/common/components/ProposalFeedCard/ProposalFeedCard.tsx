@@ -8,11 +8,12 @@ import React, {
 import { useSelector } from "react-redux";
 import { useUpdateEffect } from "react-use";
 import { debounce } from "lodash";
+import copyToClipboard from "copy-to-clipboard";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember, useProposalUserVote } from "@/pages/OldCommon/hooks";
 import { ProposalService } from "@/services";
 import { DeletePrompt, GlobalOverlay } from "@/shared/components";
-import { InboxItemType } from "@/shared/constants";
+import { InboxItemType, ShareButtonText } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
 import { useForceUpdate, useModal, useNotification } from "@/shared/hooks";
 import {
@@ -34,10 +35,10 @@ import {
   PredefinedTypes,
 } from "@/shared/models";
 import { TextEditorValue } from "@/shared/ui-kit";
-import { StaticLinkType, getUserName, InternalLinkData } from "@/shared/utils";
+import { StaticLinkType, getUserName, InternalLinkData, generateStaticShareLink } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
 import { useMenuItems } from "../DiscussionFeedCard/hooks";
-import { FeedCard, FeedCardShare } from "../FeedCard";
+import { FeedCard } from "../FeedCard";
 import {
   FeedItemRef,
   GetLastMessageOptions,
@@ -173,11 +174,6 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       setHovering(isMouseEnter);
     };
     const proposalId = item.data.id;
-    const {
-      isShowing: isShareModalOpen,
-      onOpen: onShareModalOpen,
-      onClose: onShareModalClose,
-    } = useModal(false);
     const preloadDiscussionMessagesData = usePreloadDiscussionMessagesById({
       commonId,
       discussionId: discussion?.id,
@@ -199,10 +195,16 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
         getNonAllowedItems,
         feedItemUserMetadata,
         withoutMenu,
+        shareText: ShareButtonText.Stream
       },
       {
         report: () => {},
-        share: () => onShareModalOpen(),
+        share: () => {
+          if(discussion) {
+            copyToClipboard(generateStaticShareLink(StaticLinkType.Proposal, discussion, item.id));
+            notify("The link has been copied!");
+          }
+        },
         remove: onProposalDeleteModalOpen,
         markFeedItemAsSeen,
         markFeedItemAsUnseen,
@@ -457,15 +459,6 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
             />
           )}
         </FeedCard>
-        {discussion && (
-          <FeedCardShare
-            isOpen={isShareModalOpen}
-            onClose={onShareModalClose}
-            linkType={StaticLinkType.Proposal}
-            element={discussion}
-            feedItemId={item.id}
-          />
-        )}
         {isProposalDeleteModalOpen && (
           <GlobalOverlay>
             <DeletePrompt

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, RouteProps, useHistory } from "react-router-dom";
 import classNames from "classnames";
 import { Routes } from "@/pages/MyAccount/components/Routes";
+import { NotificationService } from "@/services";
 import { Loader } from "@/shared/components";
 import {
   useAnyMandatoryRoles,
@@ -82,7 +83,8 @@ const Header = () => {
     setShowAccountLinks(isMyAccountRoute);
   }, [showMenu, isMyAccountRoute]);
 
-  const handleLogIn = useCallback(() => {
+  const handleLogIn = useCallback(async () => {
+    await NotificationService.requestPermissions();
     dispatch(setLoginModalState({ isShowing: true }));
     setShowMenu(false);
   }, [dispatch]);
@@ -116,7 +118,8 @@ const Header = () => {
     dispatch(logOut());
   };
 
-  const handleLaunchApp = () => {
+  const handleLaunchApp = async () => {
+    await NotificationService.requestPermissions();
     history.push(ROUTE_PATHS.INBOX);
   };
 

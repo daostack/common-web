@@ -1,5 +1,6 @@
 import React, { FC, useCallback, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import {
   NewDiscussionCreationFormValues,
@@ -9,6 +10,7 @@ import {
   Circle,
   CirclesPermissions,
   Common,
+  CommonFeedType,
   CommonMember,
   Governance,
 } from "@/shared/models";
@@ -16,12 +18,14 @@ import {
   TextEditorValue,
   parseStringToTextEditorValue,
 } from "@/shared/ui-kit/TextEditor";
+import { generateFirstMessage, generateOptimisticFeedItem, getUserName } from "@/shared/utils";
 import {
   selectDiscussionCreationData,
   selectIsDiscussionCreationLoading,
 } from "@/store/states";
 import { commonActions } from "@/store/states";
 import { DiscussionCreationCard, DiscussionCreationModal } from "./components";
+import { DiscussionMessageOwnerType } from "@/shared/constants";
 
 interface NewDiscussionCreationProps {
   common: Common;
@@ -116,9 +120,32 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
           }),
         );
       } else {
+        const discussionId = uuidv4();
+        const userName = getUserName(user);
+        dispatch(
+          commonActions.setOptimisticFeedItem(
+            generateOptimisticFeedItem({
+              userId,
+              commonId: common.id,
+              type: CommonFeedType.OptimisticDiscussion,
+              circleVisibility,
+              discussionId,
+              title: values.title,
+              content: JSON.stringify(values.content),
+              lastMessageContent: {
+                ownerId: userId,
+                userName,
+                ownerType: DiscussionMessageOwnerType.System,
+                content: generateFirstMessage({userName, userId}),
+              }
+            }),
+          ),
+        );
+
         dispatch(
           commonActions.createDiscussion.request({
             payload: {
+              id: discussionId,
               title: values.title,
               message: JSON.stringify(values.content),
               ownerId: userId,
@@ -129,6 +156,8 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
           }),
         );
       }
+
+      handleCancel();
     },
     [governanceCircles, userCircleIds, userId, common.id, edit],
   );

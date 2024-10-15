@@ -1,12 +1,13 @@
 import React, { FC } from "react";
-import { ShareModal } from "@/shared/components";
-import { useModal } from "@/shared/hooks";
+import copyToClipboard from "copy-to-clipboard";
+import { useNotification } from "@/shared/hooks";
 import { CommonFollowState } from "@/shared/hooks/useCases/useCommonFollow";
 import { CirclesPermissions, Common, CommonMember } from "@/shared/models";
 import { DesktopMenu, MenuButton } from "@/shared/ui-kit";
 import { StaticLinkType, generateStaticShareLink } from "@/shared/utils";
 import { useMenuItems } from "./hooks";
 import { useUpdateCommonSeenState } from "@/shared/hooks/useCases";
+import { ShareButtonText } from "@/shared/constants";
 
 interface ActionsButtonProps {
   common: Common;
@@ -18,37 +19,33 @@ interface ActionsButtonProps {
 
 const ActionsButton: FC<ActionsButtonProps> = (props) => {
   const { common, commonMember, commonFollow, onClick, onSearchClick } = props;
-  const {
-    isShowing: isShareModalOpen,
-    onOpen: onShareModalOpen,
-    onClose: onShareModalClose,
-  } = useModal(false);
+  const { notify } = useNotification();
   const { markCommonAsSeen } = useUpdateCommonSeenState();
+  const shareLink = generateStaticShareLink(StaticLinkType.Common, common);
   const items = useMenuItems(
     {
       common,
       commonMember,
       isFollowInProgress: commonFollow.isFollowInProgress,
       isSearchActionAvailable: Boolean(onSearchClick),
+      shareText: ShareButtonText.Space,
     },
     {
-      share: onShareModalOpen,
+      share: () => {
+        copyToClipboard(shareLink);
+        notify("The link has been copied!");
+      },
       onFollowToggle: commonFollow.onFollowToggle,
       onSearchClick,
       markCommonAsSeen
     },
   );
-  const shareLink = generateStaticShareLink(StaticLinkType.Common, common);
+
   const triggerEl = <MenuButton onClick={onClick} />;
 
   return (
     <>
       {items.length > 0 && <DesktopMenu triggerEl={triggerEl} items={items} />}
-      <ShareModal
-        sourceUrl={shareLink}
-        isShowing={isShareModalOpen}
-        onClose={onShareModalClose}
-      />
     </>
   );
 };

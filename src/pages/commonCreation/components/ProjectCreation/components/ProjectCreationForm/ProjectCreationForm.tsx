@@ -33,6 +33,7 @@ import { UnsavedChangesPrompt } from "../UnsavedChangesPrompt";
 import { getConfiguration } from "./configuration";
 import { ProjectCreationFormValues } from "./types";
 import styles from "./ProjectCreationForm.module.scss";
+import { sortByTierDesc } from "@/shared/utils";
 
 const NOTION_INTEGRATION_TOKEN_MASK = "************";
 
@@ -186,39 +187,46 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   const advancedSettings: SpaceAdvancedSettingsIntermediate = useMemo(() => {
     const initialCircles = Object.values(governance?.circles || {});
 
+    const sortedRootCommonRoles = sortByTierDesc(rootCommonRoles);
+
+    const sortedParentCommonRoles = sortByTierDesc(parentCommonRoles);
+
+    const circlesWithInheritRoles = sortedRootCommonRoles.map((rootCommonRole, index) => {
+      const initialCircle = initialCircles.find(
+        (circle) => circle.derivedFrom?.circleId === rootCommonRole.circleId,
+      );
+
+      const isSelected = Boolean(!isEditing || initialCircle);
+      const roleForInheritance =
+      sortedParentCommonRoles.slice(0,2).find(
+          (parentRole) => parentRole.circleId === initialCircle?.inheritFrom?.circleId,
+        ) || sortedParentCommonRoles[index];
+
+
+      return {
+        circleId: rootCommonRole.circleId,
+        circleName: `${rootCommonRole.circleName}s`,
+        selected: isSelected,
+        synced: Boolean(
+          isEditing ? initialCircle?.inheritGovernanceId : roleForInheritance ? true : false,
+        ),
+        ...(parentGovernanceId &&
+          roleForInheritance && {
+            inheritFrom: {
+              governanceId: parentGovernanceId,
+              circleId: roleForInheritance.circleId,
+              circleName: `${roleForInheritance.circleName}s`,
+              tier: roleForInheritance.tier,
+            },
+          }),
+      };
+    });
+
     return {
       permissionGovernanceId: isParentIsRoot
         ? parentGovernanceId
         : rootGovernance?.id,
-      circles: rootCommonRoles.map((rootCommonRole, index) => {
-        const initialCircle = initialCircles.find(
-          (circle) => circle.derivedFrom?.circleId === rootCommonRole.circleId,
-        );
-        const isSelected = Boolean(!isEditing || initialCircle);
-        const roleForInheritance =
-          parentCommonRoles.find(
-            (parentRole) =>
-              parentRole.circleId === initialCircle?.inheritFrom?.circleId,
-          ) || parentCommonRoles[index];
-
-        return {
-          circleId: rootCommonRole.circleId,
-          circleName: `${rootCommonRole.circleName}s`,
-          selected: isSelected,
-          synced: Boolean(
-            isEditing ? initialCircle?.inheritGovernanceId : index === 0,
-          ),
-          ...(parentGovernanceId &&
-            roleForInheritance && {
-              inheritFrom: {
-                governanceId: parentGovernanceId,
-                circleId: roleForInheritance.circleId,
-                circleName: `${roleForInheritance.circleName}s`,
-                tier: roleForInheritance.tier,
-              },
-            }),
-        };
-      }),
+      circles: circlesWithInheritRoles.reverse(),
     };
   }, [
     rootGovernance?.id,

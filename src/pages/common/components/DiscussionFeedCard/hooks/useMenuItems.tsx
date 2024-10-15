@@ -59,6 +59,7 @@ export const useMenuItems = (
     feedItem,
     feedItemFollow,
     feedItemUserMetadata,
+    shareText
   } = options;
   const {
     report,
@@ -92,7 +93,7 @@ export const useMenuItems = (
     },
     {
       id: FeedItemMenuItem.Share,
-      text: "Share",
+      text: shareText ?? "Share",
       onClick: share,
       icon: <Share3Icon />,
     },

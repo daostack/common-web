@@ -8,6 +8,7 @@ import styles from "./Loader.module.scss";
 export enum LoaderVariant {
   Default,
   Global,
+  Big,
 }
 
 export enum LoaderColor {
@@ -35,7 +36,9 @@ const Loader: FC<LoaderProps> = (props) => {
   const [isShowing, setIsShowing] = useState(!delay);
   const loaderEl = (
     <img
-      className={classNames(styles.loader, className)}
+      className={classNames(styles.loader, {
+        [styles.bigLoader]: variant === LoaderVariant.Big
+      }, className)}
       src={color === LoaderColor.White ? loaderWhite : loaderDefault}
       alt="Loader"
     />

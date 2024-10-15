@@ -1,5 +1,6 @@
 import React, { FC, useCallback } from "react";
 import classNames from "classnames";
+import { v4 as uuidv4 } from "uuid";
 import { useCommonDataContext } from "@/pages/common/providers";
 import { Circle } from "@/shared/models";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui-kit";
@@ -103,6 +104,8 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
           onJoinCircle(
             {
               args: {
+                id: uuidv4(),
+                discussionId: uuidv4(),
                 commonId,
                 title: `Request to join ${circleName} by ${userName}`,
                 description: `Join request: ${circleName}`,

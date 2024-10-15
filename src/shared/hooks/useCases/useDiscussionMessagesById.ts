@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useDeepCompareEffect, useUpdateEffect } from "react-use";
 import {
@@ -98,6 +98,8 @@ export const useDiscussionMessagesById = ({
     defaultState;
   const [discussionMessagesWithOwners, setDiscussionMessagesWithOwners] =
     useState<any>();
+
+  const unsubscribeRef = useRef<firebase.Unsubscribe | null>(null);
 
   useUpdateEffect(() => {
     if (discussionId) {
@@ -243,7 +245,7 @@ export const useDiscussionMessagesById = ({
     }
 
     try {
-      DiscussionMessageService.subscribeToDiscussionMessagesByDiscussionId(
+      unsubscribeRef.current = DiscussionMessageService.subscribeToDiscussionMessagesByDiscussionId(
         discussionId,
         lastVisible && lastVisible[discussionId],
         async (
@@ -260,16 +262,16 @@ export const useDiscussionMessagesById = ({
             ...prevVisible,
             [discussionId]: lastVisibleDocument,
           }));
-  
+
           const hasLastVisibleDocument = !!lastVisibleDocument?.data();
-  
+
           const discussionsWithText = await Promise.all(
             updatedDiscussionMessages.map(async (discussionMessage) => {
               const isUserDiscussionMessage =
                 checkIsUserDiscussionMessage(discussionMessage);
               const isSystemMessage =
                 checkIsSystemDiscussionMessage(discussionMessage);
-  
+
               const parsedText = await getTextFromTextEditorString({
                 userId,
                 ownerId: isUserDiscussionMessage
@@ -286,7 +288,7 @@ export const useDiscussionMessagesById = ({
                 onFeedItemClick,
                 onInternalLinkClick,
               });
-  
+
               return {
                 ...discussionMessage,
                 parsedText,
@@ -315,7 +317,32 @@ export const useDiscussionMessagesById = ({
     } catch(err) {
       setIsBatchLoading(false);
     }
-  },[discussionId, isEndOfList, state.loading, state.data, isBatchLoading, lastVisible, userId, users, directParent, getCommonPagePath, getCommonPageAboutTabPath, onUserClick, onFeedItemClick, onInternalLinkClick, dispatch]);
+  }, [
+    discussionId,
+    isEndOfList,
+    state.loading,
+    state.data,
+    isBatchLoading,
+    lastVisible,
+    userId,
+    users,
+    directParent,
+    getCommonPagePath,
+    getCommonPageAboutTabPath,
+    onUserClick,
+    onFeedItemClick,
+    onInternalLinkClick,
+    dispatch,
+  ]);
+
+  useEffect(() => {
+    // Cleanup subscription on unmount or when discussionId changes
+    return () => {
+      if (unsubscribeRef.current) {
+        unsubscribeRef.current();
+      }
+    };
+  }, [discussionId]);
 
   useDeepCompareEffect(() => {
     (async () => {

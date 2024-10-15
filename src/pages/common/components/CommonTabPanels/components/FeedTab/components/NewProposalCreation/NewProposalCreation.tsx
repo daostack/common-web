@@ -1,7 +1,9 @@
 import React, { FC, ReactNode, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import {
+  DiscussionMessageOwnerType,
   PROPOSAL_TYPE_SELECT_OPTIONS,
   ProposalsTypes,
 } from "@/shared/constants";
@@ -9,10 +11,12 @@ import { NewProposalCreationFormValues } from "@/shared/interfaces";
 import {
   CirclesPermissions,
   Common,
+  CommonFeedType,
   CommonMember,
   Governance,
 } from "@/shared/models";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit/TextEditor";
+import { generateFirstMessage, generateOptimisticFeedItem, getUserName } from "@/shared/utils";
 import {
   selectIsProposalCreationLoading,
   selectProposalCreationData,
@@ -82,12 +86,37 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
         return;
       }
 
+      const proposalId = uuidv4();
+      const discussionId = uuidv4();
+      const userName = getUserName(user);
+
+      dispatch(
+        commonActions.setOptimisticFeedItem(
+          generateOptimisticFeedItem({
+            userId,
+            commonId: common.id,
+            type: CommonFeedType.OptimisticProposal,
+            circleVisibility: userCircleIds,
+            discussionId,
+            title: values.title,
+            content: JSON.stringify(values.content),
+            lastMessageContent: {
+              ownerId: userId,
+              userName,
+              ownerType: DiscussionMessageOwnerType.System,
+              content: generateFirstMessage({userName, userId}),
+            }
+          }),
+        ),
+      );
       switch (values.proposalType.value) {
         case ProposalsTypes.FUNDS_ALLOCATION: {
           const fundingProposalPayload = getFundingProposalPayload(
             values,
             commonId,
             userId,
+            proposalId,
+            discussionId,
           );
 
           if (!fundingProposalPayload) {
@@ -103,12 +132,19 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
         case ProposalsTypes.SURVEY: {
           dispatch(
             commonActions.createSurveyProposal.request({
-              payload: getSurveyProposalPayload(values, commonId),
+              payload: getSurveyProposalPayload(
+                values,
+                commonId,
+                proposalId,
+                discussionId,
+              ),
             }),
           );
           break;
         }
       }
+
+      handleCancel();
     },
     [governance.circles, userCircleIds, userId, commonId],
   );
