@@ -16,35 +16,65 @@ interface FirebaseError extends Error {
 }
 
 const app = firebase.initializeApp(config.firebase);
-let db = firebase.firestore();
+let db: firebase.firestore.Firestore;
 
-enableUnlimitedCachePersistence();
+// Automatically enable Firestore persistence when Firebase is initialized
+enableUnlimitedCachePersistence(); // Automatically call this function
+
+// Function to enable Firestore persistence with unlimited cache size and error handling
+function enableUnlimitedCachePersistence() {
+  db = firebase.firestore(); // Initialize Firestore instance
+
+  const settings = {
+    cacheSizeBytes: CACHE_SIZE_LIMIT,
+  };
+
+  db.settings(settings);
+
+  return db
+    .enablePersistence({ synchronizeTabs: true })
+    .then(() => {
+      console.log("Persistence enabled successfully.");
+      return;
+    })
+    .catch(handlePersistenceError); // Catch and handle any persistence errors
+}
+
 // Function to handle Firestore persistence errors
 function handlePersistenceError(err: any) {
+  console.error("Persistence error:", err); // Log the error for debugging
+
   if (err.code === "failed-precondition") {
     console.log("Multiple tabs open or other conflict.");
   } else if (err.code === "unimplemented") {
     console.log("Persistence is not supported in this browser.");
-  } else if (err.name === "QuotaExceededError") {
+  } else if (
+    err.name === "QuotaExceededError" ||
+    err.code === "QuotaExceededError"
+  ) {
     console.log("Storage quota exceeded. Consider clearing cache.");
-    clearFirestoreCache();
+    clearFirestoreCache(); // Clear cache and try reinitialization
   } else {
     console.error("Error enabling persistence:", err);
-    reinitializeFirestoreWithPersistence();
+    reinitializeFirestoreWithPersistence(); // Reinitialize Firestore with persistence
   }
 }
 
+// Function to reinitialize Firestore with persistence after errors
 function reinitializeFirestoreWithPersistence() {
-  db = firebase.firestore(); // Reinitialize Firestore instance
-  const settings = { cacheSizeBytes: CACHE_SIZE_LIMIT };
-  db.settings(settings);
-
-  db.enablePersistence({ synchronizeTabs: true })
+  db.terminate() // Ensure Firestore is fully terminated before reinitializing
+    .then(() => db.clearPersistence()) // Clear the persistence
+    .then(() => {
+      db = firebase.firestore(); // Reinitialize Firestore instance
+      const settings = { cacheSizeBytes: CACHE_SIZE_LIMIT };
+      db.settings(settings);
+      return db.enablePersistence({ synchronizeTabs: true });
+    })
     .then(() => {
       console.log("Persistence re-enabled.");
       return;
     })
-    .catch(handlePersistenceError);
+    .catch(handlePersistenceError); // Handle any errors during reinitialization
 }
 
 // Function to clear Firestore cache and re-enable persistence
@@ -56,12 +86,12 @@ export function clearFirestoreCache() {
     })
     .then(() => {
       console.log("Persistence cleared. Waiting before reinitializing...");
-      return new Promise((resolve) => setTimeout(resolve, 2000)); // Wait 2 second
+      return new Promise((resolve) => setTimeout(resolve, 2000)); // Wait 2 seconds
     })
     .then(() => {
       console.log("Cache cleared successfully.");
       reinitializeFirestoreWithPersistence(); // Reinitialize Firestore
-      window.location.reload();
+      window.location.reload(); // Reload page to apply changes
       return;
     })
     .catch((err) => {
@@ -71,16 +101,6 @@ export function clearFirestoreCache() {
         console.error("Error clearing persistence cache:", err);
       }
     });
-}
-
-// Enable Firestore persistence with unlimited cache size and error handling
-function enableUnlimitedCachePersistence() {
-  const settings = {
-    cacheSizeBytes: CACHE_SIZE_LIMIT,
-  };
-  db.settings(settings);
-
-  db.enablePersistence({ synchronizeTabs: true }).catch(handlePersistenceError);
 }
 
 // Enable persistence in the local environment (with Firestore and Auth emulators)
@@ -107,7 +127,6 @@ if (typeof window !== "undefined" && typeof window.fetch !== "undefined") {
 }
 
 export { perf };
-// firebase.firestore.setLogLevel("debug");
 
 export const isFirebaseError = (error: any): error is FirebaseError =>
   (error && error.code && error.code.startsWith("auth/")) ||
