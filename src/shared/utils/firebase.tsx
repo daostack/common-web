@@ -1,3 +1,4 @@
+/* eslint-disable promise/always-return */
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
@@ -16,33 +17,30 @@ interface FirebaseError extends Error {
 }
 
 const app = firebase.initializeApp(config.firebase);
+
 let db: firebase.firestore.Firestore;
 
-// Automatically enable Firestore persistence when Firebase is initialized
-enableUnlimitedCachePersistence(); // Automatically call this function
-
-// Function to enable Firestore persistence with unlimited cache size and error handling
-function enableUnlimitedCachePersistence() {
-  db = firebase.firestore(); // Initialize Firestore instance
+// Function to enable Firestore persistence and apply settings
+function enableUnlimitedCachePersistence(): Promise<void> {
+  db = firebase.firestore(); // Initialize Firestore instance here
 
   const settings = {
     cacheSizeBytes: CACHE_SIZE_LIMIT,
   };
 
-  db.settings(settings);
+  db.settings(settings); // Apply settings before any Firestore operation
 
   return db
-    .enablePersistence({ synchronizeTabs: true })
+    .enablePersistence({ synchronizeTabs: true }) // Enable persistence
     .then(() => {
       console.log("Persistence enabled successfully.");
-      return;
     })
-    .catch(handlePersistenceError); // Catch and handle any persistence errors
+    .catch(handlePersistenceError); // Handle errors
 }
 
 // Function to handle Firestore persistence errors
 function handlePersistenceError(err: any) {
-  console.error("Persistence error:", err); // Log the error for debugging
+  console.error("Persistence error:", err); // Log the error
 
   if (err.code === "failed-precondition") {
     console.log("Multiple tabs open or other conflict.");
@@ -60,19 +58,18 @@ function handlePersistenceError(err: any) {
   }
 }
 
-// Function to reinitialize Firestore with persistence after errors
+// Function to reinitialize Firestore with persistence
 function reinitializeFirestoreWithPersistence() {
-  db.terminate() // Ensure Firestore is fully terminated before reinitializing
-    .then(() => db.clearPersistence()) // Clear the persistence
+  db.terminate() // Terminate the Firestore instance first
+    .then(() => db.clearPersistence()) // Clear persistence
     .then(() => {
-      db = firebase.firestore(); // Reinitialize Firestore instance
+      db = firebase.firestore(); // Reinitialize Firestore
       const settings = { cacheSizeBytes: CACHE_SIZE_LIMIT };
-      db.settings(settings);
+      db.settings(settings); // Apply settings again
       return db.enablePersistence({ synchronizeTabs: true });
     })
     .then(() => {
       console.log("Persistence re-enabled.");
-      return;
     })
     .catch(handlePersistenceError); // Handle any errors during reinitialization
 }
@@ -92,7 +89,6 @@ export function clearFirestoreCache() {
       console.log("Cache cleared successfully.");
       reinitializeFirestoreWithPersistence(); // Reinitialize Firestore
       window.location.reload(); // Reload page to apply changes
-      return;
     })
     .catch((err) => {
       if (err.code === "failed-precondition") {
@@ -102,6 +98,16 @@ export function clearFirestoreCache() {
       }
     });
 }
+
+// Call this function in your entry point (before using Firestore elsewhere)
+enableUnlimitedCachePersistence()
+  .then(() => {
+    console.log("Firestore persistence setup complete.");
+    // You can now safely access Firestore (db) or perform any Firestore operations
+  })
+  .catch(() => {
+    console.log("Firestore persistence setup error.");
+  });
 
 // Enable persistence in the local environment (with Firestore and Auth emulators)
 if (REACT_APP_ENV === Environment.Local) {
