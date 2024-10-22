@@ -1,4 +1,3 @@
-/* eslint-disable promise/always-return */
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
@@ -34,6 +33,7 @@ function enableUnlimitedCachePersistence(): Promise<void> {
     .enablePersistence({ synchronizeTabs: true }) // Enable persistence
     .then(() => {
       console.log("Persistence enabled successfully.");
+      return;
     })
     .catch(handlePersistenceError); // Handle errors
 }
@@ -70,6 +70,7 @@ function reinitializeFirestoreWithPersistence() {
     })
     .then(() => {
       console.log("Persistence re-enabled.");
+      return;
     })
     .catch(handlePersistenceError); // Handle any errors during reinitialization
 }
@@ -89,6 +90,7 @@ export function clearFirestoreCache() {
       console.log("Cache cleared successfully.");
       reinitializeFirestoreWithPersistence(); // Reinitialize Firestore
       window.location.reload(); // Reload page to apply changes
+      return;
     })
     .catch((err) => {
       if (err.code === "failed-precondition") {
@@ -104,6 +106,7 @@ enableUnlimitedCachePersistence()
   .then(() => {
     console.log("Firestore persistence setup complete.");
     // You can now safely access Firestore (db) or perform any Firestore operations
+    return;
   })
   .catch(() => {
     console.log("Firestore persistence setup error.");
