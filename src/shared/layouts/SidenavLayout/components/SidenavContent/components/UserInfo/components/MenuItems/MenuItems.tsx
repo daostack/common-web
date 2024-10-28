@@ -4,19 +4,15 @@ import { useLocation } from "react-router";
 import classNames from "classnames";
 import { Menu } from "@headlessui/react";
 import { logOut } from "@/pages/Auth/store/actions";
-import { FeatureFlags } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
-import { useFeatureFlag } from "@/shared/hooks/useFeatureFlag";
 import {
   Avatar3Icon,
   BillingIcon,
   LogoutIcon,
   NotificationsIcon,
 } from "@/shared/icons";
-import ReportIcon from "@/shared/icons/report.icon";
 import ThemeIcon from "@/shared/icons/theme.icon";
 import { toggleTheme } from "@/shared/store/actions";
-import { clearFirestoreCache } from "@/shared/utils/firebase";
 import { MenuItem } from "./components";
 import { Item, ItemType } from "./types";
 import styles from "./MenuItems.module.scss";
@@ -46,9 +42,6 @@ const MenuItems: FC<MenuItemsProps> = (props) => {
     useRoutesContext();
   const { pathname } = useLocation();
   const isV04 = pathname.includes("-v04");
-
-  const featureFlags = useFeatureFlag();
-  const isHavingAnIssueEnabled = featureFlags?.get(FeatureFlags.HavingAnIssue);
 
   const toggleThemeMenuItem = {
     key: "theme",
@@ -93,20 +86,8 @@ const MenuItems: FC<MenuItemsProps> = (props) => {
       },
     ];
 
-    if (isHavingAnIssueEnabled) {
-      menuItems.push({
-        key: "issue",
-        text: "Having an issue?",
-        icon: <ReportIcon />,
-        type: ItemType.Button,
-        onClick: () => {
-          clearFirestoreCache();
-        },
-      });
-    }
-
     return menuItems;
-  }, [isHavingAnIssueEnabled, isV04, toggleThemeMenuItem]);
+  }, [isV04, toggleThemeMenuItem]);
 
   return (
     <Menu.Items as={React.Fragment}>
