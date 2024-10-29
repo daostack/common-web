@@ -8,6 +8,8 @@ import RightArrowIcon from "@/shared/icons/rightArrow.icon";
 import { VideoEmbed } from "@/shared/ui-kit/VideoEmbed";
 import "./ImageGalleryModal.scss";
 import "swiper/components/pagination/pagination.min.css";
+import 'swiper/swiper-bundle.min.css';
+
 
 interface ImageGalleryProps {
   images: string[];
@@ -58,6 +60,9 @@ const ImageGalleryModal: FC<ImageGalleryProps> = (props) => {
           pagination
           initialSlide={initialSlide}
           allowTouchMove={isTabletView}
+          direction="horizontal"
+          centeredSlides
+          slidesPerView={1}
         >
           {videoSrc && (
             <SwiperSlide key={videoSrc} className="slider-wrapper">
