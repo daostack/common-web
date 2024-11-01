@@ -13,6 +13,7 @@ import { InternalLinkData } from "@/shared/utils";
 interface Options {
   hasPermissionToHide: boolean;
   onUserClick?: (userId: string) => void;
+  onStreamMentionClick?: (feedItemId: string) => void;
   onFeedItemClick?: (feedItemId: string) => void;
   onInternalLinkClick?: (data: InternalLinkData) => void;
   directParent?: DirectParent | null;
@@ -37,6 +38,7 @@ export const useDiscussionChatAdapter = (options: Options): Return => {
     discussionId,
     onFeedItemClick,
     onUserClick,
+    onStreamMentionClick,
     commonId,
     onInternalLinkClick,
   } = options;
@@ -63,6 +65,7 @@ export const useDiscussionChatAdapter = (options: Options): Return => {
     textStyles,
     onFeedItemClick,
     onUserClick,
+    onStreamMentionClick,
     onInternalLinkClick,
   });
   const { markFeedItemAsSeen } = useUpdateFeedItemSeenState();

@@ -129,7 +129,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   const anotherCommonId =
     userCommonIds[0] === commonId ? userCommonIds[1] : userCommonIds[0];
   const pinnedItemIds = useMemo(
-    () => commonData?.common.pinnedFeedItems.map((item) => item.feedObjectId),
+    () => (commonData?.common.pinnedFeedItems ?? []).map((item) => item.feedObjectId),
     [commonData?.common.pinnedFeedItems],
   );
 

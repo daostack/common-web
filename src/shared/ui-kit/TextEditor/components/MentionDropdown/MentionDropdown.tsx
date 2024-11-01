@@ -3,7 +3,7 @@ import { uniq } from "lodash";
 import { UserAvatar } from "@/shared/components";
 import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
 import { useOutsideClick } from "@/shared/hooks";
-import { User } from "@/shared/models";
+import { Discussion, User } from "@/shared/models";
 import { Loader } from "@/shared/ui-kit";
 import { getUserName } from "@/shared/utils";
 import styles from "./MentionDropdown.module.scss";
@@ -12,6 +12,8 @@ export const MENTION_TAG = "@";
 
 export interface MentionDropdownProps {
   onClick: (user: User) => void;
+  onClickDiscussion: (discussion: Discussion) => void;
+  discussions?: Discussion[];
   onClose: () => void;
   users?: User[];
   shouldFocusTarget?: boolean;
@@ -20,7 +22,9 @@ export interface MentionDropdownProps {
 const MentionDropdown: FC<MentionDropdownProps> = (props) => {
   const {
     onClick,
+    onClickDiscussion,
     users = [],
+    discussions = [],
     onClose,
     shouldFocusTarget,
   } = props;
@@ -30,11 +34,12 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
   const [index, setIndex] = useState(0);
 
   const userIds = useMemo(() => users.map(({ uid }) => uid), [users]);
+  const discussionIds = useMemo(() => discussions.map(({ id }) => id), [discussions]);
 
   useEffect(() => {
     if (shouldFocusTarget) {
       const filteredListRefs = uniq(listRefs.current).filter((item) => {
-        if (userIds.includes(item?.id)) {
+        if (userIds.includes(item?.id) || discussionIds.includes(item?.id)) {
           return true;
         }
 
@@ -44,12 +49,14 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
       listRefs.current = filteredListRefs;
       filteredListRefs && filteredListRefs?.[index]?.focus();
     }
-  }, [index, shouldFocusTarget, userIds]);
+  }, [index, shouldFocusTarget, userIds, discussionIds]);
 
   const increment = () => {
     setIndex((value) => {
       const updatedValue = value + 1;
-      return updatedValue > users.length - 1 ? value : updatedValue;
+      const usersLastIndex = users.length - 1;
+      const discussionsLastIndex = discussions.length - 1;
+      return updatedValue > discussionsLastIndex + usersLastIndex ? value : updatedValue;
     });
   };
   const decrement = () =>
@@ -77,7 +84,11 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
         break;
       }
       case KeyboardKeys.Enter: {
-        onClick(users[index]);
+        if(index > users.length - 1) {
+          onClickDiscussion(discussions[index - users.length]);
+        } else {
+          onClick(users[index]);
+        }
       }
     }
   };
@@ -92,7 +103,7 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
       data-cy="mentions-portal"
       onKeyDown={onKeyDown}
     >
-      {users.length === 0 && (
+      {(users.length === 0 && discussions.length === 0) && (
         <li className={styles.content}>
           <Loader className={styles.loader} />
         </li>
@@ -112,6 +123,23 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
             photoURL={user?.photo || user?.photoURL}
           />
           <p className={styles.userName}>{getUserName(user)}</p>
+        </li>
+      ))}
+      {discussions.map((discussion, index) => (
+        <li
+          id={discussion.id}
+          ref={getRef}
+          tabIndex={index}
+          key={discussion.id}
+          onClick={() => onClickDiscussion(discussion)}
+          className={styles.content}
+        >
+          <UserAvatar
+            className={styles.userAvatar}
+            userName={discussion.title}
+            photoURL={discussion.images?.[0]?.value}
+          />
+          <p className={styles.userName}>{discussion.title}</p>
         </li>
       ))}
     </ul>

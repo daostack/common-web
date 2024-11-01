@@ -112,6 +112,17 @@ class DiscussionService {
   public deleteDiscussion = async (discussionId: string): Promise<void> => {
     await Api.delete(ApiEndpoint.DeleteDiscussion(discussionId));
   };
+
+  public getDiscussionsByCommonId = async (commonId: string) => {
+    const discussionCollection = await this.getDiscussionCollection()
+      .where("commonId", "==", commonId) // Query for documents where commonId matches
+      .get();
+  
+    // Map the Firestore document data
+    const data = discussionCollection.docs.map(doc => doc.data());
+    return data;
+  };
+  
 }
 
 export default new DiscussionService();

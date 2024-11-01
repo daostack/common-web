@@ -25,7 +25,7 @@ import { withHistory } from "slate-history";
 import { ReactEditor, Slate, withReact } from "slate-react";
 import { DOMRange } from "slate-react/dist/utils/dom";
 import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
-import { User } from "@/shared/models";
+import { Discussion, User } from "@/shared/models";
 import { getUserName, isMobile, isRtlText } from "@/shared/utils";
 import {
   Editor,
@@ -40,6 +40,7 @@ import {
   parseStringToTextEditorValue,
   insertEmoji,
   insertMention,
+  insertStreamMention,
   checkIsCheckboxCreationText,
   toggleCheckboxItem,
   checkIsEmptyCheckboxCreationText,
@@ -73,6 +74,7 @@ export interface TextEditorProps {
   disabled?: boolean;
   onKeyDown?: (event: KeyboardEvent<HTMLElement>) => void;
   users?: User[];
+  discussions?: Discussion[];
   shouldReinitializeEditor: boolean;
   onClearFinished: () => void;
   scrollSelectionIntoView?: (editor: ReactEditor, domRange: DOMRange) => void;
@@ -111,6 +113,7 @@ const BaseTextEditor = forwardRef<BaseTextEditorHandles, TextEditorProps>((props
     onClearFinished,
     scrollSelectionIntoView,
     elementStyles,
+    discussions,
   } = props;
   const editor = useMemo(
     () =>
@@ -247,6 +250,12 @@ const BaseTextEditor = forwardRef<BaseTextEditorHandles, TextEditorProps>((props
 
   const chars = (usersWithAI ?? []).filter((user) => {
     return getUserName(user)
+      ?.toLowerCase()
+      .startsWith(search.text.substring(1).toLowerCase());
+  });
+
+  const discussionChars = (discussions ?? []).filter((discussion) => {
+    return discussion.title
       ?.toLowerCase()
       .startsWith(search.text.substring(1).toLowerCase());
   });
@@ -409,7 +418,14 @@ const BaseTextEditor = forwardRef<BaseTextEditorHandles, TextEditorProps>((props
               setTarget(null);
               setShouldFocusTarget(false);
             }}
+            onClickDiscussion={(discussion: Discussion) => {
+              Transforms.select(editor, target);
+              insertStreamMention(editor, discussion);
+              setTarget(null);
+              setShouldFocusTarget(false);
+            }}
             users={chars}
+            discussions={discussionChars}
             onClose={() => {
               setTarget(null);
               setShouldFocusTarget(false);

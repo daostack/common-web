@@ -19,6 +19,7 @@ import {
   CommonFeedObjectUserUnique,
   CommonFeedType,
   CommonMember,
+  FeedItemFollow,
   SubCollections,
   Timestamp,
 } from "@/shared/models";
@@ -317,6 +318,20 @@ class CommonFeedService {
         callback(docChange.doc.data(), docChange.type === "removed");
       }
     });
+  };
+
+
+  public getFeedItemByCommonAndDiscussionId = async ({commonId, discussionId}: {commonId: string; discussionId: string}): Promise<CommonFeed | null> => {
+    try {
+      const feedItems = await this.getCommonFeedSubCollection(commonId)
+        .where("data.id", "==", discussionId)
+        .get();
+
+      const data = feedItems.docs.map(doc => doc.data());
+      return data?.[0];
+    } catch (error) {
+      return null;
+    }
   };
 }
 
