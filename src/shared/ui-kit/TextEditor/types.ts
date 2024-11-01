@@ -59,6 +59,13 @@ export interface MentionElement extends BaseElement<CustomText> {
   userId: string;
 }
 
+export interface StreamMentionElement extends BaseElement<CustomText> {
+  type: ElementType.StreamMention;
+  title: string;
+  commonId: string;
+  discussionId
+}
+
 export interface EmojiElement extends BaseElement<CustomText> {
   type: ElementType.Emoji;
   emoji: Skin;
@@ -90,5 +97,6 @@ export type CustomElement =
   | BulletedListElement
   | ListItemElement
   | MentionElement
+  | StreamMentionElement
   | EmojiElement
   | CheckboxItemElement;

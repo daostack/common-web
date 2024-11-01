@@ -16,6 +16,7 @@ interface Options {
   discussionId?: string | null;
   commonId?: string;
   onUserClick?: (userId: string) => void;
+  onStreamMentionClick?: (feedItemId: string) => void;
   onFeedItemClick?: (feedItemId: string) => void;
   onInternalLinkClick?: (data: InternalLinkData) => void;
 }
@@ -31,6 +32,7 @@ export const usePreloadDiscussionMessagesById = ({
   discussionId,
   commonId,
   onUserClick,
+  onStreamMentionClick,
   onFeedItemClick,
   onInternalLinkClick,
 }: Options): Return => {
@@ -84,6 +86,7 @@ export const usePreloadDiscussionMessagesById = ({
             getCommonPagePath,
             getCommonPageAboutTabPath,
             onUserClick,
+            onStreamMentionClick,
             onFeedItemClick,
             onInternalLinkClick,
           });

@@ -30,6 +30,7 @@ import {
   useZoomDisabling,
   useImageSizeCheck,
   useQueryParams,
+  useFetchDiscussionsByCommonId,
 } from "@/shared/hooks";
 import { ArrowInCircleIcon } from "@/shared/icons";
 import { LinkPreviewData } from "@/shared/interfaces";
@@ -108,6 +109,7 @@ interface ChatComponentInterface {
   directParent?: DirectParent | null;
   renderChatInput?: () => ReactNode;
   onUserClick?: (userId: string) => void;
+  onStreamMentionClick?: (feedItemId: string) => void;
   onFeedItemClick?: (feedItemId: string) => void;
   onInternalLinkClick?: (data: InternalLinkData) => void;
 }
@@ -156,6 +158,7 @@ export default function ChatComponent({
   directParent,
   renderChatInput: renderChatInputOuter,
   onUserClick,
+  onStreamMentionClick,
   onFeedItemClick,
   onInternalLinkClick,
 }: ChatComponentInterface) {
@@ -202,6 +205,7 @@ export default function ChatComponent({
     },
     onFeedItemClick,
     onUserClick,
+    onStreamMentionClick,
     commonId,
     onInternalLinkClick,
   });
@@ -215,6 +219,9 @@ export default function ChatComponent({
     chatChannelId: chatChannel?.id || "",
     participants: chatChannel?.participants,
   });
+
+  const {data: discussionsData} = useFetchDiscussionsByCommonId(commonId);
+
   const users = useMemo(
     () => (chatChannel ? chatUsers : discussionUsers),
     [chatUsers, discussionUsers, chatChannel],
@@ -827,6 +834,7 @@ export default function ChatComponent({
             onMessageDelete={handleMessageDelete}
             directParent={directParent}
             onUserClick={onUserClick}
+            onStreamMentionClick={onStreamMentionClick}
             onFeedItemClick={onFeedItemClick}
             onInternalLinkClick={onInternalLinkClick}
             isEmpty={
@@ -864,6 +872,7 @@ export default function ChatComponent({
           onClearFinished={onClearFinished}
           shouldReinitializeEditor={shouldReinitializeEditor}
           users={users}
+          discussions={discussionsData ?? []}
           onEnterKeyDown={onEnterKeyDown}
           emojiCount={emojiCount}
           setMessage={setMessage}

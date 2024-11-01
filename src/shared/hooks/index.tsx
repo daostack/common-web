@@ -33,3 +33,4 @@ export { default as useImageSizeCheck } from "./useImageSizeCheck";
 export { default as useLightThemeOnly } from "./useLightThemeOnly";
 export * from "./useToggle";
 export * from "./useTraceUpdate";
+export * from "./useFetchDiscussionsByCommonId";

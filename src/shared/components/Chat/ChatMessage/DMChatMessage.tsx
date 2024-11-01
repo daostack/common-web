@@ -76,6 +76,7 @@ interface ChatMessageProps {
   onMessageDelete?: (messageId: string) => void;
   directParent?: DirectParent | null;
   onUserClick?: (userId: string) => void;
+  onStreamMentionClick?: (feedItemId: string) => void;
   onFeedItemClick?: (feedItemId: string) => void;
   onInternalLinkClick?: (data: InternalLinkData) => void;
   chatChannelId?: string;
@@ -112,6 +113,7 @@ export default function DMChatMessage({
   onMessageDelete,
   directParent,
   onUserClick,
+  onStreamMentionClick,
   onFeedItemClick,
   onInternalLinkClick,
   chatChannelId,
@@ -181,6 +183,7 @@ export default function DMChatMessage({
           getCommonPageAboutTabPath,
           directParent,
           onUserClick,
+          onStreamMentionClick,
           onFeedItemClick,
           onInternalLinkClick,
         });
@@ -201,6 +204,7 @@ export default function DMChatMessage({
     getCommonPagePath,
     getCommonPageAboutTabPath,
     onUserClick,
+    onStreamMentionClick,
   ]);
 
   useEffect(() => {
@@ -217,6 +221,7 @@ export default function DMChatMessage({
         commonId: discussionMessage.commonId,
         directParent,
         onUserClick,
+        onStreamMentionClick,
         onFeedItemClick,
         onInternalLinkClick,
       });
@@ -229,6 +234,7 @@ export default function DMChatMessage({
     isNotCurrentUserMessage,
     discussionMessage.commonId,
     onUserClick,
+    onStreamMentionClick,
     discussionMessageUserId,
     userId,
     onInternalLinkClick,

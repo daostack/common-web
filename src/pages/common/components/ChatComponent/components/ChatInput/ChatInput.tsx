@@ -8,7 +8,7 @@ import React, {
 import classNames from "classnames";
 import { FILES_ACCEPTED_EXTENSIONS } from "@/shared/constants";
 import { PlusIcon, SendIcon } from "@/shared/icons";
-import { User } from "@/shared/models";
+import { Discussion, User } from "@/shared/models";
 import {
   BaseTextEditor,
   ButtonIcon,
@@ -30,6 +30,7 @@ interface ChatInputProps {
   emojiCount: EmojiCount;
   onEnterKeyDown: (event: React.KeyboardEvent<HTMLElement>) => void;
   users: User[];
+  discussions: Discussion[];
   shouldReinitializeEditor: boolean;
   onClearFinished: () => void;
   canSendMessage?: boolean;
@@ -58,6 +59,7 @@ export const ChatInput = React.memo(forwardRef<BaseTextEditorHandles, ChatInputP
     emojiCount,
     onEnterKeyDown,
     users,
+    discussions,
     shouldReinitializeEditor,
     onClearFinished,
   } = props;
@@ -114,6 +116,7 @@ export const ChatInput = React.memo(forwardRef<BaseTextEditorHandles, ChatInputP
         placeholder="Message"
         onKeyDown={onEnterKeyDown}
         users={users}
+        discussions={discussions}
         shouldReinitializeEditor={shouldReinitializeEditor}
         onClearFinished={onClearFinished}
         scrollSelectionIntoView={emptyFunction}

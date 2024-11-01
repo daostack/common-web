@@ -10,6 +10,7 @@
     "@floating-ui/react-dom-interactions": "^0.13.1",
     "@headlessui/react": "^1.7.4",
     "@storybook/addon-viewport": "^6.5.13",
+    "@tanstack/react-query": "4.5.0",
     "@tanstack/react-table": "^8.7.9",
     "@types/react-pdf": "^5.7.2",
     "axios": "^0.21.0",
