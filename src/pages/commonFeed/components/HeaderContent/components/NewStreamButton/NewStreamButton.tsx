@@ -49,11 +49,11 @@ const NewStreamButton: FC<NewStreamButtonProps> = (props) => {
     return null;
   }
 
-  if(items.length === 2) {
+  if (items.length === 2 || (items.length === 1 && items[0].id === CommonAction.NewDiscussion)) {
     return (
       <ButtonIcon className={styles.buttonIcon} onClick={onNewDiscussion}>
-      <PlusIcon className={styles.icon} />
-    </ButtonIcon>
+        <PlusIcon className={styles.icon} />
+      </ButtonIcon>
     )
   }
 
