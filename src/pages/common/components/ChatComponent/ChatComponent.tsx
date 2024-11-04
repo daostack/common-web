@@ -65,6 +65,7 @@ import {
   selectOptimisticFeedItems,
   commonActions,
   selectOptimisticDiscussionMessages,
+  inboxActions,
 } from "@/store/states";
 import { ChatContentContext, ChatContentData } from "../CommonContent/context";
 import {
@@ -606,6 +607,20 @@ export default function ChatComponent({
         if (currentFilesPreview) {
           dispatch(chatActions.clearFilesPreview());
         }
+
+        const payloadUpdateFeedItem = {
+          feedItemId,
+          lastMessage: {
+            messageId: pendingMessageId,
+            ownerId: userId as string,
+            userName: getUserName(user),
+            ownerType: DiscussionMessageOwnerType.User,
+            content: JSON.stringify(message),
+          }
+        };
+
+        dispatch(commonActions.setFeedItemUpdatedAt(payloadUpdateFeedItem));
+        dispatch(inboxActions.setInboxItemUpdatedAt(payloadUpdateFeedItem));
         focusOnChat();
       }
     },
@@ -620,6 +635,7 @@ export default function ChatComponent({
       isChatChannel,
       linkPreviewData,
       isOptimisticChat,
+      feedItemId,
     ],
   );
 

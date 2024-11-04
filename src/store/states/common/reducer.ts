@@ -7,7 +7,7 @@ import {
   deserializeFeedItemFollowLayoutItem,
   FeedItemFollowLayoutItem,
 } from "@/shared/interfaces";
-import { CommonFeed } from "@/shared/models";
+import { CommonFeed, Timestamp } from "@/shared/models";
 import {
   areTimestampsEqual,
   convertToTimestamp,
@@ -781,5 +781,33 @@ export const reducer = createReducer<CommonState, Action>(initialState)
 
       // Assign the new Map back to the state
       nextState.createdOptimisticFeedItems = updatedMap;
+    }),
+  )
+  .handleAction(actions.setFeedItemUpdatedAt, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const feedItemId = payload.feedItemId;
+
+      const updatedFeedItemIndex = nextState.feedItems.data?.findIndex(
+        feedItem => feedItem.itemId === feedItemId
+      ) ?? -1;
+
+      if (updatedFeedItemIndex !== -1 && nextState.feedItems.data) {
+        const item = nextState.feedItems.data[updatedFeedItemIndex];
+        item.feedItem = {
+          ...item.feedItem,
+          updatedAt: Timestamp.fromDate(new Date()),
+          data: {
+            ...item.feedItem.data,
+            lastMessage: payload.lastMessage,
+          }
+        };
+
+        // Sort `nextState.items.data` by `updatedAt` in descending order
+        nextState.feedItems.data.sort((a, b) => {
+          const dateA = a.feedItem.updatedAt.toDate().getTime();
+          const dateB = b.feedItem.updatedAt.toDate().getTime();
+          return dateB - dateA; // Sort in descending order
+        });
+      }
     }),
   );

@@ -1,6 +1,6 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 import { FeedLayoutItemWithFollowData } from "@/shared/interfaces";
-import { ChatChannel, CommonFeed } from "@/shared/models";
+import { ChatChannel, CommonFeed, LastMessageContentWithMessageId } from "@/shared/models";
 import { InboxActionType } from "./constants";
 import { InboxItems, InboxSearchState } from "./types";
 
@@ -119,3 +119,10 @@ export const removeEmptyChatChannelItems = createStandardAction(
 export const saveLastState = createStandardAction(
   InboxActionType.SAVE_LAST_STATE,
 )<{ shouldSaveAsReadState: boolean }>();
+
+export const setInboxItemUpdatedAt = createStandardAction(
+  InboxActionType.SET_INBOX_ITEM_UPDATED_AT,
+)<{ 
+  feedItemId: string;
+  lastMessage: LastMessageContentWithMessageId;
+}>();

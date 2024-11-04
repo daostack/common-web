@@ -102,6 +102,7 @@ const InboxPage: FC<InboxPageProps> = (props) => {
   } = useInboxItems(feedItemIdsForNotListening, {
     unread: isActiveUnreadInboxItemsQueryParam,
   });
+
   const sharedInboxItem = useSelector(selectSharedInboxItem);
   const chatChannelItems = useSelector(selectChatChannelItems);
   const nextChatChannelItemId = useSelector(selectNextChatChannelItemId);

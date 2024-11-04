@@ -17,6 +17,7 @@ import {
   CommonMember,
   Discussion,
   Governance,
+  LastMessageContentWithMessageId,
   OptimisticFeedItemState,
   Proposal,
 } from "@/shared/models";
@@ -263,3 +264,10 @@ export const setRecentAssignedCircleByMember = createStandardAction(
 export const resetRecentAssignedCircleByMember = createStandardAction(
   CommonActionType.RESET_RECENT_ASSIGNED_CIRCLE_BY_MEMBER,
 )();
+
+export const setFeedItemUpdatedAt = createStandardAction(
+  CommonActionType.SET_FEED_ITEM_UPDATED_AT,
+)<{
+  feedItemId: string;
+  lastMessage: LastMessageContentWithMessageId;
+}>();
