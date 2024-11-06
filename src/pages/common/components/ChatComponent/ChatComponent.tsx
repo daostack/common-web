@@ -66,6 +66,7 @@ import {
   commonActions,
   selectOptimisticDiscussionMessages,
   inboxActions,
+  optimisticActions,
 } from "@/store/states";
 import { ChatContentContext, ChatContentData } from "../CommonContent/context";
 import {
@@ -296,7 +297,7 @@ export default function ChatComponent({
               });
 
               dispatch(
-                commonActions.clearOptimisticDiscussionMessages(
+                optimisticActions.clearOptimisticDiscussionMessages(
                   optimisticMessageDiscussionId,
                 ),
               );
@@ -574,7 +575,7 @@ export default function ChatComponent({
         }
 
         if (isOptimisticChat) {
-          dispatch(commonActions.setOptimisticDiscussionMessages(payload));
+          dispatch(optimisticActions.setOptimisticDiscussionMessages(payload));
         } else {
           setMessages((prev) => {
             if (isFilesMessageWithoutTextAndImages) {

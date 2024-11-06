@@ -37,6 +37,7 @@ import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
 import {
   inboxActions,
   selectChatChannelItems,
+  selectOptimisticInboxFeedItems,
   selectInboxSearchValue,
   selectIsSearchingInboxItems,
   selectNextChatChannelItemId,
@@ -106,6 +107,8 @@ const InboxPage: FC<InboxPageProps> = (props) => {
   const sharedInboxItem = useSelector(selectSharedInboxItem);
   const chatChannelItems = useSelector(selectChatChannelItems);
   const nextChatChannelItemId = useSelector(selectNextChatChannelItemId);
+  const optimisticInboxFeedItems = useSelector(selectOptimisticInboxFeedItems);
+
 
   const getEmptyText = (): string => {
     if (hasMoreInboxItems) {
@@ -124,6 +127,11 @@ const InboxPage: FC<InboxPageProps> = (props) => {
   const topFeedItems = useMemo(() => {
     const items: FeedLayoutItem[] = [];
 
+    if (optimisticInboxFeedItems.size > 0) {
+      const optimisticItems = Array.from(optimisticInboxFeedItems.values());
+      items.push(...optimisticItems);
+    }
+
     if (chatChannelItems.length > 0) {
       items.push(...chatChannelItems);
     }
@@ -132,7 +140,7 @@ const InboxPage: FC<InboxPageProps> = (props) => {
     }
 
     return items;
-  }, [chatChannelItems, sharedInboxItem]);
+  }, [chatChannelItems, sharedInboxItem, optimisticInboxFeedItems]);
 
   useUpdateEffect(() => {
     refetchInboxItems();

@@ -8,6 +8,7 @@ import {
   ChatState,
   CommonFeedFollowsState,
   MultipleSpacesLayoutState,
+  OptimisticState
 } from "@/store/states";
 import { AuthStateType } from "../../pages/Auth/interface";
 import { CommonsStateType } from "../../pages/OldCommon/interfaces";
@@ -28,4 +29,5 @@ export interface AppState {
   chat: ChatState;
   inbox: InboxState;
   multipleSpacesLayout: MultipleSpacesLayoutState;
+  optimistic: OptimisticState;
 }

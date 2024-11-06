@@ -4,7 +4,6 @@ import {
   NewDiscussionCreationFormValues,
   NewProposalCreationFormValues,
 } from "@/shared/interfaces";
-import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 import { Circle, CommonMember, Governance, Timestamp } from "@/shared/models";
 
 export type EntityCreation<T> = {
@@ -45,9 +44,6 @@ export interface CommonState {
   pinnedFeedItems: PinnedFeedItems;
   sharedFeedItemId: string | null;
   sharedFeedItem: FeedItemFollowLayoutItem | null;
-  createdOptimisticFeedItems: Map<string, FeedItemFollowLayoutItem | undefined>;
-  optimisticFeedItems: Map<string, FeedItemFollowLayoutItem>;
-  optimisticDiscussionMessages: Map<string, CreateDiscussionMessageDto[]>;
   commonAction: CommonAction | null;
   discussionCreation: EntityCreation<NewDiscussionCreationFormValues>;
   proposalCreation: EntityCreation<NewProposalCreationFormValues>;

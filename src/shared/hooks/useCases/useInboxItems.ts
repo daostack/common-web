@@ -5,6 +5,7 @@ import { Logger, UserService } from "@/services";
 import { addMetadataToItemsBatch } from "@/services/utils";
 import {
   checkIsFeedItemFollowLayoutItemWithFollowData,
+  FeedItemFollowLayoutItemWithFollowData,
   FeedLayoutItemWithFollowData,
   InboxItemsBatch as ItemsBatch,
 } from "@/shared/interfaces";
@@ -12,8 +13,10 @@ import { InboxItem, Timestamp } from "@/shared/models";
 import {
   inboxActions,
   InboxItems,
+  optimisticActions,
   selectFilteredInboxItems,
   selectInboxItems,
+  selectOptimisticInboxFeedItems,
 } from "@/store/states";
 
 interface Return
@@ -67,6 +70,7 @@ export const useInboxItems = (
   options?: { unread?: boolean },
 ): Return => {
   const dispatch = useDispatch();
+  const optimisticInboxItems = useSelector(selectOptimisticInboxFeedItems);
   const [newItemsBatches, setNewItemsBatches] = useState<ItemsBatch[]>([]);
   const [lastUpdatedAt, setLastUpdatedAt] = useState<Timestamp | null>(null);
   const inboxItems = useSelector(selectInboxItems);
@@ -261,6 +265,14 @@ export const useInboxItems = (
 
         if (finalData.length > 0 && isMounted) {
           dispatch(inboxActions.addNewInboxItems(finalData));
+          finalData.forEach(({item}) => {
+            const itemData = (item as FeedItemFollowLayoutItemWithFollowData).feedItem?.data;
+            if(optimisticInboxItems.has(itemData.id)) {
+              dispatch(optimisticActions.removeOptimisticInboxFeedItemState({id: itemData.id}));
+            } else if (itemData?.discussionId && optimisticInboxItems.has(itemData?.discussionId)) {
+              dispatch(optimisticActions.removeOptimisticInboxFeedItemState({id: itemData?.discussionId}));
+            }
+          })
         }
       } catch (error) {
         Logger.error(error);

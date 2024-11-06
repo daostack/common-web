@@ -20,6 +20,7 @@ import {
 } from "@/shared/ui-kit/TextEditor";
 import { generateFirstMessage, generateOptimisticFeedItem, getUserName } from "@/shared/utils";
 import {
+  optimisticActions,
   selectDiscussionCreationData,
   selectIsDiscussionCreationLoading,
 } from "@/store/states";
@@ -122,26 +123,24 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
       } else {
         const discussionId = uuidv4();
         const userName = getUserName(user);
-        dispatch(
-          commonActions.setOptimisticFeedItem(
-            generateOptimisticFeedItem({
-              userId,
-              commonId: common.id,
-              type: CommonFeedType.OptimisticDiscussion,
-              circleVisibility,
-              discussionId,
-              title: values.title,
-              content: JSON.stringify(values.content),
-              lastMessageContent: {
-                ownerId: userId,
-                userName,
-                ownerType: DiscussionMessageOwnerType.System,
-                content: generateFirstMessage({userName, userId}),
-              }
-            }),
-          ),
-        );
 
+        const optimisticFeedItem = generateOptimisticFeedItem({
+          userId,
+          commonId: common.id,
+          type: CommonFeedType.OptimisticDiscussion,
+          circleVisibility,
+          discussionId,
+          title: values.title,
+          content: JSON.stringify(values.content),
+          lastMessageContent: {
+            ownerId: userId,
+            userName,
+            ownerType: DiscussionMessageOwnerType.System,
+            content: generateFirstMessage({userName, userId}),
+          }
+        });
+        dispatch(optimisticActions.setOptimisticFeedItem(optimisticFeedItem));
+        dispatch(commonActions.setRecentStreamId(optimisticFeedItem.data.id));
         dispatch(
           commonActions.createDiscussion.request({
             payload: {
