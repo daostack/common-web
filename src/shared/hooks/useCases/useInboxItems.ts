@@ -267,6 +267,7 @@ export const useInboxItems = (
           dispatch(inboxActions.addNewInboxItems(finalData));
           finalData.forEach(({item}) => {
             const itemData = (item as FeedItemFollowLayoutItemWithFollowData).feedItem?.data;
+
             if(optimisticInboxItems.has(itemData.id)) {
               dispatch(optimisticActions.removeOptimisticInboxFeedItemState({id: itemData.id}));
             } else if (itemData?.discussionId && optimisticInboxItems.has(itemData?.discussionId)) {

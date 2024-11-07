@@ -5,6 +5,7 @@ import * as actions from "./actions";
 import {
   OptimisticState
 } from "./types";
+import { generateOptimisticFeedItemFollowWithMetadata } from "@/shared/utils";
 
 type Action = ActionType<typeof actions>;
 
@@ -16,24 +17,25 @@ const initialState: OptimisticState = {
 };
 
 export const reducer = createReducer<OptimisticState, Action>(initialState)
+  .handleAction(actions.resetOptimisticState, () => initialState)
   .handleAction(actions.setOptimisticFeedItem, (state, { payload }) =>
     produce(state, (nextState) => {
         const updatedMap = new Map(nextState.optimisticFeedItems);
         const updateMapInbox = new Map(nextState.optimisticInboxFeedItems);
 
-        const optimisticItemId = payload.data.discussionId ?? payload.data.id;
+        const optimisticItemId = payload.data.data.discussionId ?? payload.data.data.id;
         // Add the new item to the Map
         updatedMap.set(optimisticItemId, {
           type: InboxItemType.FeedItemFollow,
-          itemId: payload.id,
-          feedItem: payload,
+          itemId: payload.data.id,
+          feedItem: payload.data,
         });
         updateMapInbox.set(optimisticItemId, {
           type: InboxItemType.FeedItemFollow,
-          itemId: payload.id,
-          feedItem: payload,
-        })
-
+          itemId: payload.data.id,
+          feedItem: payload.data,
+          feedItemFollowWithMetadata: generateOptimisticFeedItemFollowWithMetadata({feedItem: payload.data, common: payload.common})
+        });
         // Assign the new Map back to the state
         nextState.optimisticFeedItems = updatedMap;
         nextState.optimisticInboxFeedItems = updateMapInbox;

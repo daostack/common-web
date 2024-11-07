@@ -27,6 +27,7 @@ import { RightArrowThinIcon } from "@/shared/icons";
 import {
   ChatChannelFeedLayoutItemProps,
   checkIsChatChannelLayoutItem,
+  FeedItemFollowLayoutItemWithFollowData,
   FeedLayoutItem,
   FeedLayoutItemChangeDataWithType,
   FeedLayoutRef,
@@ -145,6 +146,18 @@ const InboxPage: FC<InboxPageProps> = (props) => {
   useUpdateEffect(() => {
     refetchInboxItems();
   }, [isActiveUnreadInboxItemsQueryParam]);
+
+  useEffect(() => {
+    const firstFeedItem = topFeedItems[0];
+    if(optimisticInboxFeedItems.size > 0 && firstFeedItem) {
+
+      feedLayoutRef?.setActiveItem({
+        feedItemId: firstFeedItem.itemId,
+        discussion: (firstFeedItem as FeedItemFollowLayoutItemWithFollowData)?.feedItem.optimisticData,
+      });
+    }
+
+  }, [topFeedItems, optimisticInboxFeedItems, feedLayoutRef])
 
   const fetchData = () => {
     fetchInboxData({

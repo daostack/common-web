@@ -107,7 +107,10 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
         }
       });
 
-      dispatch(optimisticActions.setOptimisticFeedItem(optimisticFeedItem));
+      dispatch(optimisticActions.setOptimisticFeedItem({
+        data: optimisticFeedItem, 
+        common
+      }));
       dispatch(commonActions.setRecentStreamId(optimisticFeedItem.data.id));
       switch (values.proposalType.value) {
         case ProposalsTypes.FUNDS_ALLOCATION: {

@@ -852,6 +852,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                         item.feedItemFollowWithMetadata,
                         outerCommon,
                       );
+
                       const isPinned = (
                         outerCommon?.pinnedFeedItems || []
                       ).some(

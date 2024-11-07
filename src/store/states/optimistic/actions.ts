@@ -1,5 +1,6 @@
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 import {
+  Common,
   CommonFeed,
   OptimisticFeedItemState
 } from "@/shared/models";
@@ -8,7 +9,10 @@ import { OptimisticActionType } from "./constants";
 
 export const setOptimisticFeedItem = createStandardAction(
   OptimisticActionType.SET_OPTIMISTIC_FEED_ITEM,
-)<CommonFeed>();
+)<{
+  data: CommonFeed;
+  common: Common;
+}>();
 
 export const updateOptimisticFeedItemState = createStandardAction(
   OptimisticActionType.UPDATE_OPTIMISTIC_FEED_ITEM,
@@ -40,3 +44,7 @@ export const clearOptimisticDiscussionMessages = createStandardAction(
 export const clearCreatedOptimisticFeedItem = createStandardAction(
   OptimisticActionType.CLEAR_CREATED_OPTIMISTIC_FEED_ITEM,
 )<string>();
+
+export const resetOptimisticState = createStandardAction(
+  OptimisticActionType.RESET_OPTIMISTIC_STATE,
+)();

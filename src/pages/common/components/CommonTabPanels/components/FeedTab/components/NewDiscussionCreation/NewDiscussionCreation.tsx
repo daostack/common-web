@@ -139,7 +139,10 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
             content: generateFirstMessage({userName, userId}),
           }
         });
-        dispatch(optimisticActions.setOptimisticFeedItem(optimisticFeedItem));
+        dispatch(optimisticActions.setOptimisticFeedItem({
+          data: optimisticFeedItem, 
+          common
+        }));
         dispatch(commonActions.setRecentStreamId(optimisticFeedItem.data.id));
         dispatch(
           commonActions.createDiscussion.request({
