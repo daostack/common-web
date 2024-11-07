@@ -622,6 +622,9 @@ export default function ChatComponent({
 
         dispatch(commonActions.setFeedItemUpdatedAt(payloadUpdateFeedItem));
         dispatch(inboxActions.setInboxItemUpdatedAt(payloadUpdateFeedItem));
+        document
+          .getElementById("feedLayoutWrapper")
+          ?.scrollIntoView({ behavior: "smooth" });
         focusOnChat();
       }
     },
