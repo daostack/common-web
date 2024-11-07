@@ -65,6 +65,8 @@ import {
   selectOptimisticFeedItems,
   commonActions,
   selectOptimisticDiscussionMessages,
+  inboxActions,
+  optimisticActions,
 } from "@/store/states";
 import { ChatContentContext, ChatContentData } from "../CommonContent/context";
 import {
@@ -295,7 +297,7 @@ export default function ChatComponent({
               });
 
               dispatch(
-                commonActions.clearOptimisticDiscussionMessages(
+                optimisticActions.clearOptimisticDiscussionMessages(
                   optimisticMessageDiscussionId,
                 ),
               );
@@ -573,7 +575,7 @@ export default function ChatComponent({
         }
 
         if (isOptimisticChat) {
-          dispatch(commonActions.setOptimisticDiscussionMessages(payload));
+          dispatch(optimisticActions.setOptimisticDiscussionMessages(payload));
         } else {
           setMessages((prev) => {
             if (isFilesMessageWithoutTextAndImages) {
@@ -606,6 +608,23 @@ export default function ChatComponent({
         if (currentFilesPreview) {
           dispatch(chatActions.clearFilesPreview());
         }
+
+        const payloadUpdateFeedItem = {
+          feedItemId,
+          lastMessage: {
+            messageId: pendingMessageId,
+            ownerId: userId as string,
+            userName: getUserName(user),
+            ownerType: DiscussionMessageOwnerType.User,
+            content: JSON.stringify(message),
+          }
+        };
+
+        dispatch(commonActions.setFeedItemUpdatedAt(payloadUpdateFeedItem));
+        dispatch(inboxActions.setInboxItemUpdatedAt(payloadUpdateFeedItem));
+        document
+          .getElementById("feedLayoutWrapper")
+          ?.scrollIntoView({ behavior: "smooth" });
         focusOnChat();
       }
     },
@@ -620,6 +639,7 @@ export default function ChatComponent({
       isChatChannel,
       linkPreviewData,
       isOptimisticChat,
+      feedItemId,
     ],
   );
 

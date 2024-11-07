@@ -48,15 +48,6 @@ export const selectSharedFeedItem = (state: AppState) =>
 export const selectRecentStreamId = (state: AppState) =>
   state.common.recentStreamId;
 
-export const selectOptimisticFeedItems = (state: AppState) =>
-  state.common.optimisticFeedItems;
-
-export const selectOptimisticDiscussionMessages = (state: AppState) =>
-  state.common.optimisticDiscussionMessages;
-
-export const selectCreatedOptimisticFeedItems = (state: AppState) =>
-  state.common.createdOptimisticFeedItems;
-
 export const selectRecentAssignedCircle =
   (memberId: string) => (state: AppState) =>
     state.common.recentAssignedCircleByMember[memberId];

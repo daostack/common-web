@@ -1,6 +1,6 @@
 import { Timestamp as FirestoreTimestamp } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
-import { CommonFeed, CommonFeedType, LastMessageContent, OptimisticFeedItemState } from "../models";
+import { Common, CommonFeed, CommonFeedType, FeedItemFollowWithMetadata, LastMessageContent, OptimisticFeedItemState } from "../models";
 
 interface GenerateOptimisticFeedItemPayload {
   userId: string;
@@ -62,5 +62,30 @@ export const generateOptimisticFeedItem = ({
       state: OptimisticFeedItemState.loading,
     },
     circleVisibility,
+  }
+}
+
+export const generateOptimisticFeedItemFollowWithMetadata = ({ feedItem, common }: {
+  feedItem: CommonFeed,
+  common: Common;
+}): FeedItemFollowWithMetadata => {
+
+  const currentDate = FirestoreTimestamp.now();
+  return {
+    commonAvatar: common.image,
+    commonId: common.id,
+    commonName: common.name,
+    feedItem: feedItem,
+    feedItemId: feedItem.id,
+    userId: feedItem.userId,
+    emailSubscribed: false,
+    pushSubscribed: false,
+    count: 0,
+    type: feedItem.data.type,
+    lastSeen: currentDate,
+    createdAt: currentDate,
+    updatedAt: currentDate,
+    lastActivity: currentDate,
+    id: feedItem.id,
   }
 }

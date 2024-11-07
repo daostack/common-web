@@ -18,6 +18,7 @@ import {
 import { parseStringToTextEditorValue } from "@/shared/ui-kit/TextEditor";
 import { generateFirstMessage, generateOptimisticFeedItem, getUserName } from "@/shared/utils";
 import {
+  optimisticActions,
   selectIsProposalCreationLoading,
   selectProposalCreationData,
 } from "@/store/states";
@@ -90,25 +91,27 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
       const discussionId = uuidv4();
       const userName = getUserName(user);
 
-      dispatch(
-        commonActions.setOptimisticFeedItem(
-          generateOptimisticFeedItem({
-            userId,
-            commonId: common.id,
-            type: CommonFeedType.OptimisticProposal,
-            circleVisibility: userCircleIds,
-            discussionId,
-            title: values.title,
-            content: JSON.stringify(values.content),
-            lastMessageContent: {
-              ownerId: userId,
-              userName,
-              ownerType: DiscussionMessageOwnerType.System,
-              content: generateFirstMessage({userName, userId}),
-            }
-          }),
-        ),
-      );
+      const optimisticFeedItem = generateOptimisticFeedItem({
+        userId,
+        commonId: common.id,
+        type: CommonFeedType.OptimisticProposal,
+        circleVisibility: userCircleIds,
+        discussionId,
+        title: values.title,
+        content: JSON.stringify(values.content),
+        lastMessageContent: {
+          ownerId: userId,
+          userName,
+          ownerType: DiscussionMessageOwnerType.System,
+          content: generateFirstMessage({userName, userId}),
+        }
+      });
+
+      dispatch(optimisticActions.setOptimisticFeedItem({
+        data: optimisticFeedItem, 
+        common
+      }));
+      dispatch(commonActions.setRecentStreamId(optimisticFeedItem.data.id));
       switch (values.proposalType.value) {
         case ProposalsTypes.FUNDS_ALLOCATION: {
           const fundingProposalPayload = getFundingProposalPayload(

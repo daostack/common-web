@@ -6,3 +6,4 @@ export * from "./inbox";
 export * from "./multipleSpacesLayout";
 export * from "./projects";
 export * from "./chat";
+export * from "./optimistic";
