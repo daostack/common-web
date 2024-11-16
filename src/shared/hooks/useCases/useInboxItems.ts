@@ -7,17 +7,21 @@ import {
   checkIsFeedItemFollowLayoutItemWithFollowData,
   FeedItemFollowLayoutItemWithFollowData,
   FeedLayoutItemWithFollowData,
+  InboxItemBatch,
   InboxItemsBatch as ItemsBatch,
 } from "@/shared/interfaces";
 import { InboxItem, Timestamp } from "@/shared/models";
 import {
   inboxActions,
   InboxItems,
+  NewInboxItems,
   optimisticActions,
   selectFilteredInboxItems,
   selectInboxItems,
+  selectInstantDiscussionMessagesOrder,
   selectOptimisticInboxFeedItems,
 } from "@/store/states";
+import { useDeepCompareEffect } from "react-use";
 
 interface Return
   extends Pick<InboxItems, "data" | "loading" | "hasMore" | "batchNumber"> {
@@ -71,6 +75,9 @@ export const useInboxItems = (
 ): Return => {
   const dispatch = useDispatch();
   const optimisticInboxItems = useSelector(selectOptimisticInboxFeedItems);
+  const instantDiscussionMessages = useSelector(
+    selectInstantDiscussionMessagesOrder,
+  );
   const [newItemsBatches, setNewItemsBatches] = useState<ItemsBatch[]>([]);
   const [lastUpdatedAt, setLastUpdatedAt] = useState<Timestamp | null>(null);
   const inboxItems = useSelector(selectInboxItems);
@@ -244,6 +251,33 @@ export const useInboxItems = (
     unread,
   ]);
 
+  const [notListedFeedItems, setNotListedFeedItems] = useState<InboxItemBatch<FeedLayoutItemWithFollowData>[]>([]);
+
+  useDeepCompareEffect(() => {
+    if(notListedFeedItems.length > 0 && notListedFeedItems.length === instantDiscussionMessages.size) {
+      const updatedFeedItems = notListedFeedItems.map((item) => {
+        const itemData = item?.item as FeedItemFollowLayoutItemWithFollowData;
+        const feedItemData = itemData.feedItem?.data;
+        const messageUpdatedAt = instantDiscussionMessages.get(feedItemData?.discussionId ?? "")?.timestamp || instantDiscussionMessages.get(feedItemData.id)?.timestamp;
+        return {
+          ...item,
+          item: {
+            ...itemData,
+            feedItem: {
+              ...itemData.feedItem,
+              updatedAt: messageUpdatedAt,
+            }
+          }
+        }
+      }) as NewInboxItems[];
+
+      setNotListedFeedItems([]);
+      dispatch(inboxActions.addNewInboxItems(updatedFeedItems));
+      dispatch(optimisticActions.clearInstantDiscussionMessagesOrder());
+    }
+
+  },[notListedFeedItems, instantDiscussionMessages]);
+
   useEffect(() => {
     if (!lastBatch || !userId) {
       return;
@@ -264,16 +298,23 @@ export const useInboxItems = (
         );
 
         if (finalData.length > 0 && isMounted) {
-          dispatch(inboxActions.addNewInboxItems(finalData));
-          finalData.forEach(({item}) => {
-            const itemData = (item as FeedItemFollowLayoutItemWithFollowData).feedItem?.data;
+          const newItems: InboxItemBatch<FeedLayoutItemWithFollowData>[] = [];
+          finalData.forEach((item: InboxItemBatch<FeedLayoutItemWithFollowData>) => {
+            const itemData = (item.item as FeedItemFollowLayoutItemWithFollowData)?.feedItem?.data;
 
+            if(instantDiscussionMessages.has(itemData?.discussionId ?? "") || instantDiscussionMessages.has(itemData?.id)) {
+              setNotListedFeedItems((prev) => [...prev, item]);
+            } else {
+              newItems.push(item);
+            }
             if(optimisticInboxItems.has(itemData.id)) {
               dispatch(optimisticActions.removeOptimisticInboxFeedItemState({id: itemData.id}));
             } else if (itemData?.discussionId && optimisticInboxItems.has(itemData?.discussionId)) {
               dispatch(optimisticActions.removeOptimisticInboxFeedItemState({id: itemData?.discussionId}));
             }
           })
+
+          newItems.length > 0 && dispatch(inboxActions.addNewInboxItems(newItems));
         }
       } catch (error) {
         Logger.error(error);
@@ -285,7 +326,8 @@ export const useInboxItems = (
     return () => {
       isMounted = false;
     };
-  }, [lastBatch]);
+  }, [lastBatch, instantDiscussionMessages]);
+
 
   return {
     ...inboxItems,

@@ -43,6 +43,7 @@ import {
   selectIsSearchingInboxItems,
   selectNextChatChannelItemId,
   selectSharedInboxItem,
+  selectInstantDiscussionMessagesOrder,
 } from "@/store/states";
 import { ChatChannelItem, FeedItemBaseContent } from "./components";
 import { useInboxData } from "./hooks";
@@ -181,22 +182,26 @@ const InboxPage: FC<InboxPageProps> = (props) => {
     [],
   );
 
+  const instantDiscussionMessage = useSelector(selectInstantDiscussionMessagesOrder);
+
   const handleFeedItemUpdate = useCallback(
     (item: CommonFeed, isRemoved: boolean) => {
-      dispatch(
-        inboxActions.updateFeedItem({
-          item,
-          isRemoved,
-        }),
-      );
-
-      if (!isRemoved && item.data.lastMessage?.ownerId === userId) {
-        document
-          .getElementById("feedLayoutWrapper")
-          ?.scrollIntoView({ behavior: "smooth" });
+      if(!instantDiscussionMessage.has(item.data.id)) {
+        dispatch(
+          inboxActions.updateFeedItem({
+            item,
+            isRemoved,
+          }),
+        );
+  
+        if (!isRemoved && item.data.lastMessage?.ownerId === userId) {
+          document
+            .getElementById("feedLayoutWrapper")
+            ?.scrollIntoView({ behavior: "smooth" });
+        }
       }
     },
-    [dispatch],
+    [dispatch, instantDiscussionMessage],
   );
 
   const handleFeedItemUnfollowed = useCallback(

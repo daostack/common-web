@@ -6,6 +6,7 @@ import {
   OptimisticState
 } from "./types";
 import { generateOptimisticFeedItemFollowWithMetadata } from "@/shared/utils";
+import { Timestamp } from "@/shared/models";
 
 type Action = ActionType<typeof actions>;
 
@@ -14,10 +15,53 @@ const initialState: OptimisticState = {
   optimisticInboxFeedItems: new Map(),
   optimisticDiscussionMessages: new Map(),
   createdOptimisticFeedItems: new Map(),
+  instantDiscussionMessagesOrder: new Map(),
 };
 
 export const reducer = createReducer<OptimisticState, Action>(initialState)
   .handleAction(actions.resetOptimisticState, () => initialState)
+  .handleAction(actions.setInstantDiscussionMessagesOrder, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const updatedMap = new Map(nextState.instantDiscussionMessagesOrder);
+      const { discussionId } = payload;
+
+      if(updatedMap.size > 1 && updatedMap.has(discussionId)) {
+        const keys = Array.from(updatedMap.keys());
+
+        keys.forEach((key) => {
+          const orderValue = updatedMap.get(key)?.order || 2;
+          const timestampValue = updatedMap.get(key)?.timestamp || Timestamp.fromDate(new Date());
+          updatedMap.set(key, {
+            order: orderValue === 1 ? 1 : orderValue - 1,
+            timestamp: timestampValue
+          });
+        });
+      }
+
+      if(updatedMap.has(discussionId)) {
+        updatedMap.set(discussionId, {
+          order: updatedMap.size || 1,
+          timestamp: Timestamp.fromDate(new Date())
+        });
+      } else {
+        updatedMap.set(discussionId, {
+          order: (updatedMap.size + 1) || 1,
+          timestamp: Timestamp.fromDate(new Date())
+        });
+      }
+      nextState.instantDiscussionMessagesOrder = updatedMap;
+    }),
+  )
+  .handleAction(actions.clearInstantDiscussionMessagesOrder, (state) =>
+    produce(state, (nextState) => {
+      const updatedMap = new Map();
+
+      // updatedMap.delete(payload);
+
+      // Assign the new Map back to the state
+      nextState.instantDiscussionMessagesOrder = updatedMap;
+    }),
+  )
   .handleAction(actions.setOptimisticFeedItem, (state, { payload }) =>
     produce(state, (nextState) => {
         const updatedMap = new Map(nextState.optimisticFeedItems);

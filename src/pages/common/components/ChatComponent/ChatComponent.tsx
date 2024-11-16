@@ -67,6 +67,7 @@ import {
   selectOptimisticDiscussionMessages,
   inboxActions,
   optimisticActions,
+  selectInstantDiscussionMessagesOrder,
 } from "@/store/states";
 import { ChatContentContext, ChatContentData } from "../CommonContent/context";
 import {
@@ -89,6 +90,7 @@ import styles from "./ChatComponent.module.scss";
 import { BaseTextEditorHandles } from "@/shared/ui-kit/TextEditor/BaseTextEditor";
 
 const BASE_CHAT_INPUT_HEIGHT = 48;
+const BASE_ORDER_INTERVAL = 1000;
 
 interface ChatComponentInterface {
   commonId: string;
@@ -277,6 +279,9 @@ export default function ChatComponent({
   const optimisticDiscussionMessages = useSelector(
     selectOptimisticDiscussionMessages,
   );
+  const instantDiscussionMessagesOrder = useSelector(selectInstantDiscussionMessagesOrder);
+
+  const currentChatOrder = instantDiscussionMessagesOrder.get(discussionId)?.order || 1;
 
   const isOptimisticChat = optimisticFeedItems.has(discussionId);
 
@@ -416,8 +421,8 @@ export default function ChatComponent({
         setMessages([]);
       }
     },
-    1500,
-    [newMessages, discussionId, dispatch],
+    1500 + BASE_ORDER_INTERVAL * currentChatOrder,
+    [newMessages, discussionId, dispatch, currentChatOrder],
   );
 
   /**
@@ -584,6 +589,7 @@ export default function ChatComponent({
 
             return [...prev, ...filePreviewPayload, payload];
           });
+          dispatch(optimisticActions.setInstantDiscussionMessagesOrder({discussionId}));
         }
 
         if (isChatChannel) {

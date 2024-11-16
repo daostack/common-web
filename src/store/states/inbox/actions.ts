@@ -2,7 +2,7 @@ import { createAsyncAction, createStandardAction } from "typesafe-actions";
 import { FeedLayoutItemWithFollowData } from "@/shared/interfaces";
 import { ChatChannel, CommonFeed, LastMessageContentWithMessageId } from "@/shared/models";
 import { InboxActionType } from "./constants";
-import { InboxItems, InboxSearchState } from "./types";
+import { InboxItems, InboxSearchState, NewInboxItems } from "./types";
 
 export const resetInbox = createStandardAction(InboxActionType.RESET_INBOX)<{
   onlyIfUnread?: boolean;
@@ -26,15 +26,7 @@ export const getInboxItems = createAsyncAction(
 
 export const addNewInboxItems = createStandardAction(
   InboxActionType.ADD_NEW_INBOX_ITEMS,
-)<
-  {
-    item: FeedLayoutItemWithFollowData;
-    statuses: {
-      isAdded: boolean;
-      isRemoved: boolean;
-    };
-  }[]
->();
+)<NewInboxItems[]>();
 
 export const updateInboxItem = createStandardAction(
   InboxActionType.UPDATE_INBOX_ITEM,

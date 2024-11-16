@@ -33,7 +33,8 @@ const mapFields: Array<keyof OptimisticState> = [
   "createdOptimisticFeedItems",
   "optimisticFeedItems",
   "optimisticInboxFeedItems",
-  "optimisticDiscussionMessages"
+  "optimisticDiscussionMessages",
+  "instantDiscussionMessagesOrder"
 ];
 
 const mapTransformer = createTransform<OptimisticState, OptimisticState>(

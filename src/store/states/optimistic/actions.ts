@@ -41,6 +41,16 @@ export const clearOptimisticDiscussionMessages = createStandardAction(
   OptimisticActionType.CLEAR_OPTIMISTIC_DISCUSSION_MESSAGES,
 )<string>();
 
+export const setInstantDiscussionMessagesOrder = createStandardAction(
+  OptimisticActionType.SET_INSTANT_DISCUSSION_MESSAGES_ORDER,
+)<{
+  discussionId: string;
+}>();
+
+export const clearInstantDiscussionMessagesOrder = createStandardAction(
+  OptimisticActionType.CLEAR_INSTANT_DISCUSSION_MESSAGES_ORDER,
+)();
+
 export const clearCreatedOptimisticFeedItem = createStandardAction(
   OptimisticActionType.CLEAR_CREATED_OPTIMISTIC_FEED_ITEM,
 )<string>();

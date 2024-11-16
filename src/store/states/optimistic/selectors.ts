@@ -12,3 +12,6 @@ export const selectOptimisticDiscussionMessages = (state: AppState) =>
 
 export const selectCreatedOptimisticFeedItems = (state: AppState) =>
   state.optimistic.createdOptimisticFeedItems;
+
+export const selectInstantDiscussionMessagesOrder = (state: AppState) =>
+  state.optimistic.instantDiscussionMessagesOrder;
