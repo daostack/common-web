@@ -218,12 +218,6 @@ function DiscussionFeedCard(props, ref) {
   const cardTitle = discussion?.title;
   const commonNotion = outerCommonNotion ?? common?.notion;
 
-  // const ownerId = useMemo(() => {
-  //   if(item.userId) {
-  //     return item.userId
-  //   }
-  // },[item.userId])
-
   const handleOpenChat = useCallback(() => {
     if (discussion && !isPreviewMode) {
       setChatItem({

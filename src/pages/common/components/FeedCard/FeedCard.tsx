@@ -299,7 +299,7 @@ const FeedCard = (props, ref) => {
   ]);
 
   return (
-    <div ref={containerRef} >
+    <div ref={containerRef}>
       {!isPreviewMode && <div className={styles.toggleCard} {...getToggleProps()}>{feedItemBaseContent}</div>}
       <div {...getCollapseProps()}>
         <CommonCard

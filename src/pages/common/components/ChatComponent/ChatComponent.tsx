@@ -88,6 +88,7 @@ import {
 } from "./utils";
 import styles from "./ChatComponent.module.scss";
 import { BaseTextEditorHandles } from "@/shared/ui-kit/TextEditor/BaseTextEditor";
+import { useFeedItemContext } from "../FeedItem";
 
 const BASE_CHAT_INPUT_HEIGHT = 48;
 const BASE_ORDER_INTERVAL = 1000;
@@ -257,6 +258,20 @@ export default function ChatComponent({
   const [message, setMessage] = useState<TextEditorValue>(
     parseStringToTextEditorValue(),
   );
+
+  const {
+    setIsInputFocused
+  } = useFeedItemContext();
+
+  useEffect(() => {
+    const isEmpty = checkIsTextEditorValueEmpty(message);
+    if(!isEmpty || message.length > 1) {
+      setIsInputFocused?.(true);
+    } else {
+      setIsInputFocused?.(false);
+    }
+
+  },[message, setIsInputFocused])
 
   const emojiCount = useMemo(
     () => countTextEditorEmojiElements(message),
