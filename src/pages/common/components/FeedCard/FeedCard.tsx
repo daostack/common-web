@@ -300,7 +300,7 @@ const FeedCard = (props, ref) => {
 
   return (
     <div ref={containerRef}>
-      {!isPreviewMode && <div {...getToggleProps()}>{feedItemBaseContent}</div>}
+      {!isPreviewMode && <div className={styles.toggleCard} {...getToggleProps()}>{feedItemBaseContent}</div>}
       <div {...getCollapseProps()}>
         <CommonCard
           className={classNames(

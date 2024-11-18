@@ -6,7 +6,7 @@ import {
   subscribeToNotification,
 } from "@/pages/OldCommon/store/api";
 import { UserService } from "@/services";
-import { store } from "@/shared/appConfig";
+import { persistor, store } from "@/shared/appConfig";
 import { Awaited } from "@/shared/interfaces";
 import { FirebaseCredentials } from "@/shared/interfaces/FirebaseCredentials";
 import { EventTypeState, NotificationItem } from "@/shared/models/Notification";
@@ -48,6 +48,7 @@ import firebase from "../../../shared/utils/firebase";
 import { UserCreationDto } from "../interface";
 import * as actions from "./actions";
 import { createdUserApi, deleteUserApi, getUserData } from "./api";
+import { resetOptimisticState } from "@/store/states/optimistic/actions";
 
 const getAuthProviderFromProviderData = (
   providerData?: firebase.User["providerData"],
@@ -533,15 +534,27 @@ function* confirmVerificationCodeSaga({
 }
 
 function* logOut() {
-  localStorage.clear();
-  firebase.auth().signOut();
 
+  yield put(resetOptimisticState());
+  // Wait for persistor.purge() to complete
+  yield call([persistor, persistor.purge]);
+  yield call([persistor, persistor.flush]);
+
+  // Now clear localStorage
+  localStorage.clear();
+
+  // Sign out from Firebase
+  yield call([firebase.auth(), firebase.auth().signOut]);
+
+  // Notify React Native WebView if applicable
   if (window.ReactNativeWebView) {
-    window?.ReactNativeWebView?.postMessage(WebviewActions.logout);
+    window.ReactNativeWebView.postMessage(WebviewActions.logout);
   }
 
+  // Reset global data and navigate to home
   resetGlobalData(true);
   history.push(ROUTE_PATHS.HOME);
+
   yield true;
 }
 

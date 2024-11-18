@@ -1,8 +1,8 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 import { FeedLayoutItemWithFollowData } from "@/shared/interfaces";
-import { ChatChannel, CommonFeed } from "@/shared/models";
+import { ChatChannel, CommonFeed, LastMessageContentWithMessageId } from "@/shared/models";
 import { InboxActionType } from "./constants";
-import { InboxItems, InboxSearchState } from "./types";
+import { InboxItems, InboxSearchState, NewInboxItems } from "./types";
 
 export const resetInbox = createStandardAction(InboxActionType.RESET_INBOX)<{
   onlyIfUnread?: boolean;
@@ -26,15 +26,7 @@ export const getInboxItems = createAsyncAction(
 
 export const addNewInboxItems = createStandardAction(
   InboxActionType.ADD_NEW_INBOX_ITEMS,
-)<
-  {
-    item: FeedLayoutItemWithFollowData;
-    statuses: {
-      isAdded: boolean;
-      isRemoved: boolean;
-    };
-  }[]
->();
+)<NewInboxItems[]>();
 
 export const updateInboxItem = createStandardAction(
   InboxActionType.UPDATE_INBOX_ITEM,
@@ -119,3 +111,10 @@ export const removeEmptyChatChannelItems = createStandardAction(
 export const saveLastState = createStandardAction(
   InboxActionType.SAVE_LAST_STATE,
 )<{ shouldSaveAsReadState: boolean }>();
+
+export const setInboxItemUpdatedAt = createStandardAction(
+  InboxActionType.SET_INBOX_ITEM_UPDATED_AT,
+)<{ 
+  feedItemId: string;
+  lastMessage: LastMessageContentWithMessageId;
+}>();
