@@ -27,6 +27,7 @@ import { RightArrowThinIcon } from "@/shared/icons";
 import {
   ChatChannelFeedLayoutItemProps,
   checkIsChatChannelLayoutItem,
+  FeedItemFollowLayoutItemWithFollowData,
   FeedLayoutItem,
   FeedLayoutItemChangeDataWithType,
   FeedLayoutRef,
@@ -37,10 +38,12 @@ import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
 import {
   inboxActions,
   selectChatChannelItems,
+  selectOptimisticInboxFeedItems,
   selectInboxSearchValue,
   selectIsSearchingInboxItems,
   selectNextChatChannelItemId,
   selectSharedInboxItem,
+  selectInstantDiscussionMessagesOrder,
 } from "@/store/states";
 import { ChatChannelItem, FeedItemBaseContent } from "./components";
 import { useInboxData } from "./hooks";
@@ -102,9 +105,12 @@ const InboxPage: FC<InboxPageProps> = (props) => {
   } = useInboxItems(feedItemIdsForNotListening, {
     unread: isActiveUnreadInboxItemsQueryParam,
   });
+
   const sharedInboxItem = useSelector(selectSharedInboxItem);
   const chatChannelItems = useSelector(selectChatChannelItems);
   const nextChatChannelItemId = useSelector(selectNextChatChannelItemId);
+  const optimisticInboxFeedItems = useSelector(selectOptimisticInboxFeedItems);
+
 
   const getEmptyText = (): string => {
     if (hasMoreInboxItems) {
@@ -123,6 +129,11 @@ const InboxPage: FC<InboxPageProps> = (props) => {
   const topFeedItems = useMemo(() => {
     const items: FeedLayoutItem[] = [];
 
+    if (optimisticInboxFeedItems.size > 0) {
+      const optimisticItems = Array.from(optimisticInboxFeedItems.values());
+      items.push(...optimisticItems);
+    }
+
     if (chatChannelItems.length > 0) {
       items.push(...chatChannelItems);
     }
@@ -131,11 +142,23 @@ const InboxPage: FC<InboxPageProps> = (props) => {
     }
 
     return items;
-  }, [chatChannelItems, sharedInboxItem]);
+  }, [chatChannelItems, sharedInboxItem, optimisticInboxFeedItems]);
 
   useUpdateEffect(() => {
     refetchInboxItems();
   }, [isActiveUnreadInboxItemsQueryParam]);
+
+  useEffect(() => {
+    const firstFeedItem = topFeedItems[0];
+    if(optimisticInboxFeedItems.size > 0 && firstFeedItem) {
+
+      feedLayoutRef?.setActiveItem({
+        feedItemId: firstFeedItem.itemId,
+        discussion: (firstFeedItem as FeedItemFollowLayoutItemWithFollowData)?.feedItem.optimisticData,
+      });
+    }
+
+  }, [topFeedItems, optimisticInboxFeedItems, feedLayoutRef])
 
   const fetchData = () => {
     fetchInboxData({
@@ -159,22 +182,26 @@ const InboxPage: FC<InboxPageProps> = (props) => {
     [],
   );
 
+  const instantDiscussionMessage = useSelector(selectInstantDiscussionMessagesOrder);
+
   const handleFeedItemUpdate = useCallback(
     (item: CommonFeed, isRemoved: boolean) => {
-      dispatch(
-        inboxActions.updateFeedItem({
-          item,
-          isRemoved,
-        }),
-      );
-
-      if (!isRemoved && item.data.lastMessage?.ownerId === userId) {
-        document
-          .getElementById("feedLayoutWrapper")
-          ?.scrollIntoView({ behavior: "smooth" });
+      if(!instantDiscussionMessage.has(item.data.id)) {
+        dispatch(
+          inboxActions.updateFeedItem({
+            item,
+            isRemoved,
+          }),
+        );
+  
+        if (!isRemoved && item.data.lastMessage?.ownerId === userId) {
+          document
+            .getElementById("feedLayoutWrapper")
+            ?.scrollIntoView({ behavior: "smooth" });
+        }
       }
     },
-    [dispatch],
+    [dispatch, instantDiscussionMessage],
   );
 
   const handleFeedItemUnfollowed = useCallback(

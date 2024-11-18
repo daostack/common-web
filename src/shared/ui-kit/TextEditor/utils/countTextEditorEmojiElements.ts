@@ -14,6 +14,7 @@ export const countTextEditorEmojiElements = (
 
   let hasText = false;
   let emojiCount = 0;
+
   editorValue.forEach((element) => {
     if (
       (element as ParagraphElement)?.type === ElementType.Paragraph &&

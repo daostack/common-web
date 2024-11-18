@@ -6,6 +6,7 @@ import { InboxItemType, QueryParamKey } from "@/shared/constants";
 import {
   checkIsChatChannelLayoutItem,
   checkIsFeedItemFollowLayoutItem,
+  FeedItemFollowLayoutItemWithFollowData,
   FeedLayoutItemWithFollowData,
 } from "@/shared/interfaces";
 import { ChatChannel, CommonFeed, Timestamp } from "@/shared/models";
@@ -441,6 +442,13 @@ const updateChatChannelItem = (
   updateChatChannelItemInSharedInboxItem(state, payload);
 };
 
+// Add type guard to check if an item is of type `FeedItemFollowLayoutItemWithFollowData`
+function isFeedItemFollowLayoutItemWithFollowData(
+  item: FeedLayoutItemWithFollowData
+): item is FeedItemFollowLayoutItemWithFollowData {
+  return (item as FeedItemFollowLayoutItemWithFollowData).feedItemFollowWithMetadata !== undefined;
+}
+
 export const reducer = createReducer<InboxState, Action>(INITIAL_INBOX_STATE)
   .handleAction(actions.resetInbox, (state, { payload }) => {
     if (payload?.onlyIfUnread && !state.items.unread) {
@@ -775,4 +783,39 @@ export const reducer = createReducer<InboxState, Action>(INITIAL_INBOX_STATE)
         nextState.lastUnreadState = stateToSave;
       }
     }),
+  )
+  .handleAction(actions.setInboxItemUpdatedAt, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const feedItemId = payload.feedItemId;
+  
+      const updatedFeedItemIndex = nextState.items.data?.findIndex(
+        feedItem => feedItem.itemId === feedItemId
+      ) ?? -1;
+  
+      if (updatedFeedItemIndex !== -1 && nextState.items.data) {
+        const item = nextState.items.data[updatedFeedItemIndex];
+  
+        if (isFeedItemFollowLayoutItemWithFollowData(item)) {
+          item.feedItem = {
+            ...item.feedItem,
+            updatedAt: Timestamp.fromDate(new Date()),
+            data: {
+              ...item.feedItem.data,
+              lastMessage: payload.lastMessage,
+            }
+          };
+  
+          // Sort `nextState.items.data` by `updatedAt` in descending order
+          nextState.items.data.sort((a, b) => {
+            const dateA = isFeedItemFollowLayoutItemWithFollowData(a)
+              ? a.feedItem.updatedAt.toDate().getTime()
+              : 0; // Use 0 for items without updatedAt
+            const dateB = isFeedItemFollowLayoutItemWithFollowData(b)
+              ? b.feedItem.updatedAt.toDate().getTime()
+              : 0; // Use 0 for items without updatedAt
+            return dateB - dateA; // Sort in descending order
+          });
+        }
+      }
+    })
   );

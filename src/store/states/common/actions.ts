@@ -17,7 +17,7 @@ import {
   CommonMember,
   Discussion,
   Governance,
-  OptimisticFeedItemState,
+  LastMessageContentWithMessageId,
   Proposal,
 } from "@/shared/models";
 import { CommonActionType } from "./constants";
@@ -28,7 +28,6 @@ import {
   FeedItemsPayload,
   PinnedFeedItems,
 } from "./types";
-import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 
 export const resetCommon = createStandardAction(
   CommonActionType.RESET_COMMON,
@@ -220,35 +219,6 @@ export const setSharedFeedItem = createStandardAction(
   CommonActionType.SET_SHARED_FEED_ITEM,
 )<CommonFeed | null>();
 
-export const setOptimisticFeedItem = createStandardAction(
-  CommonActionType.SET_OPTIMISTIC_FEED_ITEM,
-)<CommonFeed>();
-
-export const updateOptimisticFeedItemState = createStandardAction(
-  CommonActionType.UPDATE_OPTIMISTIC_FEED_ITEM,
-)<{
-  id: string;
-  state: OptimisticFeedItemState;
-}>();
-
-export const removeOptimisticFeedItemState = createStandardAction(
-  CommonActionType.REMOVE_OPTIMISTIC_FEED_ITEM,
-)<{
-  id: string;
-}>();
-
-export const setOptimisticDiscussionMessages = createStandardAction(
-  CommonActionType.SET_OPTIMISTIC_DISCUSSION_MESSAGES,
-)<CreateDiscussionMessageDto>();
-
-export const clearOptimisticDiscussionMessages = createStandardAction(
-  CommonActionType.CLEAR_OPTIMISTIC_DISCUSSION_MESSAGES,
-)<string>();
-
-export const clearCreatedOptimisticFeedItem = createStandardAction(
-  CommonActionType.CLEAR_CREATED_OPTIMISTIC_FEED_ITEM,
-)<string>();
-
 export const setRecentStreamId = createStandardAction(
   CommonActionType.SET_RECENT_STREAM_ID,
 )<string>();
@@ -263,3 +233,10 @@ export const setRecentAssignedCircleByMember = createStandardAction(
 export const resetRecentAssignedCircleByMember = createStandardAction(
   CommonActionType.RESET_RECENT_ASSIGNED_CIRCLE_BY_MEMBER,
 )();
+
+export const setFeedItemUpdatedAt = createStandardAction(
+  CommonActionType.SET_FEED_ITEM_UPDATED_AT,
+)<{
+  feedItemId: string;
+  lastMessage: LastMessageContentWithMessageId;
+}>();

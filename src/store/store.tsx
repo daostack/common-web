@@ -23,11 +23,66 @@ import {
   cacheTransform,
   multipleSpacesLayoutTransform,
 } from "./transforms";
+import { createTransform } from "redux-persist";
+import { OptimisticState } from "./states";
+import { FeedItemFollowLayoutItem } from "@/shared/interfaces";
+import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
+
+// Define the keys in CommonState that are of type Map
+const mapFields: Array<keyof OptimisticState> = [
+  "createdOptimisticFeedItems",
+  "optimisticFeedItems",
+  "optimisticInboxFeedItems",
+  "optimisticDiscussionMessages",
+  "instantDiscussionMessagesOrder"
+];
+
+const mapTransformer = createTransform<OptimisticState, OptimisticState>(
+  (inboundState) => {
+    const transformedState: OptimisticState = { ...inboundState };
+
+    mapFields.forEach((key) => {
+      const value = inboundState[key];
+      if (value instanceof Map) {
+        if (key === "optimisticDiscussionMessages") {
+          (transformedState as any)[key] = Array.from(
+            (value as Map<string, CreateDiscussionMessageDto[]>).entries()
+          ) as [string, CreateDiscussionMessageDto[]][];
+        } else {
+          (transformedState as any)[key] = Array.from(
+            (value as Map<string, FeedItemFollowLayoutItem | undefined>).entries()
+          ) as [string, FeedItemFollowLayoutItem | undefined][];
+        }
+      }
+    });
+
+    return transformedState;
+  },
+  (outboundState) => {
+    const transformedState: OptimisticState = { ...outboundState };
+
+    mapFields.forEach((key) => {
+      const value = outboundState[key];
+      if (Array.isArray(value)) {
+        if (key === "optimisticDiscussionMessages") {
+          (transformedState as any)[key] = new Map(value) as Map<string, CreateDiscussionMessageDto[]>;
+        } else {
+          (transformedState as any)[key] = new Map(value) as Map<string, FeedItemFollowLayoutItem | undefined>;
+        }
+      }
+    });
+
+    return transformedState;
+  },
+  { whitelist: ["optimistic"] }
+);
+
 
 const persistConfig: PersistConfig<AppState> = {
   key: "root",
   storage,
   whitelist: [
+    "optimistic",
     "projects",
     "commonLayout",
     "commonFeedFollows",
@@ -36,7 +91,7 @@ const persistConfig: PersistConfig<AppState> = {
     "multipleSpacesLayout",
   ],
   stateReconciler: autoMergeLevel2,
-  transforms: [inboxTransform, cacheTransform, multipleSpacesLayoutTransform],
+  transforms: [mapTransformer, inboxTransform, cacheTransform, multipleSpacesLayoutTransform],
 };
 
 const sagaMiddleware = createSagaMiddleware();
