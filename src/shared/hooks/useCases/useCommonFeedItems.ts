@@ -4,6 +4,7 @@ import { CommonFeedService } from "@/services";
 import {
   commonActions,
   FeedItems,
+  optimisticActions,
   selectFeedItems,
   selectFilteredFeedItems,
   selectOptimisticFeedItems,
@@ -65,7 +66,7 @@ export const useCommonFeedItems = (
           const discussionId = item.commonFeedItem.data.discussionId ?? item.commonFeedItem.data.id;
           if(optItemIds.includes(discussionId)) {
 
-            dispatch(commonActions.removeOptimisticFeedItemState({id: discussionId}))
+            dispatch(optimisticActions.removeOptimisticFeedItemState({id: discussionId}))
           }
         })
 

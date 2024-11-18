@@ -20,6 +20,14 @@ export interface InboxItems {
   unread: boolean;
 }
 
+export interface NewInboxItems {
+  item: FeedLayoutItemWithFollowData;
+  statuses: {
+    isAdded: boolean;
+    isRemoved: boolean;
+  };
+}
+
 export type LastState = Pick<
   InboxState,
   | "items"
@@ -39,3 +47,4 @@ export interface InboxState {
   lastReadState: LastState | null;
   lastUnreadState: LastState | null;
 }
+
