@@ -784,7 +784,7 @@ export const reducer = createReducer<CommonState, Action>(initialState)
       if (sharedFeedItemId) {
         nextState.feedItems[commonId].data =
           nextState.feedItems[commonId].data &&
-          nextState.feedItems[commonId].data.filter(
+          nextState.feedItems[commonId]?.data.filter(
             (item) => item.itemId !== sharedFeedItemId,
           );
         nextState.pinnedFeedItems[commonId].data =
