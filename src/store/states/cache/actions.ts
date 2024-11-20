@@ -4,7 +4,6 @@ import {
   ChatChannelUserStatus,
   CirclesPermissions,
   CommonFeedObjectUserUnique,
-  CommonMemberWithUserInfo,
   CommonMember,
   Discussion,
   DiscussionMessage,
