@@ -1,14 +1,14 @@
 import React, { FC } from "react";
-import { useHistory } from "react-router";
 import { useDispatch } from "react-redux";
+import { useHistory } from "react-router";
+import { animateScroll } from "react-scroll";
 import { useMenuItems } from "@/pages/common/components/CommonTabPanels/components/FeedTab/components/NewStreamButton";
+import { CommonAction } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
 import { PlusIcon } from "@/shared/icons";
-import { animateScroll } from "react-scroll";
-import { CommonAction } from "@/shared/constants";
-import { commonActions } from "@/store/states";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { ButtonIcon, DesktopMenu, MobileMenu } from "@/shared/ui-kit";
+import { commonActions } from "@/store/states";
 import styles from "./NewStreamButton.module.scss";
 
 interface NewStreamButtonProps {
@@ -36,7 +36,12 @@ const NewStreamButton: FC<NewStreamButtonProps> = (props) => {
   const dispatch = useDispatch();
 
   const onNewDiscussion = () => {
-    dispatch(commonActions.setCommonAction(CommonAction.NewDiscussion));
+    dispatch(
+      commonActions.setCommonAction({
+        action: CommonAction.NewDiscussion,
+        commonId,
+      }),
+    );
     animateScroll.scrollToTop({ containerId: document.body, smooth: true });
   };
   const items = useMenuItems({
@@ -49,12 +54,15 @@ const NewStreamButton: FC<NewStreamButtonProps> = (props) => {
     return null;
   }
 
-  if (items.length === 2 || (items.length === 1 && items[0].id === CommonAction.NewDiscussion)) {
+  if (
+    items.length === 2 ||
+    (items.length === 1 && items[0].id === CommonAction.NewDiscussion)
+  ) {
     return (
       <ButtonIcon className={styles.buttonIcon} onClick={onNewDiscussion}>
         <PlusIcon className={styles.icon} />
       </ButtonIcon>
-    )
+    );
   }
 
   const triggerEl = (
