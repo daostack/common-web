@@ -170,12 +170,7 @@ export const useMenuItems = (
             },
           }),
         );
-        dispatch(
-          commonActions.setCommonAction({
-            action: CommonAction.EditDiscussion,
-            commonId: commonId ?? "",
-          }),
-        );
+        dispatch(commonActions.setCommonAction(CommonAction.EditDiscussion));
         animateScroll.scrollToTop({ containerId: document.body, smooth: true });
       },
       icon: <Edit3Icon />,

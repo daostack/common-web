@@ -577,7 +577,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
       <ErrorBoundary
         fallback={null}
         onError={() => {
-          dispatch(commonActions.setCommonAction({ action: null, commonId }));
+          dispatch(commonActions.setCommonAction(null));
         }}
       >
         {(commonAction === CommonAction.NewDiscussion ||

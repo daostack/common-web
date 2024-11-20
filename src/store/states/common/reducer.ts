@@ -48,7 +48,7 @@ const initialState: CommonState = {
   pinnedFeedItems: {},
   searchState: {},
   sharedFeedItem: {},
-  commonActions: {},
+  commonAction: null,
   discussionCreations: {},
   proposalCreations: {},
   isNewProjectCreated: {},
@@ -312,8 +312,7 @@ export const reducer = createReducer<CommonState, Action>(initialState)
   // Common Actions
   .handleAction(actions.setCommonAction, (state, { payload }) =>
     produce(state, (nextState) => {
-      const { commonId, action: commonAction } = payload;
-      nextState.commonActions[commonId] = commonAction;
+      nextState.commonAction = payload;
     }),
   )
   .handleAction(actions.setCommonMember, (state, { payload }) =>

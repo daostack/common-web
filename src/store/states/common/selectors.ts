@@ -2,8 +2,8 @@ import { AppState } from "@/shared/interfaces";
 
 export const selectCommonState = (state: AppState) => state.common;
 
-export const selectCommonAction = (commonId: string) => (state: AppState) =>
-  state.common.commonActions[commonId] || null;
+export const selectCommonAction = (state: AppState) =>
+  state.common.commonAction || null;
 
 export const selectCommonMember = (commonId: string) => (state: AppState) =>
   state.common.commonMembers[commonId] || {};

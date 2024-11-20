@@ -32,7 +32,7 @@ export function* editDiscussion(
       }),
     );
 
-    yield put(actions.setCommonAction({ action: null, commonId }));
+    yield put(actions.setCommonAction(null));
     yield put(actions.editDiscussion.success({ discussion, commonId }));
 
     if (payload.callback) {

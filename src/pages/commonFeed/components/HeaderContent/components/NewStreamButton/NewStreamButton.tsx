@@ -36,12 +36,7 @@ const NewStreamButton: FC<NewStreamButtonProps> = (props) => {
   const dispatch = useDispatch();
 
   const onNewDiscussion = () => {
-    dispatch(
-      commonActions.setCommonAction({
-        action: CommonAction.NewDiscussion,
-        commonId,
-      }),
-    );
+    dispatch(commonActions.setCommonAction(CommonAction.NewDiscussion));
     animateScroll.scrollToTop({ containerId: document.body, smooth: true });
   };
   const items = useMenuItems({

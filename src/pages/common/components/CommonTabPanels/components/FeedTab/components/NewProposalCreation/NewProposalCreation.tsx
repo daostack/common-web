@@ -84,7 +84,7 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
   );
 
   const handleCancel = () => {
-    dispatch(commonActions.setCommonAction({ action: null, commonId }));
+    dispatch(commonActions.setCommonAction(null));
     dispatch(commonActions.setProposalCreationData({ data: null, commonId }));
   };
 

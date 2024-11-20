@@ -43,7 +43,7 @@ export interface CommonState {
   feedItems: Record<string, FeedItems>;
   pinnedFeedItems: Record<string, PinnedFeedItems>;
   sharedFeedItem: Record<string, FeedItemFollowLayoutItem | null>;
-  commonActions: Record<string, CommonAction | null>;
+  commonAction: CommonAction | null;
   discussionCreations: Record<
     string,
     EntityCreation<NewDiscussionCreationFormValues>

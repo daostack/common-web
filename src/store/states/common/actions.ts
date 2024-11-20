@@ -35,10 +35,7 @@ export const resetCommon = createStandardAction(
 
 export const setCommonAction = createStandardAction(
   CommonActionType.SET_COMMON_ACTION,
-)<{
-  commonId: string;
-  action: CommonAction | null;
-}>();
+)<CommonAction | null>();
 
 export const setCommonMember = createStandardAction(
   CommonActionType.SET_COMMON_MEMBER,

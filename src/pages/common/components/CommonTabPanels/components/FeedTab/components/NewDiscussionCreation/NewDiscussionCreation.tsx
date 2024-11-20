@@ -78,7 +78,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
   );
 
   const handleCancel = () => {
-    dispatch(commonActions.setCommonAction({ action: null, commonId }));
+    dispatch(commonActions.setCommonAction(null));
     dispatch(commonActions.setDiscussionCreationData({ data: null, commonId }));
   };
 
