@@ -99,7 +99,7 @@ const ProposalCreationForm: FC<ProposalCreationFormProps> = (props) => {
               </Button>
             </div>
           </div>
-          <ProposalFormPersist />
+          <ProposalFormPersist commonId={governance.commonId} />
         </Form>
       )}
     </Formik>

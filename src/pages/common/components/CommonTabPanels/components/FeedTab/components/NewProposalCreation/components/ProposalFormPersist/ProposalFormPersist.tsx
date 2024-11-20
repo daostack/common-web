@@ -5,14 +5,20 @@ import debounce from "lodash/debounce";
 import { NewProposalCreationFormValues } from "@/shared/interfaces";
 import { commonActions } from "@/store/states";
 
-const ProposalFormPersist: FC = () => {
+interface ProposalFormPersistProps {
+  commonId: string;
+}
+
+const ProposalFormPersist: FC<ProposalFormPersistProps> = ({ commonId }) => {
   const dispatch = useDispatch();
   const { values } = useFormikContext<NewProposalCreationFormValues>();
 
   const handleUpdate = useMemo(
     () =>
       debounce((values: NewProposalCreationFormValues) => {
-        dispatch(commonActions.setProposalCreationData(values));
+        dispatch(
+          commonActions.setProposalCreationData({ data: values, commonId }),
+        );
       }, 400),
     [],
   );
