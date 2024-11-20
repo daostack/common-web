@@ -731,6 +731,7 @@ export const reducer = createReducer<CommonState, Action>(initialState)
       if (!nextState.feedItems[commonId]) {
         nextState.feedItems[commonId] = { ...initialFeedItems };
       }
+
       if (!nextState.pinnedFeedItems[commonId]) {
         nextState.pinnedFeedItems[commonId] = { ...initialPinnedFeedItems };
       }
@@ -782,6 +783,10 @@ export const reducer = createReducer<CommonState, Action>(initialState)
 
       // Remove sharedFeedItemId from feedItems and pinnedFeedItems
       if (sharedFeedItemId) {
+        if (!nextState.feedItems[commonId].data) {
+          nextState.feedItems[commonId].data = initialFeedItems.data; // Ensure it exists
+        }
+
         nextState.feedItems[commonId].data =
           nextState.feedItems?.[commonId]?.data &&
           nextState.feedItems[commonId]?.data?.filter(
