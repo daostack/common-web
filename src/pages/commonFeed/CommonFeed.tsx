@@ -117,7 +117,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     (typeof sharedFeedItemIdQueryParam === "string" &&
       sharedFeedItemIdQueryParam) ||
     null;
-  const commonAction = useSelector(selectCommonAction(commonId));
+  const commonAction = useSelector(selectCommonAction);
   const createdOptimisticFeedItems = useSelector(
     selectCreatedOptimisticFeedItems,
   );

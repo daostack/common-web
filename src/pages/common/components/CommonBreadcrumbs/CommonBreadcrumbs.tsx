@@ -16,7 +16,7 @@ const CommonBreadcrumbs: FC<CommonBreadcrumbsProps> = (props) => {
   const { activeTab } = props;
   const { getCommonPagePath } = useRoutesContext();
   const { common, parentCommons } = useCommonDataContext();
-  const commonAction = useSelector(selectCommonAction(common.id));
+  const commonAction = useSelector(selectCommonAction);
   const items: BreadcrumbItem[] = getBreadcrumbItems({
     activeTab,
     common,

@@ -61,7 +61,7 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
   const [chatColumnRef, { width: chatWidth }] = useMeasure();
   const user = useSelector(selectUser());
   const isTabletView = useIsTabletView();
-  const commonAction = useSelector(selectCommonAction(common.id));
+  const commonAction = useSelector(selectCommonAction);
   const allowedFeedActions = !commonAction ? [FeedAction.NewStream] : [];
 
   const hasAccessToChat = useMemo(
