@@ -783,14 +783,14 @@ export const reducer = createReducer<CommonState, Action>(initialState)
       // Remove sharedFeedItemId from feedItems and pinnedFeedItems
       if (sharedFeedItemId) {
         nextState.feedItems[commonId].data =
-          nextState.feedItems[commonId].data &&
-          nextState.feedItems[commonId]?.data.filter(
-            (item) => item.itemId !== sharedFeedItemId,
+          nextState.feedItems[commonId]?.data &&
+          nextState.feedItems[commonId].data.filter(
+            (item) => item?.itemId !== sharedFeedItemId,
           );
         nextState.pinnedFeedItems[commonId].data =
-          nextState.pinnedFeedItems[commonId].data &&
+          nextState.pinnedFeedItems[commonId]?.data &&
           nextState.pinnedFeedItems[commonId].data.filter(
-            (item) => item.itemId !== sharedFeedItemId,
+            (item) => item?.itemId !== sharedFeedItemId,
           );
       }
     }),
