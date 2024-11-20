@@ -29,11 +29,12 @@ export function* getPinnedFeedItems(
     yield put(
       actions.getPinnedFeedItems.success({
         data: convertedData,
+        commonId,
       }),
     );
   } catch (error) {
     if (isError(error)) {
-      yield put(actions.getPinnedFeedItems.failure(error));
+      yield put(actions.getPinnedFeedItems.failure({ error, commonId }));
     }
   }
 }

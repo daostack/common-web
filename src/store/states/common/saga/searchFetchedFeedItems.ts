@@ -46,14 +46,22 @@ function* doesProjectMatchSearchValue(searchValue: string, projectId: string) {
   return Boolean(projectState?.data?.name.toLowerCase().includes(searchValue));
 }
 
-export function* searchFetchedFeedItems(feedItems: FeedItemFollowLayoutItem[]) {
-  const searchValue = (yield select(selectFeedSearchValue)).toLowerCase();
+export function* searchFetchedFeedItems({
+  data: feedItems,
+  commonId,
+}: {
+  data: FeedItemFollowLayoutItem[];
+  commonId: string;
+}) {
+  const searchValue = (yield select(
+    selectFeedSearchValue(commonId),
+  )).toLowerCase();
 
   if (!searchValue) {
     return;
   }
 
-  yield put(actions.setIsSearchingFeedItems(true));
+  yield put(actions.setIsSearchingFeedItems({ isSearching: true, commonId }));
 
   const resultFeedItemIds: string[] = [];
   const discussionIdsToFetch: string[] = [];
@@ -114,14 +122,16 @@ export function* searchFetchedFeedItems(feedItems: FeedItemFollowLayoutItem[]) {
       .map((discussion) => discussion!.id);
 
     yield put(
-      actions.updateSearchFeedItems([
-        ...resultFeedItemIds,
-        ...resultFeedDiscussionIds,
-      ]),
+      actions.updateSearchFeedItems({
+        itemIds: [...resultFeedItemIds, ...resultFeedDiscussionIds],
+        commonId,
+      }),
     );
   } catch (error) {
     Logger.error(error);
   } finally {
-    yield put(actions.setIsSearchingFeedItems(false));
+    yield put(
+      actions.setIsSearchingFeedItems({ isSearching: false, commonId }),
+    );
   }
 }

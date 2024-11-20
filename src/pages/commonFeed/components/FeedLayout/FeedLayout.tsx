@@ -44,7 +44,11 @@ import {
   ROUTE_PATHS,
 } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
-import { useElementPresence, useMemoizedFunction, useQueryParams } from "@/shared/hooks";
+import {
+  useElementPresence,
+  useMemoizedFunction,
+  useQueryParams,
+} from "@/shared/hooks";
 import { useGovernanceByCommonId } from "@/shared/hooks/useCases";
 import { useDisableOverscroll } from "@/shared/hooks/useDisableOverscroll";
 import { useIsTabletView } from "@/shared/hooks/viewport";
@@ -75,7 +79,10 @@ import {
   getParamsFromOneOfRoutes,
   getUserName,
 } from "@/shared/utils";
-import { selectCreatedOptimisticFeedItems, selectRecentStreamId } from "@/store/states";
+import {
+  selectCreatedOptimisticFeedItems,
+  selectRecentStreamId,
+} from "@/store/states";
 import { MIN_CONTENT_WIDTH } from "../../constants";
 import {
   DesktopChat,
@@ -200,7 +207,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const queryParams = useQueryParams();
   const isTabletView = useIsTabletView();
   const user = useSelector(selectUser());
-  const createdOptimisticFeedItems = useSelector(selectCreatedOptimisticFeedItems);
+  const createdOptimisticFeedItems = useSelector(
+    selectCreatedOptimisticFeedItems,
+  );
   const recentStreamId = useSelector(selectRecentStreamId);
   const userId = user?.uid;
   const [chatItem, setChatItem] = useState<ChatItem | null>();
@@ -282,6 +291,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     if (topFeedItems) {
       items.push(...topFeedItems);
     }
+
     if (feedItems) {
       items.push(...feedItems);
     }
@@ -354,7 +364,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const activeFeedItemId = chatItem?.feedItemId || feedItemIdForAutoChatOpen;
   const sizeKey = `${windowWidth}_${contentWidth}`;
 
-  const activeFeedItemIndex = useMemo(() => allFeedItems.findIndex((item) => item.itemId === activeFeedItemId), [activeFeedItemId, allFeedItems]);
+  const activeFeedItemIndex = useMemo(
+    () => allFeedItems.findIndex((item) => item.itemId === activeFeedItemId),
+    [activeFeedItemId, allFeedItems],
+  );
 
   const getUserCircleIds = useCallback(
     (commonId) => {
@@ -408,48 +421,77 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     setChatItem(nextChatItem);
   }, []);
 
-  const isMentionOpen = useElementPresence(MENTION_TAG_ELEMENT.key, MENTION_TAG_ELEMENT.value);
+  const isMentionOpen = useElementPresence(
+    MENTION_TAG_ELEMENT.key,
+    MENTION_TAG_ELEMENT.value,
+  );
   const [isInputFocused, setIsInputFocused] = useState(false);
 
-  const handleArrowUp = (event, activeFeedItemIndex, allFeedItems, isMentionOpen, setChatItem) => {
+  const handleArrowUp = (
+    event,
+    activeFeedItemIndex,
+    allFeedItems,
+    isMentionOpen,
+    setChatItem,
+  ) => {
     if (!isMentionOpen && !isInputFocused) {
       event.preventDefault();
       event.stopPropagation();
-  
+
       if (activeFeedItemIndex > 0) {
         const nextFeedItemId = allFeedItems[activeFeedItemIndex - 1]?.itemId;
-  
+
         setChatItem({ feedItemId: nextFeedItemId });
       }
     }
   };
-  
-  const handleArrowDown = (event, activeFeedItemIndex, allFeedItems, isMentionOpen, setChatItem) => {
+
+  const handleArrowDown = (
+    event,
+    activeFeedItemIndex,
+    allFeedItems,
+    isMentionOpen,
+    setChatItem,
+  ) => {
     if (!isMentionOpen && !isInputFocused) {
       event.preventDefault();
       event.stopPropagation();
-  
+
       if (activeFeedItemIndex < allFeedItems.length - 1) {
         const nextFeedItemId = allFeedItems[activeFeedItemIndex + 1]?.itemId;
-  
+
         setChatItem({ feedItemId: nextFeedItemId });
       }
     }
   };
-  
+
   // Inside your component
   useKey(
     "ArrowUp",
-    (event) => handleArrowUp(event, activeFeedItemIndex, allFeedItems, isMentionOpen, setChatItem),
+    (event) =>
+      handleArrowUp(
+        event,
+        activeFeedItemIndex,
+        allFeedItems,
+        isMentionOpen,
+        setChatItem,
+      ),
     {},
-    [activeFeedItemIndex, allFeedItems, isMentionOpen, isInputFocused]
+    [activeFeedItemIndex, allFeedItems, isMentionOpen, isInputFocused],
   );
-  
+
   useKey(
     "ArrowDown",
-    (event) => handleArrowDown(event, activeFeedItemIndex, allFeedItems, isMentionOpen, setChatItem),
+    (event) =>
+      handleArrowDown(
+        event,
+        activeFeedItemIndex,
+        allFeedItems,
+        isMentionOpen,
+        setChatItem,
+      ),
     {},
-    [activeFeedItemIndex, allFeedItems, isMentionOpen, isInputFocused]
+    [activeFeedItemIndex, allFeedItems, isMentionOpen, isInputFocused],
   );
 
   const chatContextValue = useMemo<ChatContextValue>(
@@ -763,7 +805,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       return;
     }
 
-    if(!recentStreamId) {
+    if (!recentStreamId) {
       setActiveChatItem(null);
     }
 
@@ -913,7 +955,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                         <FeedItem
                           ref={handleRefSet}
                           key={item.feedItem.id}
-                          isOptimisticallyCreated={createdOptimisticFeedItems.has(item.feedItem.data.id)}
+                          isOptimisticallyCreated={createdOptimisticFeedItems.has(
+                            item.feedItem.data.id,
+                          )}
                           commonMember={commonMember}
                           commonId={commonData?.id}
                           commonName={commonData?.name || ""}

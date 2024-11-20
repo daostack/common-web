@@ -16,7 +16,11 @@ import {
   Governance,
 } from "@/shared/models";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit/TextEditor";
-import { generateFirstMessage, generateOptimisticFeedItem, getUserName } from "@/shared/utils";
+import {
+  generateFirstMessage,
+  generateOptimisticFeedItem,
+  getUserName,
+} from "@/shared/utils";
 import {
   optimisticActions,
   selectIsProposalCreationLoading,
@@ -61,11 +65,14 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
     isModalVariant = false,
   } = props;
   const dispatch = useDispatch();
-  const proposalCreationData = useSelector(selectProposalCreationData);
-  const isLoading = useSelector(selectIsProposalCreationLoading);
+
+  const commonId = common.id;
+  const proposalCreationData = useSelector(
+    selectProposalCreationData(commonId),
+  );
+  const isLoading = useSelector(selectIsProposalCreationLoading(commonId));
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const commonId = common.id;
   const initialValues = useMemo(
     () => proposalCreationData || INITIAL_VALUES,
     [],
@@ -77,8 +84,8 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
   );
 
   const handleCancel = () => {
-    dispatch(commonActions.setCommonAction(null));
-    dispatch(commonActions.setProposalCreationData(null));
+    dispatch(commonActions.setCommonAction({ action: null, commonId }));
+    dispatch(commonActions.setProposalCreationData({ data: null, commonId }));
   };
 
   const handleSubmit = useCallback(
@@ -103,14 +110,16 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
           ownerId: userId,
           userName,
           ownerType: DiscussionMessageOwnerType.System,
-          content: generateFirstMessage({userName, userId}),
-        }
+          content: generateFirstMessage({ userName, userId }),
+        },
       });
 
-      dispatch(optimisticActions.setOptimisticFeedItem({
-        data: optimisticFeedItem, 
-        common
-      }));
+      dispatch(
+        optimisticActions.setOptimisticFeedItem({
+          data: optimisticFeedItem,
+          common,
+        }),
+      );
       dispatch(commonActions.setRecentStreamId(optimisticFeedItem.data.id));
       switch (values.proposalType.value) {
         case ProposalsTypes.FUNDS_ALLOCATION: {
@@ -128,6 +137,7 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
           dispatch(
             commonActions.createFundingProposal.request({
               payload: fundingProposalPayload,
+              commonId,
             }),
           );
           break;
@@ -141,6 +151,7 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
                 proposalId,
                 discussionId,
               ),
+              commonId,
             }),
           );
           break;

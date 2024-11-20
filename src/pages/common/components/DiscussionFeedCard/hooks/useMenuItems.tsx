@@ -59,7 +59,7 @@ export const useMenuItems = (
     feedItem,
     feedItemFollow,
     feedItemUserMetadata,
-    shareText
+    shareText,
   } = options;
   const {
     report,
@@ -160,14 +160,22 @@ export const useMenuItems = (
 
         dispatch(
           commonActions.setDiscussionCreationData({
-            circle: circles[0] || null,
-            title: discussion.title,
-            content: parseStringToTextEditorValue(discussion.message),
-            images: files,
-            id: discussion.id,
+            commonId: commonId ?? "",
+            data: {
+              circle: circles[0] || null,
+              title: discussion.title,
+              content: parseStringToTextEditorValue(discussion.message),
+              images: files,
+              id: discussion.id,
+            },
           }),
         );
-        dispatch(commonActions.setCommonAction(CommonAction.EditDiscussion));
+        dispatch(
+          commonActions.setCommonAction({
+            action: CommonAction.EditDiscussion,
+            commonId: commonId ?? "",
+          }),
+        );
         animateScroll.scrollToTop({ containerId: document.body, smooth: true });
       },
       icon: <Edit3Icon />,

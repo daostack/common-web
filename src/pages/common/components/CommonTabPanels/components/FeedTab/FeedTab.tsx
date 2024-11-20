@@ -61,7 +61,7 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
   const [chatColumnRef, { width: chatWidth }] = useMeasure();
   const user = useSelector(selectUser());
   const isTabletView = useIsTabletView();
-  const commonAction = useSelector(selectCommonAction);
+  const commonAction = useSelector(selectCommonAction(common.id));
   const allowedFeedActions = !commonAction ? [FeedAction.NewStream] : [];
 
   const hasAccessToChat = useMemo(
@@ -179,14 +179,10 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
 
   useEffect(() => {
     return () => {
-      dispatch(
-        commonActions.getFeedItems.cancel(
-          "Cancel feed items fetch on feed umount",
-        ),
-      );
-      dispatch(commonActions.resetFeedItems());
+      dispatch(commonActions.getFeedItems.cancel({ commonId: common.id }));
+      dispatch(commonActions.resetFeedItems({ commonId: common.id }));
     };
-  }, []);
+  }, [common.id]);
 
   const contextValue = useMemo(
     () => ({

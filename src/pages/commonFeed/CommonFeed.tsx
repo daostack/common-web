@@ -104,8 +104,10 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const recentStreamId = useSelector(selectRecentStreamId);
-  const isSearchingFeedItems = useSelector(selectIsSearchingFeedItems);
-  const searchValue = useSelector(selectFeedSearchValue);
+  const isSearchingFeedItems = useSelector(
+    selectIsSearchingFeedItems(commonId),
+  );
+  const searchValue = useSelector(selectFeedSearchValue(commonId));
   const [feedLayoutRef, setFeedLayoutRef] = useState<FeedLayoutRef | null>(
     null,
   );
@@ -115,8 +117,10 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     (typeof sharedFeedItemIdQueryParam === "string" &&
       sharedFeedItemIdQueryParam) ||
     null;
-  const commonAction = useSelector(selectCommonAction);
-  const createdOptimisticFeedItems = useSelector(selectCreatedOptimisticFeedItems);
+  const commonAction = useSelector(selectCommonAction(commonId));
+  const createdOptimisticFeedItems = useSelector(
+    selectCreatedOptimisticFeedItems,
+  );
   const optimisticFeedItems = useSelector(selectOptimisticFeedItems);
   const {
     data: commonData,
@@ -207,7 +211,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     commonData?.governance,
   );
 
-  const sharedFeedItem = useSelector(selectSharedFeedItem);
+  const sharedFeedItem = useSelector(selectSharedFeedItem(commonId));
   const topFeedItemsWithoutOptimistic = useMemo(() => {
     const items: FeedLayoutItem[] = [];
     const filteredPinnedItems =
@@ -273,6 +277,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
         commonActions.updateFeedItem({
           item,
           isRemoved,
+          commonId,
         }),
       );
 
@@ -282,7 +287,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
           ?.scrollIntoView({ behavior: "smooth" });
       }
     },
-    [dispatch],
+    [dispatch, commonId],
   );
 
   const scrollToItemsTop = () => {
@@ -393,7 +398,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
 
   const onPullToRefresh = useCallback(() => {
     dispatch(cacheActions.clearFeedStateByCommonId(commonId));
-    dispatch(commonActions.resetFeedItems());
+    dispatch(commonActions.resetFeedItems({ commonId }));
   }, [dispatch, commonId]);
 
   useEffect(() => {
@@ -418,7 +423,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   ]);
 
   useEffect(() => {
-    dispatch(commonActions.setSharedFeedItemId(sharedFeedItemId));
+    dispatch(commonActions.setSharedFeedItemId({ sharedFeedItemId, commonId }));
 
     if (sharedFeedItemId) {
       feedLayoutRef?.setExpandedFeedItemId(sharedFeedItemId);
@@ -427,7 +432,12 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
 
   useEffect(() => {
     if (commonData?.sharedFeedItem) {
-      dispatch(commonActions.setSharedFeedItem(commonData.sharedFeedItem));
+      dispatch(
+        commonActions.setSharedFeedItem({
+          feedItem: commonData.sharedFeedItem,
+          commonId,
+        }),
+      );
     }
   }, [commonData?.sharedFeedItem]);
 
@@ -441,7 +451,6 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     return () => {
       clearInterval(interval);
       dispatch(cacheActions.copyFeedStateByCommonId(commonId));
-      dispatch(commonActions.resetCommon());
     };
   }, [commonId]);
 
@@ -468,7 +477,9 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     ) {
       feedLayoutRef?.setActiveItem({
         feedItemId: firstItem.feedItem.id,
-        discussion: createdOptimisticFeedItems.get(recentStreamId)?.feedItem.optimisticData
+        discussion:
+          createdOptimisticFeedItems.get(recentStreamId)?.feedItem
+            .optimisticData,
       });
       dispatch(commonActions.setRecentStreamId(""));
     } else if (
@@ -477,10 +488,11 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     ) {
       feedLayoutRef?.setActiveItem({
         feedItemId: optimisticFeedItems.get(recentStreamId)!.feedItem.id,
-        discussion: optimisticFeedItems.get(recentStreamId)?.feedItem.optimisticData,
+        discussion:
+          optimisticFeedItems.get(recentStreamId)?.feedItem.optimisticData,
       });
     }
-  }, [feedLayoutRef, recentStreamId, firstItem, optimisticFeedItems]);
+  }, [feedLayoutRef, recentStreamId, firstItem, optimisticFeedItems, commonId]);
 
   useEffect(() => {
     const handler: CommonEventToListener[CommonEvent.CommonDeleted] = (
@@ -565,7 +577,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
       <ErrorBoundary
         fallback={null}
         onError={() => {
-          dispatch(commonActions.setCommonAction(null));
+          dispatch(commonActions.setCommonAction({ action: null, commonId }));
         }}
       >
         {(commonAction === CommonAction.NewDiscussion ||
