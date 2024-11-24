@@ -28,6 +28,7 @@ interface DiscussionCreationFormProps {
   isLoading?: boolean;
   styles?: Styles;
   edit?: boolean;
+  commonId: string;
 }
 
 const DiscussionCreationForm: FC<DiscussionCreationFormProps> = (props) => {
@@ -41,6 +42,7 @@ const DiscussionCreationForm: FC<DiscussionCreationFormProps> = (props) => {
     isLoading = false,
     styles: outerStyles,
     edit,
+    commonId,
   } = props;
   const disabled = isLoading;
 
@@ -94,7 +96,7 @@ const DiscussionCreationForm: FC<DiscussionCreationFormProps> = (props) => {
               </Button>
             </div>
           </div>
-          <DiscussionFormPersist />
+          <DiscussionFormPersist commonId={commonId} />
         </Form>
       )}
     </Formik>

@@ -10,15 +10,18 @@ import { FeedItems } from "../types";
 export function* searchFeedItems(
   action: ReturnType<typeof actions.searchFeedItems>,
 ) {
-  const searchValue = action.payload.toLowerCase();
+  const searchValue = action.payload.searchValue.toLowerCase();
+  const commonId = action.payload.commonId;
 
   if (!searchValue) {
-    yield put(actions.resetSearchState());
+    yield put(actions.resetSearchState({ commonId }));
     return;
   }
 
   const feedItems = (yield select(selectFeedItems)) as FeedItems;
-  const pinnedFeedItems = (yield select(selectPinnedFeedItems)) as FeedItems;
+  const pinnedFeedItems = (yield select(
+    selectPinnedFeedItems(commonId),
+  )) as FeedItems;
   const discussionStates = yield select(selectDiscussionStates());
   const proposalStates = yield select(selectProposalStates());
   const projectStates = yield select(selectCommonStates());
@@ -57,10 +60,13 @@ export function* searchFeedItems(
 
   yield put(
     actions.setSearchState({
-      searchValue,
-      isSearching: false,
-      feedItems: filteredFeedItems,
-      pinnedFeedItems: filteredPinnedFeedItems,
+      state: {
+        searchValue,
+        isSearching: false,
+        feedItems: filteredFeedItems,
+        pinnedFeedItems: filteredPinnedFeedItems,
+      },
+      commonId,
     }),
   );
 }

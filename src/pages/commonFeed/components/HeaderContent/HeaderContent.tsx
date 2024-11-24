@@ -33,10 +33,15 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
   const isMobileVersion = useIsTabletView();
   const searchInputRef = useRef<SearchInputRef>(null);
   const commonFollow = useCommonFollow(common.id, commonMember);
+  const commonId = common.id;
   const { searchValue, searchInputToggle, onChangeSearchValue, onCloseSearch } =
     useSearchFeedItems({
-      onSearch: (value) => dispatch(commonActions.searchFeedItems(value)),
-      onResetSearchState: () => dispatch(commonActions.resetSearchState()),
+      onSearch: (value) =>
+        dispatch(
+          commonActions.searchFeedItems({ searchValue: value, commonId }),
+        ),
+      onResetSearchState: () =>
+        dispatch(commonActions.resetSearchState({ commonId })),
     });
   const showFollowIcon =
     !isMobileVersion &&
@@ -64,7 +69,7 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
     <>
       <HeaderContentWrapper className={className}>
         <HeaderCommonContent
-          commonId={common.id}
+          commonId={commonId}
           commonName={common.name}
           commonImage={common.image}
           notion={common.notion}
@@ -90,7 +95,7 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
             </>
           )}
           <NewStreamButton
-            commonId={common.id}
+            commonId={commonId}
             commonMember={commonMember}
             governance={governance}
             isMobileVersion={isMobileVersion}

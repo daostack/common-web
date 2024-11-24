@@ -54,6 +54,7 @@ import {
   removeTextEditorEmptyEndLinesValues,
   countTextEditorEmojiElements,
 } from "@/shared/ui-kit";
+import { BaseTextEditorHandles } from "@/shared/ui-kit/TextEditor/BaseTextEditor";
 import { checkUncheckedItemsInTextEditorValue } from "@/shared/ui-kit/TextEditor/utils";
 import { InternalLinkData, notEmpty } from "@/shared/utils";
 import { getUserName, hasPermission, isMobile } from "@/shared/utils";
@@ -70,6 +71,7 @@ import {
   selectInstantDiscussionMessagesOrder,
 } from "@/store/states";
 import { ChatContentContext, ChatContentData } from "../CommonContent/context";
+import { useFeedItemContext } from "../FeedItem";
 import {
   ChatContent,
   ChatContentRef,
@@ -87,8 +89,6 @@ import {
   uploadFilesAndImages,
 } from "./utils";
 import styles from "./ChatComponent.module.scss";
-import { BaseTextEditorHandles } from "@/shared/ui-kit/TextEditor/BaseTextEditor";
-import { useFeedItemContext } from "../FeedItem";
 
 const BASE_CHAT_INPUT_HEIGHT = 48;
 const BASE_ORDER_INTERVAL = 1000;
@@ -259,19 +259,16 @@ export default function ChatComponent({
     parseStringToTextEditorValue(),
   );
 
-  const {
-    setIsInputFocused
-  } = useFeedItemContext();
+  const { setIsInputFocused } = useFeedItemContext();
 
   useEffect(() => {
     const isEmpty = checkIsTextEditorValueEmpty(message);
-    if(!isEmpty || message.length > 1) {
+    if (!isEmpty || message.length > 1) {
       setIsInputFocused?.(true);
     } else {
       setIsInputFocused?.(false);
     }
-
-  },[message, setIsInputFocused])
+  }, [message, setIsInputFocused]);
 
   const emojiCount = useMemo(
     () => countTextEditorEmojiElements(message),
@@ -294,9 +291,12 @@ export default function ChatComponent({
   const optimisticDiscussionMessages = useSelector(
     selectOptimisticDiscussionMessages,
   );
-  const instantDiscussionMessagesOrder = useSelector(selectInstantDiscussionMessagesOrder);
+  const instantDiscussionMessagesOrder = useSelector(
+    selectInstantDiscussionMessagesOrder,
+  );
 
-  const currentChatOrder = instantDiscussionMessagesOrder.get(discussionId)?.order || 1;
+  const currentChatOrder =
+    instantDiscussionMessagesOrder.get(discussionId)?.order || 1;
 
   const isOptimisticChat = optimisticFeedItems.has(discussionId);
 
@@ -604,7 +604,11 @@ export default function ChatComponent({
 
             return [...prev, ...filePreviewPayload, payload];
           });
-          dispatch(optimisticActions.setInstantDiscussionMessagesOrder({discussionId}));
+          dispatch(
+            optimisticActions.setInstantDiscussionMessagesOrder({
+              discussionId,
+            }),
+          );
         }
 
         if (isChatChannel) {
@@ -638,10 +642,15 @@ export default function ChatComponent({
             userName: getUserName(user),
             ownerType: DiscussionMessageOwnerType.User,
             content: JSON.stringify(message),
-          }
+          },
         };
 
-        dispatch(commonActions.setFeedItemUpdatedAt(payloadUpdateFeedItem));
+        dispatch(
+          commonActions.setFeedItemUpdatedAt({
+            ...payloadUpdateFeedItem,
+            commonId,
+          }),
+        );
         dispatch(inboxActions.setInboxItemUpdatedAt(payloadUpdateFeedItem));
         document
           .getElementById("feedLayoutWrapper")
@@ -765,7 +774,7 @@ export default function ChatComponent({
   useLayoutEffect(() => {
     textInputRef?.current?.clear?.();
     textInputRef?.current?.focus?.();
-  },[discussionId]);
+  }, [discussionId]);
 
   useEffect(() => {
     if (isFetchedDiscussionMessages) {

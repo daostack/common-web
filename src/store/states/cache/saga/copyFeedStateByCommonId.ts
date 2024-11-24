@@ -7,10 +7,11 @@ export function* copyFeedStateByCommonId({
   payload: commonId,
 }: ReturnType<typeof actions.copyFeedStateByCommonId>) {
   const commonState = (yield select(selectCommonState)) as CommonState;
+  const specificCommonFeedItems = commonState.feedItems[commonId];
   const data =
-    commonState.feedItems.data && commonState.feedItems.data.slice(0, 30);
+    specificCommonFeedItems.data && specificCommonFeedItems.data.slice(0, 30);
   const feedItems = {
-    ...commonState.feedItems,
+    ...specificCommonFeedItems,
     data,
     loading: false,
     hasMore: true,
@@ -27,8 +28,8 @@ export function* copyFeedStateByCommonId({
       commonId,
       state: {
         feedItems,
-        pinnedFeedItems: commonState.pinnedFeedItems,
-        sharedFeedItem: commonState.sharedFeedItem,
+        pinnedFeedItems: commonState.pinnedFeedItems[commonId],
+        sharedFeedItem: commonState.sharedFeedItem[commonId],
       },
     }),
   );
