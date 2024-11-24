@@ -179,14 +179,10 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
 
   useEffect(() => {
     return () => {
-      dispatch(
-        commonActions.getFeedItems.cancel(
-          "Cancel feed items fetch on feed umount",
-        ),
-      );
-      dispatch(commonActions.resetFeedItems());
+      dispatch(commonActions.getFeedItems.cancel({ commonId: common.id }));
+      dispatch(commonActions.resetFeedItems({ commonId: common.id }));
     };
-  }, []);
+  }, [common.id]);
 
   const contextValue = useMemo(
     () => ({

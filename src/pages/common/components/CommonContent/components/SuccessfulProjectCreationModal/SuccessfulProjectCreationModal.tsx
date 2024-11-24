@@ -9,22 +9,27 @@ import styles from "./SuccessfulProjectCreationModal.module.scss";
 
 interface SuccessfulProjectCreationModalProps {
   parentCommonId: string;
+  commonId: string;
 }
 
 const SuccessfulProjectCreationModal: FC<
   SuccessfulProjectCreationModalProps
 > = (props) => {
-  const { parentCommonId } = props;
+  const { parentCommonId, commonId } = props;
   const dispatch = useDispatch();
   const history = useHistory();
 
   const handleClose = () => {
-    dispatch(commonActions.setIsNewProjectCreated(false));
+    dispatch(
+      commonActions.setIsNewProjectCreated({ isCreated: false, commonId }),
+    );
     history.push(getCommonPageAboutTabPath(parentCommonId));
   };
 
   const handleJumpToProject = () => {
-    dispatch(commonActions.setIsNewProjectCreated(false));
+    dispatch(
+      commonActions.setIsNewProjectCreated({ isCreated: false, commonId }),
+    );
   };
 
   return (

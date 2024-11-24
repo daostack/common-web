@@ -10,6 +10,7 @@ export function* editDiscussion(
 ) {
   const { payload } = action;
 
+  const commonId = payload.commonId;
   try {
     const files = yield FileService.uploadFiles(payload.payload.files || []);
     const images = yield FileService.uploadFiles(payload.payload.images || []);
@@ -32,14 +33,14 @@ export function* editDiscussion(
     );
 
     yield put(actions.setCommonAction(null));
-    yield put(actions.editDiscussion.success(discussion));
+    yield put(actions.editDiscussion.success({ discussion, commonId }));
 
     if (payload.callback) {
       payload.callback(null, discussion);
     }
   } catch (error) {
     if (isError(error)) {
-      yield put(actions.editDiscussion.failure(error));
+      yield put(actions.editDiscussion.failure({ error, commonId }));
 
       if (payload.callback) {
         payload.callback(error);

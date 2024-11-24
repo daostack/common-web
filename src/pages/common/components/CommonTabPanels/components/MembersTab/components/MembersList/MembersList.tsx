@@ -38,7 +38,7 @@ const MembersList: FC<MembersListComponentProps> = ({
 
   useEffect(() => {
     return () => {
-      dispatch(commonActions.resetRecentAssignedCircleByMember());
+      dispatch(commonActions.resetRecentAssignedCircleByMember({ commonId }));
     };
   }, []);
 

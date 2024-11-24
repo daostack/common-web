@@ -43,6 +43,7 @@ export default function AssignCircleModal({
         commonActions.setRecentAssignedCircleByMember({
           memberId,
           circle: selectedCircle,
+          commonId,
         }),
       );
 

@@ -59,7 +59,6 @@ const MenuItems: FC<MenuItemsProps> = (props) => {
         key: "my-profile",
         text: "My profile",
         icon: <Avatar3Icon />,
-        type: ItemType.Button,
         to: getProfilePagePath(),
       },
       {

@@ -33,14 +33,21 @@ export function* createDiscussion(
     );
 
     yield put(actions.setCommonAction(null));
-    yield put(actions.createDiscussion.success(discussion));
+    yield put(
+      actions.createDiscussion.success({
+        discussion,
+        commonId: payload.commonId,
+      }),
+    );
 
     if (payload.callback) {
       payload.callback(null, discussion);
     }
   } catch (error) {
     if (isError(error)) {
-      yield put(actions.createDiscussion.failure(error));
+      yield put(
+        actions.createDiscussion.failure({ error, commonId: payload.commonId }),
+      );
 
       if (payload.callback) {
         payload.callback(error);

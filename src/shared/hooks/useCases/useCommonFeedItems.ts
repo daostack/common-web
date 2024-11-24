@@ -21,8 +21,8 @@ export const useCommonFeedItems = (
   sharedFeedItemId?: string | null,
 ): Return => {
   const dispatch = useDispatch();
-  const feedItems = useSelector(selectFeedItems);
-  const filteredFeedItems = useSelector(selectFilteredFeedItems);
+  const feedItems = useSelector(selectFeedItems(commonId));
+  const filteredFeedItems = useSelector(selectFilteredFeedItems(commonId));
   const optimisticFeedItems = useSelector(selectOptimisticFeedItems);
   const idsForNotListeningRef = useRef<string[]>(idsForNotListening || []);
   const isSubscriptionAllowed = feedItems.data !== null;
@@ -56,19 +56,25 @@ export const useCommonFeedItems = (
           return;
         }
 
-
         // TODO: HERE I can get optFeedItem by discussionId
-        const optItemIds = Array.from(optimisticFeedItems.values()).map((item) => {
-          return item.feedItem.data.id;
-        } );
+        const optItemIds = Array.from(optimisticFeedItems.values()).map(
+          (item) => {
+            return item.feedItem.data.id;
+          },
+        );
 
         data.forEach((item) => {
-          const discussionId = item.commonFeedItem.data.discussionId ?? item.commonFeedItem.data.id;
-          if(optItemIds.includes(discussionId)) {
-
-            dispatch(optimisticActions.removeOptimisticFeedItemState({id: discussionId}))
+          const discussionId =
+            item.commonFeedItem.data.discussionId ??
+            item.commonFeedItem.data.id;
+          if (optItemIds.includes(discussionId)) {
+            dispatch(
+              optimisticActions.removeOptimisticFeedItemState({
+                id: discussionId,
+              }),
+            );
           }
-        })
+        });
 
         const finalData =
           idsForNotListeningRef.current.length > 0
@@ -80,20 +86,23 @@ export const useCommonFeedItems = (
               )
             : data;
 
-        dispatch(commonActions.addNewFeedItems(finalData));
+        dispatch(commonActions.addNewFeedItems({ items: finalData, commonId }));
       },
     );
 
     return unsubscribe;
-  }, [isSubscriptionAllowed, feedItems.firstDocTimestamp, commonId, optimisticFeedItems]);
+  }, [
+    isSubscriptionAllowed,
+    feedItems.firstDocTimestamp,
+    commonId,
+    optimisticFeedItems,
+  ]);
 
   useEffect(() => {
     return () => {
-      dispatch(
-        commonActions.getFeedItems.cancel("Cancel feed items fetch on unmount"),
-      );
+      dispatch(commonActions.getFeedItems.cancel({ commonId }));
     };
-  }, []);
+  }, [commonId]);
 
   return {
     ...feedItems,

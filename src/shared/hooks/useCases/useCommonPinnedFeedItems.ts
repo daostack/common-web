@@ -19,8 +19,10 @@ export const useCommonPinnedFeedItems = (
   idsForListening?: string[],
 ): Return => {
   const dispatch = useDispatch();
-  const pinnedFeedItems = useSelector(selectPinnedFeedItems);
-  const filteredPinnedFeedItems = useSelector(selectFilteredPinnedFeedItems);
+  const pinnedFeedItems = useSelector(selectPinnedFeedItems(commonId));
+  const filteredPinnedFeedItems = useSelector(
+    selectFilteredPinnedFeedItems(commonId),
+  );
   const previousIdsForListening = usePreviousDistinct(idsForListening);
 
   const fetch = () => {
@@ -42,14 +44,18 @@ export const useCommonPinnedFeedItems = (
       [];
 
     if (unpinnedIds.length > 0) {
-      dispatch(commonActions.unpinFeedItems(unpinnedIds));
+      dispatch(
+        commonActions.unpinFeedItems({ itemIds: unpinnedIds, commonId }),
+      );
     }
 
     const unsubscribe = CommonFeedService.subscribeToNewUpdatedCommonFeedItems(
       { commonId, idsForListening },
       (data) => {
         if (data.length > 0) {
-          dispatch(commonActions.addNewPinnedFeedItems(data));
+          dispatch(
+            commonActions.addNewPinnedFeedItems({ items: data, commonId }),
+          );
         }
       },
     );
@@ -59,17 +65,14 @@ export const useCommonPinnedFeedItems = (
 
   useEffect(() => {
     return () => {
-      dispatch(
-        commonActions.getPinnedFeedItems.cancel(
-          "Cancel pinned feed items fetch on unmount",
-        ),
-      );
+      dispatch(commonActions.getPinnedFeedItems.cancel({ commonId }));
     };
   }, []);
 
   return {
-    ...pinnedFeedItems,
+    // ...pinnedFeedItems,
     data: filteredPinnedFeedItems || pinnedFeedItems.data,
+    loading: false,
     fetch,
   };
 };

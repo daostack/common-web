@@ -1,4 +1,4 @@
-import { LoadingState } from "@/shared/interfaces";
+import { FeedItemFollowLayoutItem, LoadingState } from "@/shared/interfaces";
 import {
   ChatChannelUserStatus,
   ChatMessage,
@@ -11,12 +11,13 @@ import {
   Proposal,
   User,
 } from "@/shared/models";
-import { CommonState } from "../common";
+import { FeedItems, PinnedFeedItems } from "../common";
 
-export type FeedState = Pick<
-  CommonState,
-  "feedItems" | "pinnedFeedItems" | "sharedFeedItem"
->;
+export type FeedState = {
+  feedItems: FeedItems;
+  pinnedFeedItems: PinnedFeedItems;
+  sharedFeedItem: FeedItemFollowLayoutItem | null;
+};
 
 export interface CacheState {
   userStates: Record<string, LoadingState<User | null>>;
