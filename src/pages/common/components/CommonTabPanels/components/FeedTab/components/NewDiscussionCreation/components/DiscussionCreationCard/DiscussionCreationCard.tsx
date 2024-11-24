@@ -14,6 +14,7 @@ interface DiscussionCreationCardProps {
   onCancel?: () => void;
   isLoading?: boolean;
   edit?: boolean;
+  commonId: string;
 }
 
 const DiscussionCreationCard: FC<DiscussionCreationCardProps> = (props) => {
@@ -25,6 +26,7 @@ const DiscussionCreationCard: FC<DiscussionCreationCardProps> = (props) => {
     onCancel,
     isLoading = false,
     edit,
+    commonId,
   } = props;
 
   return (
@@ -37,6 +39,7 @@ const DiscussionCreationCard: FC<DiscussionCreationCardProps> = (props) => {
         onCancel={onCancel}
         isLoading={isLoading}
         edit={edit}
+        commonId={commonId}
       />
     </CommonCard>
   );

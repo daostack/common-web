@@ -2,6 +2,7 @@ import React, { FC, useCallback, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
+import { DiscussionMessageOwnerType } from "@/shared/constants";
 import {
   NewDiscussionCreationFormValues,
   UploadFile,
@@ -18,7 +19,11 @@ import {
   TextEditorValue,
   parseStringToTextEditorValue,
 } from "@/shared/ui-kit/TextEditor";
-import { generateFirstMessage, generateOptimisticFeedItem, getUserName } from "@/shared/utils";
+import {
+  generateFirstMessage,
+  generateOptimisticFeedItem,
+  getUserName,
+} from "@/shared/utils";
 import {
   optimisticActions,
   selectDiscussionCreationData,
@@ -26,7 +31,6 @@ import {
 } from "@/store/states";
 import { commonActions } from "@/store/states";
 import { DiscussionCreationCard, DiscussionCreationModal } from "./components";
-import { DiscussionMessageOwnerType } from "@/shared/constants";
 
 interface NewDiscussionCreationProps {
   common: Common;
@@ -60,8 +64,12 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
     onDiscussionIdChange,
   } = props;
   const dispatch = useDispatch();
-  const discussionCreationData = useSelector(selectDiscussionCreationData);
-  const isLoading = useSelector(selectIsDiscussionCreationLoading);
+
+  const commonId = common.id;
+  const discussionCreationData = useSelector(
+    selectDiscussionCreationData(commonId),
+  );
+  const isLoading = useSelector(selectIsDiscussionCreationLoading(commonId));
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const userCircleIds = useMemo(
@@ -71,7 +79,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
 
   const handleCancel = () => {
     dispatch(commonActions.setCommonAction(null));
-    dispatch(commonActions.setDiscussionCreationData(null));
+    dispatch(commonActions.setDiscussionCreationData({ data: null, commonId }));
   };
 
   const initialValues: NewDiscussionCreationFormValues = useMemo(() => {
@@ -118,6 +126,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
               message: JSON.stringify(values.content),
               images: values.images,
             },
+            commonId,
           }),
         );
       } else {
@@ -136,13 +145,15 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
             ownerId: userId,
             userName,
             ownerType: DiscussionMessageOwnerType.System,
-            content: generateFirstMessage({userName, userId}),
-          }
+            content: generateFirstMessage({ userName, userId }),
+          },
         });
-        dispatch(optimisticActions.setOptimisticFeedItem({
-          data: optimisticFeedItem, 
-          common
-        }));
+        dispatch(
+          optimisticActions.setOptimisticFeedItem({
+            data: optimisticFeedItem,
+            common,
+          }),
+        );
         dispatch(commonActions.setRecentStreamId(optimisticFeedItem.data.id));
         dispatch(
           commonActions.createDiscussion.request({
@@ -155,13 +166,14 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
               images: values.images,
               circleVisibility,
             },
+            commonId,
           }),
         );
       }
 
       handleCancel();
     },
-    [governanceCircles, userCircleIds, userId, common.id, edit],
+    [governanceCircles, userCircleIds, userId, commonId, edit],
   );
 
   useEffect(() => {
@@ -185,6 +197,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
         isLoading={isLoading}
         commonImage={commonImage}
         commonName={commonName}
+        commonId={commonId}
         edit={edit}
       />
     );
@@ -199,6 +212,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
       onCancel={handleCancel}
       isLoading={isLoading}
       edit={edit}
+      commonId={commonId}
     />
   );
 };

@@ -5,6 +5,7 @@ export const sortFeedItemFollowLayoutItems = (
 ): void => {
   data.sort(
     (prevItem, nextItem) =>
-      nextItem.feedItem.updatedAt.seconds - prevItem.feedItem.updatedAt.seconds,
+      nextItem?.feedItem?.updatedAt.seconds -
+      prevItem?.feedItem?.updatedAt.seconds,
   );
 };

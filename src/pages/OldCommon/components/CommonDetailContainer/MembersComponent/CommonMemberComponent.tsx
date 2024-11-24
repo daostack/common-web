@@ -45,7 +45,7 @@ const CommonMember: FC<CommonMemberProps> = ({
   const { isShowing, onClose, onOpen } = useModal(false);
   const contextMenuRef = useRef<ContextMenuRef>(null);
   const recentAssignedCircle: Circle | undefined = useSelector(
-    selectRecentAssignedCircle(member.userId),
+    selectRecentAssignedCircle(commonId, member.userId),
   );
 
   const handleContextMenu: MouseEventHandler<HTMLLIElement> = (event) => {

@@ -22,7 +22,9 @@ export function* getFeedItems(
   } = action;
 
   try {
-    const currentFeedItems = (yield select(selectFeedItems)) as FeedItems;
+    const currentFeedItems = (yield select(
+      selectFeedItems(commonId),
+    )) as FeedItems;
     const cachedFeedState = yield select(selectFeedStateByCommonId(commonId));
     const user = (yield select(selectUser())) as User | null;
     const userId = user?.uid;
@@ -48,6 +50,7 @@ export function* getFeedItems(
             },
           },
           sharedFeedItemId,
+          commonId,
         }),
       );
       return;
@@ -80,15 +83,16 @@ export function* getFeedItems(
         firstDocTimestamp: isFirstRequest
           ? firstDocTimestamp
           : currentFeedItems.firstDocTimestamp,
+        commonId,
       }),
     );
 
     if (!isFirstRequest) {
-      yield searchFetchedFeedItems(convertedData);
+      yield searchFetchedFeedItems({ data: convertedData, commonId });
     }
   } catch (error) {
     if (isError(error)) {
-      yield put(actions.getFeedItems.failure(error));
+      yield put(actions.getFeedItems.failure({ error, commonId }));
     }
   }
 }
