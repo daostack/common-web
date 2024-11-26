@@ -4,7 +4,7 @@
   position: absolute;
   bottom: 5.25rem;
   left: 2.875rem;
-  width: 20.125rem;
+  width: 25.125rem;
   max-height: 22.75rem;
   background: var(--tertiary-fill);
   color: var(--primary-text);
@@ -22,7 +22,6 @@
   align-items: center;
   width: 100%;
   box-sizing: border-box;
-  border-bottom: 0.0625rem solid var(--gentle-stroke);
 
   &:hover {
     cursor: pointer;
@@ -35,13 +34,34 @@
   }
 }
 
+.sectionTitle {
+  font-weight: 500;
+  font-size: $mobile-title;
+  padding: 0.5rem 1rem;
+  margin: 0.25rem 0;
+}
+
+.separator {
+  margin: 1rem 0rem 0.5rem;
+  height: 2px;
+}
+
 .userAvatar {
   margin-right: 0.5625rem;
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.streamIcon {
+  margin-right: 0.5625rem;
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 .userName {
   font-weight: 500;
   font-size: $mobile-title;
+  margin: 0.25rem 0;
 }
 
 .loader {

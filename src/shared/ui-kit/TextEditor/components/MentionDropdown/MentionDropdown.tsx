@@ -1,8 +1,10 @@
 import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 import { uniq } from "lodash";
-import { UserAvatar } from "@/shared/components";
+import { Separator, UserAvatar } from "@/shared/components";
 import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
 import { useOutsideClick } from "@/shared/hooks";
+import { ChatIcon } from "@/shared/icons";
+import { DotsIcon } from "@/shared/icons";
 import { Discussion, User } from "@/shared/models";
 import { Loader } from "@/shared/ui-kit";
 import { getUserName } from "@/shared/utils";
@@ -13,11 +15,18 @@ export const MENTION_TAG = "@";
 export interface MentionDropdownProps {
   onClick: (user: User) => void;
   onClickDiscussion: (discussion: Discussion) => void;
-  discussions?: Discussion[];
   onClose: () => void;
   users?: User[];
+  discussions?: Discussion[];
+  initUsers?: User[];
+  initDiscussions?: Discussion[];
   shouldFocusTarget?: boolean;
 }
+
+type CombinedItem =
+  | User
+  | Discussion
+  | { type: "toggleUsers" | "toggleDiscussions" | "separator" };
 
 const MentionDropdown: FC<MentionDropdownProps> = (props) => {
   const {
@@ -27,43 +36,71 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
     discussions = [],
     onClose,
     shouldFocusTarget,
+    initUsers = [],
+    initDiscussions = [],
   } = props;
   const mentionRef = useRef(null);
   const listRefs = useRef<HTMLLIElement[]>([]);
   const { isOutside, setOutsideValue } = useOutsideClick(mentionRef);
   const [index, setIndex] = useState(0);
+  const [isShowMoreUsers, setIsShowMoreUsers] = useState(false);
+  const [isShowMoreDiscussions, setIsShowMoreDiscussions] = useState(false);
+  const usersList = useMemo(() => {
+    if (isShowMoreUsers) {
+      return users;
+    }
 
-  const userIds = useMemo(() => users.map(({ uid }) => uid), [users]);
-  const discussionIds = useMemo(() => discussions.map(({ id }) => id), [discussions]);
+    return users.slice(0, 5);
+  }, [isShowMoreUsers, users]);
+
+  const discussionsList = useMemo(() => {
+    if (isShowMoreDiscussions) {
+      return discussions;
+    }
+
+    return discussions.slice(0, 5);
+  }, [isShowMoreDiscussions, discussions]);
 
   useEffect(() => {
     if (shouldFocusTarget) {
-      const filteredListRefs = uniq(listRefs.current).filter((item) => {
-        if (userIds.includes(item?.id) || discussionIds.includes(item?.id)) {
-          return true;
-        }
+      // Clear and rebuild listRefs based on current usersList and discussionsList
+      listRefs.current = [];
+      const allRefs = document.querySelectorAll<HTMLLIElement>(
+        `.${styles.content}`,
+      );
+      allRefs.forEach((ref) => listRefs.current.push(ref));
 
-        return false;
+      // Sort the listRefs by tabIndex
+      listRefs.current.sort((a, b) => {
+        const tabIndexA = parseInt(a.getAttribute("tabIndex") || "0", 10);
+        const tabIndexB = parseInt(b.getAttribute("tabIndex") || "0", 10);
+        return tabIndexA - tabIndexB;
       });
 
-      listRefs.current = filteredListRefs;
-      filteredListRefs && filteredListRefs?.[index]?.focus();
+      // Find the element with the matching tabIndex and focus it
+      const elementToFocus = listRefs.current.find(
+        (item) => parseInt(item.getAttribute("tabIndex") || "0", 10) === index,
+      );
+
+      if (elementToFocus) {
+        elementToFocus.focus();
+      }
     }
-  }, [index, shouldFocusTarget, userIds, discussionIds]);
+  }, [index, usersList, discussionsList, shouldFocusTarget]);
 
   const increment = () => {
     setIndex((value) => {
       const updatedValue = value + 1;
-      const usersLastIndex = users.length - 1;
-      const discussionsLastIndex = discussions.length - 1;
-      return updatedValue > discussionsLastIndex + usersLastIndex ? value : updatedValue;
+      return updatedValue < listRefs.current.length ? updatedValue : value;
     });
   };
-  const decrement = () =>
+
+  const decrement = () => {
     setIndex((value) => {
       const updatedValue = value - 1;
       return updatedValue >= 0 ? updatedValue : value;
     });
+  };
 
   useEffect(() => {
     if (isOutside) {
@@ -84,16 +121,59 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
         break;
       }
       case KeyboardKeys.Enter: {
-        if(index > users.length - 1) {
-          onClickDiscussion(discussions[index - users.length]);
-        } else {
+        const currentElement = listRefs.current.find(
+          (item) =>
+            parseInt(item.getAttribute("tabIndex") || "0", 10) === index,
+        );
+
+        if (!currentElement) return;
+
+        const type = currentElement.dataset.type;
+
+        if (type === "user") {
+          // Handle user selection
           onClick(users[index]);
+        } else if (type === "discussion") {
+          // Handle discussion selection
+          const discussionIndex =
+            index - usersList.length - (users.length > 5 ? 1 : 0);
+          onClickDiscussion(discussions[discussionIndex]);
+        } else if (type === "toggleUsers") {
+          // Toggle "Show More Users"
+          setIsShowMoreUsers((prev) => {
+            if (!prev && users.length > 5) {
+              // If expanding, move focus to the 6th user
+              setIndex(5);
+            } else {
+              // If collapsing, move focus back to the toggleUsers button
+              setIndex(5);
+            }
+            return !prev;
+          });
+        } else if (type === "toggleDiscussions") {
+          // Toggle "Show More Discussions"
+          setIsShowMoreDiscussions((prev) => {
+            if (!prev && discussions.length > 5) {
+              // If expanding, move focus to the 6th discussion
+              setIndex(usersList.length + 5);
+            } else {
+              // If collapsing, move focus back to the toggleDiscussions button
+              setIndex(usersList.length + 5);
+            }
+            return !prev;
+          });
         }
+        break;
       }
     }
   };
 
   const getRef = (element) => listRefs.current.push(element);
+  const isEmptyContent =
+    (initUsers.length > 0 || initDiscussions.length > 0) &&
+    users.length === 0 &&
+    discussions.length === 0;
+  const isLoading = initUsers.length === 0 && initDiscussions.length === 0;
 
   return (
     <ul
@@ -103,17 +183,24 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
       data-cy="mentions-portal"
       onKeyDown={onKeyDown}
     >
-      {(users.length === 0 && discussions.length === 0) && (
+      {isLoading && (
         <li className={styles.content}>
           <Loader className={styles.loader} />
         </li>
       )}
-      {users.map((user, index) => (
+      {isEmptyContent && (
+        <li className={styles.content}>
+          <p>No results</p>
+        </li>
+      )}
+      {users.length > 0 && <p className={styles.sectionTitle}>People</p>}
+      {usersList.map((user, index) => (
         <li
           id={user.uid}
           ref={getRef}
           tabIndex={index}
           key={user.uid}
+          data-type="user"
           onClick={() => onClick(user)}
           className={styles.content}
         >
@@ -125,23 +212,62 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
           <p className={styles.userName}>{getUserName(user)}</p>
         </li>
       ))}
-      {discussions.map((discussion, index) => (
+      {users.length > 5 && (
+        <li
+          ref={getRef}
+          tabIndex={usersList.length}
+          key="toggleUsers"
+          data-type="toggleUsers"
+          onClick={() => setIsShowMoreUsers((prev) => !prev)}
+          className={styles.content}
+        >
+          <DotsIcon className={styles.streamIcon} />
+          {isShowMoreUsers ? (
+            <p className={styles.userName}>Hide results</p>
+          ) : (
+            <p className={styles.userName}>{users.length - 5} more results</p>
+          )}
+        </li>
+      )}
+      {users.length > 0 && discussions.length > 0 && (
+        <Separator className={styles.separator} />
+      )}
+      {discussions.length > 0 && (
+        <p className={styles.sectionTitle}>Link to Stream</p>
+      )}
+      {discussionsList.map((discussion, index) => (
         <li
           id={discussion.id}
           ref={getRef}
-          tabIndex={index}
+          tabIndex={usersList.length + (users.length > 5 ? 1 : 0) + index}
+          data-type="discussion"
           key={discussion.id}
           onClick={() => onClickDiscussion(discussion)}
           className={styles.content}
         >
-          <UserAvatar
-            className={styles.userAvatar}
-            userName={discussion.title}
-            photoURL={discussion.images?.[0]?.value}
-          />
+          <ChatIcon className={styles.streamIcon} />
           <p className={styles.userName}>{discussion.title}</p>
         </li>
       ))}
+      {discussions.length > 5 && (
+        <li
+          ref={getRef}
+          tabIndex={usersList.length + 1 + discussionsList.length}
+          key="toggleDiscussions"
+          data-type="toggleDiscussions"
+          onClick={() => setIsShowMoreDiscussions((prev) => !prev)}
+          className={styles.content}
+        >
+          <DotsIcon className={styles.streamIcon} />
+          {isShowMoreDiscussions ? (
+            <p className={styles.userName}>Hide results</p>
+          ) : (
+            <p className={styles.userName}>
+              {discussions.length - 5} more results
+            </p>
+          )}
+        </li>
+      )}
     </ul>
   );
 };
