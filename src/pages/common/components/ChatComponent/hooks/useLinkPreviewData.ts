@@ -67,7 +67,7 @@ export const useLinkPreviewData = (options: Options): Return => {
   }, [urls]);
 
   useEffect(() => {
-    if (!currentUrl) {
+    if (!currentUrl || currentUrl.startsWith(window.location.origin)) {
       handlePreviewDataReset(true);
       return;
     }
