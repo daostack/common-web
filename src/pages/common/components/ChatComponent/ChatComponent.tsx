@@ -89,6 +89,7 @@ import {
   uploadFilesAndImages,
 } from "./utils";
 import styles from "./ChatComponent.module.scss";
+import { CommonService } from "@/services/CommonService";
 
 const BASE_CHAT_INPUT_HEIGHT = 48;
 const BASE_ORDER_INTERVAL = 1000;
@@ -481,12 +482,100 @@ export default function ChatComponent({
     );
   };
 
+  const validateStreamId = async (streamId: string): Promise<boolean> => {
+    try {
+      // Assuming you have a service to check if a stream exists
+      const stream = await CommonService.getCommonById(streamId);
+      return !!stream;
+    } catch (error) {
+      console.error('Error validating stream ID:', error);
+      return false;
+    }
+  };
+
+  const processStreamMentions = async (message: TextEditorValue, sourceStreamId: string, sourceStreamName: string, userId: string) => {
+    try {
+      if (!message || !sourceStreamId || !sourceStreamName || !userId) {
+        console.error('Missing required parameters for stream mention processing');
+        return;
+      }
+
+      const streamMentionRegex = /\[stream\](.*?)\|(.*?)\[\/stream\]/g;
+      const mentionedStreams = new Set();
+      const pendingSystemMessages: CreateDiscussionMessageDtoWithFilesPreview[] = [];
+      
+      const messageString = JSON.stringify(message);
+      if (typeof messageString !== 'string') {
+        console.error('Invalid message format for stream mention processing');
+        return;
+      }
+
+      let match;
+      while ((match = streamMentionRegex.exec(messageString)) !== null) {
+        const [_, streamId, streamName] = match;
+        
+        if (!streamId || !streamName) {
+          console.error('Invalid stream mention format:', match);
+          continue;
+        }
+
+        if (!mentionedStreams.has(streamId)) {
+          // Validate stream existence before creating system message
+          const isValidStream = await validateStreamId(streamId);
+          if (!isValidStream) {
+            console.error(`Invalid stream ID: ${streamId}`);
+            continue;
+          }
+
+          mentionedStreams.add(streamId);
+          
+          const systemMessage: CreateDiscussionMessageDtoWithFilesPreview = {
+            systemMessageType: SystemDiscussionMessageType.StreamMentioned,
+            systemMessageData: {
+              userId,
+              sourceStreamId,
+              sourceStreamName,
+            },
+            commonId: streamId,
+            discussionId: streamId,
+            createdAt: new Date(),
+            pendingId: uuidv4(), // Add pendingId for cleanup purposes
+          };
+
+          pendingSystemMessages.push(systemMessage);
+        }
+      }
+
+      // Dispatch all valid system messages
+      for (const systemMessage of pendingSystemMessages) {
+        await dispatch(optimisticActions.setOptimisticDiscussionMessages(systemMessage));
+      }
+
+      return pendingSystemMessages; // Return for cleanup if needed
+    } catch (error) {
+      console.error('Error processing stream mentions:', error);
+      return [];
+    }
+  };
+
   const sendMessage = useCallback(
     async (editorMessage: TextEditorValue) => {
-      if (user && user.uid) {
-        const pendingMessageId = uuidv4();
-        const message = removeTextEditorEmptyEndLinesValues(editorMessage);
+      if (!user?.uid) return;
 
+      let pendingSystemMessages: CreateDiscussionMessageDtoWithFilesPreview[] = [];
+      
+      try {
+        // Process stream mentions first
+        pendingSystemMessages = await processStreamMentions(
+          editorMessage,
+          discussionId,
+          common.name,
+          user.uid
+        );
+
+        // Existing message sending logic
+        const message = removeTextEditorEmptyEndLinesValues(editorMessage);
+        const pendingMessageId = uuidv4();
         const mentionTags = getMentionTags(message).map((tag) => ({
           value: tag.userId,
         }));
@@ -656,21 +745,35 @@ export default function ChatComponent({
           .getElementById("feedLayoutWrapper")
           ?.scrollIntoView({ behavior: "smooth" });
         focusOnChat();
+
+        // Try to send the main message
+        await ChatService.createMessage(payload);
+
+      } catch (error) {
+        console.error('Error sending message:', error);
+        
+        // Clean up system messages if the main message fails
+        if (pendingSystemMessages.length > 0) {
+          try {
+            for (const systemMessage of pendingSystemMessages) {
+              await dispatch(
+                optimisticActions.removeOptimisticDiscussionMessage({
+                  messageId: systemMessage.pendingId!,
+                  commonId: systemMessage.commonId,
+                })
+              );
+            }
+          } catch (cleanupError) {
+            console.error('Error cleaning up system messages:', cleanupError);
+            // Consider showing a user notification about partially failed cleanup
+          }
+        }
+
+        // Handle the original error
+        notify("Failed to send message");
       }
     },
-    [
-      dispatch,
-      user,
-      discussionMessageReply,
-      commonId,
-      currentFilesPreview,
-      discussionId,
-      discussionMessages,
-      isChatChannel,
-      linkPreviewData,
-      isOptimisticChat,
-      feedItemId,
-    ],
+    [user, discussionId, common.name, dispatch],
   );
 
   const onClearFinished = () => {

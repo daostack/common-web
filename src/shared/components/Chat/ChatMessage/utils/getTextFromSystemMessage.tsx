@@ -21,6 +21,7 @@ import {
   SystemMessageCommonType,
   SystemMessageStreamType,
   User,
+  StreamMentionedSystemMessage,
 } from "@/shared/models";
 import {
   getCommonPageAboutTabPath,
@@ -422,7 +423,49 @@ const getStreamLinkedTargetSystemMessageText = async (
   );
 };
 
+/**
+ * Generates the text content for a stream mention system message
+ * @param systemMessageData - Data about the stream mention
+ * @param data - Context data for text generation
+ * @returns Promise resolving to an array of text elements
+ */
+const getStreamMentionedSystemMessageText = async (
+  systemMessageData: StreamMentionedSystemMessage["systemMessageData"],
+  data: TextData,
+): Promise<Text[]> => {
+  try {
+    const [user, sourceCommon] = await Promise.all([
+      getUser(data.users, systemMessageData.userId),
+      getCommon(systemMessageData.sourceStreamId),
+    ]);
+
+    // Validate required data
+    if (!user || !sourceCommon) {
+      console.error('Missing user or source common data for stream mention message');
+      return ['This stream was mentioned in another stream'];
+    }
+
+    const sourceCommonEl = getCommonLink(
+      sourceCommon,
+      sourceCommon?.id && (data.getCommonPagePath || getCommonPagePath)(sourceCommon.id),
+    );
+    const userEl = renderUserMention(user, data);
+
+    return [
+      "This stream was mentioned in ",
+      sourceCommonEl,
+      " by ",
+      userEl,
+    ].filter(Boolean);
+  } catch (error) {
+    console.error('Error generating stream mention message text:', error);
+    // Fallback to basic message if rendering fails
+    return ['This stream was mentioned in another stream'];
+  }
+};
+
 export const getTextFromSystemMessage = async (
+  message: SystemDiscussionMessage,
   data: TextData,
 ): Promise<Text[] | null> => {
   const { systemMessage } = data;
@@ -495,6 +538,12 @@ export const getTextFromSystemMessage = async (
       break;
     case SystemDiscussionMessageType.StreamLinkedTarget:
       text = await getStreamLinkedTargetSystemMessageText(
+        systemMessage.systemMessageData,
+        data,
+      );
+      break;
+    case SystemDiscussionMessageType.StreamMentioned:
+      text = await getStreamMentionedSystemMessageText(
         systemMessage.systemMessageData,
         data,
       );

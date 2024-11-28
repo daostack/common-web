@@ -203,6 +203,20 @@ export interface StreamLinkedInternalSystemMessage
   systemMessageData: StreamMovedInternalSystemMessage["systemMessageData"];
 }
 
+/**
+ * Represents a system message indicating that the current stream was mentioned in another stream
+ * @interface StreamMentionedSystemMessage
+ * @extends {BaseSystemDiscussionMessage}
+ */
+export interface StreamMentionedSystemMessage extends BaseSystemDiscussionMessage {
+  systemMessageType: SystemDiscussionMessageType.StreamMentioned;
+  systemMessageData: {
+    userId: string;
+    sourceStreamId: string;
+    sourceStreamName: string;
+  };
+}
+
 export type SystemDiscussionMessage =
   | CommonCreatedSystemMessage
   | CommonMemberAddedSystemMessage
@@ -254,3 +268,27 @@ export const checkIsSystemDiscussionMessage = (
   discussionMessage?: BaseDiscussionMessage,
 ): discussionMessage is SystemDiscussionMessage =>
   discussionMessage?.ownerType === DiscussionMessageOwnerType.System;
+
+/**
+ * TEST CASES for Stream Mention System:
+ * 
+ * 1. Basic Functionality:
+ *    - Mention a stream in a message
+ *    - Verify system message appears in mentioned stream
+ *    - Verify links are clickable and navigate correctly
+ * 
+ * 2. Edge Cases:
+ *    - Multiple mentions of the same stream in one message
+ *    - Mention in a message with other content
+ *    - Mention in a message with other types of mentions (@user)
+ * 
+ * 3. Error Cases:
+ *    - Mention a non-existent stream
+ *    - Malformed stream mention syntax
+ *    - Network issues during system message creation
+ * 
+ * 4. Performance:
+ *    - Multiple stream mentions in one message
+ *    - Rapid stream mentions
+ *    - Large message content with stream mentions
+ */
