@@ -205,39 +205,39 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
     const userName = getUserName(user);
     const userId = user.uid;
     const firstMessage = generateFirstMessage({ userName, userId });
-    dispatch(
-      commonActions.setOptimisticFeedItem(
-        generateOptimisticFeedItem({
-          userId,
-          commonId,
-          type: CommonFeedType.OptimisticDiscussion,
-          circleVisibility: circleVisibility ?? [],
-          discussionId,
-          title: searchText,
-          content: firstMessage,
-          lastMessageContent: {
-            ownerId: userId,
-            userName,
-            ownerType: DiscussionMessageOwnerType.System,
-            content: firstMessage,
-          },
-        }),
-      ),
-    );
+    // dispatch(
+    //   commonActions.setOptimisticFeedItem(
+    //     generateOptimisticFeedItem({
+    //       userId,
+    //       commonId,
+    //       type: CommonFeedType.OptimisticDiscussion,
+    //       circleVisibility: circleVisibility ?? [],
+    //       discussionId,
+    //       title: searchText,
+    //       content: firstMessage,
+    //       lastMessageContent: {
+    //         ownerId: userId,
+    //         userName,
+    //         ownerType: DiscussionMessageOwnerType.System,
+    //         content: firstMessage,
+    //       },
+    //     }),
+    //   ),
+    // );
 
-    dispatch(
-      commonActions.createDiscussion.request({
-        payload: {
-          id: discussionId,
-          title: searchText,
-          message: firstMessage,
-          ownerId: userId,
-          commonId,
-          images: [],
-          circleVisibility: circleVisibility ?? [],
-        },
-      }),
-    );
+    // dispatch(
+    //   commonActions.createDiscussion.request({
+    //     payload: {
+    //       id: discussionId,
+    //       title: searchText,
+    //       message: firstMessage,
+    //       ownerId: userId,
+    //       commonId,
+    //       images: [],
+    //       circleVisibility: circleVisibility ?? [],
+    //     },
+    //   }),
+    // );
 
     onCreateDiscussion(discussionId);
   };
