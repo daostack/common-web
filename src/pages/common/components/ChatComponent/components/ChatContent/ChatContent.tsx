@@ -68,6 +68,7 @@ interface ChatContentInterface {
   onMessageDelete?: (messageId: string) => void;
   directParent?: DirectParent | null;
   onUserClick?: (userId: string) => void;
+  onStreamMentionClick?: (link: string) => void;
   onFeedItemClick?: (feedItemId: string) => void;
   onInternalLinkClick?: (data: InternalLinkData) => void;
   isEmpty?: boolean;
@@ -106,6 +107,7 @@ const ChatContent: ForwardRefRenderFunction<
     onMessageDelete,
     directParent,
     onUserClick,
+    onStreamMentionClick,
     onFeedItemClick,
     onInternalLinkClick,
     isEmpty,
@@ -292,6 +294,7 @@ const ChatContent: ForwardRefRenderFunction<
                         onMessageDelete={onMessageDelete}
                         directParent={directParent}
                         onUserClick={onUserClick}
+                        onStreamMentionClick={onStreamMentionClick}
                         onFeedItemClick={onFeedItemClick}
                         onInternalLinkClick={onInternalLinkClick}
                         chatChannelId={chatChannelId}
@@ -312,6 +315,7 @@ const ChatContent: ForwardRefRenderFunction<
                         onMessageDelete={onMessageDelete}
                         directParent={directParent}
                         onUserClick={onUserClick}
+                        onStreamMentionClick={onStreamMentionClick}
                         onFeedItemClick={onFeedItemClick}
                         onInternalLinkClick={onInternalLinkClick}
                         isMessageEditAllowed={isMessageEditAllowed}

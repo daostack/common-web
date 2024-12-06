@@ -29,4 +29,5 @@ export * from "./removeTextEditorEmptyEndLinesValues";
 export * from "./countTextEditorEmojiElements";
 export * from "./insertEmoji";
 export * from "./insertMention";
+export * from "./insertStreamMention";
 export * from "./isRtlWithNoMentions";

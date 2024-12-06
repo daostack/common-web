@@ -167,6 +167,7 @@ const MobileChat: FC<ChatProps> = (props) => {
             directParent={directParent}
             renderChatInput={renderChatInput}
             onUserClick={onUserClick}
+            onStreamMentionClick={onFeedItemClick}
             onFeedItemClick={onFeedItemClick}
             onInternalLinkClick={onInternalLinkClick}
           />
