@@ -7,9 +7,8 @@ import {
   deserializeFeedItemFollowLayoutItem,
   FeedItemFollowLayoutItem,
 } from "@/shared/interfaces";
-import { CommonFeed } from "@/shared/models";
+import { CommonFeed, Timestamp } from "@/shared/models";
 import {
-  areTimestampsEqual,
   convertToTimestamp,
   sortFeedItemFollowLayoutItems as sortFeedItems,
 } from "@/shared/utils";
@@ -37,7 +36,7 @@ const initialPinnedFeedItems: PinnedFeedItems = {
   loading: false,
 };
 
-const initialSearchState: CommonSearchState = {
+export const initialSearchState: CommonSearchState = {
   isSearching: false,
   feedItems: null,
   pinnedFeedItems: null,
@@ -45,44 +44,37 @@ const initialSearchState: CommonSearchState = {
 };
 
 const initialState: CommonState = {
-  feedItems: { ...initialFeedItems },
-  pinnedFeedItems: { ...initialPinnedFeedItems },
-  searchState: { ...initialSearchState },
-  sharedFeedItemId: null,
-  sharedFeedItem: null,
-  optimisticFeedItems: new Map(),
-  optimisticDiscussionMessages: new Map(),
-  createdOptimisticFeedItems: new Map(),
+  feedItems: {},
+  pinnedFeedItems: {},
+  searchState: {},
+  sharedFeedItem: {},
   commonAction: null,
-  discussionCreation: {
-    data: null,
-    loading: false,
-  },
-  isNewProjectCreated: false,
-  proposalCreation: {
-    data: null,
-    loading: false,
-  },
-  commonMember: null,
-  governance: null,
+  discussionCreations: {},
+  proposalCreations: {},
+  isNewProjectCreated: {},
+  sharedFeedItemId: {},
+  commonMembers: {},
+  governance: {},
   recentStreamId: "",
   recentAssignedCircleByMember: {},
 };
 
 const updateFeedItemInList = (
   state: WritableDraft<CommonState>,
+  commonId: string,
   payload: {
     item: Partial<CommonFeed> & { id: string };
     isRemoved?: boolean;
   },
 ): void => {
-  if (!state.feedItems.data) {
+  const feedItems = state.feedItems[commonId];
+  if (!feedItems || !feedItems.data) {
     return;
   }
 
   const { item: updatedItem } = payload;
   const isRemoved = payload.isRemoved || updatedItem.isDeleted;
-  const feedItemIndex = state.feedItems.data?.findIndex(
+  const feedItemIndex = feedItems.data.findIndex(
     (item) => item.feedItem.id === updatedItem.id,
   );
 
@@ -90,8 +82,7 @@ const updateFeedItemInList = (
     return;
   }
 
-  const nextData = [...state.feedItems.data];
-
+  const nextData = [...feedItems.data];
   if (isRemoved) {
     nextData.splice(feedItemIndex, 1);
   } else {
@@ -109,24 +100,17 @@ const updateFeedItemInList = (
   const lastDocTimestamp =
     nextData[nextData.length - 1]?.feedItem.updatedAt || null;
 
-  state.feedItems = {
-    ...state.feedItems,
+  state.feedItems[commonId] = {
+    ...feedItems,
     data: nextData,
+    firstDocTimestamp,
+    lastDocTimestamp,
   };
-
-  if (
-    !areTimestampsEqual(state.feedItems.firstDocTimestamp, firstDocTimestamp)
-  ) {
-    state.feedItems.firstDocTimestamp = firstDocTimestamp;
-  }
-
-  if (!areTimestampsEqual(state.feedItems.lastDocTimestamp, lastDocTimestamp)) {
-    state.feedItems.lastDocTimestamp = lastDocTimestamp;
-  }
 };
 
 const addNewFeedItems = (
   state: WritableDraft<CommonState>,
+  commonId: string,
   payload: {
     commonFeedItem: CommonFeed;
     statuses: {
@@ -136,24 +120,25 @@ const addNewFeedItems = (
   }[],
   shouldSortNewItems = false,
 ) => {
+  const feedItems = state.feedItems[commonId] || initialFeedItems;
+
   const data = payload.reduceRight((acc, { commonFeedItem, statuses }) => {
     const nextData = [...acc];
-    const itemIndex = nextData.findIndex(
-      (item) => item.feedItem.id === commonFeedItem.id,
-    );
-    const isRemoved = statuses.isRemoved || commonFeedItem.isDeleted;
+    const itemIndex = nextData.findIndex((item) => {
+      return item?.feedItem?.id === commonFeedItem?.id;
+    });
+    const isRemoved = statuses.isRemoved || commonFeedItem?.isDeleted;
 
     if (isRemoved) {
       if (itemIndex >= 0) {
         nextData.splice(itemIndex, 1);
       }
-
       return nextData;
     }
 
     const finalItem: FeedItemFollowLayoutItem = {
       type: InboxItemType.FeedItemFollow,
-      itemId: commonFeedItem.id,
+      itemId: commonFeedItem?.id,
       feedItem: commonFeedItem,
     };
 
@@ -174,32 +159,24 @@ const addNewFeedItems = (
     }
 
     nextData.splice(indexForItemPlacement, 0, finalItem);
-
     return nextData;
-  }, state.feedItems.data || []);
+  }, feedItems.data || []);
   sortFeedItems(data);
 
-  const firstDocTimestamp = data[0]?.feedItem.updatedAt || null;
-  const lastDocTimestamp = data[data.length - 1]?.feedItem.updatedAt || null;
+  const firstDocTimestamp = data[0]?.feedItem?.updatedAt || null;
+  const lastDocTimestamp = data[data.length - 1]?.feedItem?.updatedAt || null;
 
-  state.feedItems = {
-    ...state.feedItems,
+  state.feedItems[commonId] = {
+    ...feedItems,
     data,
+    firstDocTimestamp,
+    lastDocTimestamp,
   };
-
-  if (
-    !areTimestampsEqual(state.feedItems.firstDocTimestamp, firstDocTimestamp)
-  ) {
-    state.feedItems.firstDocTimestamp = firstDocTimestamp;
-  }
-
-  if (!areTimestampsEqual(state.feedItems.lastDocTimestamp, lastDocTimestamp)) {
-    state.feedItems.lastDocTimestamp = lastDocTimestamp;
-  }
 };
 
 const addNewPinnedFeedItems = (
   state: WritableDraft<CommonState>,
+  commonId: string,
   payload: {
     commonFeedItem: CommonFeed;
     statuses: {
@@ -208,10 +185,16 @@ const addNewPinnedFeedItems = (
     };
   }[],
 ) => {
+  const pinnedFeedItems = state.pinnedFeedItems[commonId] || {
+    data: null,
+    loading: false,
+  };
+
   const data = payload.reduceRight((acc, { commonFeedItem, statuses }) => {
     const nextData = [...acc];
+
     const itemIndex = nextData.findIndex(
-      (item) => item.feedItem.id === commonFeedItem.id,
+      (item) => item?.feedItem?.id === commonFeedItem.id,
     );
     const isRemoved = statuses.isRemoved || commonFeedItem.isDeleted;
 
@@ -219,7 +202,6 @@ const addNewPinnedFeedItems = (
       if (itemIndex >= 0) {
         nextData.splice(itemIndex, 1);
       }
-
       return nextData;
     }
 
@@ -234,30 +216,34 @@ const addNewPinnedFeedItems = (
     }
 
     nextData[itemIndex] = finalItem;
-
     return nextData;
-  }, state.pinnedFeedItems.data || []);
+  }, pinnedFeedItems.data || []);
 
-  state.pinnedFeedItems = {
-    ...state.pinnedFeedItems,
+  state.pinnedFeedItems[commonId] = {
+    ...pinnedFeedItems,
     data,
   };
 };
 
 const updatePinnedFeedItemInList = (
   state: WritableDraft<CommonState>,
+  commonId: string,
   payload: {
     item: Partial<CommonFeed> & { id: string };
     isRemoved?: boolean;
   },
 ): FeedItemFollowLayoutItem | null => {
-  if (!state.pinnedFeedItems.data) {
+  const pinnedFeedItems = state.pinnedFeedItems[commonId] || {
+    data: null,
+    loading: false,
+  };
+  if (!pinnedFeedItems.data) {
     return null;
   }
 
   const { item: updatedItem } = payload;
   const isRemoved = payload.isRemoved || updatedItem.isDeleted;
-  const feedItemIndex = state.pinnedFeedItems.data?.findIndex(
+  const feedItemIndex = pinnedFeedItems.data.findIndex(
     (item) => item.feedItem.id === updatedItem.id,
   );
 
@@ -265,7 +251,7 @@ const updatePinnedFeedItemInList = (
     return null;
   }
 
-  const nextData = [...state.pinnedFeedItems.data];
+  const nextData = [...pinnedFeedItems.data];
   let itemToReturn: FeedItemFollowLayoutItem;
 
   if (isRemoved) {
@@ -282,8 +268,8 @@ const updatePinnedFeedItemInList = (
     itemToReturn = nextData[feedItemIndex];
   }
 
-  state.pinnedFeedItems = {
-    ...state.pinnedFeedItems,
+  state.pinnedFeedItems[commonId] = {
+    ...pinnedFeedItems,
     data: nextData,
   };
 
@@ -292,26 +278,27 @@ const updatePinnedFeedItemInList = (
 
 const updateSharedFeedItem = (
   state: WritableDraft<CommonState>,
+  commonId: string,
   payload: {
     item: Partial<CommonFeed> & { id: string };
     isRemoved?: boolean;
   },
 ): void => {
+  const sharedFeedItem = state.sharedFeedItem[commonId];
   const { item: updatedItem } = payload;
   const isRemoved = payload.isRemoved || updatedItem.isDeleted;
 
-  if (state.sharedFeedItem?.feedItem.id !== updatedItem.id) {
+  if (!sharedFeedItem || sharedFeedItem.feedItem.id !== updatedItem.id) {
     return;
   }
 
   if (isRemoved) {
-    state.sharedFeedItem = null;
-    state.sharedFeedItemId = null;
+    state.sharedFeedItem[commonId] = null;
   } else {
-    state.sharedFeedItem = {
-      ...state.sharedFeedItem,
+    state.sharedFeedItem[commonId] = {
+      ...sharedFeedItem,
       feedItem: {
-        ...state.sharedFeedItem.feedItem,
+        ...sharedFeedItem.feedItem,
         ...updatedItem,
       },
     };
@@ -319,7 +306,10 @@ const updateSharedFeedItem = (
 };
 
 export const reducer = createReducer<CommonState, Action>(initialState)
+  // Reset state
   .handleAction(actions.resetCommon, () => ({ ...initialState }))
+
+  // Common Actions
   .handleAction(actions.setCommonAction, (state, { payload }) =>
     produce(state, (nextState) => {
       nextState.commonAction = payload;
@@ -327,74 +317,104 @@ export const reducer = createReducer<CommonState, Action>(initialState)
   )
   .handleAction(actions.setCommonMember, (state, { payload }) =>
     produce(state, (nextState) => {
-      nextState.commonMember = payload;
+      const { commonId, member } = payload;
+      nextState.commonMembers[commonId] = member;
     }),
   )
   .handleAction(actions.setCommonGovernance, (state, { payload }) =>
     produce(state, (nextState) => {
-      nextState.governance = payload;
+      const { commonId, governance } = payload;
+      nextState.governance[commonId] = governance;
     }),
   )
+
+  // Discussion Creation
   .handleAction(actions.setDiscussionCreationData, (state, { payload }) =>
     produce(state, (nextState) => {
-      nextState.discussionCreation = {
-        data: payload,
+      const { commonId, data } = payload;
+      nextState.discussionCreations[commonId] = {
+        data,
         loading: false,
       };
     }),
   )
+  .handleAction(actions.createDiscussion.request, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const { commonId } = payload;
+      const discussionCreation = nextState.discussionCreations[commonId] || {
+        data: null,
+        loading: false,
+      };
+      nextState.discussionCreations[commonId] = {
+        ...discussionCreation,
+        loading: true,
+      };
+    }),
+  )
+  .handleAction(actions.createDiscussion.success, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const { commonId } = payload;
+      nextState.discussionCreations[commonId] = {
+        loading: false,
+        data: null,
+      };
+    }),
+  )
+  .handleAction(actions.createDiscussion.failure, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const { commonId } = payload;
+      const discussionCreation = nextState.discussionCreations[commonId] || {
+        data: null,
+        loading: false,
+      };
+      nextState.discussionCreations[commonId] = {
+        ...discussionCreation,
+        loading: false,
+      };
+    }),
+  )
+  .handleAction(actions.editDiscussion.request, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const { commonId } = payload;
+      const discussionCreation = nextState.discussionCreations[commonId] || {
+        data: null,
+        loading: false,
+      };
+      nextState.discussionCreations[commonId] = {
+        ...discussionCreation,
+        loading: true,
+      };
+    }),
+  )
+  .handleAction(actions.editDiscussion.success, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const { commonId } = payload;
+      nextState.discussionCreations[commonId] = {
+        loading: false,
+        data: null,
+      };
+    }),
+  )
+  .handleAction(actions.editDiscussion.failure, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const { commonId } = payload;
+      const discussionCreation = nextState.discussionCreations[commonId] || {
+        data: null,
+        loading: false,
+      };
+      nextState.discussionCreations[commonId] = {
+        ...discussionCreation,
+        loading: false,
+      };
+    }),
+  )
+
+  // Proposal Creation
   .handleAction(actions.setProposalCreationData, (state, { payload }) =>
     produce(state, (nextState) => {
-      nextState.proposalCreation = {
-        data: payload,
-        loading: false,
-      };
-    }),
-  )
-  .handleAction(actions.createDiscussion.request, (state) =>
-    produce(state, (nextState) => {
-      nextState.discussionCreation = {
-        ...nextState.discussionCreation,
-        loading: true,
-      };
-    }),
-  )
-  .handleAction(actions.createDiscussion.success, (state) =>
-    produce(state, (nextState) => {
-      nextState.discussionCreation = {
-        loading: false,
-        data: null,
-      };
-    }),
-  )
-  .handleAction(actions.createDiscussion.failure, (state) =>
-    produce(state, (nextState) => {
-      nextState.discussionCreation = {
-        ...nextState.discussionCreation,
-        loading: false,
-      };
-    }),
-  )
-  .handleAction(actions.editDiscussion.request, (state) =>
-    produce(state, (nextState) => {
-      nextState.discussionCreation = {
-        ...nextState.discussionCreation,
-        loading: true,
-      };
-    }),
-  )
-  .handleAction(actions.editDiscussion.success, (state) =>
-    produce(state, (nextState) => {
-      nextState.discussionCreation = {
-        loading: false,
-        data: null,
-      };
-    }),
-  )
-  .handleAction(actions.editDiscussion.failure, (state) =>
-    produce(state, (nextState) => {
-      nextState.discussionCreation = {
-        ...nextState.discussionCreation,
+      const { commonId, data } = payload;
+      nextState.proposalCreations[commonId] = {
+        data,
         loading: false,
       };
     }),
@@ -404,10 +424,15 @@ export const reducer = createReducer<CommonState, Action>(initialState)
       actions.createSurveyProposal.request,
       actions.createFundingProposal.request,
     ],
-    (state) =>
+    (state, { payload }) =>
       produce(state, (nextState) => {
-        nextState.proposalCreation = {
-          ...nextState.proposalCreation,
+        const { commonId } = payload;
+        const proposalCreation = nextState.proposalCreations[commonId] || {
+          data: null,
+          loading: false,
+        };
+        nextState.proposalCreations[commonId] = {
+          ...proposalCreation,
           loading: true,
         };
       }),
@@ -417,9 +442,10 @@ export const reducer = createReducer<CommonState, Action>(initialState)
       actions.createSurveyProposal.success,
       actions.createFundingProposal.success,
     ],
-    (state) =>
+    (state, { payload }) =>
       produce(state, (nextState) => {
-        nextState.proposalCreation = {
+        const { commonId } = payload;
+        nextState.proposalCreations[commonId] = {
           loading: false,
           data: null,
         };
@@ -430,119 +456,288 @@ export const reducer = createReducer<CommonState, Action>(initialState)
       actions.createSurveyProposal.failure,
       actions.createFundingProposal.failure,
     ],
-    (state) =>
+    (state, { payload }) =>
       produce(state, (nextState) => {
-        nextState.proposalCreation = {
-          ...nextState.proposalCreation,
+        const { commonId } = payload;
+        const proposalCreation = nextState.proposalCreations[commonId] || {
+          data: null,
+          loading: false,
+        };
+        nextState.proposalCreations[commonId] = {
+          ...proposalCreation,
           loading: false,
         };
       }),
   )
-  .handleAction(actions.getFeedItems.request, (state) =>
+
+  // Feed Items
+  .handleAction(actions.getFeedItems.request, (state, { payload }) =>
     produce(state, (nextState) => {
-      nextState.feedItems = {
-        ...nextState.feedItems,
-        loading: true,
-      };
+      const { commonId } = payload;
+      const feedItems = nextState.feedItems[commonId] || initialFeedItems;
+      nextState.feedItems[commonId] = { ...feedItems, loading: true };
     }),
   )
   .handleAction(actions.getFeedItems.success, (state, { payload }) =>
     produce(state, (nextState) => {
-      const payloadData = nextState.sharedFeedItemId
-        ? payload.data &&
-        payload.data.filter(
-          (item) => item.feedItem.id !== nextState.sharedFeedItemId,
-        )
-        : payload.data;
-      const nextData = nextState.feedItems.data || [];
-      const filteredPayloadData =
-        payloadData && differenceBy(payloadData, nextData, "feedItem.id");
+      const { commonId, data, hasMore, firstDocTimestamp, lastDocTimestamp } =
+        payload;
+      const feedItems = nextState.feedItems[commonId] || initialFeedItems;
 
-      nextState.feedItems = {
-        ...payload,
-        data: filteredPayloadData && nextData.concat(filteredPayloadData),
+      const existingData = feedItems.data || [];
+      const filteredData = differenceBy(data, existingData, "feedItem.id");
+
+      nextState.feedItems[commonId] = {
+        ...feedItems,
+        data: [...existingData, ...filteredData],
         loading: false,
-        batchNumber: nextState.feedItems.batchNumber + 1,
+        hasMore,
+        firstDocTimestamp,
+        lastDocTimestamp,
       };
     }),
   )
-  .handleAction(actions.getFeedItems.failure, (state) =>
+  .handleAction(actions.getFeedItems.failure, (state, { payload }) =>
     produce(state, (nextState) => {
-      nextState.feedItems = {
-        ...nextState.feedItems,
-        data: nextState.feedItems.data || [],
+      const { commonId } = payload;
+      const feedItems = nextState.feedItems[commonId] || initialFeedItems;
+      nextState.feedItems[commonId] = {
+        ...feedItems,
         loading: false,
         hasMore: false,
-        lastDocTimestamp: null,
       };
     }),
   )
-  .handleAction(actions.getPinnedFeedItems.request, (state) =>
+  .handleAction(actions.addNewFeedItems, (state, { payload }) =>
     produce(state, (nextState) => {
-      nextState.pinnedFeedItems = {
-        ...nextState.pinnedFeedItems,
+      const { commonId, items: newItems } = payload;
+      const feedItems = nextState.feedItems[commonId] || initialFeedItems;
+      const existingData = feedItems.data || [];
+
+      const mappedNewItems = newItems.map(({ commonFeedItem }) => ({
+        type: InboxItemType.FeedItemFollow as const,
+        feedItem: commonFeedItem,
+        itemId: commonFeedItem.id,
+      }));
+
+      const newData = differenceBy(mappedNewItems, existingData, "feedItem.id");
+      nextState.feedItems[commonId] = {
+        ...feedItems,
+        data: [...existingData, ...newData],
+      };
+    }),
+  )
+  .handleAction(actions.updateFeedItem, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const { commonId, item, isRemoved } = payload;
+
+      // Ensure the feedItems, pinnedFeedItems, and sharedFeedItems for the commonId exist
+      if (!nextState.feedItems[commonId]) {
+        nextState.feedItems[commonId] = { ...initialFeedItems };
+      }
+      if (!nextState.pinnedFeedItems[commonId]) {
+        nextState.pinnedFeedItems[commonId] = { ...initialPinnedFeedItems };
+      }
+      if (!nextState.sharedFeedItem[commonId]) {
+        nextState.sharedFeedItem[commonId] = null;
+      }
+
+      // Update lists for the specified commonId
+      updateFeedItemInList(nextState, commonId, { item, isRemoved });
+      updatePinnedFeedItemInList(nextState, commonId, { item, isRemoved });
+      updateSharedFeedItem(nextState, commonId, { item, isRemoved });
+    }),
+  )
+
+  // Pinned Feed Items
+  .handleAction(actions.getPinnedFeedItems.request, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const { commonId } = payload;
+      const pinnedFeedItems =
+        nextState.pinnedFeedItems[commonId] || initialPinnedFeedItems;
+      nextState.pinnedFeedItems[commonId] = {
+        ...pinnedFeedItems,
         loading: true,
       };
     }),
   )
   .handleAction(actions.getPinnedFeedItems.success, (state, { payload }) =>
     produce(state, (nextState) => {
-      nextState.pinnedFeedItems = {
-        data: payload.data,
+      const { commonId, data } = payload;
+      nextState.pinnedFeedItems[commonId] = {
+        data,
         loading: false,
       };
     }),
   )
-  .handleAction(actions.getPinnedFeedItems.failure, (state) =>
+  .handleAction(actions.getPinnedFeedItems.failure, (state, { payload }) =>
     produce(state, (nextState) => {
-      nextState.pinnedFeedItems = {
-        ...nextState.pinnedFeedItems,
-        data: nextState.pinnedFeedItems.data || [],
+      const { commonId } = payload;
+      const pinnedFeedItems =
+        nextState.pinnedFeedItems[commonId] || initialPinnedFeedItems;
+      nextState.pinnedFeedItems[commonId] = {
+        ...pinnedFeedItems,
         loading: false,
       };
+    }),
+  )
+  .handleAction(actions.addNewPinnedFeedItems, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const { commonId, items } = payload;
+
+      // Ensure pinnedFeedItems and feedItems are initialized for the commonId
+      if (!nextState.pinnedFeedItems[commonId]) {
+        nextState.pinnedFeedItems[commonId] = { ...initialPinnedFeedItems };
+      }
+      if (!nextState.feedItems[commonId]) {
+        nextState.feedItems[commonId] = { ...initialFeedItems };
+      }
+
+      // Add new pinned feed items
+      addNewPinnedFeedItems(nextState, commonId, items);
+
+      // Add items to feed items as "removed"
+      addNewFeedItems(
+        nextState,
+        commonId,
+        items.map((item) => ({
+          ...item,
+          statuses: {
+            isAdded: false,
+            isRemoved: true,
+          },
+        })),
+        true, // Ensure sorting is applied if required
+      );
+    }),
+  )
+
+  // Shared Feed Item
+  .handleAction(actions.setSharedFeedItem, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const { commonId, feedItem } = payload;
+      nextState.sharedFeedItem[commonId] = feedItem
+        ? {
+            type: InboxItemType.FeedItemFollow,
+            itemId: feedItem.id,
+            feedItem,
+          }
+        : null;
+    }),
+  )
+  .handleAction(actions.setFeedItemUpdatedAt, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const { commonId, feedItemId, lastMessage } = payload;
+
+      const feedItems = nextState.feedItems[commonId]?.data || [];
+
+      const updatedFeedItemIndex = feedItems.findIndex((feedItem) => {
+        return feedItem?.feedItem?.id === feedItemId;
+      });
+
+      if (updatedFeedItemIndex !== -1) {
+        const item = feedItems[updatedFeedItemIndex];
+        item.feedItem = {
+          ...item.feedItem,
+          updatedAt: Timestamp.fromDate(new Date()),
+          data: {
+            ...item.feedItem.data,
+            lastMessage,
+          },
+        };
+
+        // Sort feedItems by updatedAt in descending order
+        feedItems.sort((a, b) => {
+          const dateA = a?.feedItem?.updatedAt.toDate().getTime();
+          const dateB = b?.feedItem?.updatedAt.toDate().getTime();
+          return dateB - dateA; // Sort in descending order
+        });
+
+        const firstDocTimestamp = feedItems[0]?.feedItem?.updatedAt || null;
+        const lastDocTimestamp =
+          feedItems[feedItems.length - 1]?.feedItem?.updatedAt || null;
+
+        nextState.feedItems[commonId] = {
+          ...nextState.feedItems[commonId],
+          data: feedItems,
+          firstDocTimestamp,
+          lastDocTimestamp,
+        };
+      }
     }),
   )
   .handleAction(actions.setSearchState, (state, { payload }) =>
     produce(state, (nextState) => {
-      nextState.searchState = payload;
+      const { commonId, state: searchState } = payload;
+      nextState.searchState[commonId] = searchState;
     }),
   )
-  .handleAction(actions.resetSearchState, (state) =>
+  .handleAction(actions.resetSearchState, (state, { payload }) =>
     produce(state, (nextState) => {
-      nextState.searchState = { ...initialSearchState };
+      const { commonId } = payload;
+      nextState.searchState[commonId] = { ...initialSearchState };
     }),
   )
   .handleAction(actions.updateSearchFeedItems, (state, { payload }) =>
     produce(state, (nextState) => {
-      if (!nextState.searchState.feedItems) {
-        nextState.searchState.feedItems = [];
+      const { commonId, itemIds } = payload;
+
+      // Ensure the searchState for the given commonId is initialized
+      if (!nextState.searchState[commonId]) {
+        nextState.searchState[commonId] = { ...initialSearchState };
       }
 
-      payload.forEach((feedItemEntityId) => {
-        const feedItem = nextState.feedItems.data?.find(
+      if (!nextState.searchState[commonId].feedItems) {
+        nextState.searchState[commonId].feedItems = [];
+      }
+
+      // Get the feedItems for the given commonId
+      const feedItems = nextState.feedItems[commonId]?.data || [];
+
+      itemIds.forEach((feedItemEntityId) => {
+        const feedItem = feedItems.find(
           (item) =>
             item.feedItem.data.id === feedItemEntityId ||
             item.feedItem.data.discussionId === feedItemEntityId,
         );
 
         if (feedItem) {
-          nextState.searchState.feedItems!.push(feedItem);
+          nextState.searchState[commonId].feedItems!.push(feedItem);
         }
       });
     }),
   )
   .handleAction(actions.setIsSearchingFeedItems, (state, { payload }) =>
     produce(state, (nextState) => {
-      nextState.searchState.isSearching = payload;
+      const { commonId, isSearching } = payload;
+
+      // Ensure searchState exists for the commonId
+      if (!nextState.searchState[commonId]) {
+        nextState.searchState[commonId] = { ...initialSearchState };
+      }
+
+      nextState.searchState[commonId].isSearching = isSearching;
     }),
   )
   .handleAction(actions.setFeedState, (state, { payload }) =>
     produce(state, (nextState) => {
       const {
+        commonId,
         data: { feedItems, pinnedFeedItems, sharedFeedItem },
         sharedFeedItemId,
       } = payload;
-      nextState.feedItems = {
+
+      // Initialize feedItems and pinnedFeedItems for the commonId if not already present
+      if (!nextState.feedItems[commonId]) {
+        nextState.feedItems[commonId] = { ...initialFeedItems };
+      }
+
+      if (!nextState.pinnedFeedItems[commonId]) {
+        nextState.pinnedFeedItems[commonId] = { ...initialPinnedFeedItems };
+      }
+
+      // Update feedItems
+      nextState.feedItems[commonId] = {
         ...feedItems,
         data:
           feedItems.data &&
@@ -556,17 +751,24 @@ export const reducer = createReducer<CommonState, Action>(initialState)
             convertToTimestamp(feedItems.lastDocTimestamp)) ||
           null,
         hasMore: true,
+        loading: false, // Ensure required field
+        batchNumber: nextState.feedItems[commonId].batchNumber || 0, // Preserve or initialize
       };
-      nextState.pinnedFeedItems = {
+
+      // Update pinnedFeedItems
+      nextState.pinnedFeedItems[commonId] = {
         ...pinnedFeedItems,
         data:
           pinnedFeedItems.data &&
           pinnedFeedItems.data.map(deserializeFeedItemFollowLayoutItem),
+        loading: false, // Ensure required field
       };
 
+      // Handle sharedFeedItem logic
       if (sharedFeedItem && sharedFeedItem.itemId === sharedFeedItemId) {
         return;
       }
+
       if (
         sharedFeedItem &&
         !pinnedFeedItems.data?.some(
@@ -576,47 +778,45 @@ export const reducer = createReducer<CommonState, Action>(initialState)
       ) {
         const data = [sharedFeedItem, ...(feedItems.data || [])];
         sortFeedItems(data);
-        nextState.feedItems.data = data;
+        nextState.feedItems[commonId].data = data;
       }
+
+      // Remove sharedFeedItemId from feedItems and pinnedFeedItems
       if (sharedFeedItemId) {
-        nextState.feedItems.data =
-          nextState.feedItems.data &&
-          nextState.feedItems.data.filter(
-            (item) => item.itemId !== sharedFeedItemId,
+        if (!nextState.feedItems[commonId].data) {
+          nextState.feedItems[commonId].data = initialFeedItems.data; // Ensure it exists
+        }
+
+        nextState.feedItems[commonId].data =
+          nextState.feedItems?.[commonId]?.data &&
+          (nextState.feedItems[commonId]?.data ?? []).filter(
+            (item) => item?.itemId !== sharedFeedItemId,
           );
-        nextState.pinnedFeedItems.data =
-          nextState.pinnedFeedItems.data &&
-          nextState.pinnedFeedItems.data.filter(
-            (item) => item.itemId !== sharedFeedItemId,
+        nextState.pinnedFeedItems[commonId].data =
+          nextState.pinnedFeedItems?.[commonId]?.data &&
+          (nextState.pinnedFeedItems[commonId]?.data ?? []).filter(
+            (item) => item?.itemId !== sharedFeedItemId,
           );
       }
     }),
   )
-  .handleAction(actions.addNewFeedItems, (state, { payload }) =>
-    produce(state, (nextState) => {
-      addNewFeedItems(nextState, payload);
-    }),
-  )
-  .handleAction(actions.addNewPinnedFeedItems, (state, { payload }) =>
-    produce(state, (nextState) => {
-      addNewPinnedFeedItems(nextState, payload);
-      addNewFeedItems(
-        nextState,
-        payload.map((item) => ({
-          ...item,
-          statuses: {
-            isAdded: false,
-            isRemoved: true,
-          },
-        })),
-      );
-    }),
-  )
+
   .handleAction(actions.unpinFeedItems, (state, { payload }) =>
     produce(state, (nextState) => {
+      const { commonId, itemIds } = payload;
+
+      // Ensure the pinnedFeedItems and feedItems for the commonId are initialized
+      if (!nextState.pinnedFeedItems[commonId]) {
+        nextState.pinnedFeedItems[commonId] = { ...initialPinnedFeedItems };
+      }
+      if (!nextState.feedItems[commonId]) {
+        nextState.feedItems[commonId] = { ...initialFeedItems };
+      }
+
       const removedItems: FeedItemFollowLayoutItem[] = [];
-      payload.forEach((itemId) => {
-        const removedItem = updatePinnedFeedItemInList(nextState, {
+
+      itemIds.forEach((itemId) => {
+        const removedItem = updatePinnedFeedItemInList(nextState, commonId, {
           item: { id: itemId },
           isRemoved: true,
         });
@@ -632,6 +832,7 @@ export const reducer = createReducer<CommonState, Action>(initialState)
 
       addNewFeedItems(
         nextState,
+        commonId,
         removedItems.map((item) => ({
           commonFeedItem: item.feedItem,
           statuses: {
@@ -643,29 +844,50 @@ export const reducer = createReducer<CommonState, Action>(initialState)
       );
     }),
   )
-  .handleAction(actions.updateFeedItem, (state, { payload }) =>
+  .handleAction(actions.resetFeedItems, (state, { payload }) =>
     produce(state, (nextState) => {
-      updateFeedItemInList(nextState, payload);
-      updatePinnedFeedItemInList(nextState, payload);
-      updateSharedFeedItem(nextState, payload);
-    }),
-  )
-  .handleAction(actions.resetFeedItems, (state) =>
-    produce(state, (nextState) => {
-      nextState.feedItems = { ...initialFeedItems };
-      nextState.pinnedFeedItems = { ...initialPinnedFeedItems };
-      nextState.sharedFeedItemId = null;
-      nextState.sharedFeedItem = null;
+      const { commonId } = payload;
+
+      // Reset the feed items for the given commonId
+      if (nextState.feedItems[commonId]) {
+        nextState.feedItems[commonId] = { ...initialFeedItems };
+      }
+
+      // Reset the pinned feed items for the given commonId
+      if (nextState.pinnedFeedItems[commonId]) {
+        nextState.pinnedFeedItems[commonId] = { ...initialPinnedFeedItems };
+      }
+
+      // Reset the shared feed item for the given commonId
+      if (nextState.sharedFeedItem[commonId]) {
+        nextState.sharedFeedItem[commonId] = null;
+      }
     }),
   )
   .handleAction(actions.setIsNewProjectCreated, (state, { payload }) =>
     produce(state, (nextState) => {
-      nextState.isNewProjectCreated = payload;
+      const { commonId, isCreated } = payload;
+
+      // Ensure the isNewProjectCreated map is initialized
+      if (!nextState.isNewProjectCreated) {
+        nextState.isNewProjectCreated = {};
+      }
+
+      // Set the value for the specific commonId
+      nextState.isNewProjectCreated[commonId] = isCreated;
     }),
   )
   .handleAction(actions.setSharedFeedItemId, (state, { payload }) =>
     produce(state, (nextState) => {
-      nextState.sharedFeedItemId = payload;
+      const { commonId, sharedFeedItemId } = payload;
+
+      // Ensure sharedFeedItemIds map is initialized
+      if (!nextState.sharedFeedItem) {
+        nextState.sharedFeedItemId = {};
+      }
+
+      // Set the sharedFeedItemId for the given commonId
+      nextState.sharedFeedItemId[commonId] = sharedFeedItemId;
     }),
   )
   .handleAction(actions.setRecentStreamId, (state, { payload }) =>
@@ -675,111 +897,26 @@ export const reducer = createReducer<CommonState, Action>(initialState)
   )
   .handleAction(actions.setRecentAssignedCircleByMember, (state, { payload }) =>
     produce(state, (nextState) => {
-      const { memberId, circle } = payload;
+      const { commonId, memberId, circle } = payload;
 
-      nextState.recentAssignedCircleByMember[memberId] = circle;
-    }),
-  )
-  .handleAction(actions.resetRecentAssignedCircleByMember, (state) =>
-    produce(state, (nextState) => {
-      nextState.recentAssignedCircleByMember = {};
-    }),
-  )
-  .handleAction(actions.setSharedFeedItem, (state, { payload }) =>
-    produce(state, (nextState) => {
-      nextState.sharedFeedItem = payload
-        ? {
-          type: InboxItemType.FeedItemFollow,
-          itemId: payload.id,
-          feedItem: payload,
-        }
-        : null;
-    }),
-  )
-  .handleAction(actions.setOptimisticFeedItem, (state, { payload }) =>
-    produce(state, (nextState) => {
-        const updatedMap = new Map(nextState.optimisticFeedItems);
-
-        const optimisticItemId = payload.data.discussionId ?? payload.data.id;
-        // Add the new item to the Map
-        updatedMap.set(optimisticItemId, {
-          type: InboxItemType.FeedItemFollow,
-          itemId: payload.id,
-          feedItem: payload,
-        });
-
-        // Assign the new Map back to the state
-        nextState.optimisticFeedItems = updatedMap;
-        nextState.recentStreamId = optimisticItemId;
-    }),
-  )
-  .handleAction(actions.updateOptimisticFeedItemState, (state, { payload }) =>
-    produce(state, (nextState) => {
-      const updatedMap = new Map(nextState.optimisticFeedItems);
-
-      const optimisticFeedItem = updatedMap.get(payload.id);
-      // Add the new item to the Map
-
-      if(optimisticFeedItem && optimisticFeedItem?.feedItem.optimisticData) {
-        updatedMap.set(payload.id, {
-          ...optimisticFeedItem,
-          feedItem: {
-            ...optimisticFeedItem?.feedItem,
-            optimisticData: {
-              ...optimisticFeedItem.feedItem.optimisticData,
-              state: payload.state
-            }
-          }
-        });
+      // Ensure the recentAssignedCircleByMember map for the commonId exists
+      if (!nextState.recentAssignedCircleByMember[commonId]) {
+        nextState.recentAssignedCircleByMember[commonId] = {};
       }
 
-      // Assign the new Map back to the state
-      nextState.optimisticFeedItems = updatedMap;
+      // Update the circle for the given memberId within the commonId
+      nextState.recentAssignedCircleByMember[commonId][memberId] = circle;
     }),
   )
-  .handleAction(actions.removeOptimisticFeedItemState, (state, { payload }) =>
-    produce(state, (nextState) => {
-      const createdOptimisticFeedItemsMap = new Map(nextState.createdOptimisticFeedItems);
-      const updatedMap = new Map(nextState.optimisticFeedItems);
+  .handleAction(
+    actions.resetRecentAssignedCircleByMember,
+    (state, { payload }) =>
+      produce(state, (nextState) => {
+        const { commonId } = payload;
 
-      createdOptimisticFeedItemsMap.set(payload.id, updatedMap.get(payload.id));
-      updatedMap.delete(payload.id);
-
-      // Assign the new Map back to the state
-      nextState.optimisticFeedItems = updatedMap;
-      nextState.createdOptimisticFeedItems = createdOptimisticFeedItemsMap;
-    }),
-  )
-  .handleAction(actions.setOptimisticDiscussionMessages, (state, { payload }) =>
-    produce(state, (nextState) => {
-        const updatedMap = new Map(nextState.optimisticDiscussionMessages);
-
-        const discussionMessages = updatedMap.get(payload.discussionId) ?? [];
-        discussionMessages.push(payload);
-        // Add the new item to the Map
-        updatedMap.set(payload.discussionId, discussionMessages);
-
-        // Assign the new Map back to the state
-        nextState.optimisticDiscussionMessages = updatedMap;
-    }),
-  )
-  .handleAction(actions.clearOptimisticDiscussionMessages, (state, { payload }) =>
-    produce(state, (nextState) => {
-      const updatedMap = new Map(nextState.optimisticDiscussionMessages);
-
-      updatedMap.delete(payload);
-
-      // Assign the new Map back to the state
-      nextState.optimisticDiscussionMessages = updatedMap;
-    }),
-  )
-  .handleAction(actions.clearCreatedOptimisticFeedItem, (state, { payload }) =>
-    produce(state, (nextState) => {
-      const updatedMap = new Map(nextState.createdOptimisticFeedItems);
-
-      updatedMap.delete(payload);
-
-      // Assign the new Map back to the state
-      nextState.createdOptimisticFeedItems = updatedMap;
-    }),
+        // Reset the recentAssignedCircleByMember for the specific commonId
+        if (nextState.recentAssignedCircleByMember[commonId]) {
+          nextState.recentAssignedCircleByMember[commonId] = {};
+        }
+      }),
   );

@@ -46,7 +46,9 @@ const ProposalCreationForm: FC<ProposalCreationFormProps> = (props) => {
     commonBalance,
   } = props;
   const disabled = isLoading;
-  const creationData = useSelector(selectProposalCreationData);
+  const creationData = useSelector(
+    selectProposalCreationData(governance.commonId),
+  );
 
   return (
     <Formik
@@ -97,7 +99,7 @@ const ProposalCreationForm: FC<ProposalCreationFormProps> = (props) => {
               </Button>
             </div>
           </div>
-          <ProposalFormPersist />
+          <ProposalFormPersist commonId={governance.commonId} />
         </Form>
       )}
     </Formik>

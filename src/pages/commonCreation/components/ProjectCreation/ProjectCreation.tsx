@@ -95,7 +95,12 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
         notificationsAmount: 0,
       };
 
-      dispatch(commonActions.setIsNewProjectCreated(true));
+      dispatch(
+        commonActions.setIsNewProjectCreated({
+          isCreated: true,
+          commonId: createdProject.id,
+        }),
+      );
       CommonEventEmitter.emit(
         CommonEvent.ProjectCreatedOrUpdated,
         projectsStateItem,

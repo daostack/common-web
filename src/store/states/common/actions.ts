@@ -6,6 +6,7 @@ import {
 } from "@/pages/OldCommon/interfaces";
 import { CommonAction, ProposalsTypes } from "@/shared/constants";
 import {
+  FeedItemFollowLayoutItem,
   NewDiscussionCreationFormValues,
   NewProposalCreationFormValues,
   PayloadWithOptionalCallback,
@@ -17,18 +18,16 @@ import {
   CommonMember,
   Discussion,
   Governance,
-  OptimisticFeedItemState,
+  LastMessageContentWithMessageId,
   Proposal,
 } from "@/shared/models";
 import { CommonActionType } from "./constants";
 import {
   CommonSearchState,
-  CommonState,
   FeedItems,
   FeedItemsPayload,
   PinnedFeedItems,
 } from "./types";
-import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 
 export const resetCommon = createStandardAction(
   CommonActionType.RESET_COMMON,
@@ -40,19 +39,31 @@ export const setCommonAction = createStandardAction(
 
 export const setCommonMember = createStandardAction(
   CommonActionType.SET_COMMON_MEMBER,
-)<CommonMember | null>();
+)<{
+  commonId: string;
+  member: CommonMember | null;
+}>();
 
 export const setCommonGovernance = createStandardAction(
   CommonActionType.SET_COMMON_GOVERNANCE,
-)<Governance | null>();
+)<{
+  commonId: string;
+  governance: Governance | null;
+}>();
 
 export const setDiscussionCreationData = createStandardAction(
   CommonActionType.SET_DISCUSSION_CREATION_DATA,
-)<NewDiscussionCreationFormValues | null>();
+)<{
+  commonId: string;
+  data: NewDiscussionCreationFormValues | null;
+}>();
 
 export const setProposalCreationData = createStandardAction(
   CommonActionType.SET_PROPOSAL_CREATION_DATA,
-)<NewProposalCreationFormValues | null>();
+)<{
+  commonId: string;
+  data: NewProposalCreationFormValues | null;
+}>();
 
 export const createDiscussion = createAsyncAction(
   CommonActionType.CREATE_DISCUSSION,
@@ -66,9 +77,9 @@ export const createDiscussion = createAsyncAction(
     },
     Discussion,
     Error
-  >,
-  Discussion,
-  Error
+  > & { commonId: string },
+  { commonId: string; discussion: Discussion },
+  { commonId: string; error: Error }
 >();
 
 export const editDiscussion = createAsyncAction(
@@ -83,9 +94,9 @@ export const editDiscussion = createAsyncAction(
     },
     Discussion,
     Error
-  >,
-  Discussion,
-  Error
+  > & { commonId: string },
+  { commonId: string; discussion: Discussion },
+  { commonId: string; error: Error }
 >();
 
 export const createSurveyProposal = createAsyncAction(
@@ -97,9 +108,9 @@ export const createSurveyProposal = createAsyncAction(
     CreateProposalWithFiles<ProposalsTypes.SURVEY>,
     Proposal,
     Error
-  >,
-  Proposal,
-  Error
+  > & { commonId: string },
+  { commonId: string; proposal: Proposal },
+  { commonId: string; error: Error }
 >();
 
 export const createFundingProposal = createAsyncAction(
@@ -111,9 +122,9 @@ export const createFundingProposal = createAsyncAction(
     CreateProposalWithFiles<ProposalsTypes.FUNDS_ALLOCATION>,
     Proposal,
     Error
-  >,
-  Proposal,
-  Error
+  > & { commonId: string },
+  { commonId: string; proposal: Proposal },
+  { commonId: string; error: Error }
 >();
 
 export const getFeedItems = createAsyncAction(
@@ -122,10 +133,10 @@ export const getFeedItems = createAsyncAction(
   CommonActionType.GET_FEED_ITEMS_FAILURE,
   CommonActionType.GET_FEED_ITEMS_CANCEL,
 )<
-  FeedItemsPayload,
-  Omit<FeedItems, "loading" | "batchNumber">,
-  Error,
-  string
+  { commonId: string } & FeedItemsPayload,
+  { commonId: string } & Omit<FeedItems, "loading" | "batchNumber">,
+  { commonId: string; error: Error },
+  { commonId: string }
 >();
 
 export const getPinnedFeedItems = createAsyncAction(
@@ -134,120 +145,125 @@ export const getPinnedFeedItems = createAsyncAction(
   CommonActionType.GET_PINNED_FEED_ITEMS_FAILURE,
   CommonActionType.GET_PINNED_FEED_ITEMS_CANCEL,
 )<
-  {
-    commonId: string;
-  },
-  Omit<PinnedFeedItems, "loading">,
-  Error,
-  string
+  { commonId: string },
+  { commonId: string } & Omit<PinnedFeedItems, "loading">,
+  { commonId: string; error: Error },
+  { commonId: string }
 >();
 
 export const setFeedState = createStandardAction(
   CommonActionType.SET_FEED_STATE,
 )<{
-  data: Pick<CommonState, "feedItems" | "pinnedFeedItems" | "sharedFeedItem">;
+  commonId: string;
+  data: {
+    feedItems: FeedItems;
+    pinnedFeedItems: PinnedFeedItems;
+    sharedFeedItem: FeedItemFollowLayoutItem;
+  };
   sharedFeedItemId?: string | null;
 }>();
 
 export const addNewFeedItems = createStandardAction(
   CommonActionType.ADD_NEW_FEED_ITEMS,
-)<
-  {
+)<{
+  commonId: string;
+  items: {
     commonFeedItem: CommonFeed;
     statuses: {
       isAdded: boolean;
       isRemoved: boolean;
     };
-  }[]
->();
+  }[];
+}>();
 
 export const addNewPinnedFeedItems = createStandardAction(
   CommonActionType.ADD_NEW_PINNED_FEED_ITEMS,
-)<
-  {
+)<{
+  commonId: string;
+  items: {
     commonFeedItem: CommonFeed;
     statuses: {
       isAdded: boolean;
       isRemoved: boolean;
     };
-  }[]
->();
+  }[];
+}>();
 
 export const unpinFeedItems = createStandardAction(
   CommonActionType.UNPIN_FEED_ITEMS,
-)<string[]>();
+)<{
+  commonId: string;
+  itemIds: string[];
+}>();
 
 export const updateFeedItem = createStandardAction(
   CommonActionType.UPDATE_FEED_ITEM,
 )<{
+  commonId: string;
   item: Partial<CommonFeed> & { id: string };
   isRemoved?: boolean;
 }>();
 
 export const resetFeedItems = createStandardAction(
   CommonActionType.RESET_FEED_ITEMS,
-)();
+)<{
+  commonId: string;
+}>();
 
 export const searchFeedItems = createStandardAction(
   CommonActionType.SEARCH_FEED_ITEMS,
-)<string>();
+)<{
+  commonId: string;
+  searchValue: string;
+}>();
 
 export const setSearchState = createStandardAction(
   CommonActionType.SET_SEARCH_STATE,
-)<CommonSearchState>();
+)<{
+  commonId: string;
+  state: CommonSearchState;
+}>();
 
 export const resetSearchState = createStandardAction(
   CommonActionType.RESET_SEARCH_STATE,
-)();
+)<{
+  commonId: string;
+}>();
 
 export const updateSearchFeedItems = createStandardAction(
   CommonActionType.UPDATE_SEARCH_FEED_ITEMS,
-)<string[]>();
+)<{
+  commonId: string;
+  itemIds: string[];
+}>();
 
 export const setIsSearchingFeedItems = createStandardAction(
   CommonActionType.SET_IS_SEARCHING_FEED_ITEMS,
-)<boolean>();
+)<{
+  commonId: string;
+  isSearching: boolean;
+}>();
 
 export const setIsNewProjectCreated = createStandardAction(
   CommonActionType.SET_IS_NEW_PROJECT_CREATED,
-)<boolean>();
+)<{
+  commonId: string;
+  isCreated: boolean;
+}>();
 
 export const setSharedFeedItemId = createStandardAction(
   CommonActionType.SET_SHARED_FEED_ITEM_ID,
-)<string | null>();
+)<{
+  commonId: string;
+  sharedFeedItemId: string | null;
+}>();
 
 export const setSharedFeedItem = createStandardAction(
   CommonActionType.SET_SHARED_FEED_ITEM,
-)<CommonFeed | null>();
-
-export const setOptimisticFeedItem = createStandardAction(
-  CommonActionType.SET_OPTIMISTIC_FEED_ITEM,
-)<CommonFeed>();
-
-export const updateOptimisticFeedItemState = createStandardAction(
-  CommonActionType.UPDATE_OPTIMISTIC_FEED_ITEM,
 )<{
-  id: string;
-  state: OptimisticFeedItemState;
+  commonId: string;
+  feedItem: CommonFeed | null;
 }>();
-
-export const removeOptimisticFeedItemState = createStandardAction(
-  CommonActionType.REMOVE_OPTIMISTIC_FEED_ITEM,
-)<{
-  id: string;
-}>();
-
-export const setOptimisticDiscussionMessages = createStandardAction(
-  CommonActionType.SET_OPTIMISTIC_DISCUSSION_MESSAGES,
-)<CreateDiscussionMessageDto>();
-
-export const clearOptimisticDiscussionMessages = createStandardAction(
-  CommonActionType.CLEAR_OPTIMISTIC_DISCUSSION_MESSAGES,
-)<string>();
-
-export const clearCreatedOptimisticFeedItem = createStandardAction(
-  CommonActionType.CLEAR_CREATED_OPTIMISTIC_FEED_ITEM,
-)<string>();
 
 export const setRecentStreamId = createStandardAction(
   CommonActionType.SET_RECENT_STREAM_ID,
@@ -256,10 +272,21 @@ export const setRecentStreamId = createStandardAction(
 export const setRecentAssignedCircleByMember = createStandardAction(
   CommonActionType.SET_RECENT_ASSIGNED_CIRCLE_BY_MEMBER,
 )<{
+  commonId: string;
   memberId: string;
   circle: Circle;
 }>();
 
 export const resetRecentAssignedCircleByMember = createStandardAction(
   CommonActionType.RESET_RECENT_ASSIGNED_CIRCLE_BY_MEMBER,
-)();
+)<{
+  commonId: string;
+}>();
+
+export const setFeedItemUpdatedAt = createStandardAction(
+  CommonActionType.SET_FEED_ITEM_UPDATED_AT,
+)<{
+  commonId: string;
+  feedItemId: string;
+  lastMessage: LastMessageContentWithMessageId;
+}>();

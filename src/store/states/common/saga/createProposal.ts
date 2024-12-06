@@ -28,14 +28,24 @@ export function* createSurveyProposal(
     );
 
     yield put(actions.setCommonAction(null));
-    yield put(actions.createSurveyProposal.success(proposal));
+    yield put(
+      actions.createSurveyProposal.success({
+        proposal,
+        commonId: payload.commonId,
+      }),
+    );
 
     if (payload.callback) {
       payload.callback(null, proposal);
     }
   } catch (error) {
     if (isError(error)) {
-      yield put(actions.createSurveyProposal.failure(error));
+      yield put(
+        actions.createSurveyProposal.failure({
+          error,
+          commonId: payload.commonId,
+        }),
+      );
 
       if (payload.callback) {
         payload.callback(error);
@@ -67,14 +77,24 @@ export function* createFundingProposal(
     );
 
     yield put(actions.setCommonAction(null));
-    yield put(actions.createFundingProposal.success(proposal));
+    yield put(
+      actions.createFundingProposal.success({
+        proposal,
+        commonId: payload.commonId,
+      }),
+    );
 
     if (payload.callback) {
       payload.callback(null, proposal);
     }
   } catch (error) {
     if (isError(error)) {
-      yield put(actions.createFundingProposal.failure(error));
+      yield put(
+        actions.createFundingProposal.failure({
+          error,
+          commonId: payload.commonId,
+        }),
+      );
 
       if (payload.callback) {
         payload.callback(error);

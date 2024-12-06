@@ -79,12 +79,17 @@ const BaseCommon: FC<CommonProps> = (props) => {
   }, [userId]);
 
   useEffect(() => {
-    dispatch(setCommonMember(commonMember || null));
+    dispatch(setCommonMember({ commonId, member: commonMember || null }));
     onCommonMemberChange?.(commonMember || null);
   }, [dispatch, commonMember]);
 
   useEffect(() => {
-    dispatch(setCommonGovernance(commonData?.governance || null));
+    dispatch(
+      setCommonGovernance({
+        commonId,
+        governance: commonData?.governance || null,
+      }),
+    );
   }, [dispatch, commonData?.governance]);
 
   useEffect(() => {

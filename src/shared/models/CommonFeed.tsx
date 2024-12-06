@@ -28,6 +28,14 @@ export interface LastMessageContent {
   ownerType?: DiscussionMessageOwnerType;
 }
 
+export interface LastMessageContentWithMessageId {
+  userName: string;
+  ownerId: string;
+  content: string;
+  ownerType?: DiscussionMessageOwnerType;
+  messageId: string;
+}
+
 export type DiscussionWithOptimisticData = Discussion & {
   state?: OptimisticFeedItemState; // Optional state property
   lastMessageContent: LastMessageContent; // Additional property

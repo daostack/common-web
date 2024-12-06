@@ -34,3 +34,5 @@ export { default as useLightThemeOnly } from "./useLightThemeOnly";
 export * from "./useToggle";
 export * from "./useTraceUpdate";
 export * from "./useFetchDiscussionsByCommonId";
+export * from "./useElementPresence";
+export * from "./useIsElementFocused";

@@ -67,8 +67,12 @@ import {
   selectOptimisticFeedItems,
   commonActions,
   selectOptimisticDiscussionMessages,
+  inboxActions,
+  optimisticActions,
+  selectInstantDiscussionMessagesOrder,
 } from "@/store/states";
 import { ChatContentContext, ChatContentData } from "../CommonContent/context";
+import { useFeedItemContext } from "../FeedItem";
 import {
   ChatContent,
   ChatContentRef,
@@ -88,6 +92,7 @@ import {
 import styles from "./ChatComponent.module.scss";
 
 const BASE_CHAT_INPUT_HEIGHT = 48;
+const BASE_ORDER_INTERVAL = 1000;
 
 interface ChatComponentInterface {
   commonId: string;
@@ -261,6 +266,17 @@ export default function ChatComponent({
     parseStringToTextEditorValue(),
   );
 
+  const { setIsInputFocused } = useFeedItemContext();
+
+  useEffect(() => {
+    const isEmpty = checkIsTextEditorValueEmpty(message);
+    if (!isEmpty || message.length > 1) {
+      setIsInputFocused?.(true);
+    } else {
+      setIsInputFocused?.(false);
+    }
+  }, [message, setIsInputFocused]);
+
   const emojiCount = useMemo(
     () => countTextEditorEmojiElements(message),
     [message],
@@ -282,6 +298,12 @@ export default function ChatComponent({
   const optimisticDiscussionMessages = useSelector(
     selectOptimisticDiscussionMessages,
   );
+  const instantDiscussionMessagesOrder = useSelector(
+    selectInstantDiscussionMessagesOrder,
+  );
+
+  const currentChatOrder =
+    instantDiscussionMessagesOrder.get(discussionId)?.order || 1;
 
   const isOptimisticChat = optimisticFeedItems.has(discussionId);
 
@@ -302,7 +324,7 @@ export default function ChatComponent({
               });
 
               dispatch(
-                commonActions.clearOptimisticDiscussionMessages(
+                optimisticActions.clearOptimisticDiscussionMessages(
                   optimisticMessageDiscussionId,
                 ),
               );
@@ -421,8 +443,8 @@ export default function ChatComponent({
         setMessages([]);
       }
     },
-    1500,
-    [newMessages, discussionId, dispatch],
+    1500 + BASE_ORDER_INTERVAL * currentChatOrder,
+    [newMessages, discussionId, dispatch, currentChatOrder],
   );
 
   /**
@@ -580,7 +602,7 @@ export default function ChatComponent({
         }
 
         if (isOptimisticChat) {
-          dispatch(commonActions.setOptimisticDiscussionMessages(payload));
+          dispatch(optimisticActions.setOptimisticDiscussionMessages(payload));
         } else {
           setMessages((prev) => {
             if (isFilesMessageWithoutTextAndImages) {
@@ -589,6 +611,11 @@ export default function ChatComponent({
 
             return [...prev, ...filePreviewPayload, payload];
           });
+          dispatch(
+            optimisticActions.setInstantDiscussionMessagesOrder({
+              discussionId,
+            }),
+          );
         }
 
         if (isChatChannel) {
@@ -613,6 +640,28 @@ export default function ChatComponent({
         if (currentFilesPreview) {
           dispatch(chatActions.clearFilesPreview());
         }
+
+        const payloadUpdateFeedItem = {
+          feedItemId,
+          lastMessage: {
+            messageId: pendingMessageId,
+            ownerId: userId as string,
+            userName: getUserName(user),
+            ownerType: DiscussionMessageOwnerType.User,
+            content: JSON.stringify(message),
+          },
+        };
+
+        dispatch(
+          commonActions.setFeedItemUpdatedAt({
+            ...payloadUpdateFeedItem,
+            commonId,
+          }),
+        );
+        dispatch(inboxActions.setInboxItemUpdatedAt(payloadUpdateFeedItem));
+        document
+          .getElementById("feedLayoutWrapper")
+          ?.scrollIntoView({ behavior: "smooth" });
         focusOnChat();
       }
     },
@@ -627,6 +676,7 @@ export default function ChatComponent({
       isChatChannel,
       linkPreviewData,
       isOptimisticChat,
+      feedItemId,
     ],
   );
 

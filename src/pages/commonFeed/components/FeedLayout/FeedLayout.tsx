@@ -13,7 +13,7 @@ import React, {
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import PullToRefresh from "react-simple-pull-to-refresh";
-import { useDeepCompareEffect, useWindowSize } from "react-use";
+import { useDeepCompareEffect, useKey, useWindowSize } from "react-use";
 import classNames from "classnames";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
@@ -44,7 +44,11 @@ import {
   ROUTE_PATHS,
 } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
-import { useMemoizedFunction, useQueryParams } from "@/shared/hooks";
+import {
+  useElementPresence,
+  useMemoizedFunction,
+  useQueryParams,
+} from "@/shared/hooks";
 import { useGovernanceByCommonId } from "@/shared/hooks/useCases";
 import { useDisableOverscroll } from "@/shared/hooks/useDisableOverscroll";
 import { useIsTabletView } from "@/shared/hooks/viewport";
@@ -75,7 +79,10 @@ import {
   getParamsFromOneOfRoutes,
   getUserName,
 } from "@/shared/utils";
-import { selectCreatedOptimisticFeedItems, selectRecentStreamId } from "@/store/states";
+import {
+  selectCreatedOptimisticFeedItems,
+  selectRecentStreamId,
+} from "@/store/states";
 import { MIN_CONTENT_WIDTH } from "../../constants";
 import {
   DesktopChat,
@@ -90,6 +97,7 @@ import {
 import {
   BATCHES_AMOUNT_TO_PRELOAD,
   ITEMS_AMOUNT_TO_PRE_LOAD_MESSAGES,
+  MENTION_TAG_ELEMENT,
 } from "./constants";
 import { useUserForProfile } from "./hooks";
 import {
@@ -199,7 +207,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const queryParams = useQueryParams();
   const isTabletView = useIsTabletView();
   const user = useSelector(selectUser());
-  const createdOptimisticFeedItems = useSelector(selectCreatedOptimisticFeedItems);
+  const createdOptimisticFeedItems = useSelector(
+    selectCreatedOptimisticFeedItems,
+  );
   const recentStreamId = useSelector(selectRecentStreamId);
   const userId = user?.uid;
   const [chatItem, setChatItem] = useState<ChatItem | null>();
@@ -281,6 +291,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     if (topFeedItems) {
       items.push(...topFeedItems);
     }
+
     if (feedItems) {
       items.push(...feedItems);
     }
@@ -353,6 +364,11 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const activeFeedItemId = chatItem?.feedItemId || feedItemIdForAutoChatOpen;
   const sizeKey = `${windowWidth}_${contentWidth}`;
 
+  const activeFeedItemIndex = useMemo(
+    () => allFeedItems.findIndex((item) => item.itemId === activeFeedItemId),
+    [activeFeedItemId, allFeedItems],
+  );
+
   const getUserCircleIds = useCallback(
     (commonId) => {
       return Object.values(
@@ -404,6 +420,79 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     setShouldAllowChatAutoOpen(false);
     setChatItem(nextChatItem);
   }, []);
+
+  const isMentionOpen = useElementPresence(
+    MENTION_TAG_ELEMENT.key,
+    MENTION_TAG_ELEMENT.value,
+  );
+  const [isInputFocused, setIsInputFocused] = useState(false);
+
+  const handleArrowUp = (
+    event,
+    activeFeedItemIndex,
+    allFeedItems,
+    isMentionOpen,
+    setChatItem,
+  ) => {
+    if (!isMentionOpen && !isInputFocused) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (activeFeedItemIndex > 0) {
+        const nextFeedItemId = allFeedItems[activeFeedItemIndex - 1]?.itemId;
+
+        setChatItem({ feedItemId: nextFeedItemId });
+      }
+    }
+  };
+
+  const handleArrowDown = (
+    event,
+    activeFeedItemIndex,
+    allFeedItems,
+    isMentionOpen,
+    setChatItem,
+  ) => {
+    if (!isMentionOpen && !isInputFocused) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (activeFeedItemIndex < allFeedItems.length - 1) {
+        const nextFeedItemId = allFeedItems[activeFeedItemIndex + 1]?.itemId;
+
+        setChatItem({ feedItemId: nextFeedItemId });
+      }
+    }
+  };
+
+  // Inside your component
+  useKey(
+    "ArrowUp",
+    (event) =>
+      handleArrowUp(
+        event,
+        activeFeedItemIndex,
+        allFeedItems,
+        isMentionOpen,
+        setChatItem,
+      ),
+    {},
+    [activeFeedItemIndex, allFeedItems, isMentionOpen, isInputFocused],
+  );
+
+  useKey(
+    "ArrowDown",
+    (event) =>
+      handleArrowDown(
+        event,
+        activeFeedItemIndex,
+        allFeedItems,
+        isMentionOpen,
+        setChatItem,
+      ),
+    {},
+    [activeFeedItemIndex, allFeedItems, isMentionOpen, isInputFocused],
+  );
 
   const chatContextValue = useMemo<ChatContextValue>(
     () => ({
@@ -644,6 +733,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   // so we will not have extra re-renders of ALL rendered items
   const feedItemContextValue = useMemo<FeedItemContextValue>(
     () => ({
+      setIsInputFocused,
       setExpandedFeedItemId,
       renderFeedItemBaseContent,
       onFeedItemUpdate,
@@ -656,6 +746,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       onActiveItemDataChange: handleActiveFeedItemDataChange,
     }),
     [
+      setIsInputFocused,
       renderFeedItemBaseContent,
       onFeedItemUpdate,
       onFeedItemUnfollowed,
@@ -714,7 +805,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       return;
     }
 
-    if(!recentStreamId) {
+    if (!recentStreamId) {
       setActiveChatItem(null);
     }
 
@@ -852,6 +943,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                         item.feedItemFollowWithMetadata,
                         outerCommon,
                       );
+
                       const isPinned = (
                         outerCommon?.pinnedFeedItems || []
                       ).some(
@@ -863,7 +955,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                         <FeedItem
                           ref={handleRefSet}
                           key={item.feedItem.id}
-                          isOptimisticallyCreated={createdOptimisticFeedItems.has(item.feedItem.data.id)}
+                          isOptimisticallyCreated={createdOptimisticFeedItems.has(
+                            item.feedItem.data.id,
+                          )}
                           commonMember={commonMember}
                           commonId={commonData?.id}
                           commonName={commonData?.name || ""}

@@ -3,60 +3,74 @@ import { AppState } from "@/shared/interfaces";
 export const selectCommonState = (state: AppState) => state.common;
 
 export const selectCommonAction = (state: AppState) =>
-  state.common.commonAction;
+  state.common.commonAction || null;
 
-export const selectCommonMember = (state: AppState) =>
-  state.common.commonMember;
+export const selectCommonMember = (commonId: string) => (state: AppState) =>
+  state.common.commonMembers[commonId] || {};
 
-export const selectGovernance = (state: AppState) => state.common.governance;
+export const selectGovernance = (commonId: string) => (state: AppState) =>
+  state.common.governance[commonId] || {};
 
-export const selectDiscussionCreationData = (state: AppState) =>
-  state.common.discussionCreation.data;
+export const selectDiscussionCreationData =
+  (commonId: string) => (state: AppState) =>
+    state.common.discussionCreations[commonId]?.data || null;
 
-export const selectIsDiscussionCreationLoading = (state: AppState) =>
-  state.common.discussionCreation.loading;
+export const selectIsDiscussionCreationLoading =
+  (commonId: string) => (state: AppState) =>
+    state.common.discussionCreations[commonId]?.loading || false;
 
-export const selectProposalCreationData = (state: AppState) =>
-  state.common.proposalCreation.data;
+export const selectProposalCreationData =
+  (commonId: string) => (state: AppState) =>
+    state.common.proposalCreations[commonId]?.data || null;
 
-export const selectIsProposalCreationLoading = (state: AppState) =>
-  state.common.proposalCreation.loading;
+export const selectIsProposalCreationLoading =
+  (commonId: string) => (state: AppState) =>
+    state.common.proposalCreations[commonId]?.loading || false;
 
-export const selectFeedItems = (state: AppState) => state.common.feedItems;
+export const selectFeedItems = (commonId: string) => (state: AppState) =>
+  state.common.feedItems[commonId] || {
+    data: null,
+    loading: false,
+    hasMore: false,
+    firstDocTimestamp: null,
+    lastDocTimestamp: null,
+    batchNumber: 0,
+  };
 
-export const selectPinnedFeedItems = (state: AppState) =>
-  state.common.pinnedFeedItems;
+export const selectPinnedFeedItems =
+  (commonId: string) => (state: AppState) => {
+    const pinnedFeedItems = state.common.pinnedFeedItems[commonId];
+    return {
+      data: pinnedFeedItems?.data || [],
+      loading: pinnedFeedItems?.loading || false,
+    };
+  };
 
-export const selectFilteredFeedItems = (state: AppState) =>
-  state.common.searchState.feedItems;
+export const selectFilteredFeedItems =
+  (commonId: string) => (state: AppState) =>
+    state.common.searchState[commonId]?.feedItems || null;
 
-export const selectFilteredPinnedFeedItems = (state: AppState) =>
-  state.common.searchState.pinnedFeedItems;
+export const selectFilteredPinnedFeedItems =
+  (commonId: string) => (state: AppState) =>
+    state.common.searchState?.[commonId]?.pinnedFeedItems ?? null;
 
-export const selectFeedSearchValue = (state: AppState) =>
-  state.common.searchState.searchValue;
+export const selectFeedSearchValue = (commonId: string) => (state: AppState) =>
+  state.common.searchState[commonId]?.searchValue || "";
 
-export const selectIsSearchingFeedItems = (state: AppState) =>
-  state.common.searchState.isSearching;
+export const selectIsSearchingFeedItems =
+  (commonId: string) => (state: AppState) =>
+    state.common.searchState[commonId]?.isSearching || false;
 
-export const selectIsNewProjectCreated = (state: AppState) =>
-  state.common.isNewProjectCreated;
+export const selectIsNewProjectCreated =
+  (commonId: string) => (state: AppState) =>
+    state.common.isNewProjectCreated[commonId] || {};
 
-export const selectSharedFeedItem = (state: AppState) =>
-  state.common.sharedFeedItem;
+export const selectSharedFeedItem = (commonId: string) => (state: AppState) =>
+  state.common.sharedFeedItem[commonId] || null;
 
 export const selectRecentStreamId = (state: AppState) =>
-  state.common.recentStreamId;
-
-export const selectOptimisticFeedItems = (state: AppState) =>
-  state.common.optimisticFeedItems;
-
-export const selectOptimisticDiscussionMessages = (state: AppState) =>
-  state.common.optimisticDiscussionMessages;
-
-export const selectCreatedOptimisticFeedItems = (state: AppState) =>
-  state.common.createdOptimisticFeedItems;
+  state.common.recentStreamId || "";
 
 export const selectRecentAssignedCircle =
-  (memberId: string) => (state: AppState) =>
-    state.common.recentAssignedCircleByMember[memberId];
+  (commonId: string, memberId: string) => (state: AppState) =>
+    state.common.recentAssignedCircleByMember[commonId]?.[memberId] || {};

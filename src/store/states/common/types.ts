@@ -4,7 +4,6 @@ import {
   NewDiscussionCreationFormValues,
   NewProposalCreationFormValues,
 } from "@/shared/interfaces";
-import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 import { Circle, CommonMember, Governance, Timestamp } from "@/shared/models";
 
 export type EntityCreation<T> = {
@@ -41,20 +40,23 @@ export interface CommonSearchState {
 }
 
 export interface CommonState {
-  feedItems: FeedItems;
-  pinnedFeedItems: PinnedFeedItems;
-  sharedFeedItemId: string | null;
-  sharedFeedItem: FeedItemFollowLayoutItem | null;
-  createdOptimisticFeedItems: Map<string, FeedItemFollowLayoutItem | undefined>;
-  optimisticFeedItems: Map<string, FeedItemFollowLayoutItem>;
-  optimisticDiscussionMessages: Map<string, CreateDiscussionMessageDto[]>;
+  feedItems: Record<string, FeedItems>;
+  pinnedFeedItems: Record<string, PinnedFeedItems>;
+  sharedFeedItem: Record<string, FeedItemFollowLayoutItem | null>;
   commonAction: CommonAction | null;
-  discussionCreation: EntityCreation<NewDiscussionCreationFormValues>;
-  proposalCreation: EntityCreation<NewProposalCreationFormValues>;
-  isNewProjectCreated: boolean;
-  commonMember: CommonMember | null;
-  governance: Governance | null;
+  discussionCreations: Record<
+    string,
+    EntityCreation<NewDiscussionCreationFormValues>
+  >;
+  proposalCreations: Record<
+    string,
+    EntityCreation<NewProposalCreationFormValues>
+  >;
+  isNewProjectCreated: Record<string, boolean>;
+  sharedFeedItemId: Record<string, string | null>;
+  commonMembers: Record<string, CommonMember | null>;
+  recentAssignedCircleByMember: Record<string, Record<string, Circle>>;
+  governance: Record<string, Governance | null>;
   recentStreamId: string;
-  recentAssignedCircleByMember: Record<string, Circle>;
-  searchState: CommonSearchState;
+  searchState: Record<string, CommonSearchState>;
 }

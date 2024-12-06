@@ -49,7 +49,7 @@ import {
   DiscussionFeedCardContent,
 } from "./components";
 import { useMenuItems } from "./hooks";
-import { commonActions } from "@/store/states";
+import { optimisticActions } from "@/store/states";
 
 interface DiscussionFeedCardProps {
   item: CommonFeed;
@@ -218,12 +218,6 @@ function DiscussionFeedCard(props, ref) {
   const cardTitle = discussion?.title;
   const commonNotion = outerCommonNotion ?? common?.notion;
 
-  // const ownerId = useMemo(() => {
-  //   if(item.userId) {
-  //     return item.userId
-  //   }
-  // },[item.userId])
-
   const handleOpenChat = useCallback(() => {
     if (discussion && !isPreviewMode) {
       setChatItem({
@@ -288,7 +282,7 @@ function DiscussionFeedCard(props, ref) {
   useEffect(() => {
     if(item.data.lastMessage?.content && discussion?.id && isOptimisticallyCreated) {
       markFeedItemAsSeen({feedObjectId: item.id, commonId})
-      setTimeout(() => dispatch(commonActions.clearCreatedOptimisticFeedItem(discussion?.id)), 10000);
+      setTimeout(() => dispatch(optimisticActions.clearCreatedOptimisticFeedItem(discussion?.id)), 10000);
     }
   },[item.id, item.data.lastMessage?.content, discussion?.id, isOptimisticallyCreated, commonId])
 

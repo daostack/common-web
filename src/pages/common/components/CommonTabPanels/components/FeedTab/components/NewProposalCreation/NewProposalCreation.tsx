@@ -16,8 +16,13 @@ import {
   Governance,
 } from "@/shared/models";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit/TextEditor";
-import { generateFirstMessage, generateOptimisticFeedItem, getUserName } from "@/shared/utils";
 import {
+  generateFirstMessage,
+  generateOptimisticFeedItem,
+  getUserName,
+} from "@/shared/utils";
+import {
+  optimisticActions,
   selectIsProposalCreationLoading,
   selectProposalCreationData,
 } from "@/store/states";
@@ -60,11 +65,14 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
     isModalVariant = false,
   } = props;
   const dispatch = useDispatch();
-  const proposalCreationData = useSelector(selectProposalCreationData);
-  const isLoading = useSelector(selectIsProposalCreationLoading);
+
+  const commonId = common.id;
+  const proposalCreationData = useSelector(
+    selectProposalCreationData(commonId),
+  );
+  const isLoading = useSelector(selectIsProposalCreationLoading(commonId));
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const commonId = common.id;
   const initialValues = useMemo(
     () => proposalCreationData || INITIAL_VALUES,
     [],
@@ -77,7 +85,7 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
 
   const handleCancel = () => {
     dispatch(commonActions.setCommonAction(null));
-    dispatch(commonActions.setProposalCreationData(null));
+    dispatch(commonActions.setProposalCreationData({ data: null, commonId }));
   };
 
   const handleSubmit = useCallback(
@@ -90,25 +98,29 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
       const discussionId = uuidv4();
       const userName = getUserName(user);
 
+      const optimisticFeedItem = generateOptimisticFeedItem({
+        userId,
+        commonId: common.id,
+        type: CommonFeedType.OptimisticProposal,
+        circleVisibility: userCircleIds,
+        discussionId,
+        title: values.title,
+        content: JSON.stringify(values.content),
+        lastMessageContent: {
+          ownerId: userId,
+          userName,
+          ownerType: DiscussionMessageOwnerType.System,
+          content: generateFirstMessage({ userName, userId }),
+        },
+      });
+
       dispatch(
-        commonActions.setOptimisticFeedItem(
-          generateOptimisticFeedItem({
-            userId,
-            commonId: common.id,
-            type: CommonFeedType.OptimisticProposal,
-            circleVisibility: userCircleIds,
-            discussionId,
-            title: values.title,
-            content: JSON.stringify(values.content),
-            lastMessageContent: {
-              ownerId: userId,
-              userName,
-              ownerType: DiscussionMessageOwnerType.System,
-              content: generateFirstMessage({userName, userId}),
-            }
-          }),
-        ),
+        optimisticActions.setOptimisticFeedItem({
+          data: optimisticFeedItem,
+          common,
+        }),
       );
+      dispatch(commonActions.setRecentStreamId(optimisticFeedItem.data.id));
       switch (values.proposalType.value) {
         case ProposalsTypes.FUNDS_ALLOCATION: {
           const fundingProposalPayload = getFundingProposalPayload(
@@ -125,6 +137,7 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
           dispatch(
             commonActions.createFundingProposal.request({
               payload: fundingProposalPayload,
+              commonId,
             }),
           );
           break;
@@ -138,6 +151,7 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
                 proposalId,
                 discussionId,
               ),
+              commonId,
             }),
           );
           break;

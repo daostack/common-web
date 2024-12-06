@@ -71,6 +71,7 @@ export interface GetLastMessageOptions {
 }
 
 export interface FeedItemContextValue {
+  setIsInputFocused?: (isFocused: boolean) => void;
   setExpandedFeedItemId?: (feedItemId: string | null) => void;
   renderFeedItemBaseContent?: (props: FeedItemBaseContentProps) => ReactNode;
   onFeedItemUpdate?: (item: CommonFeed, isRemoved: boolean) => void;

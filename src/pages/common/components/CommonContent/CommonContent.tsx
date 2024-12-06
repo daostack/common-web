@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { CommonPageSettings } from "@/pages/common/types";
 import { useRoutesContext } from "@/shared/contexts";
@@ -16,7 +16,7 @@ import {
 } from "@/shared/models";
 import { Container } from "@/shared/ui-kit";
 import { getInboxPagePath } from "@/shared/utils";
-import { commonActions, selectIsNewProjectCreated } from "@/store/states";
+import { selectIsNewProjectCreated } from "@/store/states";
 import { CommonDataProvider } from "../../providers";
 import { CommonHeader } from "../CommonHeader";
 import { CommonManagement } from "../CommonManagement";
@@ -67,7 +67,6 @@ const CommonContent: FC<CommonContentProps> = (props) => {
     setIsJoinPending,
   } = props;
   const isTabletView = useIsTabletView();
-  const dispatch = useDispatch();
   const history = useHistory();
   const { canGoBack, goBack } = useGoBack();
   const { getCommonPagePath } = useRoutesContext();
@@ -86,7 +85,9 @@ const CommonContent: FC<CommonContentProps> = (props) => {
       allowedTabs,
     }),
   );
-  const isNewProjectCreated = useSelector(selectIsNewProjectCreated);
+
+  const commonId = common.id;
+  const isNewProjectCreated = useSelector(selectIsNewProjectCreated(commonId));
   const parentCommonId = common.directParent?.commonId;
   const isSubCommon = common.directParent !== null;
 
@@ -107,12 +108,6 @@ const CommonContent: FC<CommonContentProps> = (props) => {
       canGoBack ? goBack() : history.push(getInboxPagePath());
     }
   }, [isCommonMember, common.listVisibility, history.push, goBack, canGoBack]);
-
-  useEffect(() => {
-    return () => {
-      dispatch(commonActions.resetCommon());
-    };
-  }, []);
 
   return (
     <CommonDataProvider
@@ -136,7 +131,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
         commonMember={commonMember}
         circles={governance.circles}
         isSubCommon={isSubCommon}
-        commonId={common.id}
+        commonId={commonId}
       />
       <CommonSidenavLayoutPageContent
         className={settings?.pageContentClassName}
@@ -145,7 +140,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
             settings.renderHeaderContent()
           ) : !isTabletView ? (
             <HeaderContent
-              backButtonPath={getCommonPagePath(common.id)}
+              backButtonPath={getCommonPagePath(commonId)}
               withoutBackButton={!commonMember}
             />
           ) : null
@@ -168,7 +163,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
             {!isTabletView && (
               <Container>
                 <CommonManagement
-                  commonId={common.id}
+                  commonId={commonId}
                   activeTab={tab}
                   allowedTabs={allowedTabs}
                   isSubCommon={isSubCommon}
@@ -197,7 +192,10 @@ const CommonContent: FC<CommonContentProps> = (props) => {
         </div>
       </CommonSidenavLayoutPageContent>
       {isGlobalDataFetched && isNewProjectCreated && parentCommonId && (
-        <SuccessfulProjectCreationModal parentCommonId={parentCommonId} />
+        <SuccessfulProjectCreationModal
+          commonId={commonId}
+          parentCommonId={parentCommonId}
+        />
       )}
     </CommonDataProvider>
   );

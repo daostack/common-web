@@ -15,6 +15,7 @@ import {
   multipleSpacesLayoutReducer,
   projectsReducer,
   chatReducer,
+  optimisticReducer
 } from "./states";
 
 export default (history: History) => {
@@ -32,6 +33,7 @@ export default (history: History) => {
     chat: chatReducer,
     inbox: inboxReducer,
     multipleSpacesLayout: multipleSpacesLayoutReducer,
+    optimistic: optimisticReducer,
   });
 
   return (state: AppState | undefined, action: AnyAction) => {
