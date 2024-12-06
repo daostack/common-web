@@ -1,4 +1,5 @@
 import React, {
+  useRef,
   FocusEventHandler,
   KeyboardEvent,
   MutableRefObject,
@@ -20,6 +21,8 @@ import {
   Editor as EditorSlate,
   BaseRange,
   BaseSelection,
+  BasePoint,
+  Text,
 } from "slate";
 import { withHistory } from "slate-history";
 import { ReactEditor, Slate, withReact } from "slate-react";
@@ -79,6 +82,9 @@ export interface TextEditorProps {
   onClearFinished: () => void;
   scrollSelectionIntoView?: (editor: ReactEditor, domRange: DOMRange) => void;
   elementStyles?: EditorElementStyles;
+  circleVisibility?: string[];
+  user?: User | null;
+  commonId?: string;
 }
 
 const INITIAL_SEARCH_VALUE = {
@@ -115,6 +121,9 @@ const BaseTextEditor = forwardRef<BaseTextEditorHandles, TextEditorProps>(
       scrollSelectionIntoView,
       elementStyles,
       discussions,
+      circleVisibility,
+      user,
+      commonId,
     } = props;
     const editor = useMemo(
       () =>
@@ -139,6 +148,7 @@ const BaseTextEditor = forwardRef<BaseTextEditorHandles, TextEditorProps>(
 
     const [target, setTarget] = useState<Range | null>();
     const [shouldFocusTarget, setShouldFocusTarget] = useState(false);
+    const isNewMentionCreated = useRef<boolean>(false);
 
     const [isRtlLanguage, setIsRtlLanguage] = useState(false);
 
@@ -217,13 +227,57 @@ const BaseTextEditor = forwardRef<BaseTextEditorHandles, TextEditorProps>(
 
     const [search, setSearch] = useState(INITIAL_SEARCH_VALUE);
 
-    const handleSearch = (text: string, value?: BaseRange) => {
-      if (!value || !value?.anchor || !text || text === "") {
+    const getTextByRange = (editor, range) => {
+      if (
+        !range ||
+        !EditorSlate.hasPath(editor, range.anchor.path) ||
+        !EditorSlate.hasPath(editor, range.focus.path)
+      ) {
+        return "";
+      }
+
+      const filteredNodes = Array.from(
+        EditorSlate.nodes(editor, { at: range }),
+      ).filter(([node]) => Text.isText(node));
+      const nodes = filteredNodes.map(([node, path]) => {
+        // Determine the start and end offsets for this node
+        const { anchor, focus } =
+          Range.intersection(range, EditorSlate.range(editor, path)) || {};
+
+        if (!anchor || !focus) return "";
+
+        // Extract the substring within the offsets
+        const text =
+          (node as Text)?.text.slice(anchor.offset, focus.offset) +
+          (filteredNodes.length > 1 ? " " : "");
+
+        // Remove newlines from the text
+        return text.replace(/\n/g, "");
+      });
+
+      // Combine the text parts and return
+      return nodes.join("").slice(0, -1);
+    };
+
+    const handleSearch = (
+      text: string,
+      value?: BaseRange,
+      afterValue?: BasePoint,
+    ) => {
+      if (!value || !value?.anchor || isNewMentionCreated.current) {
         setSearch(INITIAL_SEARCH_VALUE);
+        isNewMentionCreated.current = false;
         setTarget(null);
         setShouldFocusTarget(false);
         return;
       }
+
+      const newText = target?.anchor
+        ? getTextByRange(editor, {
+            ...target,
+            focus: afterValue ? afterValue : value.anchor,
+          })
+        : "";
 
       if (text === MENTION_TAG) {
         setSearch({
@@ -231,19 +285,31 @@ const BaseTextEditor = forwardRef<BaseTextEditorHandles, TextEditorProps>(
           ...value.anchor,
           range: value,
         });
-      } else if (text.match(/^(\s|$)/)) {
-        setSearch(INITIAL_SEARCH_VALUE);
-        setTarget(null);
-        setShouldFocusTarget(false);
-      } else if (
-        search.text.includes(MENTION_TAG) &&
-        isEqual(search.path, value.anchor.path) &&
-        search.offset + 1 === value.anchor.offset
-      ) {
-        setSearch({
-          ...search,
-          text: search.text + text,
-          ...value.anchor,
+      } else if (search.text.includes(MENTION_TAG) && text.match(/^\s+/)) {
+        setSearch((prevSearch) => {
+          {
+            return {
+              ...prevSearch,
+              text: newText,
+              ...value.anchor,
+              range: {
+                ...prevSearch.range,
+                focus: afterValue ? afterValue : value.anchor,
+              },
+            };
+          }
+        });
+      } else if (search.text.includes(MENTION_TAG)) {
+        setSearch((prevSearch) => {
+          return {
+            ...prevSearch,
+            text: newText,
+            ...value.anchor,
+            range: {
+              ...prevSearch.range,
+              focus: afterValue ? afterValue : value.anchor,
+            },
+          };
         });
         setShouldFocusTarget(false);
       }
@@ -267,7 +333,7 @@ const BaseTextEditor = forwardRef<BaseTextEditorHandles, TextEditorProps>(
           ...search.range,
           focus: {
             ...search.range.focus,
-            offset: search.range.focus.offset + search.text.length - 1,
+            offset: search.range.focus.offset + 1,
           },
         });
       }
@@ -283,8 +349,21 @@ const BaseTextEditor = forwardRef<BaseTextEditorHandles, TextEditorProps>(
       if (event.key === KeyboardKeys.ArrowUp && target) {
         event.preventDefault();
         setShouldFocusTarget(true);
+      } else if (
+        event.key === KeyboardKeys.Enter &&
+        !event.shiftKey &&
+        target
+      ) {
+        setSearch(INITIAL_SEARCH_VALUE);
+        setTarget(null);
+        setShouldFocusTarget(false);
+        isNewMentionCreated.current = true;
+      } else if (event.key === KeyboardKeys.Escape && target) {
+        event.preventDefault();
+        setSearch(INITIAL_SEARCH_VALUE);
+        setTarget(null);
+        setShouldFocusTarget(false);
       } else {
-        // event.stopPropagation();
         onKeyDown && onKeyDown(event); // Call any custom onKeyDown handler
         if (event.key === KeyboardKeys.Enter && !isMobile()) {
           onToggleIsMessageSent();
@@ -335,11 +414,11 @@ const BaseTextEditor = forwardRef<BaseTextEditorHandles, TextEditorProps>(
           return;
         }
 
-        handleSearch(beforeText ?? "", beforeRange);
+        handleSearch(beforeText ?? "", beforeRange, lineLastPoint);
       }
     };
 
-    const handleMentionSelectionChange = useCallback(() => {
+    const handleMentionSelectionChange = () => {
       if (!editor.selection || editor.selection.anchor.path.length <= 2) {
         return;
       }
@@ -353,21 +432,18 @@ const BaseTextEditor = forwardRef<BaseTextEditorHandles, TextEditorProps>(
         anchor: point,
         focus: point,
       });
-    }, []);
+    };
 
     const handleOnChange = useCallback(
       (updatedContent) => {
-        // Prevent update for cursor clicks
         if (isEqual(updatedContent, value)) {
           handleMentionSelectionChange();
           return;
         }
         onChange && onChange(updatedContent);
-        const { selection } = editor;
-
-        handleOnChangeSelection(selection);
+        handleOnChangeSelection(editor.selection);
       },
-      [onChange, value, handleMentionSelectionChange],
+      [onChange, value, handleSearch, handleMentionSelectionChange],
     );
 
     const customScrollSelectionIntoView = () => {
@@ -425,18 +501,30 @@ const BaseTextEditor = forwardRef<BaseTextEditorHandles, TextEditorProps>(
                 insertMention(editor, user);
                 setTarget(null);
                 setShouldFocusTarget(false);
+                isNewMentionCreated.current = true;
               }}
               onClickDiscussion={(discussion: Discussion) => {
                 Transforms.select(editor, target);
                 insertStreamMention(editor, discussion);
                 setTarget(null);
                 setShouldFocusTarget(false);
+                isNewMentionCreated.current = true;
               }}
+              onCreateDiscussion={(discussionId) => {
+                console.log("--discussionId", discussionId);
+                Transforms.select(editor, target);
+                Transforms.insertText(editor, "Hello, Slate!");
+              }}
+              user={user}
+              commonId={commonId}
+              circleVisibility={circleVisibility}
               users={chars}
               discussions={discussionChars}
               initUsers={usersWithAI}
               initDiscussions={discussions}
+              searchText={search.text}
               onClose={() => {
+                setSearch(INITIAL_SEARCH_VALUE);
                 setTarget(null);
                 setShouldFocusTarget(false);
               }}

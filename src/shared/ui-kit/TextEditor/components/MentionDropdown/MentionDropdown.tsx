@@ -1,13 +1,20 @@
 import React, { FC, useEffect, useMemo, useRef, useState } from "react";
-import { uniq } from "lodash";
+import { useDispatch } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
 import { Separator, UserAvatar } from "@/shared/components";
+import { DiscussionMessageOwnerType } from "@/shared/constants";
 import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
 import { useOutsideClick } from "@/shared/hooks";
-import { ChatIcon } from "@/shared/icons";
+import { ChatIcon, PlusIcon } from "@/shared/icons";
 import { DotsIcon } from "@/shared/icons";
-import { Discussion, User } from "@/shared/models";
+import { CommonFeedType, Discussion, User } from "@/shared/models";
 import { Loader } from "@/shared/ui-kit";
-import { getUserName } from "@/shared/utils";
+import {
+  generateFirstMessage,
+  generateOptimisticFeedItem,
+  getUserName,
+} from "@/shared/utils";
+import { commonActions } from "@/store/states";
 import styles from "./MentionDropdown.module.scss";
 
 export const MENTION_TAG = "@";
@@ -15,33 +22,50 @@ export const MENTION_TAG = "@";
 export interface MentionDropdownProps {
   onClick: (user: User) => void;
   onClickDiscussion: (discussion: Discussion) => void;
+  onCreateDiscussion: (discussionId: string) => void;
   onClose: () => void;
   users?: User[];
   discussions?: Discussion[];
   initUsers?: User[];
   initDiscussions?: Discussion[];
   shouldFocusTarget?: boolean;
+  searchText: string;
+  circleVisibility?: string[];
+  user?: User | null;
+  commonId?: string;
 }
-
-type CombinedItem =
-  | User
-  | Discussion
-  | { type: "toggleUsers" | "toggleDiscussions" | "separator" };
 
 const MentionDropdown: FC<MentionDropdownProps> = (props) => {
   const {
     onClick,
     onClickDiscussion,
+    onCreateDiscussion,
     users = [],
     discussions = [],
     onClose,
     shouldFocusTarget,
     initUsers = [],
     initDiscussions = [],
+    searchText = "",
+    circleVisibility,
+    user,
+    commonId,
   } = props;
   const mentionRef = useRef(null);
   const listRefs = useRef<HTMLLIElement[]>([]);
   const { isOutside, setOutsideValue } = useOutsideClick(mentionRef);
+  const dispatch = useDispatch();
+
+  const canCreateDiscussion = !!user && !!commonId;
+  console.log(
+    "--user",
+    user,
+    "--commonId",
+    commonId,
+    "--circleVisibility",
+    circleVisibility,
+  );
+
   const [index, setIndex] = useState(0);
   const [isShowMoreUsers, setIsShowMoreUsers] = useState(false);
   const [isShowMoreDiscussions, setIsShowMoreDiscussions] = useState(false);
@@ -82,6 +106,7 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
         (item) => parseInt(item.getAttribute("tabIndex") || "0", 10) === index,
       );
 
+      console.log("---elementToFocus", elementToFocus, index);
       if (elementToFocus) {
         elementToFocus.focus();
       }
@@ -91,6 +116,7 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
   const increment = () => {
     setIndex((value) => {
       const updatedValue = value + 1;
+      console.log("--listRefs", listRefs, updatedValue);
       return updatedValue < listRefs.current.length ? updatedValue : value;
     });
   };
@@ -162,10 +188,58 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
             }
             return !prev;
           });
+        } else if (type === "newDiscussion" && searchText) {
+          createDiscussion();
         }
         break;
       }
     }
+  };
+
+  const createDiscussion = () => {
+    if (!canCreateDiscussion) {
+      return;
+    }
+
+    const discussionId = uuidv4();
+    const userName = getUserName(user);
+    const userId = user.uid;
+    const firstMessage = generateFirstMessage({ userName, userId });
+    dispatch(
+      commonActions.setOptimisticFeedItem(
+        generateOptimisticFeedItem({
+          userId,
+          commonId,
+          type: CommonFeedType.OptimisticDiscussion,
+          circleVisibility: circleVisibility ?? [],
+          discussionId,
+          title: searchText,
+          content: firstMessage,
+          lastMessageContent: {
+            ownerId: userId,
+            userName,
+            ownerType: DiscussionMessageOwnerType.System,
+            content: firstMessage,
+          },
+        }),
+      ),
+    );
+
+    dispatch(
+      commonActions.createDiscussion.request({
+        payload: {
+          id: discussionId,
+          title: searchText,
+          message: firstMessage,
+          ownerId: userId,
+          commonId,
+          images: [],
+          circleVisibility: circleVisibility ?? [],
+        },
+      }),
+    );
+
+    onCreateDiscussion(discussionId);
   };
 
   const getRef = (element) => listRefs.current.push(element);
@@ -212,7 +286,7 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
           <p className={styles.userName}>{getUserName(user)}</p>
         </li>
       ))}
-      {users.length > 5 && (
+      {users.length > 5 && !isShowMoreUsers && (
         <li
           ref={getRef}
           tabIndex={usersList.length}
@@ -222,18 +296,14 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
           className={styles.content}
         >
           <DotsIcon className={styles.streamIcon} />
-          {isShowMoreUsers ? (
-            <p className={styles.userName}>Hide results</p>
-          ) : (
-            <p className={styles.userName}>{users.length - 5} more results</p>
-          )}
+          <p className={styles.userName}>{users.length - 5} more results</p>
         </li>
       )}
       {users.length > 0 && discussions.length > 0 && (
         <Separator className={styles.separator} />
       )}
       {discussions.length > 0 && (
-        <p className={styles.sectionTitle}>Link to Stream</p>
+        <p className={styles.sectionTitle}>Link to stream</p>
       )}
       {discussionsList.map((discussion, index) => (
         <li
@@ -249,7 +319,7 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
           <p className={styles.userName}>{discussion.title}</p>
         </li>
       ))}
-      {discussions.length > 5 && (
+      {discussions.length > 5 && !isShowMoreDiscussions && (
         <li
           ref={getRef}
           tabIndex={usersList.length + 1 + discussionsList.length}
@@ -259,15 +329,29 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
           className={styles.content}
         >
           <DotsIcon className={styles.streamIcon} />
-          {isShowMoreDiscussions ? (
-            <p className={styles.userName}>Hide results</p>
-          ) : (
-            <p className={styles.userName}>
-              {discussions.length - 5} more results
-            </p>
-          )}
+          <p className={styles.userName}>
+            {discussions.length - 5} more results
+          </p>
         </li>
       )}
+      {/* {((users.length > 0 || discussions.length > 0) && canCreateDiscussion && searchText) && (
+        <Separator className={styles.separator} />
+      )}
+      {(searchText && canCreateDiscussion) && (
+        <li
+          ref={getRef}
+          tabIndex={(usersList.length > 0 ? usersList.length + 1 : 0) + (discussionsList.length > 0 ? discussionsList.length + 1 : 0)}
+          key="newDiscussion"
+          data-type="newDiscussion"
+          onClick={createDiscussion}
+          className={styles.content}
+        >
+          <PlusIcon className={styles.streamIcon} />
+          <p className={styles.userName}>
+            New "{searchText.slice(1)}" discussion
+          </p>
+        </li>
+      )} */}
     </ul>
   );
 };

@@ -55,6 +55,7 @@ import {
   removeTextEditorEmptyEndLinesValues,
   countTextEditorEmojiElements,
 } from "@/shared/ui-kit";
+import { BaseTextEditorHandles } from "@/shared/ui-kit/TextEditor/BaseTextEditor";
 import { checkUncheckedItemsInTextEditorValue } from "@/shared/ui-kit/TextEditor/utils";
 import { InternalLinkData, notEmpty } from "@/shared/utils";
 import { getUserName, hasPermission, isMobile } from "@/shared/utils";
@@ -85,7 +86,6 @@ import {
   uploadFilesAndImages,
 } from "./utils";
 import styles from "./ChatComponent.module.scss";
-import { BaseTextEditorHandles } from "@/shared/ui-kit/TextEditor/BaseTextEditor";
 
 const BASE_CHAT_INPUT_HEIGHT = 48;
 
@@ -220,7 +220,7 @@ export default function ChatComponent({
     participants: chatChannel?.participants,
   });
 
-  const {data: discussionsData} = useFetchDiscussionsByCommonId(commonId);
+  const { data: discussionsData } = useFetchDiscussionsByCommonId(commonId);
 
   const users = useMemo(
     () => (chatChannel ? chatUsers : discussionUsers),
@@ -731,7 +731,7 @@ export default function ChatComponent({
   useLayoutEffect(() => {
     textInputRef?.current?.clear?.();
     textInputRef?.current?.focus?.();
-  },[discussionId]);
+  }, [discussionId]);
 
   useEffect(() => {
     if (isFetchedDiscussionMessages) {
@@ -888,6 +888,9 @@ export default function ChatComponent({
           canSendMessage={Boolean(canSendMessage)}
           inputContainerRef={inputContainerRef}
           editorRef={editorRef}
+          user={user}
+          commonId={commonId}
+          circleVisibility={discussion?.circleVisibility}
         />
       </div>
     </div>
