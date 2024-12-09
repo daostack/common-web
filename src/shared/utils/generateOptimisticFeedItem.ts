@@ -11,6 +11,7 @@ interface GenerateOptimisticFeedItemPayload {
   content: string;
   circleVisibility: string[];
   lastMessageContent: LastMessageContent
+  shouldFocus?: boolean;
 }
 
 export const generateOptimisticFeedItem = ({
@@ -22,6 +23,7 @@ export const generateOptimisticFeedItem = ({
   content,
   circleVisibility,
   lastMessageContent,
+  shouldFocus = true
 }: GenerateOptimisticFeedItemPayload): CommonFeed => {
 
   const optimisticFeedItemId = uuidv4();
@@ -60,6 +62,7 @@ export const generateOptimisticFeedItem = ({
       circleVisibilityByCommon: null,
       linkedCommonIds: [],
       state: OptimisticFeedItemState.loading,
+      shouldFocus: shouldFocus
     },
     circleVisibility,
   }

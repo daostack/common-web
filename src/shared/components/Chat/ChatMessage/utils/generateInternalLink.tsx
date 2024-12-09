@@ -16,6 +16,7 @@ interface GenerateInternalLinkProps {
 }
 
 const ITEM_KEY = "item";
+const DISCUSSION_ITEM_KEY = "discussionItem";
 
 export const getQueryParam = (path: string, key: string): string | null => {
   const urlParams = new URLSearchParams(path);
@@ -44,6 +45,16 @@ const getStreamNameByFeedItemId = async (
   }
 };
 
+const getDiscussionTitle = async (
+  discussionId: string,
+): Promise<string | undefined> => {
+  const discussion = await DiscussionService.getDiscussionById(discussionId);
+
+  return discussion?.title;
+};
+
+
+
 export const generateInternalLink = async ({
   text,
   onInternalLinkClick,
@@ -52,11 +63,12 @@ export const generateInternalLink = async ({
   if (text.startsWith(BASE_URL) && commonPath) {
     const [commonId, itemQueryParam] = commonPath.split("?");
     const itemId = getQueryParam(itemQueryParam, ITEM_KEY);
+    const discussionItemId = getQueryParam(itemQueryParam, DISCUSSION_ITEM_KEY);
     if (commonId) {
       const common = await getCommon(commonId);
       if (common?.id && common.name) {
-        const itemTitle = await getStreamNameByFeedItemId(commonId, itemId);
-
+        const itemTitle = discussionItemId ? await getDiscussionTitle(discussionItemId) : await getStreamNameByFeedItemId(commonId, itemId);
+        
         return (
           <>
             {renderLink({

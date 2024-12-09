@@ -14,15 +14,16 @@ import {
   generateOptimisticFeedItem,
   getUserName,
 } from "@/shared/utils";
-import { commonActions } from "@/store/states";
+import { commonActions, optimisticActions } from "@/store/states";
 import styles from "./MentionDropdown.module.scss";
+import { CommonService } from "@/services";
 
 export const MENTION_TAG = "@";
 
 export interface MentionDropdownProps {
   onClick: (user: User) => void;
   onClickDiscussion: (discussion: Discussion) => void;
-  onCreateDiscussion: (discussionId: string) => void;
+  onCreateDiscussion: (createdDiscussionCommonId: string, discussionId: string) => void;
   onClose: () => void;
   users?: User[];
   discussions?: Discussion[];
@@ -57,14 +58,6 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
   const dispatch = useDispatch();
 
   const canCreateDiscussion = !!user && !!commonId;
-  console.log(
-    "--user",
-    user,
-    "--commonId",
-    commonId,
-    "--circleVisibility",
-    circleVisibility,
-  );
 
   const [index, setIndex] = useState(0);
   const [isShowMoreUsers, setIsShowMoreUsers] = useState(false);
@@ -106,7 +99,6 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
         (item) => parseInt(item.getAttribute("tabIndex") || "0", 10) === index,
       );
 
-      console.log("---elementToFocus", elementToFocus, index);
       if (elementToFocus) {
         elementToFocus.focus();
       }
@@ -116,7 +108,6 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
   const increment = () => {
     setIndex((value) => {
       const updatedValue = value + 1;
-      console.log("--listRefs", listRefs, updatedValue);
       return updatedValue < listRefs.current.length ? updatedValue : value;
     });
   };
@@ -196,8 +187,14 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
     }
   };
 
-  const createDiscussion = () => {
+  const createDiscussion = async () => {
     if (!canCreateDiscussion) {
+      return;
+    }
+
+    const common = await CommonService.getCachedCommonById(commonId);
+
+    if (!common) {
       return;
     }
 
@@ -205,41 +202,47 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
     const userName = getUserName(user);
     const userId = user.uid;
     const firstMessage = generateFirstMessage({ userName, userId });
-    // dispatch(
-    //   commonActions.setOptimisticFeedItem(
-    //     generateOptimisticFeedItem({
-    //       userId,
-    //       commonId,
-    //       type: CommonFeedType.OptimisticDiscussion,
-    //       circleVisibility: circleVisibility ?? [],
-    //       discussionId,
-    //       title: searchText,
-    //       content: firstMessage,
-    //       lastMessageContent: {
-    //         ownerId: userId,
-    //         userName,
-    //         ownerType: DiscussionMessageOwnerType.System,
-    //         content: firstMessage,
-    //       },
-    //     }),
-    //   ),
-    // );
+    const optimisticFeedItem = generateOptimisticFeedItem({
+        userId,
+        commonId,
+        type: CommonFeedType.OptimisticDiscussion,
+        circleVisibility: circleVisibility ?? [],
+        discussionId,
+        title: searchText,
+        content: firstMessage,
+        lastMessageContent: {
+          ownerId: userId,
+          userName,
+          ownerType: DiscussionMessageOwnerType.System,
+          content: firstMessage,
+        },
+        shouldFocus: false
+      });
+    dispatch(
+      optimisticActions.setOptimisticFeedItem({
+        data: optimisticFeedItem,
+        common
+      }),
+    );
 
-    // dispatch(
-    //   commonActions.createDiscussion.request({
-    //     payload: {
-    //       id: discussionId,
-    //       title: searchText,
-    //       message: firstMessage,
-    //       ownerId: userId,
-    //       commonId,
-    //       images: [],
-    //       circleVisibility: circleVisibility ?? [],
-    //     },
-    //   }),
-    // );
+    console.log('---discussionId',discussionId, '--optimisticFeedItem',optimisticFeedItem.id);
 
-    onCreateDiscussion(discussionId);
+    dispatch(
+      commonActions.createDiscussion.request({
+        payload: {
+          id: discussionId,
+          title: searchText,
+          message: firstMessage,
+          ownerId: userId,
+          commonId,
+          images: [],
+          circleVisibility: circleVisibility ?? [],
+        },
+        commonId
+      }),
+    );
+
+    onCreateDiscussion(commonId, discussionId);
   };
 
   const getRef = (element) => listRefs.current.push(element);
@@ -334,7 +337,7 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
           </p>
         </li>
       )}
-      {/* {((users.length > 0 || discussions.length > 0) && canCreateDiscussion && searchText) && (
+      {((users.length > 0 || discussions.length > 0) && canCreateDiscussion && searchText) && (
         <Separator className={styles.separator} />
       )}
       {(searchText && canCreateDiscussion) && (
@@ -351,7 +354,7 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
             New "{searchText.slice(1)}" discussion
           </p>
         </li>
-      )} */}
+      )}
     </ul>
   );
 };

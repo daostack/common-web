@@ -39,6 +39,7 @@ export interface LastMessageContentWithMessageId {
 export type DiscussionWithOptimisticData = Discussion & {
   state?: OptimisticFeedItemState; // Optional state property
   lastMessageContent: LastMessageContent; // Additional property
+  shouldFocus: boolean;
 };
 
 export interface CommonFeed extends BaseEntity, SoftDeleteEntity {

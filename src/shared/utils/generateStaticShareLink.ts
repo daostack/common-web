@@ -2,7 +2,7 @@ import { Environment, REACT_APP_ENV, ROUTE_PATHS } from "../constants";
 import { Common, Discussion, DiscussionMessage, Proposal } from "../models";
 import { matchRoute } from "./matchRoute";
 
-const staticLinkPrefix = () => {
+export const staticLinkPrefix = () => {
   if (window.location.hostname === "localhost") {
     return "http://localhost:3000";
   }
@@ -70,4 +70,15 @@ export const generateStaticShareLink = (
     default:
       return "";
   }
+};
+
+export const generateDiscussionShareLink = (
+  commonId: string,
+  discussionId: string,
+): string => {
+  const basePath: string = getStaticLinkBasePath();
+
+  return `${staticLinkPrefix()}/${basePath}/${
+    commonId
+  }?discussionItem=${discussionId}`;
 };

@@ -31,7 +31,7 @@ import { AI_PRO_USER, AI_USER, FeatureFlags } from "@/shared/constants";
 import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
 import { useFeatureFlag } from "@/shared/hooks";
 import { Discussion, User } from "@/shared/models";
-import { getUserName, isMobile, isRtlText } from "@/shared/utils";
+import { generateDiscussionShareLink, getUserName, isMobile, isRtlText } from "@/shared/utils";
 import {
   Editor,
   MentionDropdown,
@@ -248,15 +248,18 @@ const BaseTextEditor = forwardRef<BaseTextEditorHandles, TextEditorProps>(
 
         // Extract the substring within the offsets
         const text =
-          (node as Text)?.text.slice(anchor.offset, focus.offset) +
+          (node as Text)?.text.slice(anchor.offset, focus.offset + 1) +
           (filteredNodes.length > 1 ? " " : "");
 
         // Remove newlines from the text
         return text.replace(/\n/g, "");
       });
 
-      // Combine the text parts and return
-      return nodes.join("").slice(0, -1);
+      if(nodes.length > 1) {
+        return nodes.join("").slice(0, -1);
+      }
+
+      return nodes.join("");
     };
 
     const handleSearch = (
@@ -275,7 +278,7 @@ const BaseTextEditor = forwardRef<BaseTextEditorHandles, TextEditorProps>(
       const newText = target?.anchor
         ? getTextByRange(editor, {
             ...target,
-            focus: afterValue ? afterValue : value.anchor,
+            focus: afterValue ? { ...afterValue, offset: afterValue.offset } : { ...value.anchor, offset: value.anchor.offset + 1 },
           })
         : "";
 
@@ -492,7 +495,6 @@ const BaseTextEditor = forwardRef<BaseTextEditorHandles, TextEditorProps>(
               insertEmoji(editor, emoji.native);
             }}
           />
-
           {target && (
             <MentionDropdown
               shouldFocusTarget={shouldFocusTarget}
@@ -510,10 +512,13 @@ const BaseTextEditor = forwardRef<BaseTextEditorHandles, TextEditorProps>(
                 setShouldFocusTarget(false);
                 isNewMentionCreated.current = true;
               }}
-              onCreateDiscussion={(discussionId) => {
-                console.log("--discussionId", discussionId);
+              onCreateDiscussion={(createdDiscussionCommonId: string, discussionId: string) => {
                 Transforms.select(editor, target);
-                Transforms.insertText(editor, "Hello, Slate!");
+                const link = generateDiscussionShareLink(createdDiscussionCommonId, discussionId);
+                Transforms.insertText(editor, link);
+                setTarget(null);
+                setShouldFocusTarget(false);
+                isNewMentionCreated.current = true;
               }}
               user={user}
               commonId={commonId}
