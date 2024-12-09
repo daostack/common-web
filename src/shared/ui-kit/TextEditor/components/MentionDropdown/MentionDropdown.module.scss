@@ -35,6 +35,25 @@
   }
 }
 
+.emptyContent {
+  padding: 0.375rem 1.75rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+
+  &:hover {
+    cursor: pointer;
+    background-color: var(--hover-fill);
+  }
+
+  &:focus {
+    background-color: var(--hover-fill);
+    outline: none;
+  }
+}
+
 .sectionTitle {
   font-weight: 500;
   font-size: $mobile-title;

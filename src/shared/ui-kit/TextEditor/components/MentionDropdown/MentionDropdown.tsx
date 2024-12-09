@@ -79,6 +79,20 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
   }, [isShowMoreDiscussions, discussions]);
 
   useEffect(() => {
+    const allRefs = document.querySelectorAll<HTMLLIElement>(
+      `.${styles.content}`,
+    );
+
+    listRefs.current = [];
+    allRefs.forEach((ref) => listRefs.current.push(ref));
+    listRefs.current.sort((a, b) => {
+      const tabIndexA = parseInt(a.getAttribute("tabIndex") || "0", 10);
+      const tabIndexB = parseInt(b.getAttribute("tabIndex") || "0", 10);
+      return tabIndexA - tabIndexB;
+    });
+  }, [searchText]);
+
+  useEffect(() => {
     if (shouldFocusTarget) {
       // Clear and rebuild listRefs based on current usersList and discussionsList
       listRefs.current = [];
@@ -86,7 +100,6 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
         `.${styles.content}`,
       );
       allRefs.forEach((ref) => listRefs.current.push(ref));
-
       // Sort the listRefs by tabIndex
       listRefs.current.sort((a, b) => {
         const tabIndexA = parseInt(a.getAttribute("tabIndex") || "0", 10);
@@ -225,8 +238,6 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
       }),
     );
 
-    console.log('---discussionId',discussionId, '--optimisticFeedItem',optimisticFeedItem.id);
-
     dispatch(
       commonActions.createDiscussion.request({
         payload: {
@@ -252,6 +263,30 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
     discussions.length === 0;
   const isLoading = initUsers.length === 0 && initDiscussions.length === 0;
 
+  const calculateNewDiscussionTabIndex = () => {
+    let tabIndex = 0;
+  
+    // Users
+    if (users.length > 0) {
+      tabIndex += isShowMoreUsers ? users.length : Math.min(users.length, 5); // Visible users
+      if (users.length > 5 && !isShowMoreUsers) {
+        tabIndex += 1; // "Show More Users" button
+      }
+    }
+  
+    // Discussions
+    if (discussions.length > 0) {
+      tabIndex += isShowMoreDiscussions
+        ? discussions.length
+        : Math.min(discussions.length, 5); // Visible discussions
+      if (discussions.length > 5 && !isShowMoreDiscussions) {
+        tabIndex += 1; // "Show More Discussions" button
+      }
+    }
+  
+    return tabIndex; // The "New Discussion" button follows all visible items
+  };
+
   return (
     <ul
       tabIndex={0}
@@ -261,12 +296,12 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
       onKeyDown={onKeyDown}
     >
       {isLoading && (
-        <li className={styles.content}>
+        <li className={styles.emptyContent}>
           <Loader className={styles.loader} />
         </li>
       )}
       {isEmptyContent && (
-        <li className={styles.content}>
+        <li className={styles.emptyContent}>
           <p>No results</p>
         </li>
       )}
@@ -343,7 +378,7 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
       {(searchText && canCreateDiscussion) && (
         <li
           ref={getRef}
-          tabIndex={(usersList.length > 0 ? usersList.length + 1 : 0) + (discussionsList.length > 0 ? discussionsList.length + 1 : 0)}
+          tabIndex={calculateNewDiscussionTabIndex()}
           key="newDiscussion"
           data-type="newDiscussion"
           onClick={createDiscussion}
