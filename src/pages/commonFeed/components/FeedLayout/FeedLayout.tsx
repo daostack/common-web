@@ -56,6 +56,7 @@ import {
   ChatChannelFeedLayoutItemProps,
   checkIsChatChannelLayoutItem,
   checkIsFeedItemFollowLayoutItem,
+  FeedItemFollowLayoutItem,
   FeedLayoutItem,
   FeedLayoutItemChangeData,
   FeedLayoutItemChangeDataWithType,
@@ -696,7 +697,20 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       }
 
       const itemId = data.params[QueryParamKey.Item];
+      const discussionItemId = data.params[QueryParamKey.discussionItem];
       const messageId = data.params[QueryParamKey.Message];
+
+      if(discussionItemId) {
+        const feedItem = allFeedItems.find((item) => (item as FeedItemFollowLayoutItem)?.feedItem?.data.id === discussionItemId);
+        const feedItemId = feedItem?.itemId;
+        if(feedItemId) {
+          handleFeedItemClick(feedItemId, {
+            commonId: feedPageParams.id,
+          });
+        }
+
+        return;
+      }
 
       if (itemId) {
         handleFeedItemClick(itemId, {

@@ -5,6 +5,7 @@ export enum QueryParamKey {
   Language = "language",
   Tab = "tab",
   Item = "item",
+  discussionItem = "discussionItem",
   ChatItem = "chatItem",
   Message = "message",
   Unread = "unread",

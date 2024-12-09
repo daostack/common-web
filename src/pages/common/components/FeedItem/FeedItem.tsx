@@ -174,6 +174,7 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
       shouldPreLoadMessages,
       withoutMenu,
       onUserClick: handleUserClick,
+      onStreamMentionClick: onFeedItemClick, 
       onFeedItemClick,
       onInternalLinkClick,
     }),

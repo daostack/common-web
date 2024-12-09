@@ -78,6 +78,7 @@ interface ChatMessageProps {
   onMessageDelete?: (messageId: string) => void;
   directParent?: DirectParent | null;
   onUserClick?: (userId: string) => void;
+  onStreamMentionClick?: (feedItemID: string) => void;
   onFeedItemClick?: (feedItemId: string) => void;
   onInternalLinkClick?: (data: InternalLinkData) => void;
   isMessageEditAllowed: boolean;
@@ -109,6 +110,7 @@ const ChatMessage = ({
   onMessageDelete,
   directParent,
   onUserClick,
+  onStreamMentionClick,
   onFeedItemClick,
   onInternalLinkClick,
   isMessageEditAllowed,
@@ -165,6 +167,7 @@ const ChatMessage = ({
         directParent,
         onUserClick,
         onFeedItemClick,
+        onStreamMentionClick,
         onInternalLinkClick,
       });
 
@@ -177,6 +180,7 @@ const ChatMessage = ({
     isNotCurrentUserMessage,
     discussionMessage.commonId,
     onUserClick,
+    onStreamMentionClick,
     onInternalLinkClick,
   ]);
 
@@ -302,6 +306,7 @@ const ChatMessage = ({
       commonId: discussionMessage.commonId,
       directParent,
       onUserClick,
+      onStreamMentionClick,
       onFeedItemClick,
       onInternalLinkClick,
     });
