@@ -12,7 +12,7 @@ export const isRtlWithNoMentions = (
     const parsedText = typeof text === "string" ? JSON.parse(text) : text;
     const textWithNoMentions = JSON.stringify(
       parsedText[0].children?.filter(
-        (item) => item.type !== ElementType.Mention,
+        (item) => (item.type !== ElementType.Mention || item.type !== ElementType.StreamMention || item.type !== ElementType.DiscussionLink),
       ),
     );
     return isRtlText(textWithNoMentions);

@@ -36,6 +36,21 @@ const StreamMention = ({ attributes, element, className, children }) => {
   );
 };
 
+const DiscussionLink = ({ attributes, element, className, children }) => {
+  return (
+    <span
+      {...attributes}
+      contentEditable={false}
+      data-cy={`discussion-link-${element.title.replace(" ", "-")}`}
+      className={className}
+      onClick={element.onInternalLinkClick}
+    >
+      @{element.title}
+      {children}
+    </span>
+  );
+};
+
 const Element: FC<RenderElementProps & { styles?: EditorElementStyles }> = (
   props,
 ) => {
@@ -89,6 +104,10 @@ const Element: FC<RenderElementProps & { styles?: EditorElementStyles }> = (
           {children}
         </Link>
       );
+    case ElementType.DiscussionLink:
+      return (
+        <DiscussionLink {...props} className={classNames(styles.mention, elementStyles?.mention)} />
+      );
     case ElementType.Mention: {
       return (
         <Mention
@@ -103,7 +122,7 @@ const Element: FC<RenderElementProps & { styles?: EditorElementStyles }> = (
           {...props}
           className={classNames(styles.mention, elementStyles?.mention)}
         />
-      )
+      );
     }
     case ElementType.Emoji: {
       return (

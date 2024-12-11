@@ -31,7 +31,7 @@ import { AI_PRO_USER, AI_USER, FeatureFlags } from "@/shared/constants";
 import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
 import { useFeatureFlag } from "@/shared/hooks";
 import { Discussion, User } from "@/shared/models";
-import { generateDiscussionShareLink, getUserName, isMobile, isRtlText } from "@/shared/utils";
+import { generateDiscussionShareLink, getUserName, InternalLinkData, isMobile, isRtlText } from "@/shared/utils";
 import {
   Editor,
   MentionDropdown,
@@ -49,6 +49,7 @@ import {
   checkIsCheckboxCreationText,
   toggleCheckboxItem,
   checkIsEmptyCheckboxCreationText,
+  insertDiscussionLink,
 } from "./utils";
 import styles from "./BaseTextEditor.module.scss";
 
@@ -85,6 +86,7 @@ export interface TextEditorProps {
   circleVisibility?: string[];
   user?: User | null;
   commonId?: string;
+  onInternalLinkClick?: (data: InternalLinkData) => void;
 }
 
 const INITIAL_SEARCH_VALUE = {
@@ -124,6 +126,7 @@ const BaseTextEditor = forwardRef<BaseTextEditorHandles, TextEditorProps>(
       circleVisibility,
       user,
       commonId,
+      onInternalLinkClick,
     } = props;
     const editor = useMemo(
       () =>
@@ -512,10 +515,10 @@ const BaseTextEditor = forwardRef<BaseTextEditorHandles, TextEditorProps>(
                 setShouldFocusTarget(false);
                 isNewMentionCreated.current = true;
               }}
-              onCreateDiscussion={(createdDiscussionCommonId: string, discussionId: string) => {
+              onCreateDiscussion={(createdDiscussionCommonId: string, discussionId: string, title: string) => {
                 Transforms.select(editor, target);
                 const link = generateDiscussionShareLink(createdDiscussionCommonId, discussionId);
-                Transforms.insertText(editor, link);
+                insertDiscussionLink(editor, title, link, onInternalLinkClick);
                 setTarget(null);
                 setShouldFocusTarget(false);
                 isNewMentionCreated.current = true;

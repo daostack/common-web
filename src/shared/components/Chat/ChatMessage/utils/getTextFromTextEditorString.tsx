@@ -13,7 +13,7 @@ import textEditorElementsStyles from "@/shared/ui-kit/TextEditor/shared/TextEdit
 import { EmojiElement } from "@/shared/ui-kit/TextEditor/types";
 import { isRtlWithNoMentions } from "@/shared/ui-kit/TextEditor/utils";
 import { InternalLinkData } from "@/shared/utils";
-import { CheckboxItem, StreamMention, UserMention } from "../components";
+import { CheckboxItem, StreamMention, UserMention, DiscussionLink } from "../components";
 import { Text, TextData } from "../types";
 import { generateInternalLink } from "./generateInternalLink";
 import { getTextFromSystemMessage } from "./getTextFromSystemMessage";
@@ -109,6 +109,15 @@ const getTextFromDescendant = async ({
           commonId={descendant.commonId}
           mentionTextClassName={mentionTextClassName}
           onStreamMentionClick={onStreamMentionClick}
+        />
+      );
+    case ElementType.DiscussionLink:
+      return (
+        <DiscussionLink
+          link={descendant.link}
+          title={descendant.title}
+          mentionTextClassName={mentionTextClassName}
+          onInternalLinkClick={onInternalLinkClick}
         />
       );
     case ElementType.Emoji:

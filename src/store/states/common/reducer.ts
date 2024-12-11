@@ -648,8 +648,8 @@ export const reducer = createReducer<CommonState, Action>(initialState)
 
         // Sort feedItems by updatedAt in descending order
         feedItems.sort((a, b) => {
-          const dateA = a?.feedItem?.updatedAt.toDate().getTime();
-          const dateB = b?.feedItem?.updatedAt.toDate().getTime();
+          const dateA = a?.feedItem?.updatedAt?.toDate().getTime();
+          const dateB = b?.feedItem?.updatedAt?.toDate().getTime();
           return dateB - dateA; // Sort in descending order
         });
 

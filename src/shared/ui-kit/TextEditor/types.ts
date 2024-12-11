@@ -3,6 +3,7 @@ import { HistoryEditor } from "slate-history";
 import { ReactEditor } from "slate-react";
 import { Skin } from "@emoji-mart/data";
 import { ElementType, FormatType } from "./constants";
+import { InternalLinkData } from "@/shared/utils";
 
 export type TextEditorValue = Descendant[];
 
@@ -59,6 +60,13 @@ export interface MentionElement extends BaseElement<CustomText> {
   userId: string;
 }
 
+export interface DiscussionLinkElement extends BaseElement<CustomText> {
+  type: ElementType.DiscussionLink;
+  title: string;
+  link: string;
+  onInternalLinkClick?: (data: InternalLinkData) => void;
+}
+
 export interface StreamMentionElement extends BaseElement<CustomText> {
   type: ElementType.StreamMention;
   title: string;
@@ -99,4 +107,5 @@ export type CustomElement =
   | MentionElement
   | StreamMentionElement
   | EmojiElement
-  | CheckboxItemElement;
+  | CheckboxItemElement
+  | DiscussionLinkElement;

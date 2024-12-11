@@ -941,6 +941,7 @@ export default function ChatComponent({
           user={user}
           commonId={commonId}
           circleVisibility={discussion?.circleVisibility}
+          onInternalLinkClick={onInternalLinkClick}
         />
       </div>
     </div>

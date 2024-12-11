@@ -23,7 +23,7 @@ export const MENTION_TAG = "@";
 export interface MentionDropdownProps {
   onClick: (user: User) => void;
   onClickDiscussion: (discussion: Discussion) => void;
-  onCreateDiscussion: (createdDiscussionCommonId: string, discussionId: string) => void;
+  onCreateDiscussion: (createdDiscussionCommonId: string, discussionId: string, title: string) => void;
   onClose: () => void;
   users?: User[];
   discussions?: Discussion[];
@@ -215,13 +215,14 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
     const userName = getUserName(user);
     const userId = user.uid;
     const firstMessage = generateFirstMessage({ userName, userId });
+    const title = searchText.slice(1);
     const optimisticFeedItem = generateOptimisticFeedItem({
         userId,
         commonId,
         type: CommonFeedType.OptimisticDiscussion,
         circleVisibility: circleVisibility ?? [],
         discussionId,
-        title: searchText,
+        title,
         content: firstMessage,
         lastMessageContent: {
           ownerId: userId,
@@ -242,7 +243,7 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
       commonActions.createDiscussion.request({
         payload: {
           id: discussionId,
-          title: searchText,
+          title,
           message: firstMessage,
           ownerId: userId,
           commonId,
@@ -253,7 +254,7 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
       }),
     );
 
-    onCreateDiscussion(commonId, discussionId);
+    onCreateDiscussion(commonId, discussionId, title);
   };
 
   const getRef = (element) => listRefs.current.push(element);

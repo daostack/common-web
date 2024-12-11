@@ -18,7 +18,7 @@ import {
 } from "@/shared/ui-kit";
 import { BaseTextEditorHandles } from "@/shared/ui-kit/TextEditor/BaseTextEditor";
 import { EmojiCount } from "@/shared/ui-kit/TextEditor/utils";
-import { emptyFunction } from "@/shared/utils";
+import { emptyFunction, InternalLinkData } from "@/shared/utils";
 import styles from "./ChatInput.module.scss";
 
 interface ChatInputProps {
@@ -44,6 +44,7 @@ interface ChatInputProps {
   circleVisibility?: string[];
   user?: User | null;
   commonId?: string;
+  onInternalLinkClick?: (data: InternalLinkData) => void; 
 }
 
 export const ChatInput = React.memo(
@@ -70,6 +71,7 @@ export const ChatInput = React.memo(
         circleVisibility,
         user,
         commonId,
+        onInternalLinkClick,
       } = props;
 
       if (shouldHideChatInput) {
@@ -131,6 +133,7 @@ export const ChatInput = React.memo(
             circleVisibility={circleVisibility}
             user={user}
             commonId={commonId}
+            onInternalLinkClick={onInternalLinkClick}
           />
           <button
             className={styles.sendIcon}
