@@ -701,7 +701,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       const messageId = data.params[QueryParamKey.Message];
 
       if(discussionItemId) {
-        const feedItem = allFeedItems.find((item) => (item as FeedItemFollowLayoutItem)?.feedItem?.data.id === discussionItemId);
+        const feedItem = allFeedItems.find((item) => (item as FeedItemFollowLayoutItem)?.feedItem?.data.id === discussionItemId || (item as FeedItemFollowLayoutItem)?.feedItem?.id === itemId);
         const feedItemId = feedItem?.itemId;
         if(feedItemId) {
           handleFeedItemClick(feedItemId, {
