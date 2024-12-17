@@ -238,7 +238,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     }
 
     return items;
-  }, [topFeedItemsWithoutOptimistic, optimisticFeedItems]);
+  }, [optimisticFeedItems, topFeedItemsWithoutOptimistic]);
 
   const firstItem = commonFeedItems?.[0];
   const isDataFetched = isCommonDataFetched;
@@ -290,14 +290,14 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     [dispatch, commonId],
   );
 
-  const scrollToItemsTop = () => {
+  const scrollToItemsTop = useCallback(() => {
     setTimeout(() => {
       feedLayoutRef?.getItemsContainerEl()?.scrollTo({
         top: 0,
         behavior: "smooth",
       });
     }, 0);
-  };
+  }, []);
 
   const onJoinCommon = checkIsProject(commonData?.common)
     ? canJoinProjectAutomatically
@@ -607,8 +607,8 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
       </ErrorBoundary>
     );
   }, [
-    JSON.stringify(commonData),
-    JSON.stringify(commonMember),
+    commonData,
+    commonMember,
     commonAction,
     scrollToItemsTop,
   ]);
@@ -716,4 +716,4 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   );
 };
 
-export default CommonFeedComponent;
+export default React.memo(CommonFeedComponent);

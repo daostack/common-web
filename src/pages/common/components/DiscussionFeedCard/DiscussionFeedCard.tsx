@@ -1,3 +1,12 @@
+// import { scan } from 'react-scan'; // import this BEFORE react
+
+// if (typeof window !== 'undefined') {
+//   scan({
+//     enabled: true,
+//     log: true, // logs render info to console (default: false)
+//   });
+// }
+
 import React, {
   forwardRef,
   useCallback,
@@ -507,6 +516,6 @@ function DiscussionFeedCard(props, ref) {
   );
 }
 
-export default forwardRef<FeedItemRef, DiscussionFeedCardProps>(
+export default React.memo(forwardRef<FeedItemRef, DiscussionFeedCardProps>(
   DiscussionFeedCard,
-);
+));

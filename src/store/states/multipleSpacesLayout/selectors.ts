@@ -1,10 +1,24 @@
+import { createSelector } from "reselect";
 import { AppState } from "@/shared/interfaces";
 
-export const selectMultipleSpacesLayoutBreadcrumbs = (state: AppState) =>
-  state.multipleSpacesLayout.breadcrumbs;
+// Base Selector for multipleSpacesLayout state
+const selectMultipleSpacesLayoutState = (state: AppState) =>
+  state.multipleSpacesLayout;
 
-export const selectMultipleSpacesLayoutBackUrl = (state: AppState) =>
-  state.multipleSpacesLayout.backUrl;
+// Breadcrumbs
+export const selectMultipleSpacesLayoutBreadcrumbs = createSelector(
+  selectMultipleSpacesLayoutState,
+  (layout) => layout.breadcrumbs
+);
 
-export const selectMultipleSpacesLayoutMainWidth = (state: AppState) =>
-  state.multipleSpacesLayout.mainWidth;
+// Back URL
+export const selectMultipleSpacesLayoutBackUrl = createSelector(
+  selectMultipleSpacesLayoutState,
+  (layout) => layout.backUrl
+);
+
+// Main Width
+export const selectMultipleSpacesLayoutMainWidth = createSelector(
+  selectMultipleSpacesLayoutState,
+  (layout) => layout.mainWidth
+);

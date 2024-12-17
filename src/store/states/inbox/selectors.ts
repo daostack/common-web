@@ -1,21 +1,53 @@
+import { createSelector } from "reselect";
 import { AppState } from "@/shared/interfaces";
 
-export const selectInboxItems = (state: AppState) => state.inbox.items;
+// Base Selector for inbox
+const selectInboxState = (state: AppState) => state.inbox;
 
-export const selectSharedInboxItem = (state: AppState) =>
-  state.inbox.sharedItem;
+// Inbox Items
+export const selectInboxItems = createSelector(
+  selectInboxState,
+  (inbox) => inbox.items
+);
 
-export const selectChatChannelItems = (state: AppState) =>
-  state.inbox.chatChannelItems;
+// Shared Inbox Item
+export const selectSharedInboxItem = createSelector(
+  selectInboxState,
+  (inbox) => inbox.sharedItem
+);
 
-export const selectNextChatChannelItemId = (state: AppState) =>
-  state.inbox.nextChatChannelItemId;
+// Chat Channel Items
+export const selectChatChannelItems = createSelector(
+  selectInboxState,
+  (inbox) => inbox.chatChannelItems
+);
 
-export const selectFilteredInboxItems = (state: AppState) =>
-  state.inbox.searchState.items;
+// Next Chat Channel Item ID
+export const selectNextChatChannelItemId = createSelector(
+  selectInboxState,
+  (inbox) => inbox.nextChatChannelItemId
+);
 
-export const selectInboxSearchValue = (state: AppState) =>
-  state.inbox.searchState.searchValue;
+// Search State
+const selectInboxSearchState = createSelector(
+  selectInboxState,
+  (inbox) => inbox.searchState
+);
 
-export const selectIsSearchingInboxItems = (state: AppState) =>
-  state.inbox.searchState.isSearching;
+// Filtered Inbox Items
+export const selectFilteredInboxItems = createSelector(
+  selectInboxSearchState,
+  (searchState) => searchState.items
+);
+
+// Inbox Search Value
+export const selectInboxSearchValue = createSelector(
+  selectInboxSearchState,
+  (searchState) => searchState.searchValue
+);
+
+// Is Searching Inbox Items
+export const selectIsSearchingInboxItems = createSelector(
+  selectInboxSearchState,
+  (searchState) => searchState.isSearching
+);

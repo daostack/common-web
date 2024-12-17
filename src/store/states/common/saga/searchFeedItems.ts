@@ -22,8 +22,8 @@ export function* searchFeedItems(
   const pinnedFeedItems = (yield select(
     selectPinnedFeedItems(commonId),
   )) as FeedItems;
-  const discussionStates = yield select(selectDiscussionStates());
-  const proposalStates = yield select(selectProposalStates());
+  const discussionStates = yield select(selectDiscussionStates);
+  const proposalStates = yield select(selectProposalStates);
   const projectStates = yield select(selectCommonStates());
 
   const filterFn = ({ feedItem }) => {

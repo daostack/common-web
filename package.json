@@ -34,7 +34,6 @@
     "lodash": "^4.17.20",
     "millify": "^3.5.2",
     "moment": "^2.29.1",
-    "node-sass": "^4.14.1",
     "openpgp": "4.10.4",
     "pluralize": "^8.0.0",
     "query-string": "^7.1.0",
@@ -55,6 +54,7 @@
     "react-pin-input": "^1.0.1",
     "react-redux": "^7.2.2",
     "react-router-dom": "^5.2.0",
+    "react-scan": "^0.0.45",
     "react-scripts": "^5.0.1",
     "react-scroll": "^1.8.7",
     "react-scrollbars-custom": "^4.1.1",
@@ -68,6 +68,7 @@
     "redux-persist": "^6.0.0",
     "redux-saga": "^1.1.3",
     "reselect": "^4.0.0",
+    "sass": "^1.83.0",
     "slate": "0.94.1",
     "slate-history": "0.93.0",
     "slate-react": "0.98.1",
@@ -145,7 +146,7 @@
     "@types/lodash": "^4.14.163",
     "@types/node": "^12.19.3",
     "@types/openpgp": "4.4.12",
-    "@types/react": "^16.9.55",
+    "@types/react": "17.0.2",
     "@types/react-aria-menubutton": "^6.2.9",
     "@types/react-datepicker": "^4.3.4",
     "@types/react-dom": "^16.9.9",
@@ -153,7 +154,7 @@
     "@types/react-loadable": "^5.5.1",
     "@types/react-phone-number-input": "^3.0.13",
     "@types/react-redux": "^7.1.9",
-    "@types/react-router-dom": "^5.1.6",
+    "@types/react-router-dom": "5.1.9",
     "@types/react-scroll": "^1.8.3",
     "@types/react-select": "^5.0.1",
     "@types/react-virtualized": "^9.21.16",
@@ -180,8 +181,8 @@
     "lint-staged": ">=10",
     "prettier": "^2.1.1",
     "prop-types": "^15.8.1",
-    "react-test-renderer": "^16.10.0",
-    "redux-devtools": "^3.5.0",
+    "react-test-renderer": "17.0.2",
+    "redux-devtools": "^3.7.0",
     "redux-devtools-extension": "^2.13.8",
     "redux-freeze": "^0.1.7",
     "ts-jest": "^27.1.5",
@@ -193,7 +194,7 @@
     "@types/react-dom": "17.0.2"
   },
   "engines": {
-    "node": "^14.18.x"
+    "node": ">=14.18.x"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,html,css,scss}": "prettier --write"

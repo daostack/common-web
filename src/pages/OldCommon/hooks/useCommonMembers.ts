@@ -116,7 +116,7 @@ export const useCommonMembers = ({ commonId }: Options): Return => {
         const useCommonMembersTrace = trace(perf, 'useCommonMembers');
         useCommonMembersTrace.start();
 
-        const cachedUserStates = selectUserStates()(store.getState());
+        const cachedUserStates = selectUserStates(store.getState());
         const hasUsersFromCache = commonMembers.some(
           ({ userId }) => cachedUserStates[userId]?.data,
         );

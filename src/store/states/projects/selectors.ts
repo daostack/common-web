@@ -1,12 +1,29 @@
+import { createSelector } from "reselect";
 import { AppState } from "@/shared/interfaces";
 
-export const selectProjectsData = (state: AppState) => state.projects.data;
+// Base selector for projects state
+const selectProjectsState = (state: AppState) => state.projects;
 
-export const selectAreProjectsLoading = (state: AppState) =>
-  state.projects.isDataLoading;
+// Projects Data
+export const selectProjectsData = createSelector(
+  selectProjectsState,
+  (projects) => projects.data
+);
 
-export const selectAreProjectsFetched = (state: AppState) =>
-  state.projects.isDataFetched;
+// Are Projects Loading
+export const selectAreProjectsLoading = createSelector(
+  selectProjectsState,
+  (projects) => projects.isDataLoading
+);
 
-export const selectIsCommonCreationDisabled = (state: AppState) =>
-  state.projects.isCommonCreationDisabled;
+// Are Projects Fetched
+export const selectAreProjectsFetched = createSelector(
+  selectProjectsState,
+  (projects) => projects.isDataFetched
+);
+
+// Is Common Creation Disabled
+export const selectIsCommonCreationDisabled = createSelector(
+  selectProjectsState,
+  (projects) => projects.isCommonCreationDisabled
+);

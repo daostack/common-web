@@ -22,9 +22,9 @@ import { InboxItems } from "../types";
 import { doesUserMatchSearchValue } from "./searchFetchedInboxItems";
 
 export function* getFilterBySearchValueFn(searchValue: string) {
-  const discussionStates = yield select(selectDiscussionStates());
-  const proposalStates = yield select(selectProposalStates());
-  const userStates = yield select(selectUserStates());
+  const discussionStates = yield select(selectDiscussionStates);
+  const proposalStates = yield select(selectProposalStates);
+  const userStates = yield select(selectUserStates);
   const user = yield select(selectUser());
   const userId = user?.uid;
 

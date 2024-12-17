@@ -110,4 +110,4 @@ const LinkStreamModal: FC<LinkStreamModalProps> = (props) => {
   );
 };
 
-export default LinkStreamModal;
+export default React.memo(LinkStreamModal);

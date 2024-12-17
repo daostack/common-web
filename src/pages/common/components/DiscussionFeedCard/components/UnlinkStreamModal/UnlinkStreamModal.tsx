@@ -113,4 +113,4 @@ const UnlinkStreamModal: FC<UnlinkStreamModalProps> = (props) => {
   );
 };
 
-export default UnlinkStreamModal;
+export default React.memo(UnlinkStreamModal);

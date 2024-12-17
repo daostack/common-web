@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { usePreviousDistinct } from "react-use";
 import difference from "lodash/difference";
@@ -69,9 +69,13 @@ export const useCommonPinnedFeedItems = (
     };
   }, []);
 
+  const data = useMemo(() => {
+    return filteredPinnedFeedItems || pinnedFeedItems.data;
+  }, [filteredPinnedFeedItems, pinnedFeedItems.data])
+
   return {
     // ...pinnedFeedItems,
-    data: filteredPinnedFeedItems || pinnedFeedItems.data,
+    data,
     loading: false,
     fetch,
   };

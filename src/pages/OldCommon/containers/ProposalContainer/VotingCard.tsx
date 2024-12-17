@@ -1,6 +1,5 @@
-import React, { FC, useMemo } from "react";
+import React, { FC, useMemo, ReactElement } from "react";
 import classNames from "classnames";
-import { ReactElement } from "hoist-non-react-statics/node_modules/@types/react";
 import { ProgressBar } from "@/shared/components";
 import { VotingCardType } from "@/shared/models";
 
