@@ -9,7 +9,7 @@ export function* copyFeedStateByCommonId({
   const commonState = (yield select(selectCommonState)) as CommonState;
   const specificCommonFeedItems = commonState.feedItems[commonId];
   const data =
-    specificCommonFeedItems.data && specificCommonFeedItems.data.slice(0, 30);
+    specificCommonFeedItems?.data && specificCommonFeedItems.data.slice(0, 30);
   const feedItems = {
     ...specificCommonFeedItems,
     data,

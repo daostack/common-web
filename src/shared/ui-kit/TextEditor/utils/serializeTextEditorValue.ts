@@ -17,6 +17,10 @@ const serializeDescendant = (descendant: Descendant): string => {
       return `${combinedChildren}\n`;
     case ElementType.Mention:
       return `@${descendant.displayName}`;
+    case ElementType.StreamMention:
+      return `@${descendant.title}`;
+    case ElementType.DiscussionLink:
+      return `@${descendant.title}`;
     default:
       return descendant.text || "";
   }

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CommonFeedService } from "@/services";
 import {
@@ -27,7 +27,7 @@ export const useCommonFeedItems = (
   const idsForNotListeningRef = useRef<string[]>(idsForNotListening || []);
   const isSubscriptionAllowed = feedItems.data !== null;
 
-  const fetch = (feedItemId?: string) => {
+  const fetch = useCallback(() => (feedItemId?: string) => {
     dispatch(
       commonActions.getFeedItems.request({
         commonId,
@@ -36,7 +36,7 @@ export const useCommonFeedItems = (
         limit: 15,
       }),
     );
-  };
+  },[commonId, sharedFeedItemId]);
 
   useEffect(() => {
     idsForNotListeningRef.current = idsForNotListening || [];

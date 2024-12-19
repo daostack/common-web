@@ -24,6 +24,8 @@ export const removeTextEditorEmptyEndLinesValues = (
       if (
         firstChild?.text !== "" ||
         Element.isElementType(secondChild, ElementType.Mention) ||
+        Element.isElementType(secondChild, ElementType.StreamMention) ||
+        Element.isElementType(secondChild, ElementType.DiscussionLink) ||
         Element.isElementType(secondChild, ElementType.Emoji)
       ) {
         endOfTextIndex = index;

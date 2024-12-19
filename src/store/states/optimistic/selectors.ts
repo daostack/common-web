@@ -1,17 +1,35 @@
+import { createSelector } from "reselect";
 import { AppState } from "@/shared/interfaces";
 
+// Base Selector for optimistic state
+const selectOptimisticState = (state: AppState) => state.optimistic;
 
-export const selectOptimisticFeedItems = (state: AppState) =>
-  state.optimistic.optimisticFeedItems;
+// Optimistic Feed Items
+export const selectOptimisticFeedItems = createSelector(
+  selectOptimisticState,
+  (optimistic) => optimistic.optimisticFeedItems
+);
 
-export const selectOptimisticInboxFeedItems = (state: AppState) =>
-  state.optimistic.optimisticInboxFeedItems;
+// Optimistic Inbox Feed Items
+export const selectOptimisticInboxFeedItems = createSelector(
+  selectOptimisticState,
+  (optimistic) => optimistic.optimisticInboxFeedItems
+);
 
-export const selectOptimisticDiscussionMessages = (state: AppState) =>
-  state.optimistic.optimisticDiscussionMessages;
+// Optimistic Discussion Messages
+export const selectOptimisticDiscussionMessages = createSelector(
+  selectOptimisticState,
+  (optimistic) => optimistic.optimisticDiscussionMessages
+);
 
-export const selectCreatedOptimisticFeedItems = (state: AppState) =>
-  state.optimistic.createdOptimisticFeedItems;
+// Created Optimistic Feed Items
+export const selectCreatedOptimisticFeedItems = createSelector(
+  selectOptimisticState,
+  (optimistic) => optimistic.createdOptimisticFeedItems
+);
 
-export const selectInstantDiscussionMessagesOrder = (state: AppState) =>
-  state.optimistic.instantDiscussionMessagesOrder;
+// Instant Discussion Messages Order
+export const selectInstantDiscussionMessagesOrder = createSelector(
+  selectOptimisticState,
+  (optimistic) => optimistic.instantDiscussionMessagesOrder
+);

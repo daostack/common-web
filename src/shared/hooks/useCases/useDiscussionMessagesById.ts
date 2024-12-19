@@ -40,6 +40,7 @@ interface Options {
   discussionId: string;
   directParent?: DirectParent | null;
   onUserClick?: (userId: string) => void;
+  onStreamMentionClick?: (feedItemId: string) => void;
   onFeedItemClick?: (feedItemId: string) => void;
   users: User[];
   textStyles: TextStyles;
@@ -78,6 +79,7 @@ export const useDiscussionMessagesById = ({
   discussionId,
   directParent,
   onUserClick,
+  onStreamMentionClick,
   onFeedItemClick,
   users,
   onInternalLinkClick,
@@ -126,6 +128,7 @@ export const useDiscussionMessagesById = ({
       getCommonPageAboutTabPath,
       directParent,
       onUserClick,
+      onStreamMentionClick: onStreamMentionClick ?? onFeedItemClick,
       onFeedItemClick,
       onInternalLinkClick,
       showPlainText: options?.showPlainText,
@@ -196,6 +199,7 @@ export const useDiscussionMessagesById = ({
               getCommonPageAboutTabPath,
               directParent,
               onUserClick,
+              onStreamMentionClick: onStreamMentionClick ??  onFeedItemClick,
               onFeedItemClick,
               onInternalLinkClick,
             });
@@ -228,6 +232,7 @@ export const useDiscussionMessagesById = ({
       getCommonPagePath,
       getCommonPageAboutTabPath,
       onUserClick,
+      onStreamMentionClick,
       onFeedItemClick,
       onInternalLinkClick,
     ],
@@ -293,6 +298,7 @@ export const useDiscussionMessagesById = ({
                 getCommonPageAboutTabPath,
                 directParent,
                 onUserClick,
+                onStreamMentionClick: onStreamMentionClick ?? onFeedItemClick,
                 onFeedItemClick,
                 onInternalLinkClick,
               });
@@ -339,6 +345,7 @@ export const useDiscussionMessagesById = ({
     getCommonPagePath,
     getCommonPageAboutTabPath,
     onUserClick,
+    onStreamMentionClick,
     onFeedItemClick,
     onInternalLinkClick,
     dispatch,

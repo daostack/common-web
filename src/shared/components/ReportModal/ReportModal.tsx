@@ -171,4 +171,4 @@ const ReportModal: FC<PropsWithChildren<ReportModalProps>> = (props) => {
   );
 };
 
-export default ReportModal;
+export default React.memo(ReportModal);

@@ -107,4 +107,4 @@ const MoveStreamModal: FC<MoveStreamModalProps> = (props) => {
   );
 };
 
-export default MoveStreamModal;
+export default React.memo(MoveStreamModal);

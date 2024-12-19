@@ -18,7 +18,7 @@ interface CirclesSelectProps {
   value: CircleSelectType | CircleSelectType[] | null;
   selectStyles?: StylesConfig<CircleSelectType>;
   error?: string;
-  onBlur: (e: React.FocusEvent<any, Element>) => void;
+  onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
   isOptionDisabled?: (option: CircleSelectType) => boolean;
 }
 

@@ -16,6 +16,13 @@ import {
   NotificationsHandler,
 } from "./handlers";
 import { Router } from "./router";
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
+
+// Create a client
+const queryClient = new QueryClient()
 
 const App = () => {
   const dispatch = useDispatch();
@@ -28,17 +35,19 @@ const App = () => {
   }, [dispatch, isDesktop]);
 
   return (
-    <ReactRouter history={history}>
-      <BackgroundNotificationModal />
-      <CommonHandler />
-      <TextDirectionHandler />
-      <ThemeHandler />
-      <UserNotificationsAmountHandler />
-      <WebViewLoginHandler />
-      <NotificationsHandler />
-      <LoginContainer />
-      <Router />
-    </ReactRouter>
+    <QueryClientProvider client={queryClient}>
+      <ReactRouter history={history}>
+        <BackgroundNotificationModal />
+        <CommonHandler />
+        <TextDirectionHandler />
+        <ThemeHandler />
+        <UserNotificationsAmountHandler />
+        <WebViewLoginHandler />
+        <NotificationsHandler />
+        <LoginContainer />
+        <Router />
+      </ReactRouter>
+    </QueryClientProvider>
   );
 };
 

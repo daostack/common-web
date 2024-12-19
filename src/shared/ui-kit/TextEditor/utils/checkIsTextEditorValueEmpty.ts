@@ -18,7 +18,7 @@ export const checkIsTextEditorValueEmpty = (
   const firstChild = firstElement.children[0];
   const secondChild = firstElement.children[1];
 
-  if (Element.isElementType(secondChild, ElementType.Mention)) {
+  if (Element.isElementType(secondChild, ElementType.Mention) || Element.isElementType(secondChild, ElementType.StreamMention) || Element.isElementType(secondChild, ElementType.DiscussionLink)) {
     return false;
   }
 

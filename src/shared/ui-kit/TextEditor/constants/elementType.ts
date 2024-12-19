@@ -3,6 +3,8 @@ export enum ElementType {
   Heading = "heading",
   Link = "link",
   Mention = "mention",
+  StreamMention = "StreamMention",
+  DiscussionLink = "DiscussionLink",
   NumberedList = "numbered-list",
   BulletedList = "bulleted-list",
   ListItem = "list-item",
@@ -19,5 +21,7 @@ export const PARENT_TYPES = [
 export const INLINE_TYPES = [
   ElementType.Link,
   ElementType.Mention,
+  ElementType.StreamMention,
+  ElementType.DiscussionLink,
   ElementType.Emoji,
 ];

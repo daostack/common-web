@@ -152,10 +152,13 @@ const InboxPage: FC<InboxPageProps> = (props) => {
     const firstFeedItem = topFeedItems[0];
     if(optimisticInboxFeedItems.size > 0 && firstFeedItem) {
 
-      feedLayoutRef?.setActiveItem({
-        feedItemId: firstFeedItem.itemId,
-        discussion: (firstFeedItem as FeedItemFollowLayoutItemWithFollowData)?.feedItem.optimisticData,
-      });
+      const shouldFocus = (firstFeedItem as FeedItemFollowLayoutItemWithFollowData)?.feedItem.optimisticData?.shouldFocus;
+      if(shouldFocus) {
+        feedLayoutRef?.setActiveItem({
+          feedItemId: firstFeedItem.itemId,
+          discussion: (firstFeedItem as FeedItemFollowLayoutItemWithFollowData)?.feedItem.optimisticData,
+        });
+      }
     }
 
   }, [topFeedItems, optimisticInboxFeedItems, feedLayoutRef])

@@ -18,6 +18,7 @@ export interface TextData {
   getCommonPageAboutTabPath?: GetCommonPageAboutTabPath;
   directParent?: DirectParent | null;
   onUserClick?: (userId: string) => void;
+  onStreamMentionClick?: (feedItemId: string) => void;
   onFeedItemClick?: (feedItemId: string) => void;
   onMessageUpdate?: (message: TextEditorValue) => void;
   onInternalLinkClick?: (data: InternalLinkData) => void;

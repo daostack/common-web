@@ -5097,6 +5097,19 @@
     "@svgr/plugin-svgo" "^5.5.0"
     loader-utils "^2.0.0"
 
+"@tanstack/query-core@4.5.0":
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-4.5.0.tgz#eeb0f290adb34f8682f65ebfce4e74709f3ae130"
+  integrity sha512-9pHE4TNlnBxdF24bTH3GGAJ4JdIDfJyuE/q+snyV425XEimPDe+OfofM8mVHfrn01Spvk9xAMpbqoEcmQG4kMg==
+
+"@tanstack/react-query@4.5.0":
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-4.5.0.tgz#566fbf4286a075d74cce32859ecfaafd11cb2d89"
+  integrity sha512-58JRis0+1hdKe37L7ZAJex849mlqhBvpNwlOjz6KzEMXHH/b0AyUHp1YIqn6ULiw7YpZiheYpCkdB/7ArIgfrg==
+  dependencies:
+    "@tanstack/query-core" "4.5.0"
+    use-sync-external-store "^1.2.0"
+
 "@tanstack/react-table@^8.7.9":
   version "8.7.9"
   resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.7.9.tgz#9efcd168fb0080a7e0bc213b5eac8b55513babf4"
@@ -19925,6 +19938,11 @@ use-long-press@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/use-long-press/-/use-long-press-2.0.2.tgz#3c945ee45b671e9c6976fe5364bdb5f563b3ff82"
   integrity sha512-zQ4sujilCykA7fSZ+m2gDuGw5aW3Gm3M4pulRH4e8c4mGXw8MDQIMthCsHiolxpt/hCe/BbIvd/iDn9XNDzkYg==
+
+use-sync-external-store@^1.2.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/use-sync-external-store/-/use-sync-external-store-1.4.0.tgz#adbc795d8eeb47029963016cefdf89dc799fcebc"
+  integrity sha512-9WXSPC5fMv61vaupRkCKCxsPxBocVnwakBEkMIHHpkTTg6icbJtg6jzgtLDm4bl3cSHAca52rYWih0k4K3PfHw==
 
 use@^3.1.0:
   version "3.1.1"

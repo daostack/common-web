@@ -13,7 +13,7 @@ import textEditorElementsStyles from "@/shared/ui-kit/TextEditor/shared/TextEdit
 import { EmojiElement } from "@/shared/ui-kit/TextEditor/types";
 import { isRtlWithNoMentions } from "@/shared/ui-kit/TextEditor/utils";
 import { InternalLinkData } from "@/shared/utils";
-import { CheckboxItem, UserMention } from "../components";
+import { CheckboxItem, StreamMention, UserMention, DiscussionLink } from "../components";
 import { Text, TextData } from "../types";
 import { generateInternalLink } from "./generateInternalLink";
 import { getTextFromSystemMessage } from "./getTextFromSystemMessage";
@@ -35,6 +35,7 @@ interface TextFromDescendant {
   commonId?: string;
   directParent?: DirectParent | null;
   onUserClick?: (userId: string) => void;
+  onStreamMentionClick?: (feedItemId: string) => void;
   onInternalLinkClick?: (data: InternalLinkData) => void;
   showPlainText?: boolean;
 }
@@ -47,6 +48,7 @@ const getTextFromDescendant = async ({
   commonId,
   directParent,
   onUserClick,
+  onStreamMentionClick,
   onInternalLinkClick,
   showPlainText,
 }: TextFromDescendant): Promise<Text> => {
@@ -60,7 +62,7 @@ const getTextFromDescendant = async ({
         return await generateInternalLink({ text, onInternalLinkClick });
       }),
     );
-    return <span>{mappedText}</span> || "";
+    return mappedText ? <span>{mappedText}</span> : "";
   }
 
   switch (descendant.type) {
@@ -79,6 +81,7 @@ const getTextFromDescendant = async ({
                   commonId,
                   directParent,
                   onUserClick,
+                  onStreamMentionClick,
                   onInternalLinkClick,
                   showPlainText,
                 })}
@@ -96,6 +99,25 @@ const getTextFromDescendant = async ({
           displayName={descendant.displayName}
           mentionTextClassName={mentionTextClassName}
           onUserClick={onUserClick}
+        />
+      );
+    case ElementType.StreamMention:
+      return (
+        <StreamMention
+          discussionId={descendant.discussionId}
+          title={descendant.title}
+          commonId={descendant.commonId}
+          mentionTextClassName={mentionTextClassName}
+          onStreamMentionClick={onStreamMentionClick}
+        />
+      );
+    case ElementType.DiscussionLink:
+      return (
+        <DiscussionLink
+          link={descendant.link}
+          title={descendant.title}
+          mentionTextClassName={mentionTextClassName}
+          onInternalLinkClick={onInternalLinkClick}
         />
       );
     case ElementType.Emoji:
@@ -148,6 +170,8 @@ export const getTextFromTextEditorString = async (
     systemMessage,
     directParent,
     onUserClick,
+    onFeedItemClick,
+    onStreamMentionClick,
     onInternalLinkClick,
     showPlainText,
   } = data;
@@ -205,6 +229,7 @@ export const getTextFromTextEditorString = async (
           commonId,
           directParent,
           onUserClick,
+          onStreamMentionClick: onStreamMentionClick ?? onFeedItemClick,
           onInternalLinkClick,
           showPlainText,
         })}

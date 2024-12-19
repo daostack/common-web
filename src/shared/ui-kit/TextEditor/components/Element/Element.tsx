@@ -22,6 +22,35 @@ const Mention = ({ attributes, element, className, children }) => {
   );
 };
 
+const StreamMention = ({ attributes, element, className, children }) => {
+  return (
+    <span
+      {...attributes}
+      contentEditable={false}
+      data-cy={`stream-mention-${element.title.replace(" ", "-")}`}
+      className={className}
+    >
+      @{element.title}
+      {children}
+    </span>
+  );
+};
+
+const DiscussionLink = ({ attributes, element, className, children }) => {
+  return (
+    <span
+      {...attributes}
+      contentEditable={false}
+      data-cy={`discussion-link-${element.title.replace(" ", "-")}`}
+      className={className}
+      onClick={element.onInternalLinkClick}
+    >
+      @{element.title}
+      {children}
+    </span>
+  );
+};
+
 const Element: FC<RenderElementProps & { styles?: EditorElementStyles }> = (
   props,
 ) => {
@@ -75,9 +104,21 @@ const Element: FC<RenderElementProps & { styles?: EditorElementStyles }> = (
           {children}
         </Link>
       );
+    case ElementType.DiscussionLink:
+      return (
+        <DiscussionLink {...props} className={classNames(styles.mention, elementStyles?.mention)} />
+      );
     case ElementType.Mention: {
       return (
         <Mention
+          {...props}
+          className={classNames(styles.mention, elementStyles?.mention)}
+        />
+      );
+    }
+    case ElementType.StreamMention: {
+      return (
+        <StreamMention
           {...props}
           className={classNames(styles.mention, elementStyles?.mention)}
         />

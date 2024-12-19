@@ -9,6 +9,7 @@ export interface RenderFunctionOptions<T extends Route = Route>
   configuration: T;
   userRoles?: UserRole[];
   authenticated: boolean;
+  component?: React.ComponentType<any>; 
 }
 
 export type RenderRouteContentFunction<T extends Route = Route> = (

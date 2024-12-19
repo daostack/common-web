@@ -25,7 +25,7 @@ export const countTextEditorEmojiElements = (
           emojiCount = emojiCount + 1;
         } else if (children?.text !== "") {
           hasText = true;
-        } else if (Element.isElementType(children, ElementType.Mention)) {
+        } else if (Element.isElementType(children, ElementType.Mention) || Element.isElementType(children, ElementType.StreamMention) || Element.isElementType(children, ElementType.DiscussionLink)) {
           hasText = true;
         }
       });

@@ -3,6 +3,7 @@ export enum KeyboardKeys {
   Escape = "Escape",
   ArrowUp = "ArrowUp",
   ArrowDown = "ArrowDown",
+  Backspace = "Backspace", // Add Backspace
 }
 
 /**

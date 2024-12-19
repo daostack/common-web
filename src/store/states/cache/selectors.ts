@@ -1,3 +1,4 @@
+import { createSelector } from "reselect";
 import {
   getChatChannelUserStatusKey,
   getCommonMemberStateKey,
@@ -5,74 +6,110 @@ import {
 import { getFeedItemUserMetadataKey } from "@/shared/constants/getFeedItemUserMetadataKey";
 import { AppState } from "@/shared/interfaces";
 
-export const selectUserStateById = (userId: string) => (state: AppState) =>
-  state.cache.userStates[userId] || null;
+// Base selector to access cache state
+const selectCacheState = (state: AppState) => state.cache;
 
-export const selectUserStates = () => (state: AppState) =>
-  state.cache.userStates;
+// User States
+export const selectUserStates = createSelector(
+  selectCacheState,
+  (cache) => cache.userStates
+);
 
-export const selectGovernanceStateByCommonId =
-  (commonId: string) => (state: AppState) =>
-    state.cache.governanceByCommonIdStates[commonId] || null;
+export const selectUserStateById = (userId: string) =>
+  createSelector(selectUserStates, (userStates) => userStates[userId] || null);
 
-export const selectDiscussionStateById =
-  (discussionId: string) => (state: AppState) =>
-    state.cache.discussionStates[discussionId] || null;
+// Governance States
+export const selectGovernanceStateByCommonId = (commonId: string) =>
+  createSelector(
+    selectCacheState,
+    (cache) => cache.governanceByCommonIdStates[commonId] || null
+  );
 
-export const selectDiscussionStates = () => (state: AppState) =>
-  state.cache.discussionStates;
+// Discussion States
+export const selectDiscussionStates = createSelector(
+  selectCacheState,
+  (cache) => cache.discussionStates
+);
 
-export const selectProposalStates = () => (state: AppState) =>
-  state.cache.proposalStates;
+export const selectDiscussionStateById = (discussionId: string) =>
+  createSelector(
+    selectDiscussionStates,
+    (discussionStates) => discussionStates[discussionId] || null
+  );
 
-export const selectProposalStateById =
-  (proposalId: string) => (state: AppState) =>
-    state.cache.proposalStates[proposalId] || null;
+// Proposal States
+export const selectProposalStates = createSelector(
+  selectCacheState,
+  (cache) => cache.proposalStates
+);
 
-export const selectDiscussionMessagesStateByDiscussionId =
-  (discussionId: string) => (state: AppState) =>
-    state.cache.discussionMessagesStates[discussionId] || null;
+export const selectProposalStateById = (proposalId: string) =>
+  createSelector(
+    selectProposalStates,
+    (proposalStates) => proposalStates[proposalId] || null
+  );
 
-export const selectChatChannelMessagesStateByChatChannelId =
-  (chatChannelId: string) => (state: AppState) =>
-    state.cache.chatChannelMessagesStates[chatChannelId] || null;
+// Discussion Messages
+export const selectDiscussionMessagesStateByDiscussionId = (discussionId: string) =>
+  createSelector(
+    selectCacheState,
+    (cache) => cache.discussionMessagesStates[discussionId] || null
+  );
 
-export const selectCommonMembersStateByCommonId =
-  (commonId?: string) => (state: AppState) => {
-    if (!commonId) {
-      return null;
-    }
+// Chat Channel Messages
+export const selectChatChannelMessagesStateByChatChannelId = (chatChannelId: string) =>
+  createSelector(
+    selectCacheState,
+    (cache) => cache.chatChannelMessagesStates[chatChannelId] || null
+  );
 
-    return state.cache.commonMembersState[commonId] || null;
-  };
+// Common Members
+export const selectCommonMembersStateByCommonId = (commonId?: string) =>
+  createSelector(
+    selectCacheState,
+    (cache) => (commonId ? cache.commonMembersState[commonId] || null : null)
+  );
 
-export const selectFeedStateByCommonId =
-  (commonId: string) => (state: AppState) =>
-    state.cache.feedByCommonIdStates[commonId] || null;
+// Feed States
+export const selectFeedStateByCommonId = (commonId: string) =>
+  createSelector(
+    selectCacheState,
+    (cache) => cache.feedByCommonIdStates[commonId] || null
+  );
 
-export const selectFeedItemUserMetadataStates = (state: AppState) =>
-  state.cache.feedItemUserMetadataStates;
+// Feed Item User Metadata States
+export const selectFeedItemUserMetadataStates = createSelector(
+  selectCacheState,
+  (cache) => cache.feedItemUserMetadataStates
+);
 
-export const selectFeedItemUserMetadata =
-  (info: { commonId: string; userId: string; feedObjectId: string }) =>
-  (state: AppState) =>
-    state.cache.feedItemUserMetadataStates[getFeedItemUserMetadataKey(info)] ||
-    null;
+export const selectFeedItemUserMetadata = (info: { commonId: string; userId: string; feedObjectId: string }) =>
+  createSelector(
+    selectFeedItemUserMetadataStates,
+    (metadataStates) => metadataStates[getFeedItemUserMetadataKey(info)] || null
+  );
 
-export const selectChatChannelUserStatusStates = (state: AppState) =>
-  state.cache.chatChannelUserStatusStates;
+// Chat Channel User Status States
+export const selectChatChannelUserStatusStates = createSelector(
+  selectCacheState,
+  (cache) => cache.chatChannelUserStatusStates
+);
 
-export const selectChatChannelUserStatus =
-  (info: { userId: string; chatChannelId: string }) => (state: AppState) =>
-    state.cache.chatChannelUserStatusStates[
-      getChatChannelUserStatusKey(info)
-    ] || null;
+export const selectChatChannelUserStatus = (info: { userId: string; chatChannelId: string }) =>
+  createSelector(
+    selectChatChannelUserStatusStates,
+    (statusStates) => statusStates[getChatChannelUserStatusKey(info)] || null
+  );
 
-export const selectCommonMemberStateByUserAndCommonIds =
-  (info: { userId: string; commonId: string }) => (state: AppState) =>
-    state.cache.commonMemberByUserAndCommonIdsStates[
-      getCommonMemberStateKey(info)
-    ] || null;
+// Common Member State by User and Common IDs
+export const selectCommonMemberStateByUserAndCommonIds = (info: { userId: string; commonId: string }) =>
+  createSelector(
+    selectCacheState,
+    (cache) => cache.commonMemberByUserAndCommonIdsStates[getCommonMemberStateKey(info)] || null
+  );
 
-export const selectExternalCommonUsers = (state: AppState) =>
-  state.cache.externalCommonUsers;
+// External Common Users
+export const selectExternalCommonUsers = createSelector(
+  selectCacheState,
+  (cache) => cache.externalCommonUsers
+);
