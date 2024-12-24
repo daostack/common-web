@@ -257,9 +257,13 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     fetchUserRelatedData();
   };
 
+  // console.log('---hasMoreCommonFeedItems',hasMoreCommonFeedItems);
+
   const fetchMoreCommonFeedItems = useCallback(
     (feedItemId?: string) => {
+      // console.log('--here', hasMoreCommonFeedItems, '--isSearchingFeedItems',isSearchingFeedItems);
       if (hasMoreCommonFeedItems && !isSearchingFeedItems) {
+        // console.log('--herere');
         fetchCommonFeedItems(feedItemId);
       }
     },

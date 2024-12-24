@@ -63,6 +63,7 @@ interface OptimisticFeedCardProps {
   onUserClick?: (userId: string) => void;
   onFeedItemClick: (feedItemId: string) => void;
   onInternalLinkClick: (data: InternalLinkData) => void;
+  onExpand?: (isExpanded: boolean) => void;
   type: CommonFeedType;
 }
 
@@ -94,6 +95,7 @@ const OptimisticFeedCard = forwardRef<
     onUserClick,
     onFeedItemClick,
     onInternalLinkClick,
+    onExpand,
   } = props;
 
   const isHome = false;
@@ -234,6 +236,7 @@ const OptimisticFeedCard = forwardRef<
       unreadMessages={feedItemUserMetadata?.count || 0}
       isActive={isActive}
       isExpanded={isExpanded}
+      onExpand={onExpand}
       onClick={handleOpenChat}
       title={cardTitle}
       lastMessage={getLastMessage({ lastMessage: discussion?.lastMessageContent, isProject: false, commonName, commonFeedType: CommonFeedType.Discussion})}

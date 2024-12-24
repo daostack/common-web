@@ -12,7 +12,6 @@ import React, {
 } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import PullToRefresh from "react-simple-pull-to-refresh";
 import { useDeepCompareEffect, useKey, useWindowSize } from "react-use";
 import classNames from "classnames";
 import { selectUser } from "@/pages/Auth/store/selectors";
@@ -39,7 +38,6 @@ import {
   AI_PRO_USER,
   AI_USER,
   InboxItemType,
-  LOADER_APPEARANCE_DELAY,
   QueryParamKey,
   ROUTE_PATHS,
 } from "@/shared/constants";
@@ -72,7 +70,7 @@ import {
   Governance,
   User,
 } from "@/shared/models";
-import { InfiniteScroll, Loader, TextEditorValue } from "@/shared/ui-kit";
+import { TextEditorValue } from "@/shared/ui-kit";
 import { InternalLinkData } from "@/shared/utils";
 import {
   addQueryParam,
@@ -110,6 +108,7 @@ import {
   saveContentSize,
 } from "./utils";
 import styles from "./FeedLayout.module.scss";
+import { List, InfiniteLoader, AutoSizer, CellMeasurerCache, CellMeasurer } from "react-virtualized";
 
 export interface FeedLayoutOuterStyles {
   splitView?: string;
@@ -162,6 +161,7 @@ interface FeedLayoutProps {
   settings?: FeedLayoutSettings;
   renderChatInput?: () => ReactNode;
   onPullToRefresh?: () => void;
+  isInboxItems?: boolean;
 }
 
 const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
@@ -199,6 +199,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     settings,
     renderChatInput,
     onPullToRefresh,
+    isInboxItems = false,
   } = props;
   useDisableOverscroll();
   const { getCommonPagePath } = useRoutesContext();
@@ -285,7 +286,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const [expandedFeedItemId, setExpandedFeedItemId] = useState<string | null>(
     null,
   );
-  const [isLoaderAfterRefresh, setIsLoaderAfterRefresh] = useState(false);
   const allFeedItems = useMemo(() => {
     const items: FeedLayoutItem[] = [];
 
@@ -730,18 +730,8 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   );
 
   const handleRefresh = async () => {
-    setIsLoaderAfterRefresh(true);
     onPullToRefresh?.();
   };
-
-  const handleRefSet = useCallback(
-    (ref: FeedItemRef | null) => {
-      if (ref) {
-        refsByItemId.current[ref.itemId] = ref;
-      }
-    },
-    [refsByItemId],
-  );
 
   // We should try to set here only the data which rarely can be changed,
   // so we will not have extra re-renders of ALL rendered items
@@ -872,12 +862,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   }, [sharedFeedItemId, isTabletView, allFeedItems]);
 
   useEffect(() => {
-    if (allFeedItems.length) {
-      setIsLoaderAfterRefresh(false);
-    }
-  }, [Boolean(allFeedItems.length)]);
-
-  useEffect(() => {
     if (isTabletView) {
       setSplitPaneRef(null);
       return;
@@ -915,6 +899,177 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
         commonId={selectedItemCommonData.id}
       />
     ) : null;
+
+      // Determine if a row has already been loaded
+  const isRowLoaded = ({ index }) => index < allFeedItems.length;
+
+  // Load more rows when needed
+  const loadMoreRows = async () => {
+    if (!loading) {
+      await onFetchNext();
+    }
+  };
+
+  const rowRefs = useRef({});
+
+  const setRowRef = (index, node) => {
+    if (node) {
+      rowRefs.current[index] = node; // Store the reference to the DOM node
+    } else {
+      delete rowRefs.current[index]; // Remove the reference if node is unmounted
+    }
+  };
+
+  // Render each row
+  const rowRenderer = ({ index, key, parent, style }) => {
+    const item = allFeedItems[index];
+    if (!item) return null;
+
+    const isActive = item.itemId === activeFeedItemId;
+    const shouldPreLoadMessages = index < ITEMS_AMOUNT_TO_PRE_LOAD_MESSAGES;
+
+    if (checkIsFeedItemFollowLayoutItem(item)) {
+      const commonData = getItemCommonData(
+        item.feedItemFollowWithMetadata,
+        outerCommon
+      );
+
+      const isPinned = (outerCommon?.pinnedFeedItems || []).some(
+        (pinnedItem) => pinnedItem.feedObjectId === item.feedItem.id
+      );
+
+      const isExpanded = item.feedItem?.id === expandedFeedItemId;
+
+      return (
+        <CellMeasurer
+          key={key}
+          cache={cache}
+          columnIndex={0}
+          rowIndex={index}
+          parent={parent}
+        >
+        <div style={style} ref={(node) => setRowRef(index, node)}>
+          <FeedItem
+            isOptimisticallyCreated={createdOptimisticFeedItems.has(
+              item.feedItem.data.id
+            )}
+            commonMember={commonMember}
+            commonId={commonData?.id}
+            commonName={commonData?.name || ""}
+            commonImage={commonData?.image || ""}
+            commonNotion={outerCommon?.notion}
+            pinnedFeedItems={outerCommon?.pinnedFeedItems}
+            isProject={commonData?.isProject}
+            isPinned={isPinned}
+            item={item.feedItem}
+            governanceCircles={governance?.circles}
+            isMobileVersion={isTabletView}
+            userCircleIds={getUserCircleIds(commonData?.id)}
+            isActive={isActive}
+            onExpand={(isExpanding) => {
+              console.log('--item.feedItem.id', item.feedItem.id);
+              // console.log('--isExpanding',isExpanding, index);
+              if(isExpanding) {
+                recomputeRowHeight(index);
+              } else {
+                cache.clear(index, 0);
+                 listRef.current?.recomputeRowHeights(index); // Recompute row heights
+              }
+            }}
+            isExpanded={isExpanded}
+            sizeKey={isActive ? sizeKey : undefined}
+            currentUserId={userId}
+            shouldCheckItemVisibility={
+              !item.feedItemFollowWithMetadata ||
+              item.feedItemFollowWithMetadata.userId !== userId
+            }
+            directParent={outerCommon?.directParent}
+            rootCommonId={outerCommon?.rootCommonId}
+            shouldPreLoadMessages={shouldPreLoadMessages}
+          />
+        </div>
+      </CellMeasurer>
+      );
+    }
+
+    if (renderChatChannelItem && checkIsChatChannelLayoutItem(item)) {
+      return (
+        <div key={key} style={style}>
+          {renderChatChannelItem({
+            chatChannel: item.chatChannel,
+            isActive,
+            onActiveItemDataChange: handleActiveChatChannelItemDataChange,
+          })}
+        </div>
+      );
+    }
+
+    return null;
+  };
+  
+  const cache = new CellMeasurerCache({
+    fixedWidth: true,
+    defaultHeight: isInboxItems ? 80.54 : 59.54, // Default row height
+  });
+  const [previousIndex, setPreviousIndex] = React.useState<number | null>(null);
+
+  // Handle row expansion
+  const recomputeRowHeight = useCallback((index) => {
+    const node = rowRefs.current[index];
+    if (!node) return;
+  
+    const images = node.querySelectorAll("img");
+
+    if(images.length === 2) {
+      cache.clear(index, 0);
+      cache.set(index, 0, 0, 466);
+    } else if (images.length === 3) {
+      cache.clear(index, 0);
+      cache.set(index, 0, 0, 486);
+    } else if (images.length >= 4) {
+      cache.clear(index, 0);
+      cache.set(index, 0, 0, 687);
+    }
+  }, []);
+  
+  
+
+  // Reference to the List component
+  const listRef = React.useRef<List | null>(null);
+
+  // React.useLayoutEffect(() => {
+  //   if (expandedFeedItemId && allFeedItems.length > 0) {
+  //     const itemIndex = allFeedItems.findIndex((item) => (item as FeedItemFollowLayoutItem)?.feedItem?.id === expandedFeedItemId);
+  //     if (itemIndex >= 0) {
+  //       recomputeRowHeight(itemIndex);
+  //       if (previousIndex !== null) {
+  //         recomputeRowHeight(previousIndex); // Recompute the previous expanded row
+  //       }
+  //       setPreviousIndex(itemIndex); // Update the previous index
+  //     }
+  //   } else if( previousIndex !== null ) {
+  //     recomputeRowHeight(previousIndex);
+  //     setPreviousIndex(null);
+  //   }
+  // }, [expandedFeedItemId, allFeedItems, recomputeRowHeight, previousIndex]);
+
+  // Calculate dynamic row height
+  const getRowHeight = ({ index }) => {
+    const item = allFeedItems[index] as FeedItemFollowLayoutItem;
+    if (!item) return cache.defaultHeight; // Use default height if no item
+    
+    const isExpanded = item.feedItem?.id === expandedFeedItemId;
+    
+    // Use cached height or calculate height dynamically
+    const cachedHeight = cache.rowHeight({ index });
+    if (cachedHeight && isExpanded) {
+      return cachedHeight;
+    }
+    
+    const basicHeight = isInboxItems ? 80.54 : 59.54;
+    return basicHeight;
+  };
+
   const contentEl = renderContentWrapper(
     <FeedItemContext.Provider value={feedItemContextValue}>
       <ChatContext.Provider value={chatContextValue}>
@@ -929,93 +1084,28 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
             {isContentEmpty ? (
               <p className={styles.emptyText}>{emptyText}</p>
             ) : (
-              <PullToRefresh
-                isPullable={isTabletView && Boolean(onPullToRefresh)}
-                className={styles.pullToRefresh}
-                onRefresh={handleRefresh}
-                refreshingContent={<Loader />}
-              >
-                <InfiniteScroll
-                  markerClassName={
-                    allFeedItems && allFeedItems.length > 7
-                      ? styles.infiniteScrollMarker
-                      : ""
-                  }
-                  onFetchNext={onFetchNext}
-                  isLoading={loading}
-                  loaderDelay={
-                    isLoaderAfterRefresh ? 0 : LOADER_APPEARANCE_DELAY
-                  }
+                <InfiniteLoader
+                  isRowLoaded={isRowLoaded}
+                  loadMoreRows={loadMoreRows}
+                  rowCount={allFeedItems.length + 1} // +1 to account for potential future items
                 >
-                  {allFeedItems?.map((item, index) => {
-                    const isActive = item.itemId === activeFeedItemId;
-                    const shouldPreLoadMessages =
-                      index < ITEMS_AMOUNT_TO_PRE_LOAD_MESSAGES;
-
-                    if (checkIsFeedItemFollowLayoutItem(item)) {
-                      const commonData = getItemCommonData(
-                        item.feedItemFollowWithMetadata,
-                        outerCommon,
-                      );
-
-                      const isPinned = (
-                        outerCommon?.pinnedFeedItems || []
-                      ).some(
-                        (pinnedItem) =>
-                          pinnedItem.feedObjectId === item.feedItem.id,
-                      );
-
-                      return (
-                        <FeedItem
-                          ref={handleRefSet}
-                          key={item.feedItem.id}
-                          isOptimisticallyCreated={createdOptimisticFeedItems.has(
-                            item.feedItem.data.id,
-                          )}
-                          commonMember={commonMember}
-                          commonId={commonData?.id}
-                          commonName={commonData?.name || ""}
-                          commonImage={commonData?.image || ""}
-                          commonNotion={outerCommon?.notion}
-                          pinnedFeedItems={outerCommon?.pinnedFeedItems}
-                          isProject={commonData?.isProject}
-                          isPinned={isPinned}
-                          item={item.feedItem}
-                          governanceCircles={governance?.circles}
-                          isMobileVersion={isTabletView}
-                          userCircleIds={getUserCircleIds(commonData?.id)}
-                          isActive={isActive}
-                          isExpanded={item.feedItem.id === expandedFeedItemId}
-                          sizeKey={isActive ? sizeKey : undefined}
-                          currentUserId={userId}
-                          shouldCheckItemVisibility={
-                            !item.feedItemFollowWithMetadata ||
-                            item.feedItemFollowWithMetadata.userId !== userId
-                          }
-                          directParent={outerCommon?.directParent}
-                          rootCommonId={outerCommon?.rootCommonId}
-                          shouldPreLoadMessages={shouldPreLoadMessages}
+                  {({ onRowsRendered, registerChild }) => (
+                    <AutoSizer>
+                      {({ height, width }) => (
+                        <List
+                          ref={listRef}
+                          width={width}
+                          height={height}
+                          rowCount={allFeedItems.length}
+                          rowHeight={getRowHeight} // Adjust based on your item height
+                          rowRenderer={rowRenderer}
+                          onRowsRendered={onRowsRendered}
+                          registerChild={registerChild}
                         />
-                      );
-                    }
-                    if (
-                      renderChatChannelItem &&
-                      checkIsChatChannelLayoutItem(item)
-                    ) {
-                      return (
-                        <React.Fragment key={item.itemId}>
-                          {renderChatChannelItem({
-                            chatChannel: item.chatChannel,
-                            isActive,
-                            onActiveItemDataChange:
-                              handleActiveChatChannelItemDataChange,
-                          })}
-                        </React.Fragment>
-                      );
-                    }
-                  })}
-                </InfiniteScroll>
-              </PullToRefresh>
+                      )}
+                    </AutoSizer>
+                  )}
+              </InfiniteLoader>
             )}
             {!isTabletView &&
               (chatItem?.discussion ? (

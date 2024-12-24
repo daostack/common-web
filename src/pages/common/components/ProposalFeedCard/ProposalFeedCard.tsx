@@ -71,6 +71,7 @@ interface ProposalFeedCardProps {
   onUserClick?: (userId: string) => void;
   onFeedItemClick: (feedItemId: string) => void;
   onInternalLinkClick: (data: InternalLinkData) => void;
+  onExpand?: (isExpanded: boolean) => void;
 }
 
 const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
@@ -98,6 +99,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       onUserClick,
       onFeedItemClick,
       onInternalLinkClick,
+      onExpand,
     } = props;
     const user = useSelector(selectUser());
     const userId = user?.uid;
@@ -411,6 +413,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
           lastActivity={item.updatedAt.seconds * 1000}
           isActive={isActive}
           isExpanded={isExpanded}
+          onExpand={onExpand}
           unreadMessages={feedItemUserMetadata?.count || 0}
           title={cardTitle}
           lastMessage={lastMessage}

@@ -7,6 +7,7 @@ import React, {
   PropsWithChildren,
   useCallback,
   useMemo,
+  useState,
 } from "react";
 import { useCollapse } from "react-collapsed";
 import classNames from "classnames";
@@ -60,6 +61,7 @@ type FeedCardProps = PropsWithChildren<{
   notion?: CommonNotion;
   originalCommonIdForLinking?: string;
   linkedCommonIds?: string[];
+  onExpand?: (isExpanded: boolean) => void;
 }>;
 
 const FeedCard = (props, ref) => {
@@ -96,15 +98,29 @@ const FeedCard = (props, ref) => {
     notion,
     originalCommonIdForLinking,
     linkedCommonIds,
+    onExpand,
   } = props;
   const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isTabletView = useIsTabletView();
   const { setExpandedFeedItemId, renderFeedItemBaseContent, feedCardSettings } =
     useFeedItemContext();
   const isContentVisible = (isExpanded && canBeExpanded) || isPreviewMode;
+  const [isCollapsing, setIsCollapsing] = useState(false);
   const { getCollapseProps, getToggleProps } = useCollapse({
     isExpanded: isContentVisible,
     duration: COLLAPSE_DURATION,
+    onTransitionStateChange: (state) => {
+      if(state === "expandEnd") {
+        onExpand && onExpand(true);
+      } else if (state === "collapseEnd") {
+        onExpand && onExpand(false);
+        setIsCollapsing(false)
+      } else if (state === "collapseStart") {
+        setIsCollapsing(true);
+      } else if (state === "collapsing") {
+        setIsCollapsing(true);
+      }
+    }
   });
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -297,6 +313,10 @@ const FeedCard = (props, ref) => {
     linkedCommonIds,
     renderFeedItemBaseContent,
   ]);
+
+  if(feedItemId === "5b37b42d-acf3-4759-b980-49899ae4fe6a") {
+    console.log('-isCollapsing', isCollapsing, '--feedItemId',feedItemId);
+  }
 
   return (
     <div ref={containerRef}>

@@ -524,6 +524,7 @@ export const reducer = createReducer<CommonState, Action>(initialState)
       nextState.feedItems[commonId] = {
         ...feedItems,
         data: [...existingData, ...newData],
+        hasMore: newItems.length === 14,
       };
     }),
   )

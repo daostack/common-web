@@ -57,6 +57,7 @@ interface FeedItemProps {
   onFeedItemUpdate?: (item: CommonFeed, isRemoved: boolean) => void;
   getNonAllowedItems?: GetNonAllowedItemsOptions;
   isOptimisticallyCreated?: boolean;
+  onExpand?: (isExpanded: boolean) => void;
 }
 
 const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
@@ -88,6 +89,7 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     onFeedItemUpdate: outerOnFeedItemUpdate,
     getNonAllowedItems: outerGetNonAllowedItems,
     isOptimisticallyCreated = false,
+    onExpand,
   } = props;
   const {
     onFeedItemUpdate,
@@ -177,6 +179,7 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
       onStreamMentionClick: onFeedItemClick, 
       onFeedItemClick,
       onInternalLinkClick,
+      onExpand
     }),
     [
       ref,
@@ -206,6 +209,7 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
       handleUserClick,
       onFeedItemClick,
       onInternalLinkClick,
+      onExpand
     ],
   );
 
