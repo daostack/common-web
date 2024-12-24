@@ -29,6 +29,7 @@ export function* getFeedItems(
     const user = (yield select(selectUser())) as User | null;
     const userId = user?.uid;
 
+    console.log('---cachedFeedState.feedItems',cachedFeedState.feedItems);
     if (!currentFeedItems.data && !feedItemId && cachedFeedState) {
       yield put(
         actions.setFeedState({
