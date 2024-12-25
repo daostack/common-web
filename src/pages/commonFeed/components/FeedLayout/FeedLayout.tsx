@@ -71,7 +71,7 @@ import {
   User,
 } from "@/shared/models";
 import { TextEditorValue } from "@/shared/ui-kit";
-import { InternalLinkData } from "@/shared/utils";
+import { checkIsItemVisibleForUser, InternalLinkData } from "@/shared/utils";
 import {
   addQueryParam,
   deleteQueryParam,
@@ -286,19 +286,70 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const [expandedFeedItemId, setExpandedFeedItemId] = useState<string | null>(
     null,
   );
+
+  const getUserCircleIds = useCallback(
+    (commonId) => {
+      return Object.values(
+        commonMemberForSpecificCommonIds[commonId]?.circles.map ??
+          commonMember?.circles.map ??
+          {},
+      ) as string[];
+    },
+    [commonMemberForSpecificCommonIds, commonMember?.circles.map],
+  );
+
   const allFeedItems = useMemo(() => {
     const items: FeedLayoutItem[] = [];
-
+  
     if (topFeedItems) {
       items.push(...topFeedItems);
     }
-
+  
     if (feedItems) {
       items.push(...feedItems);
     }
+  
+    // Apply filtering logic here
+    return items.filter((item) => {
+      const feedItem = (item as FeedItemFollowLayoutItem)?.feedItem;
+      if (checkIsFeedItemFollowLayoutItem(item)) {
+        const commonData = getItemCommonData(
+          item.feedItemFollowWithMetadata,
+          outerCommon
+        );
+        // Check if the item is visible for the user
+        if (
+          !checkIsItemVisibleForUser({
+            itemCircleVisibility: feedItem.circleVisibility,
+            userCircleIds: getUserCircleIds(commonData?.id), // Pass the user's circle IDs
+            itemUserId: feedItem.userId,
+            currentUserId: userId, // Pass the current user ID
+            itemDataType: feedItem.data?.type, // Adjust for item data type
+          })
+        ) {
+          return false;
+        }
+    
+        // Additional filtering logic if needed (e.g., based on type)
+        if (
+          feedItem.data?.type !== CommonFeedType.Discussion &&
+          feedItem.data?.type !== CommonFeedType.Proposal &&
+          feedItem.data?.type !== CommonFeedType.Project &&
+          feedItem.data?.type !== CommonFeedType.OptimisticDiscussion &&
+          feedItem.data?.type !== CommonFeedType.OptimisticProposal
+        ) {
+          return false;
+        }
+    
+        return true; // Keep the item if it passes all checks
 
-    return items;
-  }, [topFeedItems, feedItems]);
+      } else {
+        return true;
+      }
+    });
+  }, [topFeedItems, feedItems, userId, getUserCircleIds]);
+  
+  console.log('--allFeedItems',allFeedItems);
 
   const dmChatChannelItemForProfile = useMemo(
     () =>
@@ -370,17 +421,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     [activeFeedItemId, allFeedItems],
   );
 
-  const getUserCircleIds = useCallback(
-    (commonId) => {
-      return Object.values(
-        commonMemberForSpecificCommonIds[commonId]?.circles.map ??
-          commonMember?.circles.map ??
-          {},
-      ) as string[];
-    },
-    [commonMemberForSpecificCommonIds, commonMember?.circles.map],
-  );
-
   const selectedFeedItem = useMemo(
     () =>
       chatItem?.nestedItemData?.feedItem ||
@@ -417,10 +457,32 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     [handleUserWithCommonClick, selectedItemCommonData?.id],
   );
 
+
+  const allFeedItemsRef = useRef<FeedLayoutItem[]>([]);
+  useEffect(() => {
+    allFeedItemsRef.current = allFeedItems; // Update the ref when items change
+  }, [allFeedItems]);
+
+
+  const scrollToFeedItem = useCallback(
+    (feedItemId: string) => {
+      const itemIndex = allFeedItemsRef.current.findIndex(
+        (item) => (item.itemId === feedItemId || (item as FeedItemFollowLayoutItem).feedItem?.data.id === feedItemId),
+      );
+      console.log('---itemIndex',itemIndex, '---allFeedItemsRef',allFeedItemsRef, '---feedItemId',feedItemId);
+      if (itemIndex !== -1 && listRef.current) {
+        listRef.current.scrollToRow(itemIndex);
+      }
+    },
+    [], // Dependency array is empty as we're using `useRef`
+  );
+
   const setActiveChatItem = useCallback((nextChatItem: ChatItem | null) => {
     setShouldAllowChatAutoOpen(false);
     setChatItem(nextChatItem);
-  }, []);
+    console.log('--nextChatItem?.feedItemId',nextChatItem);
+    nextChatItem?.feedItemId && scrollToFeedItem(nextChatItem?.feedItemId);
+  }, [scrollToFeedItem]);
 
   const isMentionOpen = useElementPresence(
     MENTION_TAG_ELEMENT.key,
@@ -509,7 +571,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const setActiveItem = useCallback((item: ChatItem) => {
     setShouldAllowChatAutoOpen(false);
     setChatItem(item);
-  }, []);
+    console.log('---item',item);
+    scrollToFeedItem(item.feedItemId);
+  }, [scrollToFeedItem]);
 
   const handleMessagesAmountChange = useCallback(
     (newMessagesAmount: number) => {
@@ -614,6 +678,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     ) => {
       const { commonId = selectedItemCommonData?.id, messageId } = options;
 
+      console.log('---feedItemId',feedItemId);
       if (commonId) {
         onFeedItemSelect?.(commonId, feedItemId, messageId);
       }
@@ -627,10 +692,12 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   ) => {
     const { commonId, messageId } = options;
 
+    console.log('--test', chatItem?.feedItemId === feedItemId, messageId);
     if (chatItem?.feedItemId === feedItemId && !messageId) {
       return;
     }
 
+    console.log('---qwewq', feedItemId);
     const queryParamsForPath = {
       item: feedItemId,
       message: messageId,
@@ -638,6 +705,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
     if (commonId && commonId !== outerCommon?.id) {
       history.push(getCommonPagePath(commonId, queryParamsForPath));
+      console.log('--return');
       return;
     }
     if (chatItem?.nestedItemData) {
@@ -647,9 +715,11 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
           queryParamsForPath,
         ),
       );
+      console.log('--return2');
       return;
     }
 
+    console.log('--return3');
     setActiveChatItem({ feedItemId });
 
     const itemExists = allFeedItems.some((item) => item.itemId === feedItemId);
@@ -697,7 +767,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       }
 
       const itemId = data.params[QueryParamKey.Item];
+
       const discussionItemId = data.params[QueryParamKey.discussionItem];
+      console.log('--itemId',itemId, '---discussionItemId', discussionItemId);
       const messageId = data.params[QueryParamKey.Message];
 
       if(discussionItemId) {
@@ -728,10 +800,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       );
     },
   );
-
-  const handleRefresh = async () => {
-    onPullToRefresh?.();
-  };
 
   // We should try to set here only the data which rarely can be changed,
   // so we will not have extra re-renders of ALL rendered items
@@ -927,7 +995,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
     const isActive = item.itemId === activeFeedItemId;
     const shouldPreLoadMessages = index < ITEMS_AMOUNT_TO_PRE_LOAD_MESSAGES;
-
     if (checkIsFeedItemFollowLayoutItem(item)) {
       const commonData = getItemCommonData(
         item.feedItemFollowWithMetadata,
@@ -948,7 +1015,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
           rowIndex={index}
           parent={parent}
         >
-        <div style={style} ref={(node) => setRowRef(index, node)}>
+        <div id={index} style={style} ref={(node) => setRowRef(index, node)}>
           <FeedItem
             isOptimisticallyCreated={createdOptimisticFeedItems.has(
               item.feedItem.data.id
@@ -992,13 +1059,21 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
     if (renderChatChannelItem && checkIsChatChannelLayoutItem(item)) {
       return (
-        <div key={key} style={style}>
-          {renderChatChannelItem({
-            chatChannel: item.chatChannel,
-            isActive,
-            onActiveItemDataChange: handleActiveChatChannelItemDataChange,
-          })}
-        </div>
+        <CellMeasurer
+          key={key}
+          cache={cache}
+          columnIndex={0}
+          rowIndex={index}
+          parent={parent}
+        >
+          <div key={key} style={style}>
+            {renderChatChannelItem({
+              chatChannel: item.chatChannel,
+              isActive,
+              onActiveItemDataChange: handleActiveChatChannelItemDataChange,
+            })}
+          </div>
+        </CellMeasurer>
       );
     }
 
