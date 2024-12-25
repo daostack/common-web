@@ -9,6 +9,7 @@
   border-bottom: 0.0625rem solid var(--gentle-stroke);
   cursor: pointer;
   user-select: none;
+  background-color: var(--feed-item-background);
 
   &:hover {
     background-color: var(--hover-fill);

@@ -7,7 +7,6 @@ import React, {
   PropsWithChildren,
   useCallback,
   useMemo,
-  useState,
 } from "react";
 import { useCollapse } from "react-collapsed";
 import classNames from "classnames";
@@ -105,7 +104,6 @@ const FeedCard = (props, ref) => {
   const { setExpandedFeedItemId, renderFeedItemBaseContent, feedCardSettings } =
     useFeedItemContext();
   const isContentVisible = (isExpanded && canBeExpanded) || isPreviewMode;
-  const [isCollapsing, setIsCollapsing] = useState(false);
   const { getCollapseProps, getToggleProps } = useCollapse({
     isExpanded: isContentVisible,
     duration: COLLAPSE_DURATION,
@@ -114,11 +112,6 @@ const FeedCard = (props, ref) => {
         onExpand && onExpand(true);
       } else if (state === "collapseEnd") {
         onExpand && onExpand(false);
-        setIsCollapsing(false)
-      } else if (state === "collapseStart") {
-        setIsCollapsing(true);
-      } else if (state === "collapsing") {
-        setIsCollapsing(true);
       }
     }
   });
@@ -313,10 +306,6 @@ const FeedCard = (props, ref) => {
     linkedCommonIds,
     renderFeedItemBaseContent,
   ]);
-
-  if(feedItemId === "5b37b42d-acf3-4759-b980-49899ae4fe6a") {
-    console.log('-isCollapsing', isCollapsing, '--feedItemId',feedItemId);
-  }
 
   return (
     <div ref={containerRef}>

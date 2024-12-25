@@ -967,13 +967,11 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
             userCircleIds={getUserCircleIds(commonData?.id)}
             isActive={isActive}
             onExpand={(isExpanding) => {
-              console.log('--item.feedItem.id', item.feedItem.id);
-              // console.log('--isExpanding',isExpanding, index);
               if(isExpanding) {
                 recomputeRowHeight(index);
               } else {
                 cache.clear(index, 0);
-                 listRef.current?.recomputeRowHeights(index); // Recompute row heights
+                listRef.current?.recomputeRowHeights(index); // Recompute row heights
               }
             }}
             isExpanded={isExpanded}
@@ -988,7 +986,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
             shouldPreLoadMessages={shouldPreLoadMessages}
           />
         </div>
-      </CellMeasurer>
+       </CellMeasurer>
       );
     }
 
@@ -1037,21 +1035,21 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   // Reference to the List component
   const listRef = React.useRef<List | null>(null);
 
-  // React.useLayoutEffect(() => {
-  //   if (expandedFeedItemId && allFeedItems.length > 0) {
-  //     const itemIndex = allFeedItems.findIndex((item) => (item as FeedItemFollowLayoutItem)?.feedItem?.id === expandedFeedItemId);
-  //     if (itemIndex >= 0) {
-  //       recomputeRowHeight(itemIndex);
-  //       if (previousIndex !== null) {
-  //         recomputeRowHeight(previousIndex); // Recompute the previous expanded row
-  //       }
-  //       setPreviousIndex(itemIndex); // Update the previous index
-  //     }
-  //   } else if( previousIndex !== null ) {
-  //     recomputeRowHeight(previousIndex);
-  //     setPreviousIndex(null);
-  //   }
-  // }, [expandedFeedItemId, allFeedItems, recomputeRowHeight, previousIndex]);
+  React.useLayoutEffect(() => {
+    if (expandedFeedItemId && allFeedItems.length > 0) {
+      const itemIndex = allFeedItems.findIndex((item) => (item as FeedItemFollowLayoutItem)?.feedItem?.id === expandedFeedItemId);
+      if (itemIndex >= 0) {
+        recomputeRowHeight(itemIndex);
+        if (previousIndex !== null) {
+          recomputeRowHeight(previousIndex); // Recompute the previous expanded row
+        }
+        setPreviousIndex(itemIndex); // Update the previous index
+      }
+    } else if( previousIndex !== null ) {
+      recomputeRowHeight(previousIndex);
+      setPreviousIndex(null);
+    }
+  }, [expandedFeedItemId, allFeedItems, recomputeRowHeight, previousIndex]);
 
   // Calculate dynamic row height
   const getRowHeight = ({ index }) => {
@@ -1060,8 +1058,8 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     
     const isExpanded = item.feedItem?.id === expandedFeedItemId;
     
-    // Use cached height or calculate height dynamically
     const cachedHeight = cache.rowHeight({ index });
+
     if (cachedHeight && isExpanded) {
       return cachedHeight;
     }
