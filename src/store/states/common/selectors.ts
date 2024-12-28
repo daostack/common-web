@@ -126,6 +126,11 @@ export const selectRecentStreamId = createSelector(
   (common) => common.recentStreamId || ""
 );
 
+export const selectPendingFeedItemId = createSelector(
+  selectCommonState,
+  (common) => common.pendingFeedItemId || ""
+);
+
 // Recent Assigned Circle
 export const selectRecentAssignedCircle = (commonId: string, memberId: string) =>
   createSelector(

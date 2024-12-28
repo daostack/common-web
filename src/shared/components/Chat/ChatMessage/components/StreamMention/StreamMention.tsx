@@ -29,7 +29,6 @@ const StreamMention: FC<StreamMentionProps> = (props) => {
   const feedItemId = useMemo(() => data?.id, [data?.id]);
 
   const handleStreamNameClick = () => {
-    console.log('----data', data);
     if (onStreamMentionClick && feedItemId) {
       dispatch(
         commonActions.getFeedItems.request({
@@ -38,7 +37,6 @@ const StreamMention: FC<StreamMentionProps> = (props) => {
           limit: 15,
         }),
       );
-      console.log('-hererere');
       onStreamMentionClick(feedItemId);
     }
   };

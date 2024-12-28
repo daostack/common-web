@@ -167,9 +167,6 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     if (commonPinnedFeedItems) {
       items.push(...commonPinnedFeedItems.map((item) => item.itemId));
     }
-    if (sharedFeedItemId) {
-      items.push(sharedFeedItemId);
-    }
     return Array.from(new Set(items));
   }, [sharedFeedItemId, pinnedItemIds, commonPinnedFeedItems]);
   const {
@@ -222,9 +219,6 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     if (filteredPinnedItems.length > 0) {
       items.push(...filteredPinnedItems);
     }
-    if (sharedFeedItem) {
-      items.push(sharedFeedItem);
-    }
 
     return items;
   }, [sharedFeedItem, sharedFeedItemId, commonPinnedFeedItems]);
@@ -257,13 +251,10 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     fetchUserRelatedData();
   };
 
-  // console.log('---hasMoreCommonFeedItems',hasMoreCommonFeedItems);
 
   const fetchMoreCommonFeedItems = useCallback(
     (feedItemId?: string) => {
-      // console.log('--here', hasMoreCommonFeedItems, '--isSearchingFeedItems',isSearchingFeedItems);
       if (hasMoreCommonFeedItems && !isSearchingFeedItems) {
-        // console.log('--herere');
         fetchCommonFeedItems(feedItemId);
       }
     },
@@ -720,4 +711,4 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   );
 };
 
-export default React.memo(CommonFeedComponent);
+export default CommonFeedComponent;

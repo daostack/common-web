@@ -4,3 +4,11 @@ export const MENTION_TAG_ELEMENT = {
     key: "data-cy",
     value: "mentions-portal"
 }
+
+export const FeedCardHeights = {
+    inboxItemHeight: 80.54,
+    commonFeedItemHeight: 59.54,
+    oneImageItem: 466,
+    twoImageItem: 486,
+    threeImageItem: 687,
+}

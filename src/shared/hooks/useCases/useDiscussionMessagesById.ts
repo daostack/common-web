@@ -40,7 +40,7 @@ interface Options {
   discussionId: string;
   directParent?: DirectParent | null;
   onUserClick?: (userId: string) => void;
-  onStreamMentionClick?: (feedItemId: string) => void;
+  onStreamMentionClick?: ((feedItemId: string, options?: { commonId?: string; messageId?: string }) => void) | ((data: InternalLinkData) => void);
   onFeedItemClick?: (feedItemId: string) => void;
   users: User[];
   textStyles: TextStyles;
@@ -199,7 +199,7 @@ export const useDiscussionMessagesById = ({
               getCommonPageAboutTabPath,
               directParent,
               onUserClick,
-              onStreamMentionClick: onStreamMentionClick ??  onFeedItemClick,
+              onStreamMentionClick: onStreamMentionClick ?? onFeedItemClick,
               onFeedItemClick,
               onInternalLinkClick,
             });

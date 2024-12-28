@@ -40,7 +40,7 @@ export const inboxTransform = createTransform(
     }
 
     const data =
-      inboundState.items.data && inboundState.items.data.slice(0, 30);
+      inboundState.items.data && inboundState.items.data;
 
     return {
       ...inboundState,

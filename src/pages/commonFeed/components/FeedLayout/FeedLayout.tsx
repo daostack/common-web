@@ -10,7 +10,7 @@ import React, {
   ReactNode,
   ForwardRefRenderFunction,
 } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { useDeepCompareEffect, useKey, useWindowSize } from "react-use";
 import classNames from "classnames";
@@ -71,7 +71,7 @@ import {
   User,
 } from "@/shared/models";
 import { TextEditorValue } from "@/shared/ui-kit";
-import { checkIsItemVisibleForUser, InternalLinkData } from "@/shared/utils";
+import { InternalLinkData } from "@/shared/utils";
 import {
   addQueryParam,
   deleteQueryParam,
@@ -79,7 +79,9 @@ import {
   getUserName,
 } from "@/shared/utils";
 import {
+  commonActions,
   selectCreatedOptimisticFeedItems,
+  selectPendingFeedItemId,
   selectRecentStreamId,
 } from "@/store/states";
 import { MIN_CONTENT_WIDTH } from "../../constants";
@@ -95,6 +97,7 @@ import {
 } from "./components";
 import {
   BATCHES_AMOUNT_TO_PRELOAD,
+  FeedCardHeights,
   ITEMS_AMOUNT_TO_PRE_LOAD_MESSAGES,
   MENTION_TAG_ELEMENT,
 } from "./constants";
@@ -109,6 +112,7 @@ import {
 } from "./utils";
 import styles from "./FeedLayout.module.scss";
 import { List, InfiniteLoader, AutoSizer, CellMeasurerCache, CellMeasurer } from "react-virtualized";
+import useAllFeedItems from "./hooks/useAllFeedItems";
 
 export interface FeedLayoutOuterStyles {
   splitView?: string;
@@ -203,12 +207,15 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   } = props;
   useDisableOverscroll();
   const { getCommonPagePath } = useRoutesContext();
+  const dispatch = useDispatch();
   const refsByItemId = useRef<Record<string, FeedItemRef | null>>({});
   const { width: windowWidth } = useWindowSize();
   const history = useHistory();
   const queryParams = useQueryParams();
   const isTabletView = useIsTabletView();
   const user = useSelector(selectUser());
+  const pendingFeedItemId = useSelector(selectPendingFeedItemId);
+  console.log('---pendingFeedItemId',pendingFeedItemId);
   const createdOptimisticFeedItems = useSelector(
     selectCreatedOptimisticFeedItems,
   );
@@ -298,58 +305,13 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     [commonMemberForSpecificCommonIds, commonMember?.circles.map],
   );
 
-  const allFeedItems = useMemo(() => {
-    const items: FeedLayoutItem[] = [];
-  
-    if (topFeedItems) {
-      items.push(...topFeedItems);
-    }
-  
-    if (feedItems) {
-      items.push(...feedItems);
-    }
-  
-    // Apply filtering logic here
-    return items.filter((item) => {
-      const feedItem = (item as FeedItemFollowLayoutItem)?.feedItem;
-      if (checkIsFeedItemFollowLayoutItem(item)) {
-        const commonData = getItemCommonData(
-          item.feedItemFollowWithMetadata,
-          outerCommon
-        );
-        // Check if the item is visible for the user
-        if (
-          !checkIsItemVisibleForUser({
-            itemCircleVisibility: feedItem.circleVisibility,
-            userCircleIds: getUserCircleIds(commonData?.id), // Pass the user's circle IDs
-            itemUserId: feedItem.userId,
-            currentUserId: userId, // Pass the current user ID
-            itemDataType: feedItem.data?.type, // Adjust for item data type
-          })
-        ) {
-          return false;
-        }
-    
-        // Additional filtering logic if needed (e.g., based on type)
-        if (
-          feedItem.data?.type !== CommonFeedType.Discussion &&
-          feedItem.data?.type !== CommonFeedType.Proposal &&
-          feedItem.data?.type !== CommonFeedType.Project &&
-          feedItem.data?.type !== CommonFeedType.OptimisticDiscussion &&
-          feedItem.data?.type !== CommonFeedType.OptimisticProposal
-        ) {
-          return false;
-        }
-    
-        return true; // Keep the item if it passes all checks
-
-      } else {
-        return true;
-      }
-    });
-  }, [topFeedItems, feedItems, userId, getUserCircleIds]);
-  
-  console.log('--allFeedItems',allFeedItems);
+  const allFeedItems = useAllFeedItems(
+    topFeedItems,
+    feedItems,
+    userId,
+    getUserCircleIds,
+    outerCommon
+  );
 
   const dmChatChannelItemForProfile = useMemo(
     () =>
@@ -463,26 +425,50 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     allFeedItemsRef.current = allFeedItems; // Update the ref when items change
   }, [allFeedItems]);
 
+const scrollToFeedItem = useCallback(
+  (feedItemId: string) => {
+    const itemIndex = allFeedItems.findIndex(
+      (item) =>
+        item.itemId === feedItemId ||
+        (item as FeedItemFollowLayoutItem)?.feedItem?.data.id === feedItemId
+    );
 
-  const scrollToFeedItem = useCallback(
-    (feedItemId: string) => {
-      const itemIndex = allFeedItemsRef.current.findIndex(
-        (item) => (item.itemId === feedItemId || (item as FeedItemFollowLayoutItem).feedItem?.data.id === feedItemId),
-      );
-      console.log('---itemIndex',itemIndex, '---allFeedItemsRef',allFeedItemsRef, '---feedItemId',feedItemId);
-      if (itemIndex !== -1 && listRef.current) {
-        listRef.current.scrollToRow(itemIndex);
-      }
-    },
-    [], // Dependency array is empty as we're using `useRef`
-  );
+    if (itemIndex !== -1 && listRef.current && !isInboxItems) {
+      // Item is found, scroll to it
+      console.log('--itemIndex',itemIndex, feedItemId, '--allFeedItems',allFeedItems);
+      listRef.current.scrollToRow(itemIndex);
+      dispatch(commonActions.setPendingFeedItemId(feedItemId));
+    } else {
+      dispatch(commonActions.setPendingFeedItemId(feedItemId));
+    }
+  },
+  [allFeedItems, isInboxItems]
+);
+
+
+// Scroll effect
+useEffect(() => {
+  if (pendingFeedItemId) {
+    const itemIndex = allFeedItems.findIndex(
+      (item) =>
+        item.itemId === pendingFeedItemId ||
+        (item as FeedItemFollowLayoutItem)?.feedItem?.data.id ===
+          pendingFeedItemId
+    );
+
+    console.log('--itemIndex',itemIndex);
+    if (itemIndex !== -1 && listRef.current) {
+      setTimeout(() => listRef.current?.scrollToRow(itemIndex), 200);
+      dispatch(commonActions.setPendingFeedItemId(null));
+    }
+  }
+}, [pendingFeedItemId, allFeedItems]);
 
   const setActiveChatItem = useCallback((nextChatItem: ChatItem | null) => {
     setShouldAllowChatAutoOpen(false);
     setChatItem(nextChatItem);
-    console.log('--nextChatItem?.feedItemId',nextChatItem);
     nextChatItem?.feedItemId && scrollToFeedItem(nextChatItem?.feedItemId);
-  }, [scrollToFeedItem]);
+  }, [scrollToFeedItem, allFeedItems]);
 
   const isMentionOpen = useElementPresence(
     MENTION_TAG_ELEMENT.key,
@@ -571,8 +557,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const setActiveItem = useCallback((item: ChatItem) => {
     setShouldAllowChatAutoOpen(false);
     setChatItem(item);
-    console.log('---item',item);
-    scrollToFeedItem(item.feedItemId);
+    item.feedItemId && scrollToFeedItem(item.feedItemId);
   }, [scrollToFeedItem]);
 
   const handleMessagesAmountChange = useCallback(
@@ -678,10 +663,15 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     ) => {
       const { commonId = selectedItemCommonData?.id, messageId } = options;
 
-      console.log('---feedItemId',feedItemId);
-      if (commonId) {
-        onFeedItemSelect?.(commonId, feedItemId, messageId);
+      console.log('--commonId',commonId, '---feedItemId',feedItemId);
+      if (commonId && onFeedItemSelect) {
+        onFeedItemSelect(commonId, feedItemId, messageId);
+        setActiveChatItem({ feedItemId });
+      } else {
+        setActiveChatItem({ feedItemId });
       }
+
+
     },
     [selectedItemCommonData?.id, onFeedItemSelect],
   );
@@ -692,12 +682,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   ) => {
     const { commonId, messageId } = options;
 
-    console.log('--test', chatItem?.feedItemId === feedItemId, messageId);
     if (chatItem?.feedItemId === feedItemId && !messageId) {
       return;
     }
 
-    console.log('---qwewq', feedItemId);
     const queryParamsForPath = {
       item: feedItemId,
       message: messageId,
@@ -705,7 +693,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
     if (commonId && commonId !== outerCommon?.id) {
       history.push(getCommonPagePath(commonId, queryParamsForPath));
-      console.log('--return');
       return;
     }
     if (chatItem?.nestedItemData) {
@@ -715,15 +702,13 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
           queryParamsForPath,
         ),
       );
-      console.log('--return2');
       return;
     }
 
-    console.log('--return3');
     setActiveChatItem({ feedItemId });
-
+    
     const itemExists = allFeedItems.some((item) => item.itemId === feedItemId);
-
+    
     if (itemExists) {
       refsByItemId.current[feedItemId]?.scrollToItem();
     } else {
@@ -769,7 +754,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       const itemId = data.params[QueryParamKey.Item];
 
       const discussionItemId = data.params[QueryParamKey.discussionItem];
-      console.log('--itemId',itemId, '---discussionItemId', discussionItemId);
       const messageId = data.params[QueryParamKey.Message];
 
       if(discussionItemId) {
@@ -1082,7 +1066,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   
   const cache = new CellMeasurerCache({
     fixedWidth: true,
-    defaultHeight: isInboxItems ? 80.54 : 59.54, // Default row height
+    defaultHeight: FeedCardHeights[isInboxItems ? "inboxItemHeight" : "commonFeedItemHeight"], // Default row height
   });
   const [previousIndex, setPreviousIndex] = React.useState<number | null>(null);
 
@@ -1095,13 +1079,13 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
     if(images.length === 2) {
       cache.clear(index, 0);
-      cache.set(index, 0, 0, 466);
+      cache.set(index, 0, 0, FeedCardHeights.oneImageItem);
     } else if (images.length === 3) {
       cache.clear(index, 0);
-      cache.set(index, 0, 0, 486);
+      cache.set(index, 0, 0, FeedCardHeights.twoImageItem);
     } else if (images.length >= 4) {
       cache.clear(index, 0);
-      cache.set(index, 0, 0, 687);
+      cache.set(index, 0, 0, FeedCardHeights.threeImageItem);
     }
   }, []);
   
@@ -1180,6 +1164,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   )}
               </InfiniteLoader>
             )}
+            {/* {console.log('--isInboxItems',isInboxItems, isInboxItems ? handleFeedItemClickExternal : handleInternalLinkClick)} */}
             {!isTabletView &&
               (chatItem?.discussion ? (
                 <DesktopChat
@@ -1195,6 +1180,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   renderChatInput={renderChatInput}
                   onUserClick={handleUserClick}
                   onFeedItemClick={handleFeedItemClick}
+                  onStreamMentionClick={isInboxItems ? handleFeedItemClickExternal : handleInternalLinkClick}
                   onInternalLinkClick={handleInternalLinkClick}
                 />
               ) : (
@@ -1221,6 +1207,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                 renderChatInput={renderChatInput}
                 onUserClick={handleUserClick}
                 onFeedItemClick={handleFeedItemClick}
+                onStreamMentionClick={isInboxItems ? handleFeedItemClickExternal : handleInternalLinkClick}
                 onInternalLinkClick={handleInternalLinkClick}
               >
                 {selectedItemCommonData &&

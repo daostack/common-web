@@ -56,6 +56,7 @@ const initialState: CommonState = {
   commonMembers: {},
   governance: {},
   recentStreamId: "",
+  pendingFeedItemId: "",
   recentAssignedCircleByMember: {},
 };
 
@@ -894,6 +895,11 @@ export const reducer = createReducer<CommonState, Action>(initialState)
   .handleAction(actions.setRecentStreamId, (state, { payload }) =>
     produce(state, (nextState) => {
       nextState.recentStreamId = payload;
+    }),
+  )
+  .handleAction(actions.setPendingFeedItemId, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.pendingFeedItemId = payload;
     }),
   )
   .handleAction(actions.setRecentAssignedCircleByMember, (state, { payload }) =>
