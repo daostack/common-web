@@ -11,7 +11,7 @@ import React, {
   ForwardRefRenderFunction,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { useDeepCompareEffect, useKey, useWindowSize } from "react-use";
 import classNames from "classnames";
 import { selectUser } from "@/pages/Auth/store/selectors";
@@ -165,7 +165,6 @@ interface FeedLayoutProps {
   settings?: FeedLayoutSettings;
   renderChatInput?: () => ReactNode;
   onPullToRefresh?: () => void;
-  isInboxItems?: boolean;
 }
 
 const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
@@ -203,7 +202,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     settings,
     renderChatInput,
     onPullToRefresh,
-    isInboxItems = false,
   } = props;
   useDisableOverscroll();
   const { getCommonPagePath } = useRoutesContext();
@@ -215,7 +213,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const isTabletView = useIsTabletView();
   const user = useSelector(selectUser());
   const pendingFeedItemId = useSelector(selectPendingFeedItemId);
-  console.log('---pendingFeedItemId',pendingFeedItemId);
+  const location = useLocation();
+  
+  const isInboxItems = useMemo(() => location.pathname === ROUTE_PATHS.INBOX, [location.pathname]);
+
   const createdOptimisticFeedItems = useSelector(
     selectCreatedOptimisticFeedItems,
   );
@@ -427,20 +428,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
 const scrollToFeedItem = useCallback(
   (feedItemId: string) => {
-    const itemIndex = allFeedItems.findIndex(
-      (item) =>
-        item.itemId === feedItemId ||
-        (item as FeedItemFollowLayoutItem)?.feedItem?.data.id === feedItemId
-    );
-
-    if (itemIndex !== -1 && listRef.current && !isInboxItems) {
-      // Item is found, scroll to it
-      console.log('--itemIndex',itemIndex, feedItemId, '--allFeedItems',allFeedItems);
-      listRef.current.scrollToRow(itemIndex);
-      dispatch(commonActions.setPendingFeedItemId(feedItemId));
-    } else {
-      dispatch(commonActions.setPendingFeedItemId(feedItemId));
-    }
+    dispatch(commonActions.setPendingFeedItemId(feedItemId));
   },
   [allFeedItems, isInboxItems]
 );
@@ -456,7 +444,6 @@ useEffect(() => {
           pendingFeedItemId
     );
 
-    console.log('--itemIndex',itemIndex);
     if (itemIndex !== -1 && listRef.current) {
       setTimeout(() => listRef.current?.scrollToRow(itemIndex), 200);
       dispatch(commonActions.setPendingFeedItemId(null));
@@ -663,7 +650,6 @@ useEffect(() => {
     ) => {
       const { commonId = selectedItemCommonData?.id, messageId } = options;
 
-      console.log('--commonId',commonId, '---feedItemId',feedItemId);
       if (commonId && onFeedItemSelect) {
         onFeedItemSelect(commonId, feedItemId, messageId);
         setActiveChatItem({ feedItemId });
@@ -676,68 +662,90 @@ useEffect(() => {
     [selectedItemCommonData?.id, onFeedItemSelect],
   );
 
-  const handleFeedItemClickInternal = (
-    feedItemId: string,
-    options: { commonId?: string; messageId?: string } = {},
-  ) => {
-    const { commonId, messageId } = options;
-
-    if (chatItem?.feedItemId === feedItemId && !messageId) {
-      return;
-    }
-
-    const queryParamsForPath = {
-      item: feedItemId,
-      message: messageId,
-    };
-
-    if (commonId && commonId !== outerCommon?.id) {
-      history.push(getCommonPagePath(commonId, queryParamsForPath));
-      return;
-    }
-    if (chatItem?.nestedItemData) {
-      history.push(
-        getCommonPagePath(
-          chatItem?.nestedItemData.common.id,
-          queryParamsForPath,
-        ),
-      );
-      return;
-    }
-
-    setActiveChatItem({ feedItemId });
-    
-    const itemExists = allFeedItems.some((item) => item.itemId === feedItemId);
-    
-    if (itemExists) {
-      refsByItemId.current[feedItemId]?.scrollToItem();
-    } else {
-      onFetchNext(feedItemId);
-      const paneEl = document.getElementsByClassName("Pane Pane1")[0];
-      const containerEl = isTabletView ? window : paneEl;
-      const scrollHeight = isTabletView
-        ? document.body.scrollHeight
-        : paneEl?.scrollHeight;
-
-      if (containerEl) {
-        setTimeout(() => {
-          containerEl.scrollTo({
-            top: scrollHeight,
-            behavior: "smooth",
-          });
-        }, 50);
+  const handleFeedItemClickInternal = useCallback(
+    (
+      feedItemId: string,
+      options: { commonId?: string; messageId?: string } = {}
+    ) => {
+      const { commonId, messageId } = options;
+  
+      if (chatItem?.feedItemId === feedItemId && !messageId) {
+        setActiveChatItem({ feedItemId });
+        return;
       }
-    }
-
-    if (messageId) {
-      addQueryParam(QueryParamKey.Message, messageId);
-    }
-  };
-
-  const handleFeedItemClick = useMemoizedFunction(
-    onFeedItemSelect
-      ? handleFeedItemClickExternal
-      : handleFeedItemClickInternal,
+  
+      const queryParamsForPath = {
+        item: feedItemId,
+        message: messageId,
+      };
+  
+      if (commonId && commonId !== outerCommon?.id) {
+        history.push(getCommonPagePath(commonId, queryParamsForPath));
+        return;
+      }
+  
+      if (chatItem?.nestedItemData) {
+        history.push(
+          getCommonPagePath(
+            chatItem?.nestedItemData.common.id,
+            queryParamsForPath
+          )
+        );
+        return;
+      }
+  
+      setActiveChatItem({ feedItemId });
+  
+      const itemExists = allFeedItems.some((item) => item.itemId === feedItemId);
+  
+      if (itemExists) {
+        const isInbox = window.location.pathname === ROUTE_PATHS.INBOX;
+        if(isInbox && commonId) {
+          history.push(getCommonPagePath(commonId, queryParamsForPath));
+        } else {
+          refsByItemId.current[feedItemId]?.scrollToItem();
+        }
+      } else {
+        onFetchNext(feedItemId);
+        const paneEl = document.getElementsByClassName('Pane Pane1')[0];
+        const containerEl = isTabletView ? window : paneEl;
+        const scrollHeight = isTabletView
+          ? document.body.scrollHeight
+          : paneEl?.scrollHeight;
+  
+        if (containerEl) {
+          setTimeout(() => {
+            containerEl.scrollTo({
+              top: scrollHeight,
+              behavior: 'smooth',
+            });
+          }, 50);
+        }
+      }
+  
+      if (messageId) {
+        addQueryParam(QueryParamKey.Message, messageId);
+      }
+    },
+    [
+      chatItem?.feedItemId,
+      chatItem?.nestedItemData,
+      outerCommon?.id,
+      history,
+      getCommonPagePath,
+      setActiveChatItem,
+      allFeedItems,
+      isInboxItems,
+      refsByItemId,
+      onFetchNext,
+      isTabletView,
+      addQueryParam,
+    ]
+  );
+  
+  const handleFeedItemClick = useCallback(
+    onFeedItemSelect ? handleFeedItemClickExternal : handleFeedItemClickInternal,
+    [onFeedItemSelect, handleFeedItemClickExternal, handleFeedItemClickInternal, isInboxItems]
   );
 
   const handleInternalLinkClick = useMemoizedFunction(
@@ -1164,7 +1172,6 @@ useEffect(() => {
                   )}
               </InfiniteLoader>
             )}
-            {/* {console.log('--isInboxItems',isInboxItems, isInboxItems ? handleFeedItemClickExternal : handleInternalLinkClick)} */}
             {!isTabletView &&
               (chatItem?.discussion ? (
                 <DesktopChat
@@ -1180,7 +1187,7 @@ useEffect(() => {
                   renderChatInput={renderChatInput}
                   onUserClick={handleUserClick}
                   onFeedItemClick={handleFeedItemClick}
-                  onStreamMentionClick={isInboxItems ? handleFeedItemClickExternal : handleInternalLinkClick}
+                  onStreamMentionClick={handleFeedItemClickExternal}
                   onInternalLinkClick={handleInternalLinkClick}
                 />
               ) : (
@@ -1207,7 +1214,7 @@ useEffect(() => {
                 renderChatInput={renderChatInput}
                 onUserClick={handleUserClick}
                 onFeedItemClick={handleFeedItemClick}
-                onStreamMentionClick={isInboxItems ? handleFeedItemClickExternal : handleInternalLinkClick}
+                onStreamMentionClick={handleFeedItemClickExternal}
                 onInternalLinkClick={handleInternalLinkClick}
               >
                 {selectedItemCommonData &&

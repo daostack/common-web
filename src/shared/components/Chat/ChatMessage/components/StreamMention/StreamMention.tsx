@@ -5,13 +5,14 @@ import { useQuery } from "@tanstack/react-query";
 import { CommonFeedService } from "@/services";
 import { useDispatch } from "react-redux";
 import { commonActions } from "@/store/states";
+import { InternalLinkData } from "@/shared/utils";
 
 interface StreamMentionProps {
   commonId: string;
   discussionId: string;
   title: string;
   mentionTextClassName?: string;
-  onStreamMentionClick?: (feedItemId: string) => void;
+  onStreamMentionClick?: ((feedItemId: string, options?: { commonId?: string; messageId?: string }) => void) | ((data: InternalLinkData) => void);
 }
 
 const StreamMention: FC<StreamMentionProps> = (props) => {
@@ -37,7 +38,8 @@ const StreamMention: FC<StreamMentionProps> = (props) => {
           limit: 15,
         }),
       );
-      onStreamMentionClick(feedItemId);
+
+      (onStreamMentionClick as ((feedItemId: string, options?: { commonId?: string; messageId?: string }) => void))(feedItemId, { commonId });
     }
   };
 

@@ -341,7 +341,6 @@ const InboxPage: FC<InboxPageProps> = (props) => {
   return (
     <>
       <FeedLayout
-        isInboxItems={true}
         ref={setFeedLayoutRef}
         className={styles.feedLayout}
         renderContentWrapper={renderContentWrapper}

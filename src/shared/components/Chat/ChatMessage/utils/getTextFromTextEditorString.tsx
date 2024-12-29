@@ -35,7 +35,7 @@ interface TextFromDescendant {
   commonId?: string;
   directParent?: DirectParent | null;
   onUserClick?: (userId: string) => void;
-  onStreamMentionClick?: (feedItemId: string) => void;
+  onStreamMentionClick?: ((feedItemId: string, options?: { commonId?: string; messageId?: string }) => void) | ((data: InternalLinkData) => void);
   onInternalLinkClick?: (data: InternalLinkData) => void;
   showPlainText?: boolean;
 }
