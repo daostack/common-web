@@ -668,16 +668,23 @@ useEffect(() => {
       options: { commonId?: string; messageId?: string } = {}
     ) => {
       const { commonId, messageId } = options;
+
+      const queryParamsForPath = {
+        item: feedItemId,
+        message: messageId,
+      };
+
+      const isInbox = window.location.pathname === ROUTE_PATHS.INBOX;
+      if (isInbox && commonId && feedItemId) {
+        history.push(getCommonPagePath(commonId, queryParamsForPath));
+        setActiveChatItem({ feedItemId });
+        return;
+      }
   
       if (chatItem?.feedItemId === feedItemId && !messageId) {
         setActiveChatItem({ feedItemId });
         return;
       }
-  
-      const queryParamsForPath = {
-        item: feedItemId,
-        message: messageId,
-      };
   
       if (commonId && commonId !== outerCommon?.id) {
         history.push(getCommonPagePath(commonId, queryParamsForPath));
@@ -699,12 +706,7 @@ useEffect(() => {
       const itemExists = allFeedItems.some((item) => item.itemId === feedItemId);
   
       if (itemExists) {
-        const isInbox = window.location.pathname === ROUTE_PATHS.INBOX;
-        if(isInbox && commonId) {
-          history.push(getCommonPagePath(commonId, queryParamsForPath));
-        } else {
-          refsByItemId.current[feedItemId]?.scrollToItem();
-        }
+        refsByItemId.current[feedItemId]?.scrollToItem();
       } else {
         onFetchNext(feedItemId);
         const paneEl = document.getElementsByClassName('Pane Pane1')[0];
