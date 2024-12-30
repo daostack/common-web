@@ -1168,6 +1168,7 @@ useEffect(() => {
                           rowRenderer={rowRenderer}
                           onRowsRendered={onRowsRendered}
                           registerChild={registerChild}
+                          overscanRowCount={10}
                         />
                       )}
                     </AutoSizer>
