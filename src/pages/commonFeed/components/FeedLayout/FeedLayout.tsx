@@ -201,7 +201,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     outerStyles,
     settings,
     renderChatInput,
-    onPullToRefresh,
   } = props;
   useDisableOverscroll();
   const { getCommonPagePath } = useRoutesContext();
@@ -654,6 +653,14 @@ useEffect(() => {
         onFeedItemSelect(commonId, feedItemId, messageId);
         setActiveChatItem({ feedItemId });
       } else {
+        const isInbox = window.location.pathname === ROUTE_PATHS.INBOX;
+        if (isInbox && commonId && feedItemId) {
+          const queryParamsForPath = {
+            item: feedItemId,
+          };
+          history.push(getCommonPagePath(commonId, queryParamsForPath));
+        }
+    
         setActiveChatItem({ feedItemId });
       }
 
