@@ -1085,6 +1085,13 @@ useEffect(() => {
     fixedWidth: true,
     defaultHeight: FeedCardHeights[isInboxItems ? "inboxItemHeight" : "commonFeedItemHeight"], // Default row height
   });
+
+  useEffect(() => {
+    return () => {
+      cache.clearAll();
+    };
+  }, []);
+  
   const [previousIndex, setPreviousIndex] = React.useState<number | null>(null);
 
   // Handle row expansion
