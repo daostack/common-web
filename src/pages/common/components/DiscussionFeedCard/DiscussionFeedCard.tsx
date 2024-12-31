@@ -1,12 +1,3 @@
-// import { scan } from 'react-scan'; // import this BEFORE react
-
-// if (typeof window !== 'undefined') {
-//   scan({
-//     enabled: true,
-//     log: true, // logs render info to console (default: false)
-//   });
-// }
-
 import React, {
   forwardRef,
   useCallback,
@@ -86,6 +77,7 @@ interface DiscussionFeedCardProps {
   onUserClick?: (userId: string) => void;
   onFeedItemClick: (feedItemId: string) => void;
   onInternalLinkClick: (data: InternalLinkData) => void;
+  onExpand?: (isExpanded: boolean) => void;
   isOptimisticallyCreated?: boolean;
 }
 
@@ -125,6 +117,7 @@ function DiscussionFeedCard(props, ref) {
     onFeedItemClick,
     onInternalLinkClick,
     isOptimisticallyCreated,
+    onExpand,
   } = props;
   const {
     isShowing: isReportModalOpen,
@@ -412,6 +405,7 @@ function DiscussionFeedCard(props, ref) {
         unreadMessages={feedItemUserMetadata?.count || 0}
         isActive={isActive}
         isExpanded={isExpanded}
+        onExpand={onExpand}
         onClick={handleOpenChat}
         title={cardTitle}
         lastMessage={lastMessage}

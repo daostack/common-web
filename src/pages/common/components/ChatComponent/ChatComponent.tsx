@@ -114,7 +114,7 @@ interface ChatComponentInterface {
   directParent?: DirectParent | null;
   renderChatInput?: () => ReactNode;
   onUserClick?: (userId: string) => void;
-  onStreamMentionClick?: (feedItemId: string) => void;
+  onStreamMentionClick?: ((feedItemId: string, options?: { commonId?: string; messageId?: string }) => void) | ((data: InternalLinkData) => void);
   onFeedItemClick?: (feedItemId: string) => void;
   onInternalLinkClick?: (data: InternalLinkData) => void;
 }

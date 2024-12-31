@@ -60,6 +60,7 @@ type FeedCardProps = PropsWithChildren<{
   notion?: CommonNotion;
   originalCommonIdForLinking?: string;
   linkedCommonIds?: string[];
+  onExpand?: (isExpanded: boolean) => void;
 }>;
 
 const FeedCard = (props, ref) => {
@@ -96,6 +97,7 @@ const FeedCard = (props, ref) => {
     notion,
     originalCommonIdForLinking,
     linkedCommonIds,
+    onExpand,
   } = props;
   const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isTabletView = useIsTabletView();
@@ -105,6 +107,13 @@ const FeedCard = (props, ref) => {
   const { getCollapseProps, getToggleProps } = useCollapse({
     isExpanded: isContentVisible,
     duration: COLLAPSE_DURATION,
+    onTransitionStateChange: (state) => {
+      if(state === "expandEnd") {
+        onExpand && onExpand(true);
+      } else if (state === "collapseEnd") {
+        onExpand && onExpand(false);
+      }
+    }
   });
   const containerRef = useRef<HTMLDivElement>(null);
 

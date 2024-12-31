@@ -19,6 +19,7 @@
   --mention-primary: #d84c7f;
   --mention-secondary: #ffa6d7;
   --highlight: #d84ca0;
+  --feed-item-background: #ffffff;
 }
 
 :root[data-theme="dark"] {
@@ -42,4 +43,5 @@
   --mention-primary: #d84c7f;
   --mention-secondary: #ffa6d7;
   --highlight: #d84ca0;
+  --feed-item-background: rgb(16, 16, 16);
 }

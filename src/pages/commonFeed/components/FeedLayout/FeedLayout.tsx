@@ -10,9 +10,8 @@ import React, {
   ReactNode,
   ForwardRefRenderFunction,
 } from "react";
-import { useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
-import PullToRefresh from "react-simple-pull-to-refresh";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory, useLocation } from "react-router-dom";
 import { useDeepCompareEffect, useKey, useWindowSize } from "react-use";
 import classNames from "classnames";
 import { selectUser } from "@/pages/Auth/store/selectors";
@@ -39,7 +38,6 @@ import {
   AI_PRO_USER,
   AI_USER,
   InboxItemType,
-  LOADER_APPEARANCE_DELAY,
   QueryParamKey,
   ROUTE_PATHS,
 } from "@/shared/constants";
@@ -72,7 +70,7 @@ import {
   Governance,
   User,
 } from "@/shared/models";
-import { InfiniteScroll, Loader, TextEditorValue } from "@/shared/ui-kit";
+import { TextEditorValue } from "@/shared/ui-kit";
 import { InternalLinkData } from "@/shared/utils";
 import {
   addQueryParam,
@@ -81,7 +79,9 @@ import {
   getUserName,
 } from "@/shared/utils";
 import {
+  commonActions,
   selectCreatedOptimisticFeedItems,
+  selectPendingFeedItemId,
   selectRecentStreamId,
 } from "@/store/states";
 import { MIN_CONTENT_WIDTH } from "../../constants";
@@ -97,6 +97,7 @@ import {
 } from "./components";
 import {
   BATCHES_AMOUNT_TO_PRELOAD,
+  FeedCardHeights,
   ITEMS_AMOUNT_TO_PRE_LOAD_MESSAGES,
   MENTION_TAG_ELEMENT,
 } from "./constants";
@@ -110,6 +111,8 @@ import {
   saveContentSize,
 } from "./utils";
 import styles from "./FeedLayout.module.scss";
+import { List, InfiniteLoader, AutoSizer, CellMeasurerCache, CellMeasurer } from "react-virtualized";
+import useAllFeedItems from "./hooks/useAllFeedItems";
 
 export interface FeedLayoutOuterStyles {
   splitView?: string;
@@ -198,16 +201,21 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     outerStyles,
     settings,
     renderChatInput,
-    onPullToRefresh,
   } = props;
   useDisableOverscroll();
   const { getCommonPagePath } = useRoutesContext();
+  const dispatch = useDispatch();
   const refsByItemId = useRef<Record<string, FeedItemRef | null>>({});
   const { width: windowWidth } = useWindowSize();
   const history = useHistory();
   const queryParams = useQueryParams();
   const isTabletView = useIsTabletView();
   const user = useSelector(selectUser());
+  const pendingFeedItemId = useSelector(selectPendingFeedItemId);
+  const location = useLocation();
+  
+  const isInboxItems = useMemo(() => location.pathname === ROUTE_PATHS.INBOX, [location.pathname]);
+
   const createdOptimisticFeedItems = useSelector(
     selectCreatedOptimisticFeedItems,
   );
@@ -285,20 +293,25 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const [expandedFeedItemId, setExpandedFeedItemId] = useState<string | null>(
     null,
   );
-  const [isLoaderAfterRefresh, setIsLoaderAfterRefresh] = useState(false);
-  const allFeedItems = useMemo(() => {
-    const items: FeedLayoutItem[] = [];
 
-    if (topFeedItems) {
-      items.push(...topFeedItems);
-    }
+  const getUserCircleIds = useCallback(
+    (commonId) => {
+      return Object.values(
+        commonMemberForSpecificCommonIds[commonId]?.circles.map ??
+          commonMember?.circles.map ??
+          {},
+      ) as string[];
+    },
+    [commonMemberForSpecificCommonIds, commonMember?.circles.map],
+  );
 
-    if (feedItems) {
-      items.push(...feedItems);
-    }
-
-    return items;
-  }, [topFeedItems, feedItems]);
+  const allFeedItems = useAllFeedItems(
+    topFeedItems,
+    feedItems,
+    userId,
+    getUserCircleIds,
+    outerCommon
+  );
 
   const dmChatChannelItemForProfile = useMemo(
     () =>
@@ -370,17 +383,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     [activeFeedItemId, allFeedItems],
   );
 
-  const getUserCircleIds = useCallback(
-    (commonId) => {
-      return Object.values(
-        commonMemberForSpecificCommonIds[commonId]?.circles.map ??
-          commonMember?.circles.map ??
-          {},
-      ) as string[];
-    },
-    [commonMemberForSpecificCommonIds, commonMember?.circles.map],
-  );
-
   const selectedFeedItem = useMemo(
     () =>
       chatItem?.nestedItemData?.feedItem ||
@@ -417,10 +419,42 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     [handleUserWithCommonClick, selectedItemCommonData?.id],
   );
 
+
+  const allFeedItemsRef = useRef<FeedLayoutItem[]>([]);
+  useEffect(() => {
+    allFeedItemsRef.current = allFeedItems; // Update the ref when items change
+  }, [allFeedItems]);
+
+const scrollToFeedItem = useCallback(
+  (feedItemId: string) => {
+    dispatch(commonActions.setPendingFeedItemId(feedItemId));
+  },
+  [allFeedItems, isInboxItems]
+);
+
+
+// Scroll effect
+useEffect(() => {
+  if (pendingFeedItemId) {
+    const itemIndex = allFeedItems.findIndex(
+      (item) =>
+        item.itemId === pendingFeedItemId ||
+        (item as FeedItemFollowLayoutItem)?.feedItem?.data.id ===
+          pendingFeedItemId
+    );
+
+    if (itemIndex !== -1 && listRef.current) {
+      setTimeout(() => listRef.current?.scrollToRow(itemIndex), 200);
+      dispatch(commonActions.setPendingFeedItemId(null));
+    }
+  }
+}, [pendingFeedItemId, allFeedItems]);
+
   const setActiveChatItem = useCallback((nextChatItem: ChatItem | null) => {
     setShouldAllowChatAutoOpen(false);
     setChatItem(nextChatItem);
-  }, []);
+    nextChatItem?.feedItemId && scrollToFeedItem(nextChatItem?.feedItemId);
+  }, [scrollToFeedItem, allFeedItems]);
 
   const isMentionOpen = useElementPresence(
     MENTION_TAG_ELEMENT.key,
@@ -441,7 +475,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
       if (activeFeedItemIndex > 0) {
         const nextFeedItemId = allFeedItems[activeFeedItemIndex - 1]?.itemId;
-
+        setExpandedFeedItemId(null);
         setChatItem({ feedItemId: nextFeedItemId });
       }
     }
@@ -460,7 +494,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
       if (activeFeedItemIndex < allFeedItems.length - 1) {
         const nextFeedItemId = allFeedItems[activeFeedItemIndex + 1]?.itemId;
-
+        setExpandedFeedItemId(null);
         setChatItem({ feedItemId: nextFeedItemId });
       }
     }
@@ -509,7 +543,8 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const setActiveItem = useCallback((item: ChatItem) => {
     setShouldAllowChatAutoOpen(false);
     setChatItem(item);
-  }, []);
+    item.feedItemId && scrollToFeedItem(item.feedItemId);
+  }, [scrollToFeedItem]);
 
   const handleMessagesAmountChange = useCallback(
     (newMessagesAmount: number) => {
@@ -614,75 +649,112 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     ) => {
       const { commonId = selectedItemCommonData?.id, messageId } = options;
 
-      if (commonId) {
-        onFeedItemSelect?.(commonId, feedItemId, messageId);
+      if (commonId && onFeedItemSelect) {
+        onFeedItemSelect(commonId, feedItemId, messageId);
+        setActiveChatItem({ feedItemId });
+      } else {
+        const isInbox = window.location.pathname === ROUTE_PATHS.INBOX;
+        if (isInbox && commonId && feedItemId) {
+          const queryParamsForPath = {
+            item: feedItemId,
+          };
+          history.push(getCommonPagePath(commonId, queryParamsForPath));
+        }
+    
+        setActiveChatItem({ feedItemId });
       }
+
+
     },
     [selectedItemCommonData?.id, onFeedItemSelect],
   );
 
-  const handleFeedItemClickInternal = (
-    feedItemId: string,
-    options: { commonId?: string; messageId?: string } = {},
-  ) => {
-    const { commonId, messageId } = options;
+  const handleFeedItemClickInternal = useCallback(
+    (
+      feedItemId: string,
+      options: { commonId?: string; messageId?: string } = {}
+    ) => {
+      const { commonId, messageId } = options;
 
-    if (chatItem?.feedItemId === feedItemId && !messageId) {
-      return;
-    }
+      const queryParamsForPath = {
+        item: feedItemId,
+        message: messageId,
+      };
 
-    const queryParamsForPath = {
-      item: feedItemId,
-      message: messageId,
-    };
-
-    if (commonId && commonId !== outerCommon?.id) {
-      history.push(getCommonPagePath(commonId, queryParamsForPath));
-      return;
-    }
-    if (chatItem?.nestedItemData) {
-      history.push(
-        getCommonPagePath(
-          chatItem?.nestedItemData.common.id,
-          queryParamsForPath,
-        ),
-      );
-      return;
-    }
-
-    setActiveChatItem({ feedItemId });
-
-    const itemExists = allFeedItems.some((item) => item.itemId === feedItemId);
-
-    if (itemExists) {
-      refsByItemId.current[feedItemId]?.scrollToItem();
-    } else {
-      onFetchNext(feedItemId);
-      const paneEl = document.getElementsByClassName("Pane Pane1")[0];
-      const containerEl = isTabletView ? window : paneEl;
-      const scrollHeight = isTabletView
-        ? document.body.scrollHeight
-        : paneEl?.scrollHeight;
-
-      if (containerEl) {
-        setTimeout(() => {
-          containerEl.scrollTo({
-            top: scrollHeight,
-            behavior: "smooth",
-          });
-        }, 50);
+      const isInbox = window.location.pathname === ROUTE_PATHS.INBOX;
+      if (isInbox && commonId && feedItemId) {
+        history.push(getCommonPagePath(commonId, queryParamsForPath));
+        setActiveChatItem({ feedItemId });
+        return;
       }
-    }
-
-    if (messageId) {
-      addQueryParam(QueryParamKey.Message, messageId);
-    }
-  };
-
-  const handleFeedItemClick = useMemoizedFunction(
-    onFeedItemSelect
-      ? handleFeedItemClickExternal
-      : handleFeedItemClickInternal,
+  
+      if (chatItem?.feedItemId === feedItemId && !messageId) {
+        setActiveChatItem({ feedItemId });
+        return;
+      }
+  
+      if (commonId && commonId !== outerCommon?.id) {
+        history.push(getCommonPagePath(commonId, queryParamsForPath));
+        return;
+      }
+  
+      if (chatItem?.nestedItemData) {
+        history.push(
+          getCommonPagePath(
+            chatItem?.nestedItemData.common.id,
+            queryParamsForPath
+          )
+        );
+        return;
+      }
+  
+      setActiveChatItem({ feedItemId });
+  
+      const itemExists = allFeedItems.some((item) => item.itemId === feedItemId);
+  
+      if (itemExists) {
+        refsByItemId.current[feedItemId]?.scrollToItem();
+      } else {
+        onFetchNext(feedItemId);
+        const paneEl = document.getElementsByClassName('Pane Pane1')[0];
+        const containerEl = isTabletView ? window : paneEl;
+        const scrollHeight = isTabletView
+          ? document.body.scrollHeight
+          : paneEl?.scrollHeight;
+  
+        if (containerEl) {
+          setTimeout(() => {
+            containerEl.scrollTo({
+              top: scrollHeight,
+              behavior: 'smooth',
+            });
+          }, 50);
+        }
+      }
+  
+      if (messageId) {
+        addQueryParam(QueryParamKey.Message, messageId);
+      }
+    },
+    [
+      chatItem?.feedItemId,
+      chatItem?.nestedItemData,
+      outerCommon?.id,
+      history,
+      getCommonPagePath,
+      setActiveChatItem,
+      allFeedItems,
+      isInboxItems,
+      refsByItemId,
+      onFetchNext,
+      isTabletView,
+      addQueryParam,
+    ]
+  );
+  
+  const handleFeedItemClick = useCallback(
+    onFeedItemSelect ? handleFeedItemClickExternal : handleFeedItemClickInternal,
+    [onFeedItemSelect, handleFeedItemClickExternal, handleFeedItemClickInternal, isInboxItems]
   );
 
   const handleInternalLinkClick = useMemoizedFunction(
@@ -697,6 +769,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       }
 
       const itemId = data.params[QueryParamKey.Item];
+
       const discussionItemId = data.params[QueryParamKey.discussionItem];
       const messageId = data.params[QueryParamKey.Message];
 
@@ -727,20 +800,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
         }),
       );
     },
-  );
-
-  const handleRefresh = async () => {
-    setIsLoaderAfterRefresh(true);
-    onPullToRefresh?.();
-  };
-
-  const handleRefSet = useCallback(
-    (ref: FeedItemRef | null) => {
-      if (ref) {
-        refsByItemId.current[ref.itemId] = ref;
-      }
-    },
-    [refsByItemId],
   );
 
   // We should try to set here only the data which rarely can be changed,
@@ -872,12 +931,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   }, [sharedFeedItemId, isTabletView, allFeedItems]);
 
   useEffect(() => {
-    if (allFeedItems.length) {
-      setIsLoaderAfterRefresh(false);
-    }
-  }, [Boolean(allFeedItems.length)]);
-
-  useEffect(() => {
     if (isTabletView) {
       setSplitPaneRef(null);
       return;
@@ -915,6 +968,189 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
         commonId={selectedItemCommonData.id}
       />
     ) : null;
+
+      // Determine if a row has already been loaded
+  const isRowLoaded = ({ index }) => index < allFeedItems.length;
+
+  // Load more rows when needed
+  const loadMoreRows = async () => {
+    if (!loading) {
+      await onFetchNext();
+    }
+  };
+
+  const rowRefs = useRef({});
+
+  const setRowRef = (index, node) => {
+    if (node) {
+      rowRefs.current[index] = node; // Store the reference to the DOM node
+    } else {
+      delete rowRefs.current[index]; // Remove the reference if node is unmounted
+    }
+  };
+
+  // Render each row
+  const rowRenderer = ({ index, key, parent, style }) => {
+    const item = allFeedItems[index];
+    if (!item) return null;
+
+    const isActive = item.itemId === activeFeedItemId;
+    const shouldPreLoadMessages = index < ITEMS_AMOUNT_TO_PRE_LOAD_MESSAGES;
+    if (checkIsFeedItemFollowLayoutItem(item)) {
+      const commonData = getItemCommonData(
+        item.feedItemFollowWithMetadata,
+        outerCommon
+      );
+
+      const isPinned = (outerCommon?.pinnedFeedItems || []).some(
+        (pinnedItem) => pinnedItem.feedObjectId === item.feedItem.id
+      );
+
+      const isExpanded = item.feedItem?.id === expandedFeedItemId;
+
+      return (
+        <CellMeasurer
+          key={key}
+          cache={cache}
+          columnIndex={0}
+          rowIndex={index}
+          parent={parent}
+        >
+        <div id={index} style={style} ref={(node) => setRowRef(index, node)}>
+          <FeedItem
+            isOptimisticallyCreated={createdOptimisticFeedItems.has(
+              item.feedItem.data.id
+            )}
+            commonMember={commonMember}
+            commonId={commonData?.id}
+            commonName={commonData?.name || ""}
+            commonImage={commonData?.image || ""}
+            commonNotion={outerCommon?.notion}
+            pinnedFeedItems={outerCommon?.pinnedFeedItems}
+            isProject={commonData?.isProject}
+            isPinned={isPinned}
+            item={item.feedItem}
+            governanceCircles={governance?.circles}
+            isMobileVersion={isTabletView}
+            userCircleIds={getUserCircleIds(commonData?.id)}
+            isActive={isActive}
+            onExpand={(isExpanding) => {
+              if(isExpanding) {
+                recomputeRowHeight(index);
+              } else {
+                cache.clear(index, 0);
+                listRef.current?.recomputeRowHeights(index); // Recompute row heights
+              }
+            }}
+            isExpanded={isExpanded}
+            sizeKey={isActive ? sizeKey : undefined}
+            currentUserId={userId}
+            shouldCheckItemVisibility={
+              !item.feedItemFollowWithMetadata ||
+              item.feedItemFollowWithMetadata.userId !== userId
+            }
+            directParent={outerCommon?.directParent}
+            rootCommonId={outerCommon?.rootCommonId}
+            shouldPreLoadMessages={shouldPreLoadMessages}
+          />
+        </div>
+       </CellMeasurer>
+      );
+    }
+
+    if (renderChatChannelItem && checkIsChatChannelLayoutItem(item)) {
+      return (
+        <CellMeasurer
+          key={key}
+          cache={cache}
+          columnIndex={0}
+          rowIndex={index}
+          parent={parent}
+        >
+          <div key={key} style={style}>
+            {renderChatChannelItem({
+              chatChannel: item.chatChannel,
+              isActive,
+              onActiveItemDataChange: handleActiveChatChannelItemDataChange,
+            })}
+          </div>
+        </CellMeasurer>
+      );
+    }
+
+    return null;
+  };
+  
+  const cache = new CellMeasurerCache({
+    fixedWidth: true,
+    defaultHeight: FeedCardHeights[isInboxItems ? "inboxItemHeight" : "commonFeedItemHeight"], // Default row height
+  });
+
+  useEffect(() => {
+    return () => {
+      cache.clearAll();
+    };
+  }, []);
+  
+  const [previousIndex, setPreviousIndex] = React.useState<number | null>(null);
+
+  // Handle row expansion
+  const recomputeRowHeight = useCallback((index) => {
+    const node = rowRefs.current[index];
+    if (!node) return;
+  
+    const images = node.querySelectorAll("img");
+
+    if(images.length === 2) {
+      cache.clear(index, 0);
+      cache.set(index, 0, 0, FeedCardHeights.oneImageItem);
+    } else if (images.length === 3) {
+      cache.clear(index, 0);
+      cache.set(index, 0, 0, FeedCardHeights.twoImageItem);
+    } else if (images.length >= 4) {
+      cache.clear(index, 0);
+      cache.set(index, 0, 0, FeedCardHeights.threeImageItem);
+    }
+  }, []);
+  
+  
+
+  // Reference to the List component
+  const listRef = React.useRef<List | null>(null);
+
+  React.useLayoutEffect(() => {
+    if (expandedFeedItemId && allFeedItems.length > 0) {
+      const itemIndex = allFeedItems.findIndex((item) => (item as FeedItemFollowLayoutItem)?.feedItem?.id === expandedFeedItemId);
+      if (itemIndex >= 0) {
+        recomputeRowHeight(itemIndex);
+        if (previousIndex !== null) {
+          recomputeRowHeight(previousIndex); // Recompute the previous expanded row
+        }
+        setPreviousIndex(itemIndex); // Update the previous index
+      }
+    } else if( previousIndex !== null ) {
+      recomputeRowHeight(previousIndex);
+      setPreviousIndex(null);
+    }
+  }, [expandedFeedItemId, allFeedItems, recomputeRowHeight, previousIndex]);
+
+  // Calculate dynamic row height
+  const getRowHeight = ({ index }) => {
+    const item = allFeedItems[index] as FeedItemFollowLayoutItem;
+    if (!item) return cache.defaultHeight; // Use default height if no item
+    
+    const isExpanded = item.feedItem?.id === expandedFeedItemId;
+    
+    const cachedHeight = cache.rowHeight({ index });
+
+    if (cachedHeight && isExpanded) {
+      return cachedHeight;
+    }
+    
+    const basicHeight = isInboxItems ? 80.54 : 59.54;
+    return basicHeight;
+  };
+
   const contentEl = renderContentWrapper(
     <FeedItemContext.Provider value={feedItemContextValue}>
       <ChatContext.Provider value={chatContextValue}>
@@ -929,93 +1165,29 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
             {isContentEmpty ? (
               <p className={styles.emptyText}>{emptyText}</p>
             ) : (
-              <PullToRefresh
-                isPullable={isTabletView && Boolean(onPullToRefresh)}
-                className={styles.pullToRefresh}
-                onRefresh={handleRefresh}
-                refreshingContent={<Loader />}
-              >
-                <InfiniteScroll
-                  markerClassName={
-                    allFeedItems && allFeedItems.length > 7
-                      ? styles.infiniteScrollMarker
-                      : ""
-                  }
-                  onFetchNext={onFetchNext}
-                  isLoading={loading}
-                  loaderDelay={
-                    isLoaderAfterRefresh ? 0 : LOADER_APPEARANCE_DELAY
-                  }
+                <InfiniteLoader
+                  isRowLoaded={isRowLoaded}
+                  loadMoreRows={loadMoreRows}
+                  rowCount={allFeedItems.length + 1} // +1 to account for potential future items
                 >
-                  {allFeedItems?.map((item, index) => {
-                    const isActive = item.itemId === activeFeedItemId;
-                    const shouldPreLoadMessages =
-                      index < ITEMS_AMOUNT_TO_PRE_LOAD_MESSAGES;
-
-                    if (checkIsFeedItemFollowLayoutItem(item)) {
-                      const commonData = getItemCommonData(
-                        item.feedItemFollowWithMetadata,
-                        outerCommon,
-                      );
-
-                      const isPinned = (
-                        outerCommon?.pinnedFeedItems || []
-                      ).some(
-                        (pinnedItem) =>
-                          pinnedItem.feedObjectId === item.feedItem.id,
-                      );
-
-                      return (
-                        <FeedItem
-                          ref={handleRefSet}
-                          key={item.feedItem.id}
-                          isOptimisticallyCreated={createdOptimisticFeedItems.has(
-                            item.feedItem.data.id,
-                          )}
-                          commonMember={commonMember}
-                          commonId={commonData?.id}
-                          commonName={commonData?.name || ""}
-                          commonImage={commonData?.image || ""}
-                          commonNotion={outerCommon?.notion}
-                          pinnedFeedItems={outerCommon?.pinnedFeedItems}
-                          isProject={commonData?.isProject}
-                          isPinned={isPinned}
-                          item={item.feedItem}
-                          governanceCircles={governance?.circles}
-                          isMobileVersion={isTabletView}
-                          userCircleIds={getUserCircleIds(commonData?.id)}
-                          isActive={isActive}
-                          isExpanded={item.feedItem.id === expandedFeedItemId}
-                          sizeKey={isActive ? sizeKey : undefined}
-                          currentUserId={userId}
-                          shouldCheckItemVisibility={
-                            !item.feedItemFollowWithMetadata ||
-                            item.feedItemFollowWithMetadata.userId !== userId
-                          }
-                          directParent={outerCommon?.directParent}
-                          rootCommonId={outerCommon?.rootCommonId}
-                          shouldPreLoadMessages={shouldPreLoadMessages}
+                  {({ onRowsRendered, registerChild }) => (
+                    <AutoSizer>
+                      {({ height, width }) => (
+                        <List
+                          ref={listRef}
+                          width={width}
+                          height={height}
+                          rowCount={allFeedItems.length}
+                          rowHeight={getRowHeight} // Adjust based on your item height
+                          rowRenderer={rowRenderer}
+                          onRowsRendered={onRowsRendered}
+                          registerChild={registerChild}
+                          overscanRowCount={10}
                         />
-                      );
-                    }
-                    if (
-                      renderChatChannelItem &&
-                      checkIsChatChannelLayoutItem(item)
-                    ) {
-                      return (
-                        <React.Fragment key={item.itemId}>
-                          {renderChatChannelItem({
-                            chatChannel: item.chatChannel,
-                            isActive,
-                            onActiveItemDataChange:
-                              handleActiveChatChannelItemDataChange,
-                          })}
-                        </React.Fragment>
-                      );
-                    }
-                  })}
-                </InfiniteScroll>
-              </PullToRefresh>
+                      )}
+                    </AutoSizer>
+                  )}
+              </InfiniteLoader>
             )}
             {!isTabletView &&
               (chatItem?.discussion ? (
@@ -1032,6 +1204,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   renderChatInput={renderChatInput}
                   onUserClick={handleUserClick}
                   onFeedItemClick={handleFeedItemClick}
+                  onStreamMentionClick={handleFeedItemClickExternal}
                   onInternalLinkClick={handleInternalLinkClick}
                 />
               ) : (
@@ -1058,6 +1231,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                 renderChatInput={renderChatInput}
                 onUserClick={handleUserClick}
                 onFeedItemClick={handleFeedItemClick}
+                onStreamMentionClick={handleFeedItemClickExternal}
                 onInternalLinkClick={handleInternalLinkClick}
               >
                 {selectedItemCommonData &&

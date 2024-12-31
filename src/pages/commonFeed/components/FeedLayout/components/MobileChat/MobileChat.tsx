@@ -38,6 +38,7 @@ interface ChatProps {
   renderChatInput?: () => ReactNode;
   onClose: () => void;
   onUserClick?: (userId: string) => void;
+  onStreamMentionClick?: ((feedItemId: string, options?: { commonId?: string; messageId?: string }) => void) | ((data: InternalLinkData) => void);
   onFeedItemClick?: (feedItemId: string) => void;
   onInternalLinkClick?: (data: InternalLinkData) => void;
 }
@@ -60,6 +61,7 @@ const MobileChat: FC<ChatProps> = (props) => {
     onClose,
     onUserClick,
     onFeedItemClick,
+    onStreamMentionClick,
     onInternalLinkClick,
   } = props;
   const { setIsShowFeedItemDetailsModal } = useChatContext();
@@ -167,7 +169,7 @@ const MobileChat: FC<ChatProps> = (props) => {
             directParent={directParent}
             renderChatInput={renderChatInput}
             onUserClick={onUserClick}
-            onStreamMentionClick={onFeedItemClick}
+            onStreamMentionClick={onStreamMentionClick}
             onFeedItemClick={onFeedItemClick}
             onInternalLinkClick={onInternalLinkClick}
           />

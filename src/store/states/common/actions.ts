@@ -269,6 +269,10 @@ export const setRecentStreamId = createStandardAction(
   CommonActionType.SET_RECENT_STREAM_ID,
 )<string>();
 
+export const setPendingFeedItemId = createStandardAction(
+  CommonActionType.SET_PENDING_FEED_ITEM_ID,
+)<string | null>();
+
 export const setRecentAssignedCircleByMember = createStandardAction(
   CommonActionType.SET_RECENT_ASSIGNED_CIRCLE_BY_MEMBER,
 )<{

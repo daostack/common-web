@@ -40,7 +40,7 @@ const ImageGallery: FC<ImageGalleryProps> = (props) => {
 
   const imagePreviewStyle = useMemo(
     () => ({
-      height: `calc(${videoContainerWidth / 2}px - 0.875rem)`,
+      height: "9.375rem",
       width: `calc(${videoContainerWidth / 2}px - 0.15625rem)`,
     }),
     [videoContainerWidth],

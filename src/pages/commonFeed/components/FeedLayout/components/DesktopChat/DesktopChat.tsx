@@ -34,6 +34,7 @@ interface ChatProps {
   renderChatInput?: () => ReactNode;
   onUserClick?: (userId: string) => void;
   onFeedItemClick?: (feedItemId: string) => void;
+  onStreamMentionClick?: ((feedItemId: string, options?: { commonId?: string; messageId?: string }) => void) | ((data: InternalLinkData) => void);
   onInternalLinkClick?: (data: InternalLinkData) => void;
 }
 
@@ -51,6 +52,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
     renderChatInput,
     onUserClick,
     onFeedItemClick,
+    onStreamMentionClick,
     onInternalLinkClick,
   } = props;
   const {
@@ -131,7 +133,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
         directParent={directParent}
         renderChatInput={renderChatInput}
         onUserClick={onUserClick}
-        onStreamMentionClick={onFeedItemClick}
+        onStreamMentionClick={onStreamMentionClick}
         onFeedItemClick={onFeedItemClick}
         onInternalLinkClick={onInternalLinkClick}
       />

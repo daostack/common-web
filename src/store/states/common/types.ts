@@ -58,5 +58,6 @@ export interface CommonState {
   recentAssignedCircleByMember: Record<string, Record<string, Circle>>;
   governance: Record<string, Governance | null>;
   recentStreamId: string;
+  pendingFeedItemId: string | null;
   searchState: Record<string, CommonSearchState>;
 }
