@@ -475,7 +475,7 @@ useEffect(() => {
 
       if (activeFeedItemIndex > 0) {
         const nextFeedItemId = allFeedItems[activeFeedItemIndex - 1]?.itemId;
-
+        setExpandedFeedItemId(null);
         setChatItem({ feedItemId: nextFeedItemId });
       }
     }
@@ -494,7 +494,7 @@ useEffect(() => {
 
       if (activeFeedItemIndex < allFeedItems.length - 1) {
         const nextFeedItemId = allFeedItems[activeFeedItemIndex + 1]?.itemId;
-
+        setExpandedFeedItemId(null);
         setChatItem({ feedItemId: nextFeedItemId });
       }
     }
